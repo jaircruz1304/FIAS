@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Abrir Enlaces - Solución</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      color: #333;
+    }
+    
+    .container {
+      background-color: white;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      width: 100%;
+      max-width: 650px;
+      padding: 30px;
+      text-align: center;
+    }
+    
+    h1 {
+      color: #2c3e50;
+      margin-bottom: 25px;
+      font-size: 32px;
+      position: relative;
+      padding-bottom: 15px;
+    }
+    
+    h1:after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 4px;
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      border-radius: 2px;
+    }
+    
+    .warning {
+      background-color: #fff4e6;
+      border-left: 4px solid #ffa94d;
+      padding: 16px;
+      margin: 25px 0;
+      text-align: left;
+      border-radius: 6px;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+    
+    .warning-icon {
+      color: #ff7e00;
+      font-weight: bold;
+      margin-right: 8px;
+    }
+    
+    .link-card {
+      background-color: #f8f9fa;
+      border-radius: 10px;
+      padding: 20px;
+      margin: 20px 0;
+      text-align: left;
+      transition: transform 0.3s, box-shadow 0.3s;
+      border: 1px solid #e9ecef;
+    }
+    
+    .link-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .link-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #2c3e50;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+    }
+    
+    .link-icon {
+      margin-right: 10px;
+      color: #667eea;
+      font-size: 20px;
+    }
+    
+    .link-url {
+      font-size: 14px;
+      color: #6c757d;
+      word-break: break-all;
+      margin-bottom: 15px;
+      padding: 12px;
+      background-color: white;
+      border-radius: 6px;
+      border: 1px solid #dee2e6;
+    }
+    
+    .btn {
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      padding: 14px 25px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      text-decoration: none;
+      margin-top: 10px;
+      box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+    }
+    
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(102, 126, 234, 0.4);
+    }
+    
+    .btn-open-all {
+      background: linear-gradient(90deg, #10ac84, #0d916a);
+      box-shadow: 0 4px 8px rgba(16, 172, 132, 0.3);
+      margin-top: 25px;
+      padding: 16px 30px;
+    }
+    
+    .btn-open-all:hover {
+      box-shadow: 0 6px 12px rgba(16, 172, 132, 0.4);
+    }
+    
+    .btn-icon {
+      margin-right: 8px;
+      font-size: 18px;
+    }
+    
+    .status {
+      margin-top: 25px;
+      padding: 15px;
+      border-radius: 8px;
+      font-weight: 500;
+    }
+    
+    .success {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    
+    .error {
+      background-color: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+    
+    .instructions {
+      margin-top: 30px;
+      padding: 20px;
+      background-color: #e9f7fe;
+      border-radius: 8px;
+      text-align: left;
+      border-left: 4px solid #3498db;
+    }
+    
+    .instructions h3 {
+      color: #2980b9;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+    }
+    
+    .instructions-icon {
+      margin-right: 10px;
+      font-size: 20px;
+    }
+    
+    .instructions ol {
+      padding-left: 20px;
+    }
+    
+    .instructions li {
+      margin-bottom: 10px;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1><span class="btn-icon">📂</span> Actas de entrega</h1>
+    
+    <div class="warning">
+      <span class="warning-icon">⚠️</span>
+      <strong>Atención:</strong> Los navegadores pueden bloquear la apertura automática de ventanas. 
+      Si no se abren automáticamente, puedes hacer clic en los botones de abajo para abrirlas manualmente.
+    </div>
+    
+    <div class="link-card">
+      <div class="link-title">
+        <span class="link-icon">📄</span> Documento 1
+      </div>
+      <div class="link-url">
+        https://fiasec-my.sharepoint.com/:b:/g/personal/jcruzg_fias_org_ec/EY9ndMhPR_xPj2v2DJLMRqsBjK4QGXT556814dw3DKgxZg
+      </div>
+      <a href="https://fiasec-my.sharepoint.com/:b:/g/personal/jcruzg_fias_org_ec/EY9ndMhPR_xPj2v2DJLMRqsBjK4QGXT556814dw3DKgxZg" 
+         target="_blank" class="btn">
+        <span class="btn-icon">🔗</span> Abrir enlace
+      </a>
+    </div>
+
+<div class="link-card">
+      <div class="link-title">
+        <span class="link-icon">📄</span> Documento 2
+      </div>
+      <div class="link-url">
+        https://fiasec-my.sharepoint.com/:b:/g/personal/jcruzg_fias_org_ec/EY54NclxidJElHbBFixlQZEB_ABDBKfd8RHbc-1os1KmPw
+      </div>
+      <a href="https://fiasec-my.sharepoint.com/:b:/g/personal/jcruzg_fias_org_ec/EY54NclxidJElHbBFixlQZEB_ABDBKfd8RHbc-1os1KmPw" 
+         target="_blank" class="btn">
+        <span class="btn-icon">🔗</span> Abrir enlace
+      </a>
+    </div>
+
+
+<div class="link-card">
+      <div class="link-title">
+        <span class="link-icon">📄</span> Documento 3
+      </div>
+      <div class="link-url">
+        https://fiasec-my.sharepoint.com/:b:/g/personal/jcruzg_fias_org_ec/EWzlsTVtpjtGmXcwg0CRjaMBtR3pM5L97PhaBOM53qKSoA
+      </div>
+      <a href="https://fiasec-my.sharepoint.com/:b:/g/personal/jcruzg_fias_org_ec/EWzlsTVtpjtGmXcwg0CRjaMBtR3pM5L97PhaBOM53qKSoA" 
+         target="_blank" class="btn">
+        <span class="btn-icon">🔗</span> Abrir enlace
+      </a>
+    </div>
+
+<div class="link-card">
+      <div class="link-title">
+        <span class="link-icon">📄</span> Documento 4
+      </div>
+      <div class="link-url">
+        https://fiasec-my.sharepoint.com/:b:/g/personal/jcruzg_fias_org_ec/EUlWoivKES5Gomup3Q7d2M0B1Kl4tXjeueVqM0b-VLjLVA
+      </div>
+      <a href="https://fiasec-my.sharepoint.com/:b:/g/personal/jcruzg_fias_org_ec/EUlWoivKES5Gomup3Q7d2M0B1Kl4tXjeueVqM0b-VLjLVA" 
+         target="_blank" class="btn">
+        <span class="btn-icon">🔗</span> Abrir enlace
+      </a>
+    </div>
+
+
+    
+    <button id="openAll" class="btn btn-open-all">
+      <span class="btn-icon">🚀</span> Abrir todos los enlaces
+    </button>
+    
+    <div id="statusMessage" class="status"></div>
+    
+    <div class="instructions">
+      <h3><span class="instructions-icon">💡</span> Instrucciones para permitir ventanas emergentes</h3>
+      <ol>
+        <li>Si tu navegador bloquea las ventanas emergentes, verás un mensaje en la barra de direcciones.</li>
+        <li>Haz clic en el icono de bloqueo 🔒 o en el mensaje que aparece.</li>
+        <li>Selecciona "Permitir siempre ventanas emergentes" o "Permitir" para este sitio.</li>
+        <li>Vuelve a hacer clic en "Abrir todos los enlaces".</li>
+      </ol>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const urls = [
+        "https://fiasec-my.sharepoint.com/:b:/g/personal/jcruzg_fias_org_ec/EUlWoivKES5Gomup3Q7d2M0B1Kl4tXjeueVqM0b-VLjLVA",
+"https://fiasec-my.sharepoint.com/:b:/g/personal/jcruzg_fias_org_ec/EWzlsTVtpjtGmXcwg0CRjaMBtR3pM5L97PhaBOM53qKSoA",
+"https://fiasec-my.sharepoint.com/:b:/g/personal/jcruzg_fias_org_ec/EY54NclxidJElHbBFixlQZEB_ABDBKfd8RHbc-1os1KmPw",
+"https://fiasec-my.sharepoint.com/:b:/g/personal/jcruzg_fias_org_ec/EY9ndMhPR_xPj2v2DJLMRqsBjK4QGXT556814dw3DKgxZg"
+      ];
+      
+      const statusMessage = document.getElementById('statusMessage');
+      const openAllButton = document.getElementById('openAll');
+      
+      // Función para abrir una URL
+      function openUrl(url) {
+        try {
+          const newWindow = window.open(url, '_blank', 'noopener,noreferrer');
+          if (newWindow) {
+            newWindow.opener = null;
+            return true;
+          } else {
+            return false;
+          }
+        } catch (e) {
+          console.error('Error al abrir la ventana:', e);
+          return false;
+        }
+      }
+      
+      // Función para abrir todos los enlaces
+      function openAllUrls() {
+        let allOpened = true;
+        let popupBlocked = false;
+        
+        statusMessage.textContent = "Abriendo enlaces...";
+        statusMessage.className = "status";
+        
+        urls.forEach((url, index) => {
+          const opened = openUrl(url);
+          if (!opened) {
+            allOpened = false;
+            popupBlocked = true;
+          }
+        });
+        
+        if (allOpened) {
+          statusMessage.textContent = "¡Todos los enlaces se abrieron correctamente!";
+          statusMessage.classList.add("success");
+        } else if (popupBlocked) {
+          statusMessage.textContent = "El navegador bloqueó algunas ventanas. Por favor, permite las ventanas emergentes e intenta nuevamente.";
+          statusMessage.classList.add("error");
+        } else {
+          statusMessage.textContent = "Ocurrió un error al abrir los enlaces.";
+          statusMessage.classList.add("error");
+        }
+      }
+      
+      // Intentar abrir automáticamente al cargar la página
+      setTimeout(openAllUrls, 300);
+      
+      // Abrir todos al hacer clic en el botón
+      openAllButton.addEventListener('click', openAllUrls);
+    });
+  </script>
+</body>
+</html>

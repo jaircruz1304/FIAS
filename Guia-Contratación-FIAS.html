@@ -229,13 +229,19 @@
             align-items: center;
         }
         
-        .mermaid {
+        .flujograma-placeholder {
             width: 100%;
-            overflow: auto;
             min-height: 400px;
             display: flex;
             justify-content: center;
             align-items: center;
+            background-color: #f8f9fa;
+            border: 2px dashed #dee2e6;
+            border-radius: 8px;
+            color: #6c757d;
+            font-style: italic;
+            text-align: center;
+            padding: 20px;
         }
         
         /* Paneles de información */
@@ -375,10 +381,11 @@
 
         <div class="tab-content" id="processTabContent">
             
+            <!-- MENOR CUANTÍA -->
             <section class="tab-pane fade show active" id="menor" role="tabpanel" aria-labelledby="menor-tab">
                 <div class="process-content">
                     <h2 class="process-title">
-                        <i class="fas fa-circle-dollar-to-slot me-2"></i> Menor Cuantía
+                        <i class="fas fa-circle-dollar-to-slot me-2"></i> Menor Cuantía - Bienes y Servicios
                         <span class="process-badge">Hasta USD 2.000</span>
                     </h2>
                     
@@ -391,15 +398,22 @@
                                 <div class="process-step">
                                     <span class="step-icon"><i class="fas fa-file-alt"></i></span>
                                     <div class="step-content">
-                                        <div>Memo de inicio del proceso</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Requirente / Coordinador de Proyecto</div>
+                                        <div>Memo de inicio del proceso con necesidad, objeto, alcance, línea presupuestaria referencial y TdR/ET cortos</div>
+                                        <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
                                     </div>
                                 </div>
                                 <div class="process-step">
                                     <span class="step-icon"><i class="fas fa-tasks"></i></span>
                                     <div class="step-content">
-                                        <div>Elaboración de TdR o especificaciones técnicas con línea presupuestaria</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Requirente</div>
+                                        <div>Preparación de TdR/Especificaciones cortas con línea presupuestaria</div>
+                                        <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
+                                    </div>
+                                </div>
+                                <div class="process-step">
+                                    <span class="step-icon"><i class="fas fa-check-circle"></i></span>
+                                    <div class="step-content">
+                                        <div>Autorización de inicio del proceso</div>
+                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Ejecutiva</div>
                                     </div>
                                 </div>
                             </div>
@@ -414,51 +428,66 @@
                                     <span class="step-icon"><i class="fas fa-file-invoice-dollar"></i></span>
                                     <div class="step-content">
                                         <div>Certificación presupuestaria</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Administrativa</div>
+                                        <div class="responsable"><i class="fas fa-user me-1"></i> Gerencia Administrativa Financiera (GAF)</div>
                                     </div>
                                 </div>
                                 <div class="process-step">
                                     <span class="step-icon"><i class="fas fa-search-dollar"></i></span>
                                     <div class="step-content">
                                         <div>Solicitud de 3 cotizaciones</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Ordenador de Gasto</div>
+                                        <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
                                     </div>
                                 </div>
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-chart-bar"></i></span>
+                                    <span class="step-icon"><i class="fas fa-clipboard-list"></i></span>
                                     <div class="step-content">
-                                        <div>Cuadro comparativo</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Administrativa</div>
+                                        <div>Elaboración de cuadro comparativo y recomendación</div>
+                                        <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
                                     </div>
                                 </div>
+                                <div class="process-step">
+                                    <span class="step-icon"><i class="fas fa-check-double"></i></span>
+                                    <div class="step-content">
+                                        <div>Validación y adjudicación</div>
+                                        <div class="responsable"><i class="fas fa-user me-1"></i> GAF / Ordenador de Gasto</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="stage-card">
+                            <div class="card-header contractual-header">
+                                <i class="fas fa-file-contract me-2"></i> Etapa Contractual
+                            </div>
+                            <div class="card-body p-0">
                                 <div class="process-step">
                                     <span class="step-icon"><i class="fas fa-question-circle"></i></span>
                                     <div class="step-content">
-                                        <div>¿Monto < USD 200?</div>
-                                        <div>→ Sí: Presentación de factura</div>
-                                        <div>→ No: Orden de compra o servicio</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Administrativa</div>
+                                        <div>¿Monto menor a USD 200?</div>
+                                        <div>→ Sí: Presentación de factura + aprobación del Ordenador de Gasto</div>
+                                        <div>→ No: Orden de compra/servicio</div>
+                                        <div class="responsable"><i class="fas fa-user me-1"></i> GAF</div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        
-                        <div class="stage-card">
-                            <div class="card-header contractual-header">
-                                <i class="fas fa-file-contract me-2"></i> Etapa Contractual
-                            </div>
-                            <div class="card-body p-0">
                                 <div class="process-step">
                                     <span class="step-icon"><i class="fas fa-question"></i></span>
                                     <div class="step-content">
                                         <div>¿Hay anticipo?</div>
                                         <div>→ Sí:</div>
                                         <div class="ms-3">
-                                            - Solicitud de borrador de contrato<br>
-                                            - Recepción de garantía<br>
-                                            - Firma de contrato
-                                        </div> <div>→ No: No aplica contrato</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Ejecutiva / Dirección Administrativa</div>
+                                            - Elaboración de contrato por Asesoría Jurídica<br>
+                                            - Recepción de garantías (100% del anticipo)<br>
+                                            - Firma de contrato por Dirección Ejecutiva
+                                        </div>
+                                        <div>→ No: No aplica contrato</div>
+                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Ejecutiva / GAF</div>
+                                    </div>
+                                </div>
+                                <div class="process-step">
+                                    <span class="step-icon"><i class="fas fa-shield-alt"></i></span>
+                                    <div class="step-content">
+                                        <div>Custodia de garantías</div>
+                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Administrativa y RRHH</div>
                                     </div>
                                 </div>
                             </div>
@@ -466,40 +495,28 @@
                     </div>
                     
                     <div class="flujograma-container">
+                        <h4 class="flujograma-title"><i class="fas fa-project-diagram me-2"></i>Flujograma: Menor Cuantía - Bienes y Servicios</h4>
                         
-
-
-
-<h4 class="flujograma-title"><i class="fas fa-project-diagram me-2"></i>Flujograma: Menor Cuantía</h4>
-                      
-
-
-
-
-<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns:xlink="http://www.w3.org/1999/xlink" aria-roledescription="flowchart-v2" role="graphics-document document" viewBox="0 0 1393.5390625 6684.34375" style="max-width: 100%;" class="flowchart" xmlns="http://www.w3.org/2000/svg" width="100%" id="mermaid-svg-650" height="100%"><style>#mermaid-svg-650{font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:16px;fill:#ccc;}@keyframes edge-animation-frame{from{stroke-dashoffset:0;}}@keyframes dash{to{stroke-dashoffset:0;}}#mermaid-svg-650 .edge-animation-slow{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 50s linear infinite;stroke-linecap:round;}#mermaid-svg-650 .edge-animation-fast{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 20s linear infinite;stroke-linecap:round;}#mermaid-svg-650 .error-icon{fill:#a44141;}#mermaid-svg-650 .error-text{fill:#ddd;stroke:#ddd;}#mermaid-svg-650 .edge-thickness-normal{stroke-width:1px;}#mermaid-svg-650 .edge-thickness-thick{stroke-width:3.5px;}#mermaid-svg-650 .edge-pattern-solid{stroke-dasharray:0;}#mermaid-svg-650 .edge-thickness-invisible{stroke-width:0;fill:none;}#mermaid-svg-650 .edge-pattern-dashed{stroke-dasharray:3;}#mermaid-svg-650 .edge-pattern-dotted{stroke-dasharray:2;}#mermaid-svg-650 .marker{fill:lightgrey;stroke:lightgrey;}#mermaid-svg-650 .marker.cross{stroke:lightgrey;}#mermaid-svg-650 svg{font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:16px;}#mermaid-svg-650 p{margin:0;}#mermaid-svg-650 .label{font-family:"trebuchet ms",verdana,arial,sans-serif;color:#ccc;}#mermaid-svg-650 .cluster-label text{fill:#F9FFFE;}#mermaid-svg-650 .cluster-label span{color:#F9FFFE;}#mermaid-svg-650 .cluster-label span p{background-color:transparent;}#mermaid-svg-650 .label text,#mermaid-svg-650 span{fill:#ccc;color:#ccc;}#mermaid-svg-650 .node rect,#mermaid-svg-650 .node circle,#mermaid-svg-650 .node ellipse,#mermaid-svg-650 .node polygon,#mermaid-svg-650 .node path{fill:#1f2020;stroke:#ccc;stroke-width:1px;}#mermaid-svg-650 .rough-node .label text,#mermaid-svg-650 .node .label text,#mermaid-svg-650 .image-shape .label,#mermaid-svg-650 .icon-shape .label{text-anchor:middle;}#mermaid-svg-650 .node .katex path{fill:#000;stroke:#000;stroke-width:1px;}#mermaid-svg-650 .rough-node .label,#mermaid-svg-650 .node .label,#mermaid-svg-650 .image-shape .label,#mermaid-svg-650 .icon-shape .label{text-align:center;}#mermaid-svg-650 .node.clickable{cursor:pointer;}#mermaid-svg-650 .root .anchor path{fill:lightgrey!important;stroke-width:0;stroke:lightgrey;}#mermaid-svg-650 .arrowheadPath{fill:lightgrey;}#mermaid-svg-650 .edgePath .path{stroke:lightgrey;stroke-width:2.0px;}#mermaid-svg-650 .flowchart-link{stroke:lightgrey;fill:none;}#mermaid-svg-650 .edgeLabel{background-color:hsl(0, 0%, 34.4117647059%);text-align:center;}#mermaid-svg-650 .edgeLabel p{background-color:hsl(0, 0%, 34.4117647059%);}#mermaid-svg-650 .edgeLabel rect{opacity:0.5;background-color:hsl(0, 0%, 34.4117647059%);fill:hsl(0, 0%, 34.4117647059%);}#mermaid-svg-650 .labelBkg{background-color:rgba(87.75, 87.75, 87.75, 0.5);}#mermaid-svg-650 .cluster rect{fill:hsl(180, 1.5873015873%, 28.3529411765%);stroke:rgba(255, 255, 255, 0.25);stroke-width:1px;}#mermaid-svg-650 .cluster text{fill:#F9FFFE;}#mermaid-svg-650 .cluster span{color:#F9FFFE;}#mermaid-svg-650 div.mermaidTooltip{position:absolute;text-align:center;max-width:200px;padding:2px;font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:12px;background:hsl(20, 1.5873015873%, 12.3529411765%);border:1px solid rgba(255, 255, 255, 0.25);border-radius:2px;pointer-events:none;z-index:100;}#mermaid-svg-650 .flowchartTitleText{text-anchor:middle;font-size:18px;fill:#ccc;}#mermaid-svg-650 rect.text{fill:none;stroke-width:0;}#mermaid-svg-650 .icon-shape,#mermaid-svg-650 .image-shape{background-color:hsl(0, 0%, 34.4117647059%);text-align:center;}#mermaid-svg-650 .icon-shape p,#mermaid-svg-650 .image-shape p{background-color:hsl(0, 0%, 34.4117647059%);padding:2px;}#mermaid-svg-650 .icon-shape rect,#mermaid-svg-650 .image-shape rect{opacity:0.5;background-color:hsl(0, 0%, 34.4117647059%);fill:hsl(0, 0%, 34.4117647059%);}#mermaid-svg-650 :root{--mermaid-font-family:"trebuchet ms",verdana,arial,sans-serif;}</style><g><marker orient="auto" markerHeight="8" markerWidth="8" markerUnits="userSpaceOnUse" refY="5" refX="5" viewBox="0 0 10 10" class="marker flowchart-v2" id="mermaid-svg-650_flowchart-v2-pointEnd"><path style="stroke-width: 1; stroke-dasharray: 1, 0;" class="arrowMarkerPath" d="M 0 0 L 10 5 L 0 10 z"></path></marker><marker orient="auto" markerHeight="8" markerWidth="8" markerUnits="userSpaceOnUse" refY="5" refX="4.5" viewBox="0 0 10 10" class="marker flowchart-v2" id="mermaid-svg-650_flowchart-v2-pointStart"><path style="stroke-width: 1; stroke-dasharray: 1, 0;" class="arrowMarkerPath" d="M 0 5 L 10 10 L 10 0 z"></path></marker><marker orient="auto" markerHeight="11" markerWidth="11" markerUnits="userSpaceOnUse" refY="5" refX="11" viewBox="0 0 10 10" class="marker flowchart-v2" id="mermaid-svg-650_flowchart-v2-circleEnd"><circle style="stroke-width: 1; stroke-dasharray: 1, 0;" class="arrowMarkerPath" r="5" cy="5" cx="5"></circle></marker><marker orient="auto" markerHeight="11" markerWidth="11" markerUnits="userSpaceOnUse" refY="5" refX="-1" viewBox="0 0 10 10" class="marker flowchart-v2" id="mermaid-svg-650_flowchart-v2-circleStart"><circle style="stroke-width: 1; stroke-dasharray: 1, 0;" class="arrowMarkerPath" r="5" cy="5" cx="5"></circle></marker><marker orient="auto" markerHeight="11" markerWidth="11" markerUnits="userSpaceOnUse" refY="5.2" refX="12" viewBox="0 0 11 11" class="marker cross flowchart-v2" id="mermaid-svg-650_flowchart-v2-crossEnd"><path style="stroke-width: 2; stroke-dasharray: 1, 0;" class="arrowMarkerPath" d="M 1,1 l 9,9 M 10,1 l -9,9"></path></marker><marker orient="auto" markerHeight="11" markerWidth="11" markerUnits="userSpaceOnUse" refY="5.2" refX="-1" viewBox="0 0 11 11" class="marker cross flowchart-v2" id="mermaid-svg-650_flowchart-v2-crossStart"><path style="stroke-width: 2; stroke-dasharray: 1, 0;" class="arrowMarkerPath" d="M 1,1 l 9,9 M 10,1 l -9,9"></path></marker><g class="root"><g class="clusters"></g><g class="edgePaths"><path marker-end="url(#mermaid-svg-650_flowchart-v2-pointEnd__6c757d)" style="stroke:#6c757d;stroke-width:2px;stroke:#28a745;stroke-width:3px;fill:none;" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" id="L_A_B_0" d="M293,86L293,90.167C293,94.333,293,102.667,293,110.333C293,118,293,125,293,128.5L293,132"></path><path marker-end="url(#mermaid-svg-650_flowchart-v2-pointEnd__6c757d)" style="stroke:#6c757d;stroke-width:2px;" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" id="L_B_C_0" d="M293,262L293,266.167C293,270.333,293,278.667,293,286.333C293,294,293,301,293,304.5L293,308"></path><path marker-end="url(#mermaid-svg-650_flowchart-v2-pointEnd__6c757d)" style="stroke:#6c757d;stroke-width:2px;" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" id="L_C_D_0" d="M293,390L293,394.167C293,398.333,293,406.667,293.07,414.417C293.141,422.167,293.281,429.334,293.351,432.917L293.422,436.501"></path><path marker-end="url(#mermaid-svg-650_flowchart-v2-pointEnd__6c757d)" style="stroke:#6c757d;stroke-width:2px;stroke:#28a745;stroke-width:3px;fill:none;" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" id="L_D_E_0" d="M237.956,599.41L221.297,614.75C204.638,630.091,171.319,660.772,154.659,685.613C138,710.453,138,729.453,138,738.953L138,748.453"></path><path marker-end="url(#mermaid-svg-650_flowchart-v2-pointEnd__6c757d)" style="stroke:#6c757d;stroke-width:2px;" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" id="L_D_F_0" d="M349.044,599.41L365.536,614.75C382.029,630.091,415.015,660.772,431.507,681.613C448,702.453,448,713.453,448,718.953L448,724.453"></path><path marker-end="url(#mermaid-svg-650_flowchart-v2-pointEnd__6c757d)" style="stroke:#6c757d;stroke-width:2px;stroke:#28a745;stroke-width:3px;fill:none;" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" id="L_F_G_0" d="M543.798,878.453L549.12,882.62C554.442,886.786,565.086,895.12,570.408,902.786C575.73,910.453,575.73,917.453,575.73,920.953L575.73,924.453"></path><path marker-end="url(#mermaid-svg-650_flowchart-v2-pointEnd__6c757d)" style="stroke:#6c757d;stroke-width:2px;" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" id="L_G_H_0" d="M575.73,1030.453L575.73,1034.62C575.73,1038.786,575.73,1047.12,575.801,1054.87C575.871,1062.62,576.012,1069.787,576.082,1073.37L576.152,1076.954"></path><path marker-end="url(#mermaid-svg-650_flowchart-v2-pointEnd__6c757d)" style="stroke:#6c757d;stroke-width:2px;" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" id="L_H_I_0" d="M523.446,1226.466L506.327,1241.347C489.208,1256.227,454.969,1285.989,430.498,1306.625C406.027,1327.261,391.323,1338.773,383.972,1344.529L376.62,1350.284"></path><path marker-end="url(#mermaid-svg-650_flowchart-v2-pointEnd__6c757d)" style="stroke:#6c757d;stroke-width:2px;stroke:#28a745;stroke-width:3px;fill:none;" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" id="L_I_F_0" d="M277.735,1352.75L276.241,1346.583C274.746,1340.417,271.758,1328.083,270.264,1299.225C268.77,1270.367,268.77,1224.984,268.77,1181.602C268.77,1138.219,268.77,1096.836,268.77,1063.478C268.77,1030.12,268.77,1004.786,268.77,979.453C268.77,954.12,268.77,928.786,276.392,911.867C284.015,894.947,299.261,886.441,306.884,882.187L314.507,877.934"></path><path marker-end="url(#mermaid-svg-650_flowchart-v2-pointEnd__6c757d)" style="stroke:#6c757d;stroke-width:2px;" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" id="L_H_J_0" d="M592.775,1262.705L594.479,1271.546C596.184,1280.387,599.592,1298.068,601.296,1314.409C603,1330.75,603,1345.75,603,1353.25L603,1360.75"></path><path marker-end="url(#mermaid-svg-650_flowchart-v2-pointEnd__6c757d)" style="stroke:#6c757d;stroke-width:2px;" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" id="L_J_K_0" d="M603,1466.75L603,1472.917C603,1479.083,603,1491.417,603,1501.083C603,1510.75,603,1517.75,603,1521.25L603,1524.75"></path><path marker-end="url(#mermaid-svg-650_flowchart-v2-pointEnd__6c757d)" style="stroke:#6c757d;stroke-width:2px;stroke:#28a745;stroke-width:3px;fill:none;" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" id="L_K_L_0" d="M603,1702.75L603,1706.917C603,1711.083,603,1719.417,603.07,1727.167C603.141,1734.917,603.281,1742.084,603.351,1745.667L603.422,1749.251"></path><path marker-end="url(#mermaid-svg-650_flowchart-v2-pointEnd__6c757d)" style="stroke:#6c757d;stroke-width:2px;" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" id="L_L_M_0" d="M538.409,1966.159L523.341,1983.091C508.273,2000.023,478.136,2033.886,463.068,2056.318C448,2078.75,448,2089.75,448,2095.25L448,2100.75"></path><path marker-end="url(#mermaid-svg-650_flowchart-v2-pointEnd__6c757d)" style="stroke:#6c757d;stroke-width:2px;" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" id="L_L_N_0" d="M668.591,1966.159L683.492,1983.091C698.394,2000.023,728.197,2033.886,743.098,2056.318C758,2078.75,758,2089.75,758,2095.25L758,2100.75"></path><path marker-end="url(#mermaid-svg-650_flowchart-v2-pointEnd__6c757d)" style="stroke:#6c757d;stroke-width:2px;stroke:#28a745;stroke-width:3px;fill:none;" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" id="L_N_O_0" d="M865.207,2230.75L872.298,2234.917C879.388,2239.083,893.569,2247.417,900.73,2255.167C907.891,2262.917,908.031,2270.084,908.101,2273.667L908.172,2277.251"></path><path marker-end="url(#mermaid-svg-650_flowchart-v2-pointEnd__6c757d)" style="stroke:#6c757d;stroke-width:2px;" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" id="L_O_P_0" d="M843.159,2494.159L828.091,2511.091C813.023,2528.023,782.886,2561.886,759.926,2584.591C736.965,2607.296,721.18,2618.842,713.288,2624.615L705.395,2630.388"></path><path marker-end="url(#mermaid-svg-650_flowchart-v2-pointEnd__6c757d)" style="stroke:#6c757d;stroke-width:2px;" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" id="L_P_N_0" d="M606.432,2632.75L605.491,2626.583C604.551,2620.417,602.67,2608.083,601.729,2572.583C600.789,2537.083,600.789,2478.417,600.789,2421.75C600.789,2365.083,600.789,2310.417,607.651,2279.242C614.513,2248.068,628.237,2240.386,635.099,2236.545L641.961,2232.704"></path><path marker-end="url(#mermaid-svg-650_flowchart-v2-pointEnd__6c757d)" style="stroke:#6c757d;stroke-width:2px;stroke:#28a745;stroke-width:3px;fill:none;" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" id="L_O_Q_0" d="M921.335,2546.165L922.119,2554.43C922.903,2562.694,924.471,2579.222,925.255,2592.986C926.039,2606.75,926.039,2617.75,926.039,2623.25L926.039,2628.75"></path><path marker-end="url(#mermaid-svg-650_flowchart-v2-pointEnd__6c757d)" style="stroke:#6c757d;stroke-width:2px;" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" id="L_Q_R_0" d="M1031.429,2758.75L1038.399,2762.917C1045.369,2767.083,1059.31,2775.417,1066.35,2783.167C1073.391,2790.917,1073.531,2798.084,1073.601,2801.667L1073.672,2805.251"></path><path marker-end="url(#mermaid-svg-650_flowchart-v2-pointEnd__6c757d)" style="stroke:#6c757d;stroke-width:2px;" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" id="L_R_S_0" d="M1003.056,3040.556L987.171,3058.421C971.287,3076.287,939.519,3112.019,906.166,3152.193C872.813,3192.367,837.877,3236.984,820.408,3259.292L802.94,3281.601"></path><path marker-end="url(#mermaid-svg-650_flowchart-v2-pointEnd__6c757d)" style="stroke:#6c757d;stroke-width:2px;stroke:#28a745;stroke-width:3px;fill:none;" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" id="L_S_Q_0" d="M756.402,3284.75L754.55,3261.917C752.698,3239.083,748.993,3193.417,747.141,3139.25C745.289,3085.083,745.289,3022.417,745.289,2961.75C745.289,2901.083,745.289,2842.417,753.248,2809.208C761.207,2776,777.124,2768.251,785.083,2764.376L793.042,2760.501"></path><path marker-end="url(#mermaid-svg-650_flowchart-v2-pointEnd__6c757d)" style="stroke:#6c757d;stroke-width:2px;" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" id="L_R_T_0" d="M1087.137,3097.863L1087.871,3106.177C1088.605,3114.492,1090.072,3131.121,1090.88,3145.019C1091.688,3158.917,1091.837,3170.084,1091.911,3175.667L1091.986,3181.25"></path><path marker-end="url(#mermaid-svg-650_flowchart-v2-pointEnd__6c757d)" style="stroke:#6c757d;stroke-width:2px;" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" id="L_T_U_0" d="M1160.275,3419.014L1174.653,3436.47C1189.03,3453.926,1217.784,3488.838,1232.162,3522.961C1246.539,3557.083,1246.539,3590.417,1246.539,3621.75C1246.539,3653.083,1246.539,3682.417,1246.539,3713.75C1246.539,3745.083,1246.539,3778.417,1246.539,3813.75C1246.539,3849.083,1246.539,3886.417,1246.539,3923.75C1246.539,3961.083,1246.539,3998.417,1246.539,4033.75C1246.539,4069.083,1246.539,4102.417,1246.539,4142.32C1246.539,4182.224,1246.539,4228.698,1246.539,4277.172C1246.539,4325.646,1246.539,4376.12,1246.539,4406.857C1246.539,4437.594,1246.539,4448.594,1246.539,4454.094L1246.539,4459.594"></path><path marker-end="url(#mermaid-svg-650_flowchart-v2-pointEnd__6c757d)" style="stroke:#6c757d;stroke-width:2px;stroke:#28a745;stroke-width:3px;fill:none;" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" id="L_U_V_0" d="M1246.539,4613.594L1246.539,4617.76C1246.539,4621.927,1246.539,4630.26,1246.539,4646.142C1246.539,4662.023,1246.539,4685.453,1246.539,4697.168L1246.539,4708.883"></path><path marker-end="url(#mermaid-svg-650_flowchart-v2-pointEnd__6c757d)" style="stroke:#6c757d;stroke-width:2px;" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" id="L_V_W_0" d="M1246.539,4862.883L1246.539,4877.264C1246.539,4891.646,1246.539,4920.409,1246.614,4940.374C1246.688,4960.339,1246.837,4971.505,1246.911,4977.089L1246.986,4982.672"></path><path marker-end="url(#mermaid-svg-650_flowchart-v2-pointEnd__6c757d)" style="stroke:#6c757d;stroke-width:2px;" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" id="L_W_X_0" d="M1135.745,5153.377L1036.377,5178.01C937.009,5202.642,738.274,5251.907,614.673,5293.341C491.072,5334.774,442.605,5368.376,418.371,5385.178L394.138,5401.979"></path><path marker-end="url(#mermaid-svg-650_flowchart-v2-pointEnd__6c757d)" style="stroke:#6c757d;stroke-width:2px;stroke:#28a745;stroke-width:3px;fill:none;" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" id="L_X_U_0" d="M312.242,5404.258L310.541,5387.077C308.841,5369.896,305.44,5335.534,303.739,5289.02C302.039,5242.505,302.039,5183.839,302.039,5125.172C302.039,5066.505,302.039,5007.839,302.039,4951.624C302.039,4895.409,302.039,4841.646,302.039,4789.883C302.039,4738.12,302.039,4688.357,437.126,4649.173C572.213,4609.989,842.387,4581.384,977.474,4567.081L1112.561,4552.779"></path><path marker-end="url(#mermaid-svg-650_flowchart-v2-pointEnd__6c757d)" style="stroke:#6c757d;stroke-width:2px;" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" id="L_W_Y_0" d="M1247.039,5264.672L1246.956,5270.755C1246.872,5276.839,1246.706,5289.005,1246.622,5307.603C1246.539,5326.201,1246.539,5351.229,1246.539,5363.743L1246.539,5376.258"></path><path marker-end="url(#mermaid-svg-650_flowchart-v2-pointEnd__6c757d)" style="stroke:#6c757d;stroke-width:2px;" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" id="L_T_Z_0" d="M1023.803,3419.014L1009.259,3436.47C994.715,3453.926,965.627,3488.838,951.083,3511.794C936.539,3534.75,936.539,3545.75,936.539,3551.25L936.539,3556.75"></path><path marker-end="url(#mermaid-svg-650_flowchart-v2-pointEnd__6c757d)" style="stroke:#6c757d;stroke-width:2px;stroke:#28a745;stroke-width:3px;fill:none;" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" id="L_Z_AA_0" d="M936.539,3686.75L936.539,3690.917C936.539,3695.083,936.539,3703.417,936.539,3711.083C936.539,3718.75,936.539,3725.75,936.539,3729.25L936.539,3732.75"></path><path marker-end="url(#mermaid-svg-650_flowchart-v2-pointEnd__6c757d)" style="stroke:#6c757d;stroke-width:2px;" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" id="L_AA_AB_0" d="M936.539,3886.75L936.539,3892.917C936.539,3899.083,936.539,3911.417,936.539,3923.083C936.539,3934.75,936.539,3945.75,936.539,3951.25L936.539,3956.75"></path><path marker-end="url(#mermaid-svg-650_flowchart-v2-pointEnd__6c757d)" style="stroke:#6c757d;stroke-width:2px;" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" id="L_AB_AC_0" d="M996.756,4110.75L1000.101,4114.917C1003.447,4119.083,1010.137,4127.417,1013.553,4135.167C1016.969,4142.917,1017.109,4150.084,1017.179,4153.667L1017.25,4157.251"></path><path marker-end="url(#mermaid-svg-650_flowchart-v2-pointEnd__6c757d)" style="stroke:#6c757d;stroke-width:2px;stroke:#28a745;stroke-width:3px;fill:none;" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" id="L_AC_AD_0" d="M1017.328,4390.094L1017.245,4396.177C1017.161,4402.26,1016.995,4414.427,1011.445,4428.135C1005.896,4441.843,994.964,4457.093,989.498,4464.718L984.032,4472.343"></path><path marker-end="url(#mermaid-svg-650_flowchart-v2-pointEnd__6c757d)" style="stroke:#6c757d;stroke-width:2px;" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" id="L_AD_AB_0" d="M856.686,4475.594L846.335,4467.427C835.983,4459.26,815.281,4442.927,804.929,4409.523C794.578,4376.12,794.578,4325.646,794.578,4277.172C794.578,4228.698,794.578,4182.224,799.948,4155.204C805.318,4128.185,816.058,4120.619,821.428,4116.836L826.798,4113.054"></path><path marker-end="url(#mermaid-svg-650_flowchart-v2-pointEnd__6c757d)" style="stroke:#6c757d;stroke-width:2px;" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" id="L_AC_AE_0" d="M934.627,4307.392L882.529,4327.259C830.431,4347.126,726.235,4386.86,674.137,4412.227C622.039,4437.594,622.039,4448.594,622.039,4454.094L622.039,4459.594"></path><path marker-end="url(#mermaid-svg-650_flowchart-v2-pointEnd__6c757d)" style="stroke:#6c757d;stroke-width:2px;stroke:#28a745;stroke-width:3px;fill:none;" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" id="L_AE_AF_0" d="M724.572,4613.594L730.269,4617.76C735.965,4621.927,747.357,4630.26,753.124,4638.011C758.891,4645.761,759.031,4652.928,759.101,4656.511L759.172,4660.095"></path><path marker-end="url(#mermaid-svg-650_flowchart-v2-pointEnd__6c757d)" style="stroke:#6c757d;stroke-width:2px;" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" id="L_AF_AG_0" d="M698.341,4851.763L682.576,4867.998C666.811,4884.233,635.28,4916.702,605.295,4951.244C575.31,4985.786,546.869,5022.399,532.649,5040.706L518.429,5059.013"></path><path marker-end="url(#mermaid-svg-650_flowchart-v2-pointEnd__6c757d)" style="stroke:#6c757d;stroke-width:2px;" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" id="L_AG_AE_0" d="M441.087,5062.172L433.329,5043.339C425.571,5024.505,410.055,4986.839,402.297,4941.124C394.539,4895.409,394.539,4841.646,394.539,4789.883C394.539,4738.12,394.539,4688.357,410.179,4656.601C425.818,4624.845,457.098,4611.095,472.738,4604.221L488.377,4597.346"></path><path marker-end="url(#mermaid-svg-650_flowchart-v2-pointEnd__6c757d)" style="stroke:#6c757d;stroke-width:2px;stroke:#28a745;stroke-width:3px;fill:none;" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" id="L_AF_AH_0" d="M771.908,4900.014L772.763,4908.207C773.618,4916.4,775.329,4932.786,776.184,4959.146C777.039,4985.505,777.039,5021.839,777.039,5040.005L777.039,5058.172"></path><path marker-end="url(#mermaid-svg-650_flowchart-v2-pointEnd__6c757d)" style="stroke:#6c757d;stroke-width:2px;" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" id="L_AH_AI_0" d="M777.039,5188.172L777.039,5207.005C777.039,5225.839,777.039,5263.505,777.114,5287.922C777.188,5312.339,777.337,5323.505,777.411,5329.089L777.486,5334.672"></path><path marker-end="url(#mermaid-svg-650_flowchart-v2-pointEnd__6c757d)" style="stroke:#6c757d;stroke-width:2px;" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" id="L_AI_AJ_0" d="M768.404,5563.709L767.67,5571.315C766.936,5578.92,765.468,5594.132,764.734,5607.238C764,5620.344,764,5631.344,764,5636.844L764,5642.344"></path><path marker-end="url(#mermaid-svg-650_flowchart-v2-pointEnd__6c757d)" style="stroke:#6c757d;stroke-width:2px;stroke:#28a745;stroke-width:3px;fill:none;" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" id="L_AI_AK_0" d="M866.286,5484.097L931.835,5504.971C997.383,5525.846,1128.481,5567.595,1192.529,5599.975C1256.578,5632.355,1253.577,5655.366,1252.077,5666.872L1250.577,5678.377"></path><path marker-end="url(#mermaid-svg-650_flowchart-v2-pointEnd__6c757d)" style="stroke:#6c757d;stroke-width:2px;" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" id="L_Y_AK_0" d="M1240.192,5530.258L1239.077,5543.439C1237.962,5556.62,1235.731,5582.982,1236.116,5607.668C1236.5,5632.355,1239.501,5655.366,1241.001,5666.872L1242.501,5678.377"></path><path marker-end="url(#mermaid-svg-650_flowchart-v2-pointEnd__6c757d)" style="stroke:#6c757d;stroke-width:2px;" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" id="L_AK_AL_0" d="M1246.539,5736.344L1246.539,5746.51C1246.539,5756.677,1246.539,5777.01,1246.539,5790.677C1246.539,5804.344,1246.539,5811.344,1246.539,5814.844L1246.539,5818.344"></path><path marker-end="url(#mermaid-svg-650_flowchart-v2-pointEnd__6c757d)" style="stroke:#6c757d;stroke-width:2px;stroke:#28a745;stroke-width:3px;fill:none;" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" id="L_AL_AM_0" d="M1246.539,5996.344L1246.539,6000.51C1246.539,6004.677,1246.539,6013.01,1246.539,6020.677C1246.539,6028.344,1246.539,6035.344,1246.539,6038.844L1246.539,6042.344"></path><path marker-end="url(#mermaid-svg-650_flowchart-v2-pointEnd__6c757d)" style="stroke:#6c757d;stroke-width:2px;" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" id="L_AM_AN_0" d="M1246.539,6196.344L1246.539,6200.51C1246.539,6204.677,1246.539,6213.01,1246.539,6220.677C1246.539,6228.344,1246.539,6235.344,1246.539,6238.844L1246.539,6242.344"></path><path marker-end="url(#mermaid-svg-650_flowchart-v2-pointEnd__6c757d)" style="stroke:#6c757d;stroke-width:2px;" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" id="L_AN_AO_0" d="M1246.539,6348.344L1246.539,6352.51C1246.539,6356.677,1246.539,6365.01,1246.539,6372.677C1246.539,6380.344,1246.539,6387.344,1246.539,6390.844L1246.539,6394.344"></path><path marker-end="url(#mermaid-svg-650_flowchart-v2-pointEnd__6c757d)" style="stroke:#6c757d;stroke-width:2px;stroke:#28a745;stroke-width:3px;fill:none;" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" id="L_AO_AP_0" d="M1246.539,6500.344L1246.539,6504.51C1246.539,6508.677,1246.539,6517.01,1246.539,6524.677C1246.539,6532.344,1246.539,6539.344,1246.539,6542.844L1246.539,6546.344"></path></g><g class="edgeLabels"><g class="edgeLabel"><g transform="translate(0, 0)" class="label"><foreignObject height="0" width="0"><div class="labelBkg" xmlns="http://www.w3.org/1999/xhtml" style="stroke: rgb(40, 167, 69); stroke-width: 3px; display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel" style=";stroke:#6c757d;stroke-width:2px;stroke:#28a745;stroke-width:3px;color:none"></span></div></foreignObject></g></g><g class="edgeLabel"><g transform="translate(0, 0)" class="label"><foreignObject height="0" width="0"><div class="labelBkg" xmlns="http://www.w3.org/1999/xhtml" style="stroke: rgb(108, 117, 125); stroke-width: 2px; display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel" style=";stroke:#6c757d;stroke-width:2px"></span></div></foreignObject></g></g><g class="edgeLabel"><g transform="translate(0, 0)" class="label"><foreignObject height="0" width="0"><div class="labelBkg" xmlns="http://www.w3.org/1999/xhtml" style="stroke: rgb(108, 117, 125); stroke-width: 2px; display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel" style=";stroke:#6c757d;stroke-width:2px"></span></div></foreignObject></g></g><g transform="translate(138, 691.453125)" class="edgeLabel"><g transform="translate(-10.5, -12)" class="label"><foreignObject height="24" width="21"><div class="labelBkg" xmlns="http://www.w3.org/1999/xhtml" style="stroke: rgb(40, 167, 69); stroke-width: 3px; display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel" style=";stroke:#6c757d;stroke-width:2px;stroke:#28a745;stroke-width:3px;color:none"><p>NO</p></span></div></foreignObject></g></g><g transform="translate(448, 691.453125)" class="edgeLabel"><g transform="translate(-6.078125, -12)" class="label"><foreignObject height="24" width="12.15625"><div class="labelBkg" xmlns="http://www.w3.org/1999/xhtml" style="stroke: rgb(108, 117, 125); stroke-width: 2px; display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel" style=";stroke:#6c757d;stroke-width:2px"><p>SÍ</p></span></div></foreignObject></g></g><g class="edgeLabel"><g transform="translate(0, 0)" class="label"><foreignObject height="0" width="0"><div class="labelBkg" xmlns="http://www.w3.org/1999/xhtml" style="stroke: rgb(40, 167, 69); stroke-width: 3px; display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel" style=";stroke:#6c757d;stroke-width:2px;stroke:#28a745;stroke-width:3px;color:none"></span></div></foreignObject></g></g><g class="edgeLabel"><g transform="translate(0, 0)" class="label"><foreignObject height="0" width="0"><div class="labelBkg" xmlns="http://www.w3.org/1999/xhtml" style="stroke: rgb(108, 117, 125); stroke-width: 2px; display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel" style=";stroke:#6c757d;stroke-width:2px"></span></div></foreignObject></g></g><g transform="translate(420.73046875, 1315.75)" class="edgeLabel"><g transform="translate(-28.4609375, -12)" class="label"><foreignObject height="24" width="56.921875"><div class="labelBkg" xmlns="http://www.w3.org/1999/xhtml" style="stroke: rgb(108, 117, 125); stroke-width: 2px; display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel" style=";stroke:#6c757d;stroke-width:2px"><p>NO/OBS</p></span></div></foreignObject></g></g><g class="edgeLabel"><g transform="translate(0, 0)" class="label"><foreignObject height="0" width="0"><div class="labelBkg" xmlns="http://www.w3.org/1999/xhtml" style="stroke: rgb(40, 167, 69); stroke-width: 3px; display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel" style=";stroke:#6c757d;stroke-width:2px;stroke:#28a745;stroke-width:3px;color:none"></span></div></foreignObject></g></g><g transform="translate(603, 1315.75)" class="edgeLabel"><g transform="translate(-6.078125, -12)" class="label"><foreignObject height="24" width="12.15625"><div class="labelBkg" xmlns="http://www.w3.org/1999/xhtml" style="stroke: rgb(108, 117, 125); stroke-width: 2px; display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel" style=";stroke:#6c757d;stroke-width:2px"><p>SÍ</p></span></div></foreignObject></g></g><g class="edgeLabel"><g transform="translate(0, 0)" class="label"><foreignObject height="0" width="0"><div class="labelBkg" xmlns="http://www.w3.org/1999/xhtml" style="stroke: rgb(108, 117, 125); stroke-width: 2px; display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel" style=";stroke:#6c757d;stroke-width:2px"></span></div></foreignObject></g></g><g class="edgeLabel"><g transform="translate(0, 0)" class="label"><foreignObject height="0" width="0"><div class="labelBkg" xmlns="http://www.w3.org/1999/xhtml" style="stroke: rgb(40, 167, 69); stroke-width: 3px; display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel" style=";stroke:#6c757d;stroke-width:2px;stroke:#28a745;stroke-width:3px;color:none"></span></div></foreignObject></g></g><g transform="translate(448, 2067.75)" class="edgeLabel"><g transform="translate(-10.5, -12)" class="label"><foreignObject height="24" width="21"><div class="labelBkg" xmlns="http://www.w3.org/1999/xhtml" style="stroke: rgb(108, 117, 125); stroke-width: 2px; display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel" style=";stroke:#6c757d;stroke-width:2px"><p>NO</p></span></div></foreignObject></g></g><g transform="translate(758, 2067.75)" class="edgeLabel"><g transform="translate(-6.078125, -12)" class="label"><foreignObject height="24" width="12.15625"><div class="labelBkg" xmlns="http://www.w3.org/1999/xhtml" style="stroke: rgb(108, 117, 125); stroke-width: 2px; display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel" style=";stroke:#6c757d;stroke-width:2px"><p>SÍ</p></span></div></foreignObject></g></g><g class="edgeLabel"><g transform="translate(0, 0)" class="label"><foreignObject height="0" width="0"><div class="labelBkg" xmlns="http://www.w3.org/1999/xhtml" style="stroke: rgb(40, 167, 69); stroke-width: 3px; display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel" style=";stroke:#6c757d;stroke-width:2px;stroke:#28a745;stroke-width:3px;color:none"></span></div></foreignObject></g></g><g transform="translate(752.75, 2595.75)" class="edgeLabel"><g transform="translate(-10.5, -12)" class="label"><foreignObject height="24" width="21"><div class="labelBkg" xmlns="http://www.w3.org/1999/xhtml" style="stroke: rgb(108, 117, 125); stroke-width: 2px; display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel" style=";stroke:#6c757d;stroke-width:2px"><p>NO</p></span></div></foreignObject></g></g><g class="edgeLabel"><g transform="translate(0, 0)" class="label"><foreignObject height="0" width="0"><div class="labelBkg" xmlns="http://www.w3.org/1999/xhtml" style="stroke: rgb(108, 117, 125); stroke-width: 2px; display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel" style=";stroke:#6c757d;stroke-width:2px"></span></div></foreignObject></g></g><g transform="translate(926.0390625, 2595.75)" class="edgeLabel"><g transform="translate(-6.078125, -12)" class="label"><foreignObject height="24" width="12.15625"><div class="labelBkg" xmlns="http://www.w3.org/1999/xhtml" style="stroke: rgb(40, 167, 69); stroke-width: 3px; display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel" style=";stroke:#6c757d;stroke-width:2px;stroke:#28a745;stroke-width:3px;color:none"><p>SÍ</p></span></div></foreignObject></g></g><g class="edgeLabel"><g transform="translate(0, 0)" class="label"><foreignObject height="0" width="0"><div class="labelBkg" xmlns="http://www.w3.org/1999/xhtml" style="stroke: rgb(108, 117, 125); stroke-width: 2px; display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel" style=";stroke:#6c757d;stroke-width:2px"></span></div></foreignObject></g></g><g transform="translate(907.75, 3147.75)" class="edgeLabel"><g transform="translate(-10.5, -12)" class="label"><foreignObject height="24" width="21"><div class="labelBkg" xmlns="http://www.w3.org/1999/xhtml" style="stroke: rgb(108, 117, 125); stroke-width: 2px; display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel" style=";stroke:#6c757d;stroke-width:2px"><p>NO</p></span></div></foreignObject></g></g><g class="edgeLabel"><g transform="translate(0, 0)" class="label"><foreignObject height="0" width="0"><div class="labelBkg" xmlns="http://www.w3.org/1999/xhtml" style="stroke: rgb(40, 167, 69); stroke-width: 3px; display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel" style=";stroke:#6c757d;stroke-width:2px;stroke:#28a745;stroke-width:3px;color:none"></span></div></foreignObject></g></g><g transform="translate(1091.5390625, 3147.75)" class="edgeLabel"><g transform="translate(-6.078125, -12)" class="label"><foreignObject height="24" width="12.15625"><div class="labelBkg" xmlns="http://www.w3.org/1999/xhtml" style="stroke: rgb(108, 117, 125); stroke-width: 2px; display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel" style=";stroke:#6c757d;stroke-width:2px"><p>SÍ</p></span></div></foreignObject></g></g><g transform="translate(1246.5390625, 3923.75)" class="edgeLabel"><g transform="translate(-10.5, -12)" class="label"><foreignObject height="24" width="21"><div class="labelBkg" xmlns="http://www.w3.org/1999/xhtml" style="stroke: rgb(108, 117, 125); stroke-width: 2px; display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel" style=";stroke:#6c757d;stroke-width:2px"><p>NO</p></span></div></foreignObject></g></g><g class="edgeLabel"><g transform="translate(0, 0)" class="label"><foreignObject height="0" width="0"><div class="labelBkg" xmlns="http://www.w3.org/1999/xhtml" style="stroke: rgb(40, 167, 69); stroke-width: 3px; display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel" style=";stroke:#6c757d;stroke-width:2px;stroke:#28a745;stroke-width:3px;color:none"></span></div></foreignObject></g></g><g class="edgeLabel"><g transform="translate(0, 0)" class="label"><foreignObject height="0" width="0"><div class="labelBkg" xmlns="http://www.w3.org/1999/xhtml" style="stroke: rgb(108, 117, 125); stroke-width: 2px; display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel" style=";stroke:#6c757d;stroke-width:2px"></span></div></foreignObject></g></g><g transform="translate(539.5390625, 5301.171875)" class="edgeLabel"><g transform="translate(-10.5, -12)" class="label"><foreignObject height="24" width="21"><div class="labelBkg" xmlns="http://www.w3.org/1999/xhtml" style="stroke: rgb(108, 117, 125); stroke-width: 2px; display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel" style=";stroke:#6c757d;stroke-width:2px"><p>NO</p></span></div></foreignObject></g></g><g class="edgeLabel"><g transform="translate(0, 0)" class="label"><foreignObject height="0" width="0"><div class="labelBkg" xmlns="http://www.w3.org/1999/xhtml" style="stroke: rgb(40, 167, 69); stroke-width: 3px; display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel" style=";stroke:#6c757d;stroke-width:2px;stroke:#28a745;stroke-width:3px;color:none"></span></div></foreignObject></g></g><g transform="translate(1246.5390625, 5301.171875)" class="edgeLabel"><g transform="translate(-6.078125, -12)" class="label"><foreignObject height="24" width="12.15625"><div class="labelBkg" xmlns="http://www.w3.org/1999/xhtml" style="stroke: rgb(108, 117, 125); stroke-width: 2px; display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel" style=";stroke:#6c757d;stroke-width:2px"><p>SÍ</p></span></div></foreignObject></g></g><g transform="translate(936.5390625, 3523.75)" class="edgeLabel"><g transform="translate(-6.078125, -12)" class="label"><foreignObject height="24" width="12.15625"><div class="labelBkg" xmlns="http://www.w3.org/1999/xhtml" style="stroke: rgb(108, 117, 125); stroke-width: 2px; display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel" style=";stroke:#6c757d;stroke-width:2px"><p>SÍ</p></span></div></foreignObject></g></g><g class="edgeLabel"><g transform="translate(0, 0)" class="label"><foreignObject height="0" width="0"><div class="labelBkg" xmlns="http://www.w3.org/1999/xhtml" style="stroke: rgb(40, 167, 69); stroke-width: 3px; display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel" style=";stroke:#6c757d;stroke-width:2px;stroke:#28a745;stroke-width:3px;color:none"></span></div></foreignObject></g></g><g class="edgeLabel"><g transform="translate(0, 0)" class="label"><foreignObject height="0" width="0"><div class="labelBkg" xmlns="http://www.w3.org/1999/xhtml" style="stroke: rgb(108, 117, 125); stroke-width: 2px; display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel" style=";stroke:#6c757d;stroke-width:2px"></span></div></foreignObject></g></g><g class="edgeLabel"><g transform="translate(0, 0)" class="label"><foreignObject height="0" width="0"><div class="labelBkg" xmlns="http://www.w3.org/1999/xhtml" style="stroke: rgb(108, 117, 125); stroke-width: 2px; display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel" style=";stroke:#6c757d;stroke-width:2px"></span></div></foreignObject></g></g><g transform="translate(1016.828125, 4426.59375)" class="edgeLabel"><g transform="translate(-10.5, -12)" class="label"><foreignObject height="24" width="21"><div class="labelBkg" xmlns="http://www.w3.org/1999/xhtml" style="stroke: rgb(40, 167, 69); stroke-width: 3px; display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel" style=";stroke:#6c757d;stroke-width:2px;stroke:#28a745;stroke-width:3px;color:none"><p>NO</p></span></div></foreignObject></g></g><g class="edgeLabel"><g transform="translate(0, 0)" class="label"><foreignObject height="0" width="0"><div class="labelBkg" xmlns="http://www.w3.org/1999/xhtml" style="stroke: rgb(108, 117, 125); stroke-width: 2px; display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel" style=";stroke:#6c757d;stroke-width:2px"></span></div></foreignObject></g></g><g transform="translate(622.0390625, 4426.59375)" class="edgeLabel"><g transform="translate(-6.078125, -12)" class="label"><foreignObject height="24" width="12.15625"><div class="labelBkg" xmlns="http://www.w3.org/1999/xhtml" style="stroke: rgb(108, 117, 125); stroke-width: 2px; display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel" style=";stroke:#6c757d;stroke-width:2px"><p>SÍ</p></span></div></foreignObject></g></g><g class="edgeLabel"><g transform="translate(0, 0)" class="label"><foreignObject height="0" width="0"><div class="labelBkg" xmlns="http://www.w3.org/1999/xhtml" style="stroke: rgb(40, 167, 69); stroke-width: 3px; display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel" style=";stroke:#6c757d;stroke-width:2px;stroke:#28a745;stroke-width:3px;color:none"></span></div></foreignObject></g></g><g transform="translate(603.75, 4949.171875)" class="edgeLabel"><g transform="translate(-10.5, -12)" class="label"><foreignObject height="24" width="21"><div class="labelBkg" xmlns="http://www.w3.org/1999/xhtml" style="stroke: rgb(108, 117, 125); stroke-width: 2px; display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel" style=";stroke:#6c757d;stroke-width:2px"><p>NO</p></span></div></foreignObject></g></g><g class="edgeLabel"><g transform="translate(0, 0)" class="label"><foreignObject height="0" width="0"><div class="labelBkg" xmlns="http://www.w3.org/1999/xhtml" style="stroke: rgb(108, 117, 125); stroke-width: 2px; display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel" style=";stroke:#6c757d;stroke-width:2px"></span></div></foreignObject></g></g><g transform="translate(777.0390625, 4949.171875)" class="edgeLabel"><g transform="translate(-6.078125, -12)" class="label"><foreignObject height="24" width="12.15625"><div class="labelBkg" xmlns="http://www.w3.org/1999/xhtml" style="stroke: rgb(40, 167, 69); stroke-width: 3px; display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel" style=";stroke:#6c757d;stroke-width:2px;stroke:#28a745;stroke-width:3px;color:none"><p>SÍ</p></span></div></foreignObject></g></g><g class="edgeLabel"><g transform="translate(0, 0)" class="label"><foreignObject height="0" width="0"><div class="labelBkg" xmlns="http://www.w3.org/1999/xhtml" style="stroke: rgb(108, 117, 125); stroke-width: 2px; display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel" style=";stroke:#6c757d;stroke-width:2px"></span></div></foreignObject></g></g><g transform="translate(764, 5609.34375)" class="edgeLabel"><g transform="translate(-10.5, -12)" class="label"><foreignObject height="24" width="21"><div class="labelBkg" xmlns="http://www.w3.org/1999/xhtml" style="stroke: rgb(108, 117, 125); stroke-width: 2px; display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel" style=";stroke:#6c757d;stroke-width:2px"><p>NO</p></span></div></foreignObject></g></g><g transform="translate(1259.578125, 5609.34375)" class="edgeLabel"><g transform="translate(-6.078125, -12)" class="label"><foreignObject height="24" width="12.15625"><div class="labelBkg" xmlns="http://www.w3.org/1999/xhtml" style="stroke: rgb(40, 167, 69); stroke-width: 3px; display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel" style=";stroke:#6c757d;stroke-width:2px;stroke:#28a745;stroke-width:3px;color:none"><p>SÍ</p></span></div></foreignObject></g></g><g class="edgeLabel"><g transform="translate(0, 0)" class="label"><foreignObject height="0" width="0"><div class="labelBkg" xmlns="http://www.w3.org/1999/xhtml" style="stroke: rgb(108, 117, 125); stroke-width: 2px; display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel" style=";stroke:#6c757d;stroke-width:2px"></span></div></foreignObject></g></g><g class="edgeLabel"><g transform="translate(0, 0)" class="label"><foreignObject height="0" width="0"><div class="labelBkg" xmlns="http://www.w3.org/1999/xhtml" style="stroke: rgb(108, 117, 125); stroke-width: 2px; display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel" style=";stroke:#6c757d;stroke-width:2px"></span></div></foreignObject></g></g><g class="edgeLabel"><g transform="translate(0, 0)" class="label"><foreignObject height="0" width="0"><div class="labelBkg" xmlns="http://www.w3.org/1999/xhtml" style="stroke: rgb(40, 167, 69); stroke-width: 3px; display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel" style=";stroke:#6c757d;stroke-width:2px;stroke:#28a745;stroke-width:3px;color:none"></span></div></foreignObject></g></g><g class="edgeLabel"><g transform="translate(0, 0)" class="label"><foreignObject height="0" width="0"><div class="labelBkg" xmlns="http://www.w3.org/1999/xhtml" style="stroke: rgb(108, 117, 125); stroke-width: 2px; display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel" style=";stroke:#6c757d;stroke-width:2px"></span></div></foreignObject></g></g><g class="edgeLabel"><g transform="translate(0, 0)" class="label"><foreignObject height="0" width="0"><div class="labelBkg" xmlns="http://www.w3.org/1999/xhtml" style="stroke: rgb(108, 117, 125); stroke-width: 2px; display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel" style=";stroke:#6c757d;stroke-width:2px"></span></div></foreignObject></g></g><g class="edgeLabel"><g transform="translate(0, 0)" class="label"><foreignObject height="0" width="0"><div class="labelBkg" xmlns="http://www.w3.org/1999/xhtml" style="stroke: rgb(40, 167, 69); stroke-width: 3px; display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel" style=";stroke:#6c757d;stroke-width:2px;stroke:#28a745;stroke-width:3px;color:none"></span></div></foreignObject></g></g></g><g class="nodes"><g transform="translate(293, 47)" id="flowchart-A-0" class="node default"><rect height="78" width="192.734375" y="-39" x="-96.3671875" ry="5" rx="5" style="" class="basic label-container"></rect><g transform="translate(-81.3671875, -24)" style="" class="label"><rect></rect><foreignObject height="48" width="162.734375"><div style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;" xmlns="http://www.w3.org/1999/xhtml"><span class="nodeLabel"><p>🏁 INICIO<br/>Proceso Menor Cuantía</p></span></div></foreignObject></g></g><g transform="translate(293, 199)" id="flowchart-B-2" class="node default"><rect height="126" width="260" y="-63" x="-130" style="" class="basic label-container"></rect><g transform="translate(-100, -48)" style="" class="label"><rect></rect><foreignObject height="96" width="200"><div style="display: table; white-space: break-spaces; line-height: 1.5; max-width: 200px; text-align: center; width: 200px;" xmlns="http://www.w3.org/1999/xhtml"><span class="nodeLabel"><p>📋 COORDINADOR DE PROYECTO<br/>Elabora memo de inicio con justificación técnica</p></span></div></foreignObject></g></g><g transform="translate(293, 351)" id="flowchart-C-4" class="node default"><rect height="78" width="244" y="-39" x="-122" style="" class="basic label-container"></rect><g transform="translate(-92, -24)" style="" class="label"><rect></rect><foreignObject height="48" width="184"><div style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;" xmlns="http://www.w3.org/1999/xhtml"><span class="nodeLabel"><p>👤 DIRECCIÓN EJECUTIVA<br/>Revisa y evalúa solicitud</p></span></div></foreignObject></g></g><g transform="translate(293, 547.2265625)" id="flowchart-D-6" class="node default"><polygon transform="translate(-107.2265625,107.2265625)" class="label-container" points="107.2265625,0 214.453125,-107.2265625 107.2265625,-214.453125 0,-107.2265625"></polygon><g transform="translate(-80.2265625, -12)" style="" class="label"><rect></rect><foreignObject height="24" width="160.453125"><div style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;" xmlns="http://www.w3.org/1999/xhtml"><span class="nodeLabel"><p>❓ ¿Autoriza el inicio?</p></span></div></foreignObject></g></g><g transform="translate(138, 803.453125)" id="flowchart-E-8" class="node default"><rect height="102" width="260" y="-51" x="-130" style="" class="basic label-container"></rect><g transform="translate(-100, -36)" style="" class="label"><rect></rect><foreignObject height="72" width="200"><div style="display: table; white-space: break-spaces; line-height: 1.5; max-width: 200px; text-align: center; width: 200px;" xmlns="http://www.w3.org/1999/xhtml"><span class="nodeLabel"><p>↩️ Devuelve para justificación adicional<br/>o archiva el proceso</p></span></div></foreignObject></g></g><g transform="translate(448, 803.453125)" id="flowchart-F-10" class="node default"><rect height="150" width="260" y="-75" x="-130" style="" class="basic label-container"></rect><g transform="translate(-100, -60)" style="" class="label"><rect></rect><foreignObject height="120" width="200"><div style="display: table; white-space: break-spaces; line-height: 1.5; max-width: 200px; text-align: center; width: 200px;" xmlns="http://www.w3.org/1999/xhtml"><span class="nodeLabel"><p>📄 UNIDAD REQUIRENTE<br/>Elabora Términos de Referencia detallados<br/>con línea presupuestaria específica</p></span></div></foreignObject></g></g><g transform="translate(575.73046875, 979.453125)" id="flowchart-G-12" class="node default"><rect height="102" width="260" y="-51" x="-130" style="" class="basic label-container"></rect><g transform="translate(-100, -36)" style="" class="label"><rect></rect><foreignObject height="72" width="200"><div style="display: table; white-space: break-spaces; line-height: 1.5; max-width: 200px; text-align: center; width: 200px;" xmlns="http://www.w3.org/1999/xhtml"><span class="nodeLabel"><p>👥 COORDINADOR/DIRECTOR<br/>Revisa completitud de TdR</p></span></div></foreignObject></g></g><g transform="translate(575.73046875, 1179.6015625)" id="flowchart-H-14" class="node default"><polygon transform="translate(-99.1484375,99.1484375)" class="label-container" points="99.1484375,0 198.296875,-99.1484375 99.1484375,-198.296875 0,-99.1484375"></polygon><g transform="translate(-72.1484375, -12)" style="" class="label"><rect></rect><foreignObject height="24" width="144.296875"><div style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;" xmlns="http://www.w3.org/1999/xhtml"><span class="nodeLabel"><p>❓ ¿TdR aprobados?</p></span></div></foreignObject></g></g><g transform="translate(293, 1415.75)" id="flowchart-I-16" class="node default"><rect height="126" width="260" y="-63" x="-130" style="" class="basic label-container"></rect><g transform="translate(-100, -48)" style="" class="label"><rect></rect><foreignObject height="96" width="200"><div style="display: table; white-space: break-spaces; line-height: 1.5; max-width: 200px; text-align: center; width: 200px;" xmlns="http://www.w3.org/1999/xhtml"><span class="nodeLabel"><p>↩️ Devuelve para correcciones<br/>Máximo 2 iteraciones permitidas</p></span></div></foreignObject></g></g><g transform="translate(603, 1415.75)" id="flowchart-J-20" class="node default"><rect height="102" width="260" y="-51" x="-130" style="" class="basic label-container"></rect><g transform="translate(-100, -36)" style="" class="label"><rect></rect><foreignObject height="72" width="200"><div style="display: table; white-space: break-spaces; line-height: 1.5; max-width: 200px; text-align: center; width: 200px;" xmlns="http://www.w3.org/1999/xhtml"><span class="nodeLabel"><p>💸 UNIDAD REQUIRENTE<br/>Solicita certificación presupuestaria formal</p></span></div></foreignObject></g></g><g transform="translate(603, 1615.75)" id="flowchart-K-22" class="node default"><rect height="174" width="260" y="-87" x="-130" style="" class="basic label-container"></rect><g transform="translate(-100, -72)" style="" class="label"><rect></rect><foreignObject height="144" width="200"><div style="display: table; white-space: break-spaces; line-height: 1.5; max-width: 200px; text-align: center; width: 200px;" xmlns="http://www.w3.org/1999/xhtml"><span class="nodeLabel"><p>💰 GERENCIA ADMINISTRATIVA FINANCIERA<br/>Verifica disponibilidad presupuestaria<br/>en partida correspondiente</p></span></div></foreignObject></g></g><g transform="translate(603, 1891.75)" id="flowchart-L-24" class="node default"><polygon transform="translate(-139,139)" class="label-container" points="139,0 278,-139 139,-278 0,-139"></polygon><g transform="translate(-100, -24)" style="" class="label"><rect></rect><foreignObject height="48" width="200"><div style="display: table; white-space: break-spaces; line-height: 1.5; max-width: 200px; text-align: center; width: 200px;" xmlns="http://www.w3.org/1999/xhtml"><span class="nodeLabel"><p>❓ ¿Existe disponibilidad presupuestaria?</p></span></div></foreignObject></g></g><g transform="translate(448, 2167.75)" id="flowchart-M-26" class="node default"><rect height="126" width="260" y="-63" x="-130" style="" class="basic label-container"></rect><g transform="translate(-100, -48)" style="" class="label"><rect></rect><foreignObject height="96" width="200"><div style="display: table; white-space: break-spaces; line-height: 1.5; max-width: 200px; text-align: center; width: 200px;" xmlns="http://www.w3.org/1999/xhtml"><span class="nodeLabel"><p>⚠️ Reformular proyecto o presupuesto<br/>Suspender proceso temporalmente</p></span></div></foreignObject></g></g><g transform="translate(758, 2167.75)" id="flowchart-N-28" class="node default"><rect height="126" width="260" y="-63" x="-130" style="" class="basic label-container"></rect><g transform="translate(-100, -48)" style="" class="label"><rect></rect><foreignObject height="96" width="200"><div style="display: table; white-space: break-spaces; line-height: 1.5; max-width: 200px; text-align: center; width: 200px;" xmlns="http://www.w3.org/1999/xhtml"><span class="nodeLabel"><p>📧 ORDENADOR DE GASTO<br/>Solicita mínimo 3 cotizaciones<br/>a proveedores potenciales</p></span></div></foreignObject></g></g><g transform="translate(907.75, 2419.75)" id="flowchart-O-30" class="node default"><polygon transform="translate(-139,139)" class="label-container" points="139,0 278,-139 139,-278 0,-139"></polygon><g transform="translate(-100, -24)" style="" class="label"><rect></rect><foreignObject height="48" width="200"><div style="display: table; white-space: break-spaces; line-height: 1.5; max-width: 200px; text-align: center; width: 200px;" xmlns="http://www.w3.org/1999/xhtml"><span class="nodeLabel"><p>❓ ¿Se obtuvieron 3+ cotizaciones válidas?</p></span></div></foreignObject></g></g><g transform="translate(616.0390625, 2695.75)" id="flowchart-P-32" class="node default"><rect height="126" width="260" y="-63" x="-130" style="" class="basic label-container"></rect><g transform="translate(-100, -48)" style="" class="label"><rect></rect><foreignObject height="96" width="200"><div style="display: table; white-space: break-spaces; line-height: 1.5; max-width: 200px; text-align: center; width: 200px;" xmlns="http://www.w3.org/1999/xhtml"><span class="nodeLabel"><p>📊 Elaborar estudio de mercado justificativo<br/>con menos de 3 cotizaciones</p></span></div></foreignObject></g></g><g transform="translate(926.0390625, 2695.75)" id="flowchart-Q-36" class="node default"><rect height="126" width="260" y="-63" x="-130" style="" class="basic label-container"></rect><g transform="translate(-100, -48)" style="" class="label"><rect></rect><foreignObject height="96" width="200"><div style="display: table; white-space: break-spaces; line-height: 1.5; max-width: 200px; text-align: center; width: 200px;" xmlns="http://www.w3.org/1999/xhtml"><span class="nodeLabel"><p>📊 UNIDAD REQUIRENTE<br/>Elabora cuadro comparativo detallado<br/>de ofertas recibidas</p></span></div></foreignObject></g></g><g transform="translate(1073.25, 2959.75)" id="flowchart-R-38" class="node default"><polygon transform="translate(-151,151)" class="label-container" points="151,0 302,-151 151,-302 0,-151"></polygon><g transform="translate(-100, -36)" style="" class="label"><rect></rect><foreignObject height="72" width="200"><div style="display: table; white-space: break-spaces; line-height: 1.5; max-width: 200px; text-align: center; width: 200px;" xmlns="http://www.w3.org/1999/xhtml"><span class="nodeLabel"><p>❓ ¿Existe un ganador claro<br/>en base a especificaciones?</p></span></div></foreignObject></g></g><g transform="translate(760.5390625, 3335.75)" id="flowchart-S-40" class="node default"><rect height="102" width="260" y="-51" x="-130" style="" class="basic label-container"></rect><g transform="translate(-100, -36)" style="" class="label"><rect></rect><foreignObject height="72" width="200"><div style="display: table; white-space: break-spaces; line-height: 1.5; max-width: 200px; text-align: center; width: 200px;" xmlns="http://www.w3.org/1999/xhtml"><span class="nodeLabel"><p>🔄 Solicitar nueva cotización adicional<br/>a proveedores alternativos</p></span></div></foreignObject></g></g><g transform="translate(1091.5390625, 3335.75)" id="flowchart-T-44" class="node default"><polygon transform="translate(-151,151)" class="label-container" points="151,0 302,-151 151,-302 0,-151"></polygon><g transform="translate(-100, -36)" style="" class="label"><rect></rect><foreignObject height="72" width="200"><div style="display: table; white-space: break-spaces; line-height: 1.5; max-width: 200px; text-align: center; width: 200px;" xmlns="http://www.w3.org/1999/xhtml"><span class="nodeLabel"><p>❓ ¿El bien/servicio requiere<br/>contrato formal?</p></span></div></foreignObject></g></g><g transform="translate(1246.5390625, 4538.59375)" id="flowchart-U-46" class="node default"><rect height="150" width="260" y="-75" x="-130" style="" class="basic label-container"></rect><g transform="translate(-100, -60)" style="" class="label"><rect></rect><foreignObject height="120" width="200"><div style="display: table; white-space: break-spaces; line-height: 1.5; max-width: 200px; text-align: center; width: 200px;" xmlns="http://www.w3.org/1999/xhtml"><span class="nodeLabel"><p>📑 UNIDAD REQUIRENTE<br/>Elabora orden de compra/servicio<br/>basado en cotización ganadora</p></span></div></foreignObject></g></g><g transform="translate(1246.5390625, 4787.8828125)" id="flowchart-V-48" class="node default"><rect height="150" width="260" y="-75" x="-130" style="" class="basic label-container"></rect><g transform="translate(-100, -60)" style="" class="label"><rect></rect><foreignObject height="120" width="200"><div style="display: table; white-space: break-spaces; line-height: 1.5; max-width: 200px; text-align: center; width: 200px;" xmlns="http://www.w3.org/1999/xhtml"><span class="nodeLabel"><p>✅ GERENCIA ADMINISTRATIVA FINANCIERA<br/>Revisa y aprueba orden de compra</p></span></div></foreignObject></g></g><g transform="translate(1246.5390625, 5125.171875)" id="flowchart-W-50" class="node default"><polygon transform="translate(-139,139)" class="label-container" points="139,0 278,-139 139,-278 0,-139"></polygon><g transform="translate(-100, -24)" style="" class="label"><rect></rect><foreignObject height="48" width="200"><div style="display: table; white-space: break-spaces; line-height: 1.5; max-width: 200px; text-align: center; width: 200px;" xmlns="http://www.w3.org/1999/xhtml"><span class="nodeLabel"><p>❓ ¿Orden de compra aprobada?</p></span></div></foreignObject></g></g><g transform="translate(317.2890625, 5455.2578125)" id="flowchart-X-52" class="node default"><rect height="102" width="260" y="-51" x="-130" style="" class="basic label-container"></rect><g transform="translate(-100, -36)" style="" class="label"><rect></rect><foreignObject height="72" width="200"><div style="display: table; white-space: break-spaces; line-height: 1.5; max-width: 200px; text-align: center; width: 200px;" xmlns="http://www.w3.org/1999/xhtml"><span class="nodeLabel"><p>↩️ Devuelve para correcciones<br/>y ajustes necesarios</p></span></div></foreignObject></g></g><g transform="translate(1246.5390625, 5455.2578125)" id="flowchart-Y-56" class="node default"><rect height="150" width="260" y="-75" x="-130" style="" class="basic label-container"></rect><g transform="translate(-100, -60)" style="" class="label"><rect></rect><foreignObject height="120" width="200"><div style="display: table; white-space: break-spaces; line-height: 1.5; max-width: 200px; text-align: center; width: 200px;" xmlns="http://www.w3.org/1999/xhtml"><span class="nodeLabel"><p>📧 NOTIFICACIÓN AL PROVEEDOR GANADOR<br/>Envío formal de orden de compra<br/>con condiciones y plazos</p></span></div></foreignObject></g></g><g transform="translate(936.5390625, 3623.75)" id="flowchart-Z-58" class="node default"><rect height="126" width="260" y="-63" x="-130" style="" class="basic label-container"></rect><g transform="translate(-100, -48)" style="" class="label"><rect></rect><foreignObject height="96" width="200"><div style="display: table; white-space: break-spaces; line-height: 1.5; max-width: 200px; text-align: center; width: 200px;" xmlns="http://www.w3.org/1999/xhtml"><span class="nodeLabel"><p>📧 UNIDAD REQUIRENTE<br/>Notifica adjudicación formal<br/>al oferente ganador</p></span></div></foreignObject></g></g><g transform="translate(936.5390625, 3811.75)" id="flowchart-AA-60" class="node default"><rect height="150" width="260" y="-75" x="-130" style="" class="basic label-container"></rect><g transform="translate(-100, -60)" style="" class="label"><rect></rect><foreignObject height="120" width="200"><div style="display: table; white-space: break-spaces; line-height: 1.5; max-width: 200px; text-align: center; width: 200px;" xmlns="http://www.w3.org/1999/xhtml"><span class="nodeLabel"><p>📄 SOLICITUD DE BORRADOR<br/>Solicita elaboración de borrador<br/>de contrato a proveedor</p></span></div></foreignObject></g></g><g transform="translate(936.5390625, 4035.75)" id="flowchart-AB-62" class="node default"><rect height="150" width="260" y="-75" x="-130" style="" class="basic label-container"></rect><g transform="translate(-100, -60)" style="" class="label"><rect></rect><foreignObject height="120" width="200"><div style="display: table; white-space: break-spaces; line-height: 1.5; max-width: 200px; text-align: center; width: 200px;" xmlns="http://www.w3.org/1999/xhtml"><span class="nodeLabel"><p>⚖️ DIRECCIÓN ADMINISTRATIVA<br/>Envía borrador para revisión jurídica<br/>completa del contrato</p></span></div></foreignObject></g></g><g transform="translate(1016.828125, 4275.171875)" id="flowchart-AC-64" class="node default"><polygon transform="translate(-114.421875,114.421875)" class="label-container" points="114.421875,0 228.84375,-114.421875 114.421875,-228.84375 0,-114.421875"></polygon><g transform="translate(-75.421875, -24)" style="" class="label"><rect></rect><foreignObject height="48" width="150.84375"><div style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;" xmlns="http://www.w3.org/1999/xhtml"><span class="nodeLabel"><p>❓ ¿Revisión jurídica<br/>sin observaciones?</p></span></div></foreignObject></g></g><g transform="translate(936.5390625, 4538.59375)" id="flowchart-AD-66" class="node default"><rect height="126" width="260" y="-63" x="-130" style="" class="basic label-container"></rect><g transform="translate(-100, -48)" style="" class="label"><rect></rect><foreignObject height="96" width="200"><div style="display: table; white-space: break-spaces; line-height: 1.5; max-width: 200px; text-align: center; width: 200px;" xmlns="http://www.w3.org/1999/xhtml"><span class="nodeLabel"><p>🔄 Realizar ajustes contractuales<br/>y reenviar para nueva revisión</p></span></div></foreignObject></g></g><g transform="translate(622.0390625, 4538.59375)" id="flowchart-AE-70" class="node default"><rect height="150" width="260" y="-75" x="-130" style="" class="basic label-container"></rect><g transform="translate(-100, -60)" style="" class="label"><rect></rect><foreignObject height="120" width="200"><div style="display: table; white-space: break-spaces; line-height: 1.5; max-width: 200px; text-align: center; width: 200px;" xmlns="http://www.w3.org/1999/xhtml"><span class="nodeLabel"><p>🏦 UNIDAD REQUIRENTE<br/>Gestiona recepción de garantías<br/>contractuales del proveedor</p></span></div></foreignObject></g></g><g transform="translate(758.75, 4787.8828125)" id="flowchart-AF-72" class="node default"><polygon transform="translate(-124.2890625,124.2890625)" class="label-container" points="124.2890625,0 248.578125,-124.2890625 124.2890625,-248.578125 0,-124.2890625"></polygon><g transform="translate(-85.2890625, -24)" style="" class="label"><rect></rect><foreignObject height="48" width="170.578125"><div style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;" xmlns="http://www.w3.org/1999/xhtml"><span class="nodeLabel"><p>❓ ¿Garantías recibidas<br/>son conformes?</p></span></div></foreignObject></g></g><g transform="translate(467.0390625, 5125.171875)" id="flowchart-AG-74" class="node default"><rect height="126" width="260" y="-63" x="-130" style="" class="basic label-container"></rect><g transform="translate(-100, -48)" style="" class="label"><rect></rect><foreignObject height="96" width="200"><div style="display: table; white-space: break-spaces; line-height: 1.5; max-width: 200px; text-align: center; width: 200px;" xmlns="http://www.w3.org/1999/xhtml"><span class="nodeLabel"><p>🔄 Solicitar corrección de garantías<br/>Máximo 2 intentos permitidos</p></span></div></foreignObject></g></g><g transform="translate(777.0390625, 5125.171875)" id="flowchart-AH-78" class="node default"><rect height="126" width="260" y="-63" x="-130" style="" class="basic label-container"></rect><g transform="translate(-100, -48)" style="" class="label"><rect></rect><foreignObject height="96" width="200"><div style="display: table; white-space: break-spaces; line-height: 1.5; max-width: 200px; text-align: center; width: 200px;" xmlns="http://www.w3.org/1999/xhtml"><span class="nodeLabel"><p>✍️ FIRMA DEL CONTRATO<br/>Dirección Ejecutiva y Proveedor<br/>firman contrato formal</p></span></div></foreignObject></g></g><g transform="translate(777.0390625, 5455.2578125)" id="flowchart-AI-80" class="node default"><polygon transform="translate(-117.0859375,117.0859375)" class="label-container" points="117.0859375,0 234.171875,-117.0859375 117.0859375,-234.171875 0,-117.0859375"></polygon><g transform="translate(-78.0859375, -24)" style="" class="label"><rect></rect><foreignObject height="48" width="156.171875"><div style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;" xmlns="http://www.w3.org/1999/xhtml"><span class="nodeLabel"><p>❓ ¿Contrato firmado<br/>exitosamente?</p></span></div></foreignObject></g></g><g transform="translate(764, 5709.34375)" id="flowchart-AJ-82" class="node default"><rect height="126" width="260" y="-63" x="-130" style="" class="basic label-container"></rect><g transform="translate(-100, -48)" style="" class="label"><rect></rect><foreignObject height="96" width="200"><div style="display: table; white-space: break-spaces; line-height: 1.5; max-width: 200px; text-align: center; width: 200px;" xmlns="http://www.w3.org/1999/xhtml"><span class="nodeLabel"><p>❌ Declarar proceso fallido<br/>Adjudicar al segundo mejor oferente<br/>o reiniciar proceso</p></span></div></foreignObject></g></g><g transform="translate(1246.5390625, 5709.34375)" id="flowchart-AK-84" class="node default"><rect height="54" width="78.65625" y="-27" x="-39.328125" style="" class="basic label-container"></rect><g transform="translate(-9.328125, -12)" style="" class="label"><rect></rect><foreignObject height="24" width="18.65625"><div style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;" xmlns="http://www.w3.org/1999/xhtml"><span class="nodeLabel"><p>EJECUCIÓN</p></span></div></foreignObject></g></g><g transform="translate(1246.5390625, 5909.34375)" id="flowchart-AL-88" class="node default"><rect height="174" width="260" y="-87" x="-130" style="" class="basic label-container"></rect><g transform="translate(-100, -72)" style="" class="label"><rect></rect><foreignObject height="144" width="200"><div style="display: table; white-space: break-spaces; line-height: 1.5; max-width: 200px; text-align: center; width: 200px;" xmlns="http://www.w3.org/1999/xhtml"><span class="nodeLabel"><p>⚙️ EJECUCIÓN Y MONITOREO<br/>Seguimiento a la implementación<br/>del bien/servicio contratado</p></span></div></foreignObject></g></g><g transform="translate(1246.5390625, 6121.34375)" id="flowchart-AM-90" class="node default"><rect height="150" width="260" y="-75" x="-130" style="" class="basic label-container"></rect><g transform="translate(-100, -60)" style="" class="label"><rect></rect><foreignObject height="120" width="200"><div style="display: table; white-space: break-spaces; line-height: 1.5; max-width: 200px; text-align: center; width: 200px;" xmlns="http://www.w3.org/1999/xhtml"><span class="nodeLabel"><p>📦 RECEPCIÓN Y VERIFICACIÓN<br/>Revisión de conformidad<br/>de bienes/servicios recibidos</p></span></div></foreignObject></g></g><g transform="translate(1246.5390625, 6297.34375)" id="flowchart-AN-92" class="node default"><rect height="102" width="257.890625" y="-51" x="-128.9453125" style="" class="basic label-container"></rect><g transform="translate(-98.9453125, -36)" style="" class="label"><rect></rect><foreignObject height="72" width="197.890625"><div style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;" xmlns="http://www.w3.org/1999/xhtml"><span class="nodeLabel"><p>💳 PROCESO DE PAGO<br/>Gestación de desembolso<br/>según condiciones pactadas</p></span></div></foreignObject></g></g><g transform="translate(1246.5390625, 6449.34375)" id="flowchart-AO-94" class="node default"><rect height="102" width="258.34375" y="-51" x="-129.171875" style="" class="basic label-container"></rect><g transform="translate(-99.171875, -36)" style="" class="label"><rect></rect><foreignObject height="72" width="198.34375"><div style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;" xmlns="http://www.w3.org/1999/xhtml"><span class="nodeLabel"><p>📁 CIERRE ADMINISTRATIVO<br/>Archivo de documentación<br/>y cierre del proceso</p></span></div></foreignObject></g></g><g transform="translate(1246.5390625, 6613.34375)" id="flowchart-AP-96" class="node default"><rect height="126" width="230" y="-63" x="-115" ry="5" rx="5" style="" class="basic label-container"></rect><g transform="translate(-100, -48)" style="" class="label"><rect></rect><foreignObject height="96" width="200"><div style="display: table; white-space: break-spaces; line-height: 1.5; max-width: 200px; text-align: center; width: 200px;" xmlns="http://www.w3.org/1999/xhtml"><span class="nodeLabel"><p>✅ FIN DEL PROCESO<br/>Contratación Menor Cuantía<br/>Completado Exitosamente</p></span></div></foreignObject></g></g></g></g><marker orient="auto" markerHeight="8" markerWidth="8" markerUnits="userSpaceOnUse" refY="5" refX="5" viewBox="0 0 10 10" class="marker flowchart-v2" id="mermaid-svg-650_flowchart-v2-pointEnd__6c757d"><path fill="#6c757d" stroke="#6c757d" style="stroke-width: 1; stroke-dasharray: 1, 0;" class="arrowMarkerPath" d="M 0 0 L 10 5 L 0 10 z"></path></marker></g></svg>
-
-
-
-
-
- <!-- <div class="mermaid" id="mermaidMenor"></div> -->
+                               <img src="https://raw.githubusercontent.com/jaircruz1304/FIAS/main/MC.svg" alt="Flujograma Menor Cuantía" class="img-fluid" style="width: 100%;">
+                           
+                        </div>
                         <div class="info-panel">
                             <h4 class="info-title"><i class="fas fa-info-circle me-2"></i>Información del Proceso</h4>
                             <div class="step-info">
-                                <div class="step-title">Menor Cuantía (Hasta USD 2.000)</div>
-                                <p class="step-desc">Proceso simplificado para contrataciones de menor valor.</p>
-                                <div class="responsable"><i class="fas fa-user me-1"></i>Responsables: Requirente, Dirección Administrativa, Ordenador de Gasto</div>
+                                <div class="step-title">Menor Cuantía - Bienes y Servicios (Hasta USD 2.000)</div>
+                                <p class="step-desc">Proceso simplificado para contrataciones de menor valor. No aplica para consultorías.</p>
+                                <div class="responsable"><i class="fas fa-user me-1"></i>Responsables: Unidad Requirente, GAF, Dirección Ejecutiva</div>
                             </div>
                         </div>
                     </div>
-                </div>
+                
             </section>
             
+            <!-- LISTA CORTA -->
             <section class="tab-pane fade" id="lista" role="tabpanel" aria-labelledby="lista-tab">
                 <div class="process-content">
                     <h2 class="process-title">
-                        <i class="fas fa-list-ol me-2"></i> Lista Corta
+                        <i class="fas fa-list-ol me-2"></i> Lista Corta - Bienes y Servicios
                         <span class="process-badge">USD 2.001 - 10.000</span>
                     </h2>
                     
@@ -512,25 +529,22 @@
                                 <div class="process-step">
                                     <span class="step-icon"><i class="fas fa-file-alt"></i></span>
                                     <div class="step-content">
-                                        <div>Memo de inicio del proceso</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Coordinador de Proyecto</div>
+                                        <div>Memo de inicio del proceso con TdR/ET y línea presupuestaria</div>
+                                        <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
                                     </div>
                                 </div>
-
-<div class="process-step">
+                                <div class="process-step">
                                     <span class="step-icon"><i class="fas fa-file-alt"></i></span>
                                     <div class="step-content">
-                                        <div>3 cotizaciones</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Requirente</div>
+                                        <div>Adjuntar 3 cotizaciones</div>
+                                        <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
                                     </div>
                                 </div>
-
-
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-tasks"></i></span>
+                                    <span class="step-icon"><i class="fas fa-check-circle"></i></span>
                                     <div class="step-content">
-                                        <div>Elaboración de TdR con línea presupuestaria</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Requirente</div>
+                                        <div>Autorización de inicio del proceso</div>
+                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Ejecutiva</div>
                                     </div>
                                 </div>
                             </div>
@@ -545,35 +559,35 @@
                                     <span class="step-icon"><i class="fas fa-file-invoice-dollar"></i></span>
                                     <div class="step-content">
                                         <div>Certificación presupuestaria</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Administrativa</div>
+                                        <div class="responsable"><i class="fas fa-user me-1"></i> Gerencia Administrativa Financiera (GAF)</div>
                                     </div>
                                 </div>
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-envelope"></i></span>
+                                    <span class="step-icon"><i class="fas fa-clipboard-list"></i></span>
                                     <div class="step-content">
-                                        <div>Invitación a 3-6 oferentes</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Comisión de Calificación</div>
+                                        <div>Elaboración de cuadro comparativo con las 3 cotizaciones</div>
+                                        <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
                                     </div>
                                 </div>
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-inbox"></i></span>
+                                    <span class="step-icon"><i class="fas fa-check-double"></i></span>
                                     <div class="step-content">
-                                        <div>Recepción de ofertas</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Comisión de Calificación</div>
+                                        <div>Validación y adjudicación</div>
+                                        <div class="responsable"><i class="fas fa-user me-1"></i> GAF</div>
                                     </div>
                                 </div>
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-chart-bar"></i></span>
+                                    <span class="step-icon"><i class="fas fa-file-purchase"></i></span>
                                     <div class="step-content">
-                                        <div>Cuadro comparativo firmado</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Comisión de Calificación</div>
+                                        <div>Emisión de orden de compra/servicio (adjudicación)</div>
+                                        <div class="responsable"><i class="fas fa-user me-1"></i> GAF</div>
                                     </div>
                                 </div>
                                 <div class="process-step">
                                     <span class="step-icon"><i class="fas fa-bell"></i></span>
                                     <div class="step-content">
-                                        <div>Notificación al oferente ganador</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Administrativa</div>
+                                        <div>Notificación al adjudicatario</div>
+                                        <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
                                     </div>
                                 </div>
                             </div>
@@ -590,183 +604,168 @@
                                         <div>¿Hay anticipo?</div>
                                         <div>→ Sí:</div>
                                         <div class="ms-3">
-                                            - Solicitud de borrador de contrato<br>
-                                            - Recepción de garantía<br>
-                                            - Firma de contrato
-                                        </div><div>→ No: Orden de compra o servicio</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Ejecutiva / Dirección Administrativa</div>
+                                            - Elaboración de contrato por Asesoría Jurídica<br>
+                                            - Recepción de garantías (100% del anticipo)<br>
+                                            - Firma de contrato por Dirección Ejecutiva
+                                        </div>
+                                        <div>→ No: Orden de compra/servicio</div>
+                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Ejecutiva / GAF</div>
+                                    </div>
+                                </div>
+                                <div class="process-step">
+                                    <span class="step-icon"><i class="fas fa-shield-alt"></i></span>
+                                    <div class="step-content">
+                                        <div>Custodia de garantías</div>
+                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Administrativa y RRHH</div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="process-content">
-                    <h2 class="process-title">
-                        <i class="fas fa-list-ol me-2"></i> Lista Corta - Consultoría
-                        <span class="process-badge">USD 2.001 - 10.000</span>
-                    </h2>
-                    
-                    <div class="stages-container">
-                        <div class="stage-card">
-                            <div class="card-header inicio-header">
-                                <i class="fas fa-flag me-2"></i> Etapa de Inicio
-                            </div>
-                            <div class="card-body p-0">
-                                <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-file-alt"></i></span>
-                                    <div class="step-content">
-                                        <div>Memo de inicio del proceso</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Coordinador de Proyecto</div>
-                                    </div>
-                                </div>
-
-<div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-file-alt"></i></span>
-                                    <div class="step-content">
-                                        <div>3 a 6 oferentes</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Requirente</div>
-                                    </div>
-                                </div>
-
-
-                                <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-tasks"></i></span>
-                                    <div class="step-content">
-                                        <div>Elaboración de TdR con línea presupuestaria</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Requirente</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="stage-card">
-                            <div class="card-header precontractual-header">
-                                <i class="fas fa-handshake me-2"></i> Etapa Precontractual
-                            </div>
-                            <div class="card-body p-0">
-                                <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-file-invoice-dollar"></i></span>
-                                    <div class="step-content">
-                                        <div>Certificación presupuestaria</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Administrativa</div>
-                                    </div>
-                                </div>
-
-<div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-calendar"></i></span>
-                                    <div class="step-content">
-                                        <div>Bases y cronograma</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Administrativa</div>
-                                    </div>
-                                </div>
-
-                                <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-envelope"></i></span>
-                                    <div class="step-content">
-                                        <div>Invitación a 3-6 oferentes</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Comisión de Calificación</div>
-                                    </div>
-                                </div>
-                                <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-inbox"></i></span>
-                                    <div class="step-content">
-                                        <div>Recepción de ofertas (Mínimo 5 días).</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Comisión de Calificación</div>
-                                    </div>
-                                </div>
-                                <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-chart-bar"></i></span>
-                                    <div class="step-content">
-                                        <div>Acta de Comisión de Calificación</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Comisión de Calificación</div>
-                                    </div>
-                                </div>
-                                <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-bell"></i></span>
-                                    <div class="step-content">
-                                        <div>Notificación al oferente ganador</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Administrativa</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="stage-card">
-                            <div class="card-header contractual-header">
-                                <i class="fas fa-file-contract me-2"></i> Etapa Contractual
-                            </div>
-                            <div class="card-body p-0">
-                                <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-question"></i></span>
-                                    <div class="step-content">
-                                        <div>¿Hay anticipo?</div>
-                                        <div>→ Sí:</div>
-                                        <div class="ms-3">
-                                            - Solicitud de borrador de contrato<br>
-                                            - Recepción de garantía<br>
-                                            - Firma de contrato
-                                        </div><div>→ No: Orden de compra o servicio</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Ejecutiva / Dirección Administrativa</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-                    
                     <div class="flujograma-container">
-                        <h4 class="flujograma-title"><i class="fas fa-project-diagram me-2"></i>Flujograma: Lista Corta</h4>
-                        <div class="mermaid" id="mermaidLista"></div>
-                        <div class="info-panel">
-                            <h4 class="info-title"><i class="fas fa-info-circle me-2"></i>Información del Proceso</h4>
-                            <div class="step-info">
-                                <div class="step-title">Lista Corta (USD 2.001 - 10.000)</div>
-                                <p class="step-desc">Proceso para contrataciones de valor medio mediante lista corta de proveedores.</p>
-                                <div class="responsable"><i class="fas fa-user me-1"></i>Responsables: Comisión de Calificación, Dirección Administrativa</div>
+                        <h4 class="flujograma-title"><i class="fas fa-project-diagram me-2"></i>Flujograma: Lista Corta - Bienes y Servicios</h4>
+                        <img src="https://raw.githubusercontent.com/jaircruz1304/FIAS/main/LC.svg" alt="Flujograma Menor Cuantía" class="img-fluid" style="width: 100%;">
+
+                    </div>
+
+                    <div class="process-content mt-4">
+                        <h2 class="process-title">
+                            <i class="fas fa-list-ol me-2"></i> Lista Corta - Consultorías
+                            <span class="process-badge">USD 2.001 - 10.000</span>
+                        </h2>
+                        
+                        <div class="stages-container">
+                            <div class="stage-card">
+                                <div class="card-header inicio-header">
+                                    <i class="fas fa-flag me-2"></i> Etapa de Inicio
+                                </div>
+                                <div class="card-body p-0">
+                                    <div class="process-step">
+                                        <span class="step-icon"><i class="fas fa-file-alt"></i></span>
+                                        <div class="step-content">
+                                            <div>Memo de inicio del proceso con TdR (productos, metodología, perfiles, cronograma, línea presupuestaria)</div>
+                                            <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
+                                        </div>
+                                    </div>
+                                    <div class="process-step">
+                                        <span class="step-icon"><i class="fas fa-users"></i></span>
+                                        <div class="step-content">
+                                            <div>Lista corta de consultores (3-6)</div>
+                                            <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
+                                        </div>
+                                    </div>
+                                    <div class="process-step">
+                                        <span class="step-icon"><i class="fas fa-check-circle"></i></span>
+                                        <div class="step-content">
+                                            <div>Autorización de inicio del proceso</div>
+                                            <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Ejecutiva</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="stage-card">
+                                <div class="card-header precontractual-header">
+                                    <i class="fas fa-handshake me-2"></i> Etapa Precontractual
+                                </div>
+                                <div class="card-body p-0">
+                                    <div class="process-step">
+                                        <span class="step-icon"><i class="fas fa-file-invoice-dollar"></i></span>
+                                        <div class="step-content">
+                                            <div>Certificación presupuestaria</div>
+                                            <div class="responsable"><i class="fas fa-user me-1"></i> Gerencia Administrativa Financiera (GAF)</div>
+                                        </div>
+                                    </div>
+                                    <div class="process-step">
+                                        <span class="step-icon"><i class="fas fa-file-alt"></i></span>
+                                        <div class="step-content">
+                                            <div>Elaboración de bases y cronograma</div>
+                                            <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
+                                        </div>
+                                    </div>
+					<div class="process-step">
+                                        <span class="step-icon"><i class="fas fa-envelope"></i></span>
+                                        <div class="step-content">
+                                            <div>Invitación a consultores de la lista corta (carta, TdR, formato de propuesta)</div>
+                                            <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
+                                        </div>
+                                    </div>
+				<div class="process-step">
+                                        <span class="step-icon"><i class="fas fa-envelope"></i></span>
+                                        <div class="step-content">
+                                            <div>Recepción de ofertas (Mínimo 5 días)</div>
+                                            <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="process-step">
+                                        <span class="step-icon"><i class="fas fa-clipboard-check"></i></span>
+                                        <div class="step-content">
+                                            <div>Evaluación de propuestas (técnica y económica)-Calificación</div>
+                                            <div class="responsable"><i class="fas fa-user me-1"></i> Comité de Evaluación</div>
+                                        </div>
+                                    </div>
+                                    <div class="process-step">
+                                        <span class="step-icon"><i class="fas fa-trophy"></i></span>
+                                        <div class="step-content">
+                                            <div>Adjudicación</div>
+                                            <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Ejecutiva</div>
+                                        </div>
+                                    </div>
+                                    <div class="process-step">
+                                        <span class="step-icon"><i class="fas fa-bell"></i></span>
+                                        <div class="step-content">
+                                            <div>Notificación al adjudicatario</div>
+                                            <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="stage-card">
+                                <div class="card-header contractual-header">
+                                    <i class="fas fa-file-contract me-2"></i> Etapa Contractual
+                                </div>
+                                <div class="card-body p-0">
+                                    <div class="process-step">
+                                        <span class="step-icon"><i class="fas fa-file-signature"></i></span>
+                                        <div class="step-content">
+                                            <div>Elaboración de contrato</div>
+                                            <div class="responsable"><i class="fas fa-user me-1"></i> Asesoría Jurídica</div>
+                                        </div>
+                                    </div>
+                                    <div class="process-step">
+                                        <span class="step-icon"><i class="fas fa-shield-alt"></i></span>
+                                        <div class="step-content">
+                                            <div>Recepción de garantías (si aplica)</div>
+                                            <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Administrativa y RRHH</div>
+                                        </div>
+                                    </div>
+                                    <div class="process-step">
+                                        <span class="step-icon"><i class="fas fa-signature"></i></span>
+                                        <div class="step-content">
+                                            <div>Firma de contrato</div>
+                                            <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Ejecutiva</div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                    </div>
+
+                    <div class="flujograma-container">
+                        <h4 class="flujograma-title"><i class="fas fa-project-diagram me-2"></i>Flujograma: Lista Corta - Consultorías</h4>
+                        <img src="https://raw.githubusercontent.com/jaircruz1304/FIAS/main/LCC.svg" alt="Flujograma Menor Cuantía" class="img-fluid" style="width: 100%;">
                     </div>
                 </div>
             </section>
-
-
-
-
             
+            <!-- CONCURSO DE OFERTAS -->
             <section class="tab-pane fade" id="concurso" role="tabpanel" aria-labelledby="concurso-tab">
                 <div class="process-content">
                     <h2 class="process-title">
-                        <i class="fas fa-gavel me-2"></i> Concurso de Ofertas
+                        <i class="fas fa-gavel me-2"></i> Concurso de Ofertas - Bienes y Servicios
                         <span class="process-badge">USD 10.001 - 50.000</span>
                     </h2>
                     
@@ -779,147 +778,32 @@
                                 <div class="process-step">
                                     <span class="step-icon"><i class="fas fa-file-alt"></i></span>
                                     <div class="step-content">
-                                        <div>Memo de inicio del proceso</div>
-                                        <div class="responsable"><i class="fas fa-users me-1"></i> Equipo de Contrataciones</div>
-                                    </div>
-                                </div>
-                                <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-tasks"></i></span>
-                                    <div class="step-content">
-                                        <div>Elaboración de TdR con línea presupuestaria</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Requirente</div>
-                                    </div>
-                                </div>
-                                <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-chart-line"></i></span>
-                                    <div class="step-content">
-                                        <div>Estudio de mercado</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Coordinador / Dirección Administrativa</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="stage-card">
-                            <div class="card-header precontractual-header">
-                                <i class="fas fa-handshake me-2"></i> Etapa Precontractual
-                            </div>
-                            <div class="card-body p-0">
-                                <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-file-invoice-dollar"></i></span>
-                                    <div class="step-content">
-                                        <div>Certificación presupuestaria</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Administrativa</div>
-                                    </div>
-                                </div>
-                                <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-file-contract"></i></span>
-                                    <div class="step-content">
-                                        <div>Elaboración de bases y cronograma</div>
-                                        <div class="responsable"><i class="fas fa-users me-1"></i> Comité de Contrataciones</div>
-                                    </div>
-                                </div>
-                                <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-bullhorn"></i></span>
-                                    <div class="step-content">
-                                        <div>Convocatoria pública o invitación</div>
-                                        <div class="responsable"><i class="fas fa-users me-1"></i> Comité de Contrataciones</div>
-                                    </div>
-                                </div>
-                                <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-inbox"></i></span>
-                                    <div class="step-content">
-                                        <div>Recepción de ofertas</div>
-                                        <div class="responsable"><i class="fas fa-users me-1"></i> Comité de Contrataciones</div>
-                                    </div>
-                                </div>
-                                <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-clipboard-check"></i></span>
-                                    <div class="step-content">
-                                        <div>Acta del Comité de Contrataciones</div>
-                                        <div class="responsable"><i class="fas fa-users me-1"></i> Comité de Contrataciones</div>
-                                    </div>
-                                </div>
-                                <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-bell"></i></span>
-                                    <div class="step-content">
-                                        <div>Notificación al oferente ganador</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Comité de Contrataciones / Dirección Administrativa</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="stage-card">
-                            <div class="card-header contractual-header">
-                                <i class="fas fa-file-contract me-2"></i> Etapa Contractual
-                            </div>
-                            <div class="card-body p-0">
-                                <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-question"></i></span>
-                                    <div class="step-content">
-                                        <div>¿Hay anticipo?</div>
-                                        <div>→ Sí:</div>
-                                        <div class="ms-3">
-                                            - Solicitud ofertas<br>
-                                            - Recepción de garantía<br>
-                                            - Firma de contrato
-                                        </div>
-                                        <div>→ No: Orden de compra o servicio</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Ejecutiva / Dirección Administrativa</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    
-
-
-
-
-
-
-<div class="process-content">
-                    <h2 class="process-title">
-                        <i class="fas fa-gavel me-2"></i> Concurso de Ofertas - Consultoría
-                        <span class="process-badge">USD 10.001 - 50.000</span>
-                    </h2>
-                    
-                    <div class="stages-container">
-                        <div class="stage-card">
-                            <div class="card-header inicio-header">
-                                <i class="fas fa-flag me-2"></i> Etapa de Inicio
-                            </div>
-                            <div class="card-body p-0">
-                                <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-file-alt"></i></span>
-                                    <div class="step-content">
-                                        <div>Memo de inicio del proceso</div>
-                                        <div class="responsable"><i class="fas fa-users me-1"></i> Equipo de Contrataciones</div>
-                                    </div>
-                                </div>
-                                <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-tasks"></i></span>
-                                    <div class="step-content">
-                                        <div>Elaboración de TdR con línea presupuestaria</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Requirente</div>
+                                        <div>Memo de inicio del proceso con TdR/ET y línea presupuestaria</div>
+                                        <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
                                     </div>
                                 </div>
 
 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-chart-line"></i></span>
-                                    <div class="step-content">
-                                        <div>Lista corta (En el caso que aplique si son proveedores calificados FIAS o invitados por FIAS).</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Coordinador / Dirección Administrativa</div>
+                                        <span class="step-icon"><i class="fas fa-users"></i></span>
+                                        <div class="step-content">
+                                            <div>Estudio de Mercado</div>
+                                            <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
+                                        </div>
                                     </div>
-                                </div>
+
+				<div class="process-step">
+                                        <span class="step-icon"><i class="fas fa-users"></i></span>
+                                        <div class="step-content">
+                                            <div>Lista corta (En el caso que aplique si son proveedores calificados FIAS o invitados por FIAS)</div>
+                                            <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
+                                        </div>
+                                    </div>
 
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-chart-line"></i></span>
+                                    <span class="step-icon"><i class="fas fa-check-circle"></i></span>
                                     <div class="step-content">
-                                        <div>Estudio de mercado</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Coordinador / Dirección Administrativa</div>
+                                        <div>Autorización de inicio del proceso</div>
+                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Ejecutiva</div>
                                     </div>
                                 </div>
                             </div>
@@ -934,332 +818,499 @@
                                     <span class="step-icon"><i class="fas fa-file-invoice-dollar"></i></span>
                                     <div class="step-content">
                                         <div>Certificación presupuestaria</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Administrativa</div>
+                                        <div class="responsable"><i class="fas fa-user me-1"></i> Gerencia Administrativa Financiera (GAF)</div>
                                     </div>
                                 </div>
-                                <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-file-contract"></i></span>
-                                    <div class="step-content">
-                                        <div>Elaboración de bases y cronograma</div>
-                                        <div class="responsable"><i class="fas fa-users me-1"></i> Comité de Contrataciones</div>
+                               
+<div class="process-step">
+                                        <span class="step-icon"><i class="fas fa-file-alt"></i></span>
+                                        <div class="step-content">
+                                            <div>Elaboración de Bases y Cronograma</div>
+                                            <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="process-step">
+
+ <div class="process-step">
                                     <span class="step-icon"><i class="fas fa-bullhorn"></i></span>
                                     <div class="step-content">
-                                        <div>Convocatoria pública o invitación</div>
-                                        <div class="responsable"><i class="fas fa-users me-1"></i> Comité de Contrataciones</div>
+                                        <div>Convocatoria pública (portal FIAS, redes sociales, medios)</div>
+                                        <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente / Comunicación</div>
                                     </div>
                                 </div>
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-inbox"></i></span>
+                                    <span class="step-icon"><i class="fas fa-envelope-open-text"></i></span>
                                     <div class="step-content">
-                                        <div>Recepción de ofertas</div>
-                                        <div class="responsable"><i class="fas fa-users me-1"></i> Comité de Contrataciones</div>
+                                        <div>Recepción de ofertas (Mínimo 5 días)</div>
+                                        <div class="responsable"><i class="fas fa-user me-1"></i> Comité de Recepción</div>
                                     </div>
                                 </div>
                                 <div class="process-step">
                                     <span class="step-icon"><i class="fas fa-clipboard-check"></i></span>
                                     <div class="step-content">
-                                        <div>Acta del Comité de Contrataciones</div>
-                                        <div class="responsable"><i class="fas fa-users me-1"></i> Comité de Contrataciones</div>
+                                        <div>Apertura de ofertas (pública)</div>
+                                        <div class="responsable"><i class="fas fa-user me-1"></i> Comité de Recepción</div>
                                     </div>
                                 </div>
                                 <div class="process-step">
+                                    <span class="step-icon"><i class="fas fa-search"></i></span>
+                                    <div class="step-content">
+                                        <div>Evaluación de ofertas (técnica y económica) -Acta de calificación</div>
+                                        <div class="responsable"><i class="fas fa-user me-1"></i> Comité de Evaluación</div>
+                                    </div>
+                                </div>
+                                <div class="process-step">
+                                    <span class="step-icon"><i class="fas fa-trophy"></i></span>
+                                    <div class="step-content">
+                                        <div>Adjudicación</div>
+                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Ejecutiva</div>
+                                    </div>
+                                </div>
+
+<div class="card-body p-0">
+                                
+                                <div class="process-step">
                                     <span class="step-icon"><i class="fas fa-bell"></i></span>
                                     <div class="step-content">
-                                        <div>Notificación al oferente ganador</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Comité de Contrataciones / Dirección Administrativa</div>
+                                        <div>Notificación al adjudicatario</div>
+                                        <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div>  </div>
                         
                         <div class="stage-card">
                             <div class="card-header contractual-header">
                                 <i class="fas fa-file-contract me-2"></i> Etapa Contractual
                             </div>
                             <div class="card-body p-0">
-                                <div class="process-step">
+
+<div class="process-step">
                                     <span class="step-icon"><i class="fas fa-question"></i></span>
                                     <div class="step-content">
                                         <div>¿Hay anticipo?</div>
-                                        <div>→ Sí:</div>
+					<div>→ No: No aplica contrato, se emite OC/OS</div>
+                                        
                                         <div class="ms-3">
-                                            - Solicitud ofertas<br>
-                                            - Recepción de garantía<br>
-                                            - Firma de contrato
+                                            
                                         </div>
-                                        <div>→ No: Orden de compra o servicio</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Ejecutiva / Dirección Administrativa</div>
+                                        
+                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Ejecutiva / GAF</div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="flujograma-container">
-                        <h4 class="flujograma-title"><i class="fas fa-project-diagram me-2"></i>Flujograma: Concurso de Ofertas</h4>
-                        <div class="mermaid" id="mermaidConcurso"></div>
-                        <div class="info-panel">
-                            <h4 class="info-title"><i class="fas fa-info-circle me-2"></i>Información del Proceso</h4>
-                            <div class="step-info">
-                                <div class="step-title">Concurso de Ofertas (USD 10.001 - 50.000)</div>
-                                <p class="step-desc">Proceso formal de contratación mediante concurso de ofertas.</p>
-                                <div class="responsable"><i class="fas fa-user me-1"></i>Responsables: Comité de Contrataciones, Dirección Administrativa</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            
-            <section class="tab-pane fade" id="licitacion" role="tabpanel" aria-labelledby="licitacion-tab">
-                <div class="process-content">
-                    <h2 class="process-title">
-                        <i class="fas fa-file-contract me-2"></i> Licitación
-                        <span class="process-badge">Desde USD 50.001</span>
-                    </h2>
-                    
-                    <div class="stages-container">
-                        <div class="stage-card">
-                            <div class="card-header inicio-header">
-                                <i class="fas fa-flag me-2"></i> Etapa de Inicio
-                            </div>
-                            <div class="card-body p-0">
-                                <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-file-alt"></i></span>
-                                    <div class="step-content">
-                                        <div>Memo de inicio del proceso</div>
-                                        <div class="responsable"><i class="fas fa-users me-1"></i> Equipo de Contrataciones</div>
-                                    </div>
-                                </div>
-                                <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-tasks"></i></span>
-                                    <div class="step-content">
-                                        <div>Elaboración de TdR con línea presupuestaria</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Requirente</div>
-                                    </div>
-                                </div>
-                                <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-chart-line"></i></span>
-                                    <div class="step-content">
-                                        <div>Estudio de mercado</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Coordinador / Dirección Administrativa</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="stage-card">
-                            <div class="card-header precontractual-header">
-                                <i class="fas fa-handshake me-2"></i> Etapa Precontractual
-                            </div>
-                            <div class="card-body p-0">
-                                <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-file-invoice-dollar"></i></span>
-                                    <div class="step-content">
-                                        <div>Certificación presupuestaria</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Administrativa</div>
-                                    </div>
-                                </div>
-                                <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-file-contract"></i></span>
-                                    <div class="step-content">
-                                        <div>Elaboración de bases y cronograma</div>
-                                        <div class="responsable"><i class="fas fa-users me-1"></i> Comité de Contrataciones</div>
-                                    </div>
-                                </div>
-                                <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-bullhorn"></i></span>
-                                    <div class="step-content">
-                                        <div>Convocatoria pública</div>
-                                        <div class="responsable"><i class="fas fa-users me-1"></i> Comité de Contrataciones</div>
-                                    </div>
-                                </div>
-                                <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-inbox"></i></span>
-                                    <div class="step-content">
-                                        <div>Recepción de ofertas</div>
-                                        <div class="responsable"><i class="fas fa-users me-1"></i> Comité de Contrataciones</div>
-                                    </div>
-                                </div>
-                                <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-clipboard-check"></i></span>
-                                    <div class="step-content">
-                                        <div>Acta del Comité de Contrataciones</div>
-                                        <div class="responsable"><i class="fas fa-users me-1"></i> Comité de Contrataciones</div>
-                                    </div>
-                                </div>
-                                <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-bell"></i></span>
-                                    <div class="step-content">
-                                        <div>Notificación al oferente ganador</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Comité de Contrataciones / Dirección Administrativa</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="stage-card">
-                            <div class="card-header contractual-header">
-                                <i class="fas fa-file-contract me-2"></i> Etapa Contractual
-                            </div>
-                            <div class="card-body p-0">
-                                <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-question"></i></span>
-                                    <div class="step-content">
-                                        <div>¿Hay anticipo?</div>
-                                        <div>→ Sí:</div>
-                                        <div class="ms-3">
-                                            - Solicitud ofertas<br>
-                                            - Recepción de garantía<br>
-                                            - Firma de contrato
-                                        </div>
-                                        <div>→ No: Orden de compra o servicio</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Ejecutiva / Dirección Administrativa</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="flujograma-container">
-                        <h4 class="flujograma-title"><i class="fas fa-project-diagram me-2"></i>Flujograma: Licitación</h4>
-                        <div class="mermaid" id="mermaidLicitacion"></div>
-                        <div class="info-panel">
-                            <h4 class="info-title"><i class="fas fa-info-circle me-2"></i>Información del Proceso</h4>
-                            <div class="step-info">
-                                <div class="step-title">Licitación (Desde USD 50.001)</div>
-                                <p class="step-desc">Proceso formal de licitación pública para contrataciones de alto valor.</p>
-                                <div class="responsable"><i class="fas fa-user me-1"></i>Responsables: Comité de Contrataciones, Dirección Administrativa, Dirección Ejecutiva</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            
-            <section class="tab-pane fade" id="directa" role="tabpanel" aria-labelledby="directa-tab">
-                <div class="process-content">
-                    <h2 class="process-title">
-                        <i class="fas fa-handshake me-2"></i> Contratación Directa
-                        <span class="process-badge">Casos Específicos</span>
-                    </h2>
-                    
-                    <div class="stages-container">
-                        <div class="stage-card">
-                            <div class="card-header inicio-header">
-                                <i class="fas fa-flag me-2"></i> Etapa de Inicio
-                            </div>
-                            <div class="card-body p-0">
-                                <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-file-alt"></i></span>
-                                    <div class="step-content">
-                                        <div>Memo de inicio del proceso</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Requirente / Coordinador de Proyecto</div>
-                                    </div>
-                                </div>
-                                <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-tasks"></i></span>
-                                    <div class="step-content">
-                                        <div>Elaboración de TdR o especificaciones técnicas con línea presupuestaria</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Requirente</div>
-                                    </div>
-                                </div>
-                                <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-exclamation-circle"></i></span>
-                                    <div class="step-content">
-                                        <div>Justificación de contratación directa</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Requirente</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="stage-card">
-                            <div class="card-header precontractual-header">
-                                <i class="fas fa-handshake me-2"></i> Etapa Precontractual
-                            </div>
-                            <div class="card-body p-0">
-                                <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-file-invoice-dollar"></i></span>
-                                    <div class="step-content">
-                                        <div>Certificación presupuestaria</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Administrativa</div>
-                                    </div>
-                                </div>
                                 <div class="process-step">
                                     <span class="step-icon"><i class="fas fa-file-signature"></i></span>
                                     <div class="step-content">
-                                        <div>Aprobación de la justificación</div>
+<div>→ Sí:</div>
+                                        <div>Elaboración de contrato</div>
+                                        <div class="responsable"><i class="fas fa-user me-1"></i> Asesoría Jurídica</div>
+                                    </div>
+                                </div>
+                                <div class="process-step">
+                                    <span class="step-icon"><i class="fas fa-shield-alt"></i></span>
+                                    <div class="step-content">
+                                        <div>Recepción de garantías (5% del valor del contrato)</div>
+                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Administrativa y RRHH</div>
+                                    </div>
+                                </div>
+                                <div class="process-step">
+                                    <span class="step-icon"><i class="fas fa-signature"></i></span>
+                                    <div class="step-content">
+                                        <div>Firma de contrato</div>
+                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Ejecutiva</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flujograma-container">
+                        <h4 class="flujograma-title"><i class="fas fa-project-diagram me-2"></i>Flujograma: Concurso de Ofertas - Bienes y Servicios</h4>
+                        <img src="https://raw.githubusercontent.com/jaircruz1304/FIAS/main/CONS.svg" alt="Flujograma Menor Cuantía" class="img-fluid" style="width: 100%;">
+                    </div>
+
+                    <div class="process-content mt-4">
+                        <h2 class="process-title">
+                            <i class="fas fa-gavel me-2"></i> Concurso de Ofertas - Consultorías
+                            <span class="process-badge">USD 10.001 - 50.000</span>
+                        </h2>
+                        
+                        <div class="stages-container">
+                        <div class="stage-card">
+                            <div class="card-header inicio-header">
+                                <i class="fas fa-flag me-2"></i> Etapa de Inicio
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="process-step">
+                                    <span class="step-icon"><i class="fas fa-file-alt"></i></span>
+                                    <div class="step-content">
+                                        <div>Memo de inicio del proceso con TdR/ET y línea presupuestaria</div>
+                                        <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
+                                    </div>
+                                </div>
+
+				<div class="process-step">
+                                        <span class="step-icon"><i class="fas fa-users"></i></span>
+                                        <div class="step-content">
+                                            <div>Lista corta (En el caso que aplique si son proveedores calificados FIAS o invitados por FIAS)</div>
+                                            <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
+                                        </div>
+                                    </div>
+
+                                <div class="process-step">
+                                    <span class="step-icon"><i class="fas fa-check-circle"></i></span>
+                                    <div class="step-content">
+                                        <div>Autorización de inicio del proceso</div>
+                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Ejecutiva</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                            
+                            <div class="stage-card">
+                                <div class="card-header precontractual-header">
+                                    <i class="fas fa-handshake me-2"></i> Etapa Precontractual
+                                </div>
+                                <div class="card-body p-0">
+                                    <div class="process-step">
+                                        <span class="step-icon"><i class="fas fa-file-invoice-dollar"></i></span>
+                                        <div class="step-content">
+                                            <div>Certificación presupuestaria</div>
+                                            <div class="responsable"><i class="fas fa-user me-1"></i> Gerencia Administrativa Financiera (GAF)</div>
+                                        </div>
+                                    </div>
+
+
+<div class="process-step">
+                                        <span class="step-icon"><i class="fas fa-file-alt"></i></span>
+                                        <div class="step-content">
+                                            <div>Elaboración de Bases y Cronograma</div>
+                                            <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="process-step">
+                                        <span class="step-icon"><i class="fas fa-bullhorn"></i></span>
+                                        <div class="step-content">
+                                            <div>Convocatoria pública (portal FIAS, redes sociales, medios)</div>
+                                            <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente / Comunicación</div>
+                                        </div>
+                                    </div>
+                                    <div class="process-step">
+                                        <span class="step-icon"><i class="fas fa-envelope-open-text"></i></span>
+                                        <div class="step-content">
+                                            <div>Recepción de propuestas</div>
+                                            <div class="responsable"><i class="fas fa-user me-1"></i> Comité de Recepción</div>
+                                        </div>
+                                    </div>
+                                    <div class="process-step">
+                                        <span class="step-icon"><i class="fas fa-clipboard-check"></i></span>
+                                        <div class="step-content">
+                                            <div>Apertura de propuestas</div>
+                                            <div class="responsable"><i class="fas fa-user me-1"></i> Comité de Recepción</div>
+                                        </div>
+                                    </div>
+                                    <div class="process-step">
+                                        <span class="step-icon"><i class="fas fa-search"></i></span>
+                                        <div class="step-content">
+                                            <div>Evaluación de propuestas (técnica y económica)-Acta de Comité de contrataciones</div>
+                                            <div class="responsable"><i class="fas fa-user me-1"></i> Comité de Evaluación</div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="process-step">
+                                        <span class="step-icon"><i class="fas fa-trophy"></i></span>
+                                        <div class="step-content">
+                                            <div>Adjudicación</div>
+                                            <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Ejecutiva</div>
+                                        </div>
+                                    </div>
+
+
+
+
+                                    <div class="process-step">
+                                        <span class="step-icon"><i class="fas fa-bell"></i></span>
+                                        <div class="step-content">
+                                            <div>Notificación al adjudicatario con Orden compra/servicio</div>
+                                            <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="stage-card">
+                                <div class="card-header contractual-header">
+                                    <i class="fas fa-file-contract me-2"></i> Etapa Contractual
+                                </div>
+                                <div class="card-body p-0">
+                                    <div class="process-step">
+                                    <span class="step-icon"><i class="fas fa-question"></i></span>
+                                    <div class="step-content">
+                                        <div>¿Hay anticipo?</div>
+					<div>→ No: No aplica contrato, se emite OC/OS</div>
+                                        
+                                        <div class="ms-3">
+                                            
+                                        </div>
+                                        
+                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Ejecutiva / GAF</div>
+                                    </div>
+                                </div>
+
+                                <div class="process-step">
+                                    <span class="step-icon"><i class="fas fa-file-signature"></i></span>
+                                    <div class="step-content">
+<div>→ Sí:</div>
+
+                                            <div>Elaboración de contrato</div>
+                                            <div class="responsable"><i class="fas fa-user me-1"></i> Asesoría Jurídica</div>
+                                        </div>
+                                    </div>
+                                    <div class="process-step">
+                                        <span class="step-icon"><i class="fas fa-shield-alt"></i></span>
+                                        <div class="step-content">
+                                            <div>Recepción de garantías (si aplica)</div>
+                                            <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Administrativa y RRHH</div>
+                                        </div>
+                                    </div>
+                                    <div class="process-step">
+                                        <span class="step-icon"><i class="fas fa-signature"></i></span>
+                                        <div class="step-content">
+                                            <div>Firma de contrato</div>
+                                            <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Ejecutiva</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flujograma-container">
+                        <h4 class="flujograma-title"><i class="fas fa-project-diagram me-2"></i>Flujograma: Concurso de Ofertas - Consultorías</h4>
+                        <img src="https://raw.githubusercontent.com/jaircruz1304/FIAS/main/CONSD.svg" alt="Flujograma Menor Cuantía" class="img-fluid" style="width: 100%;">
+                    </div>
+                </div>
+            </section>
+            
+            <!-- LICITACIÓN -->
+            <section class="tab-pane fade" id="licitacion" role="tabpanel" aria-labelledby="licitacion-tab">
+                <div class="process-content">
+                    <h2 class="process-title">
+                        <i class="fas fa-file-contract me-2"></i> Licitación  - Bienes y Servicios
+                        <span class="process-badge">De USD $50.001 en adelante.</span>
+                    </h2>
+                    
+                    <div class="stages-container">
+                        <div class="stage-card">
+                            <div class="card-header inicio-header">
+                                <i class="fas fa-flag me-2"></i> Etapa de Inicio
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="process-step">
+                                    <span class="step-icon"><i class="fas fa-file-alt"></i></span>
+                                    <div class="step-content">
+                                        <div>Memo de inicio del proceso con TdR/ET detallados y línea presupuestaria</div>
+                                        <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
+                                    </div>
+                                </div>
+
+<div class="process-step">
+                                        <span class="step-icon"><i class="fas fa-users"></i></span>
+                                        <div class="step-content">
+                                            <div>Estudio de Mercado (En caso de bienes y servicios).</div>
+                                            <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
+                                        </div>
+                                    </div>
+
+				<div class="process-step">
+                                        <span class="step-icon"><i class="fas fa-users"></i></span>
+                                        <div class="step-content">
+                                            <div>Lista corta (En el caso que aplique si son proveedores calificados FIAS o invitados por FIAS)</div>
+                                            <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
+                                        </div>
+                                    </div>
+
+                                <div class="process-step">
+                                    <span class="step-icon"><i class="fas fa-check-circle"></i></span>
+                                    <div class="step-content">
+                                        <div>Autorización de inicio del proceso</div>
+                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Ejecutiva</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="stage-card">
+                            <div class="card-header precontractual-header">
+                                <i class="fas fa-handshake me-2"></i> Etapa Precontractual
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="process-step">
+                                    <span class="step-icon"><i class="fas fa-file-invoice-dollar"></i></span>
+                                    <div class="step-content">
+                                        <div>Certificación presupuestaria</div>
+                                        <div class="responsable"><i class="fas fa-user me-1"></i> Gerencia Administrativa Financiera (GAF)</div>
+                                    </div>
+                                </div>
+
+
+<div class="process-step">
+                                        <span class="step-icon"><i class="fas fa-file-alt"></i></span>
+                                        <div class="step-content">
+                                            <div>Elaboración de Bases y Cronograma</div>
+                                            <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
+                                        </div>
+                                    </div>
+
+
+                                <div class="process-step">
+                                    <span class="step-icon"><i class="fas fa-bullhorn"></i></span>
+                                    <div class="step-content">
+                                        <div>Convocatoria pública (portal FIAS, redes sociales, medios)</div>
+                                        <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente / Comunicación</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="process-step">
+                                    <span class="step-icon"><i class="fas fa-envelope-open-text"></i></span>
+                                    <div class="step-content">
+                                        <div>Recepción de ofertas (Mínimo 5 días)</div>
+                                        <div class="responsable"><i class="fas fa-user me-1"></i> Comité de Recepción</div>
+                                    </div>
+                                </div>
+                                <div class="process-step">
+                                    <span class="step-icon"><i class="fas fa-clipboard-check"></i></span>
+                                    <div class="step-content">
+                                        <div>Apertura de ofertas</div>
+                                        <div class="responsable"><i class="fas fa-user me-1"></i> Comité de Recepción</div>
+                                    </div>
+                                </div>
+                                <div class="process-step">
+                                    <span class="step-icon"><i class="fas fa-search"></i></span>
+                                    <div class="step-content">
+                                        <div>Evaluación de ofertas (técnica y económica)- Acta de Comité de Contrataciones</div>
+                                        <div class="responsable"><i class="fas fa-user me-1"></i> Comité de Evaluación</div>
+                                    </div>
+                                </div>
+                                <div class="process-step">
+                                    <span class="step-icon"><i class="fas fa-trophy"></i></span>
+                                    <div class="step-content">
+                                        <div>Adjudicación</div>
                                         <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Ejecutiva</div>
                                     </div>
                                 </div>
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-search-dollar"></i></span>
+                                    <span class="step-icon"><i class="fas fa-bell"></i></span>
                                     <div class="step-content">
-                                        <div>Solicitud de cotización</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Ordenador de Gasto</div>
+                                        <div>Notificación al adjudicatario</div>
+                                        <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="stage-card">
+                            <div class="card-header contractual-header">
+                                <i class="fas fa-file-contract me-2"></i> Etapa Contractual
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="process-step">
+                                    <span class="step-icon"><i class="fas fa-file-signature"></i></span>
+                                    <div class="step-content">
+                                        <div>Elaboración de contrato</div>
+                                        <div class="responsable"><i class="fas fa-user me-1"></i> Asesoría Jurídica</div>
                                     </div>
                                 </div>
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-chart-bar"></i></span>
+                                    <span class="step-icon"><i class="fas fa-shield-alt"></i></span>
                                     <div class="step-content">
-                                        <div>Cuadro comparativo</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Administrativa</div>
+                                        <div>Recepción de garantías (5% del valor del contrato)</div>
+                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Administrativa y RRHH</div>
+                                    </div>
+                                </div>
+                                <div class="process-step">
+                                    <span class="step-icon"><i class="fas fa-signature"></i></span>
+                                    <div class="step-content">
+                                        <div>Firma de contrato</div>
+                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Ejecutiva</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flujograma-container">
+                        <h4 class="flujograma-title"><i class="fas fa-project-diagram me-2"></i>Flujograma: Licitación - Bienes y Servicios</h4>
+                        <img src="https://raw.githubusercontent.com/jaircruz1304/FIAS/main/LIC.svg" alt="Flujograma Menor Cuantía" class="img-fluid" style="width: 100%;">
+                </div>
+                 </div>
+            </section>
+            
+            <!-- CONTRATACIÓN DIRECTA -->
+            <section class="tab-pane fade" id="directa" role="tabpanel" aria-labelledby="directa-tab">
+                <div class="process-content">
+                    <h2 class="process-title">
+                        <i class="fas fa-handshake me-2"></i> Contratación Directa - Bienes y Servicios
+                        <span class="process-badge">Cualquier Monto $ - Casos Específicos</span>
+                    </h2>
+                    
+                    <div class="stages-container">
+                        <div class="stage-card">
+                            <div class="card-header inicio-header">
+                                <i class="fas fa-flag me-2"></i> Etapa de Inicio
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="process-step">
+                                    <span class="step-icon"><i class="fas fa-file-alt"></i></span>
+                                    <div class="step-content">
+                                        <div>Memo de inicio del proceso con justificación técnica y legal</div>
+					<div>📋	Términos de Referencia (con línea presupuestaria).</div>
+					<div>📋Informe de justificación de contratación directa arpobado por la Comisión o Comité de contrataciones</div>
+					<div>📋Invitación (correo u oficio Coordinar de Proyecto).</div>
+					<div>📋Cotización.</div>
+					<div>📋No objeción Cooperante (Cuando aplique)</div>
+
+                                        <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
+                                    </div>
+                                </div>
+                                <div class="process-step">
+                                    <span class="step-icon"><i class="fas fa-check-circle"></i></span>
+                                    <div class="step-content">
+                                        <div>Autorización de inicio del proceso</div>
+                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Ejecutiva</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="stage-card">
+                            <div class="card-header precontractual-header">
+                                <i class="fas fa-handshake me-2"></i> Etapa Precontractual
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="process-step">
+                                    <span class="step-icon"><i class="fas fa-file-invoice-dollar"></i></span>
+                                    <div class="step-content">
+                                        <div>Certificación presupuestaria</div>
+                                        <div class="responsable"><i class="fas fa-user me-1"></i> Gerencia Administrativa Financiera (GAF)</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="process-step">
+                                    <span class="step-icon"><i class="fas fa-check-double"></i></span>
+                                    <div class="step-content">
+                                        <div>Validación y adjudicación</div>
+                                        <div class="responsable"><i class="fas fa-user me-1"></i> GAF / Ordenador de Gasto</div>
+                                    </div>
+                                </div>
+                                <div class="process-step">
+                                    <span class="step-icon"><i class="fas fa-bell"></i></span>
+                                    <div class="step-content">
+                                        <div>Notificación al adjudicatario </div>
+                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Ejecutiva/ Unidad Requirente</div>
                                     </div>
                                 </div>
                             </div>
@@ -1273,32 +1324,141 @@
                                 <div class="process-step">
                                     <span class="step-icon"><i class="fas fa-question"></i></span>
                                     <div class="step-content">
-                                        <div>¿Hay anticipo?</div>
+                                        <div>¿Requiere contrato?</div>
                                         <div>→ Sí:</div>
                                         <div class="ms-3">
-                                            - Solicitud de borrador de contrato<br>
-                                            - Recepción de garantía<br>
-                                            - Firma de contrato
+                                            - Elaboración de contrato por Asesoría Jurídica<br>
+                                            - Recepción de garantías (si aplica)<br>
+                                            - Firma de contrato por Dirección Ejecutiva
                                         </div>
-                                        <div>→ No: Orden de compra o servicio</div>                                        
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Ejecutiva / Dirección Administrativa</div>
+                                        <div>→ No: Orden de compra/servicio hasta $50.000</div>
+                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Ejecutiva / GAF</div>
+                                    </div>
+                                </div>
+                                <div class="process-step">
+                                    <span class="step-icon"><i class="fas fa-shield-alt"></i></span>
+                                    <div class="step-content">
+                                        <div>Custodia de garantías (si aplica)</div>
+                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Administrativa y RRHH</div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="flujograma-container">
-                        <h4 class="flujograma-title"><i class="fas fa-project-diagram me-2"></i>Flujograma: Contratación Directa</h4>
-                        <div class="mermaid" id="mermaidDirecta"></div>
-                        <div class="info-panel">
-                            <h4 class="info-title"><i class="fas fa-info-circle me-2"></i>Información del Proceso</h4>
-                            <div class="step-info">
-                                <div class="step-title">Contratación Directa (Casos Específicos)</div>
-                                <p class="step-desc">Proceso para casos especiales que justifican la contratación directa.</p>
-                                <div class="responsable"><i class="fas fa-user me-1"></i>Responsables: Requirente, Dirección Administrativa, Dirección Ejecutiva</div>
+                        <h4 class="flujograma-title"><i class="fas fa-project-diagram me-2"></i>Flujograma: Contratación Directa - Bienes y Servicios</h4>
+                        <img src="https://raw.githubusercontent.com/jaircruz1304/FIAS/main/DIR.svg" alt="Flujograma Menor Cuantía" class="img-fluid" style="width: 100%;">
+                    </div>
+
+                    <div class="process-content mt-4">
+                        <h2 class="process-title">
+                            <i class="fas fa-handshake me-2"></i> Contratación Directa - Consultorías
+                            <span class="process-badge">Casos Específicos</span>
+                        </h2>
+                        
+                        <div class="stages-container">
+                            <div class="stage-card">
+                                <div class="card-header inicio-header">
+                                    <i class="fas fa-flag me-2"></i> Etapa de Inicio
+                                </div>
+                                <div class="card-body p-0">
+                                    <div class="process-step">
+                                    <span class="step-icon"><i class="fas fa-file-alt"></i></span>
+                                    <div class="step-content">
+                                        <div>Memo de inicio del proceso con justificación técnica y legal</div>
+					<div>📋	Términos de Referencia (con línea presupuestaria).</div>
+					<div>📋	Informe de justificación de contratación directa arpobado por la Comisión o Comité de contrataciones</div>
+					<div>📋	Invitación (correo u oficio Coordinar de Proyecto).</div>
+					<div>📋	Propuesta.</div>
+					<div>📋	No objeción Cooperante (Cuando aplique)</div>
+					<div>📋	Otros documentos de soporte</div>
+
+
+                                        <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
+                                    </div>
+                                </div>
+
+                                    <div class="process-step">
+                                        <span class="step-icon"><i class="fas fa-check-circle"></i></span>
+                                        <div class="step-content">
+                                            <div>Autorización de inicio del proceso</div>
+                                            <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Ejecutiva</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="stage-card">
+                                <div class="card-header precontractual-header">
+                                    <i class="fas fa-handshake me-2"></i> Etapa Precontractual
+                                </div>
+                                <div class="card-body p-0">
+                                    <div class="process-step">
+                                        <span class="step-icon"><i class="fas fa-file-invoice-dollar"></i></span>
+                                        <div class="step-content">
+                                            <div>Certificación presupuestaria</div>
+                                            <div class="responsable"><i class="fas fa-user me-1"></i> Gerencia Administrativa Financiera (GAF)</div>
+                                        </div>
+                                    </div>
+                                    <div class="process-step">
+                                        <span class="step-icon"><i class="fas fa-search-dollar"></i></span>
+                                        <div class="step-content">
+                                            <div>Propuesta única</div>
+                                            <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
+                                        </div>
+                                    </div>
+                                    <div class="process-step">
+                                        <span class="step-icon"><i class="fas fa-check-double"></i></span>
+                                        <div class="step-content">
+                                            <div>Validación y adjudicación</div>
+                                            <div class="responsable"><i class="fas fa-user me-1"></i> GAF / Ordenador de Gasto</div>
+                                        </div>
+                                    </div>
+                                    <div class="process-step">
+                                        <span class="step-icon"><i class="fas fa-bell"></i></span>
+                                        <div class="step-content">
+                                            <div>Notificación al adjudicatario</div>
+                                            <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="stage-card">
+                                <div class="card-header contractual-header">
+                                    <i class="fas fa-file-contract me-2"></i> Etapa Contractual
+                                </div>
+                                <div class="card-body p-0">
+                                    <div class="process-step">
+                                        <span class="step-icon"><i class="fas fa-file-signature"></i></span>
+                                        <div class="step-content">
+                                            <div>Elaboración de contrato</div>
+                                            <div class="responsable"><i class="fas fa-user me-1"></i> Asesoría Jurídica</div>
+                                        </div>
+                                    </div>
+                                    <div class="process-step">
+                                        <span class="step-icon"><i class="fas fa-shield-alt"></i></span>
+                                        <div class="step-content">
+                                            <div>Recepción de garantías (si aplica)</div>
+                                            <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Administrativa y RRHH</div>
+                                        </div>
+                                    </div>
+                                    <div class="process-step">
+                                        <span class="step-icon"><i class="fas fa-signature"></i></span>
+                                        <div class="step-content">
+                                            <div>Firma de contrato</div>
+                                            <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Ejecutiva</div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                    </div>
+
+                    <div class="flujograma-container">
+                        <h4 class="flujograma-title"><i class="fas fa-project-diagram me-2"></i>Flujograma: Contratación Directa - Consultorías</h4>
+                        <img src="https://raw.githubusercontent.com/jaircruz1304/FIAS/main/DIRC.svg" alt="Flujograma Menor Cuantía" class="img-fluid" style="width: 100%;">
                     </div>
                 </div>
             </section>
@@ -1308,151 +1468,60 @@
     <footer>
         <div class="container">
             <div class="row">
-                <div class="col-md-4 mb-4">
-                    <h5>FIAS</h5>
-                     <p>Procesos de Contratación Institucional</p>
+                <div class="col-md-6 mb-4">
+                    <h5>FIAS - Fondo de Inversión Ambiental Sostenible</h5>
+                    <p>Guía de procesos de contratación institucional</p>
+                    <p>Versión 1.0 - 2025</p>
                 </div>
-                <div class="col-md-4 mb-4">
-                    <h5>Enlaces Rápidos</h5>
-                    <div class="footer-links">
-                        <p><a href="https://fiasec-my.sharepoint.com/personal/dalvarez_fias_org_ec/_layouts/15/onedrive.aspx?ct=1746474465893&or=OWA%2DNT%2DMail&ga=1&id=%2Fpersonal%2Fdalvarez%5Ffias%5Forg%5Fec%2FDocuments%2FManual%20y%20Documentos%20FIAS%2FManual%20Actualizado%20FIAS%202021%2FAnexo%207%2E%20Manual%20de%20Pol%C3%ADticas%20y%20Procesos%20Administrativo%20FIAS%20%28Actualizado%2011%2006%202021%29%2Epdf&parent=%2Fpersonal%2Fdalvarez%5Ffias%5Forg%5Fec%2FDocuments%2FManual%20y%20Documentos%20FIAS%2FManual%20Actualizado%20FIAS%202021" target="_blank">Políticas de Contratación</a></p>
-                                               
-                    </div>
+                <div class="col-md-3 mb-4 footer-links">
+                    <h5>Enlaces</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="https://fias.org.ec/" target="_blank">Sitio web FIAS</a></li>
+                        <li><a href="https://fiasec-my.sharepoint.com/personal/dalvarez_fias_org_ec/_layouts/15/onedrive.aspx?ct=1746474465893&or=OWA%2DNT%2DMail&ga=1&id=%2Fpersonal%2Fdalvarez%5Ffias%5Forg%5Fec%2FDocuments%2FManual%20y%20Documentos%20FIAS%2FManual%20Actualizado%20FIAS%202021%2FAnexo%207%2E%20Manual%20de%20Pol%C3%ADticas%20y%20Procesos%20Administrativo%20FIAS%20%28Actualizado%2011%2006%202021%29%2Epdf&parent=%2Fpersonal%2Fdalvarez%5Ffias%5Forg%5Fec%2FDocuments%2FManual%20y%20Documentos%20FIAS%2FManual%20Actualizado%20FIAS%202021" target="_blank">MANUAL DE POLÍTICAS Y PROCESOS ADMINISTRATIVOS</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3 mb-4 footer-links">
+                    <h5>Contacto</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="mailto:jcruzg@fias.org.ec">jcruzg@fias.org.ec</a></li>
+                                            </ul>
                 </div>
             </div>
-            <hr class="mt-4 mb-4" style="border-color: rgba(255,255,255,0.2);">
-            <div class="text-center">
-                <p>&copy; 2025 FIAS - Todos los derechos reservados</p>
+            <hr class="mt-0 mb-4">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p class="mb-0">&copy; 2025 FIAS. Todos los derechos reservados.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="mb-0">Desarrollado para uso interno institucional</p>
+                </div>
             </div>
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    
-    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
-    
     <script>
+        // Inicializar AOS (Animate On Scroll)
         document.addEventListener('DOMContentLoaded', function() {
-            // Inicializar AOS (Animaciones al hacer scroll)
             AOS.init({
                 duration: 800,
                 easing: 'ease-in-out',
                 once: true
             });
             
-            // Inicializar Mermaid con la configuración correcta para renderizado manual
-            mermaid.initialize({
-                startOnLoad: false, // <-- ¡Este es el cambio clave!
-                theme: 'forest',
-                flowchart: {
-                    useMaxWidth: true,
-                    htmlLabels: true,
-                    curve: 'basis'
-                }
-            });
-            
-            // Definir los diagramas Mermaid
-            const diagramas = {
-                menor: `flowchart TD
-    A[Memo de inicio del proceso] --> B[Elaboración de TdR o especificaciones técnicas]
-    B --> C[Certificación presupuestaria]
-    C --> D[Solicitud de 3 cotizaciones]
-    D --> E[Cuadro comparativo]
-    E --> F{Monto < USD 200?}
-    F -->|Sí| G[Presentación de factura]
-    F -->|No| H[Orden de compra o servicio]
-    H --> I{¿Hay anticipo?}
-    I -->|Sí| J[Solicitud de borrador de contrato]
-    J --> K[Recepción de garantía]
-    K --> L[Firma de contrato]
-    I -->|No| M[No aplica contrato]`,
-            
-                lista: `flowchart TD
-    A[Memo de inicio del proceso] --> B[Elaboración de TdR - 3 Cotizaciones]
-    B --> C[Certificación presupuestaria]
-    C --> D[Invitación a 3-6 oferentes]
-    D --> E[Recepción de ofertas]
-    E --> F[Cuadro comparativo firmado]
-    F --> G[Notificación al oferente ganador]
-    G --> H{¿Hay anticipo?}
-    H -->|Sí| I[Solicitud de borrador de contrato]
-    I --> J[Recepción de garantía]
-    J --> K[Firma de contrato]
-    H -->|No| L[Orden de compra o servicio]`,
-            
-                concurso: `flowchart TD
-    A[Memo de inicio del proceso] --> B[Elaboración de TdR]
-    B --> C[Estudio de mercado]
-    C --> D[Certificación presupuestaria]
-    D --> E[Elaboración de bases y cronograma]
-    E --> F[Convocatoria pública o invitación]
-    F --> G[Recepción de ofertas]
-    G --> H[Acta del Comité de Contrataciones]
-    H --> I[Notificación al oferente ganador]
-    I --> J{¿Hay anticipo?}
-    J -->|Sí| K[Solicitud de borrador de contrato]
-    K --> L[Recepción de garantía]
-    L --> M[Firma de contrato]
-    J -->|No| N[Orden de compra o servicio]`,
-            
-                licitacion: `flowchart TD
-    A[Memo de inicio del proceso] --> B[Elaboración de TdR]
-    B --> C[Estudio de mercado]
-    C --> D[Certificación presupuestaria]
-    D --> E[Elaboración de bases y cronograma]
-    E --> F[Convocatoria pública]
-    F --> G[Recepción de ofertas]
-    G --> H[Acta del Comité de Contrataciones]
-    H --> I[Notificación al oferente ganador]
-    I --> J{¿Hay anticipo?}
-    J -->|Sí| K[Solicitud de borrador de contrato]
-    K --> L[Recepción de garantía]
-    L --> M[Firma de contrato]
-    J -->|No| N[Orden de compra o servicio]`,
-            
-                directa: `flowchart TD
-    A[Memo de inicio del proceso] --> B[Elaboración de TdR o especificaciones técnicas]
-    B --> C[Justificación de contratación directa]
-    C --> D[Certificación presupuestaria]
-    D --> E[Aprobación de la justificación]
-    E --> F[Solicitud de cotización]
-    F --> G[Cuadro comparativo]
-    G --> H{¿Hay anticipo?}
-    H -->|Sí| I[Solicitud de borrador de contrato]
-    I --> J[Recepción de garantía]
-    J --> K[Firma de contrato]
-    H -->|No| L[Orden de compra o servicio]`
-            };
-            
-            // Función para renderizar un diagrama específico
-            async function renderDiagram(id) {
-                const container = document.getElementById(`mermaid${id.charAt(0).toUpperCase() + id.slice(1)}`);
-                const diagramCode = diagramas[id];
-
-                // Renderizar solo si el contenedor existe, tiene código y no ha sido renderizado antes
-                if (container && diagramCode && !container.hasAttribute('data-rendered')) {
-                    container.innerHTML = diagramCode; // Insertar el código del diagrama
-                    container.removeAttribute('data-processed'); // Asegurarse de que Mermaid lo reprocese
-                    await mermaid.run({ nodes: [container] }); // Renderizar el diagrama
-                    container.setAttribute('data-rendered', 'true'); // Marcar como renderizado
-                }
-            }
-            
-            // Renderizar el diagrama de la primera pestaña que está activa por defecto
-            renderDiagram('menor');
-            
-            // Configurar eventos para cambiar de pestaña
-            const tabButtons = document.querySelectorAll('[data-bs-toggle="tab"]');
-            tabButtons.forEach(button => {
-                button.addEventListener('shown.bs.tab', function(event) {
-                    const targetId = event.target.getAttribute('data-bs-target').substring(1);
-                    renderDiagram(targetId);
+            // Cambiar pestaña activa en la barra de navegación de procesos
+            const processTabEl = document.querySelectorAll('button[data-bs-toggle="tab"]');
+            processTabEl.forEach(tabEl => {
+                tabEl.addEventListener('shown.bs.tab', event => {
+                    const target = event.target.getAttribute('data-bs-target');
+                    document.querySelectorAll('.nav-process .nav-link').forEach(link => {
+                        link.classList.remove('active');
+                    });
+                    event.target.classList.add('active');
                 });
             });
         });
     </script>
 </body>
 </html>
-

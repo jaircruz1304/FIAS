@@ -5,15 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Guía interactiva de los procesos de contratación del FIAS, detallando los procedimientos para Menor Cuantía, Lista Corta, Concurso de Ofertas, Licitación y Contratación Directa.">
     <meta name="author" content="FIAS">
+    <meta name="theme-color" content="#2c7c50">
     
     <title>Guía de Procesos de Contratación FIAS</title>
     
     <link rel="icon" href="https://fias.org.ec/wp-content/uploads/2021/11/cropped-favicon-32x32.png" sizes="32x32">
-
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com/ajax/libs">
+    <link rel="preconnect" href="https://unpkg.com">
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     
     <style>
@@ -299,6 +301,34 @@
             text-decoration: underline;
         }
         
+        /* Estilos para imágenes optimizadas */
+        .flujograma-img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        /* Mejoras de accesibilidad */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+        
+        /* Focus styles para mejor accesibilidad */
+        .nav-link:focus,
+        button:focus {
+            outline: 2px solid var(--fias-primary);
+            outline-offset: 2px;
+        }
+        
         /* Media Queries para diseño responsivo */
         @media (max-width: 768px) {
             .nav-process {
@@ -312,6 +342,28 @@
             .stages-container {
                 grid-template-columns: 1fr;
             }
+            
+            .process-title {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .process-badge {
+                margin-left: 0;
+                margin-top: 10px;
+            }
+        }
+        
+        /* Animaciones de carga optimizadas */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
         }
         
     </style>
@@ -321,7 +373,7 @@
         <div class="container">
             <a class="navbar-brand" href="#">
                 <div class="d-flex align-items-center">
-                    <img src="https://fias.org.ec/wp-content/uploads/2021/11/Logo_FIAS_web.png" height="50px" width="150px" alt="Logo de FIAS">
+                    <img src="https://fias.org.ec/wp-content/uploads/2021/11/Logo_FIAS_web.png" height="50" width="150" alt="Logo de FIAS" loading="lazy">
                     <span class="ms-2">Guía de Contratación</span>
                 </div>
             </a>
@@ -331,10 +383,10 @@
             <div class="collapse navbar-collapse" id="navbarContent">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" href="#" aria-current="page"><i class="fas fa-home me-1"></i> Inicio</a>
+                        <a class="nav-link active" href="#" aria-current="page"><i class="fas fa-home me-1" aria-hidden="true"></i> Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="https://fiasec-my.sharepoint.com/personal/dalvarez_fias_org_ec/_layouts/15/onedrive.aspx?ct=1746474465893&or=OWA%2DNT%2DMail&ga=1&id=%2Fpersonal%2Fdalvarez%5Ffias%5Forg%5Fec%2FDocuments%2FManual%20y%20Documentos%20FIAS%2FManual%20Actualizado%20FIAS%202021" target="_blank"><i class="fas fa-book me-1"></i> Documentación</a>
+                        <a class="nav-link" href="https://fiasec-my.sharepoint.com/personal/dalvarez_fias_org_ec/_layouts/15/onedrive.aspx?ct=1746474465893&or=OWA%2DNT%2DMail&ga=1&id=%2Fpersonal%2Fdalvarez%5Ffias%5Forg%5Fec%2FDocuments%2FManual%20y%20Documentos%20FIAS%2FManual%20Actualizado%20FIAS%202021" target="_blank" rel="noopener"><i class="fas fa-book me-1" aria-hidden="true"></i> Documentación</a>
                     </li>
                 </ul>
             </div>
@@ -353,27 +405,27 @@
             <ul class="nav nav-process nav-justified" id="processTab" role="tablist">
                 <li class="nav-item" role="presentation">
                     <button class="nav-link active" id="menor-tab" data-bs-toggle="tab" data-bs-target="#menor" type="button" role="tab" aria-controls="menor" aria-selected="true">
-                        <i class="fas fa-circle-dollar-to-slot me-2"></i> Menor Cuantía
+                        <i class="fas fa-circle-dollar-to-slot me-2" aria-hidden="true"></i> Menor Cuantía
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="lista-tab" data-bs-toggle="tab" data-bs-target="#lista" type="button" role="tab" aria-controls="lista" aria-selected="false">
-                        <i class="fas fa-list-ol me-2"></i> Lista Corta
+                        <i class="fas fa-list-ol me-2" aria-hidden="true"></i> Lista Corta
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="concurso-tab" data-bs-toggle="tab" data-bs-target="#concurso" type="button" role="tab" aria-controls="concurso" aria-selected="false">
-                        <i class="fas fa-gavel me-2"></i> Concurso de Ofertas
+                        <i class="fas fa-gavel me-2" aria-hidden="true"></i> Concurso de Ofertas
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="licitacion-tab" data-bs-toggle="tab" data-bs-target="#licitacion" type="button" role="tab" aria-controls="licitacion" aria-selected="false">
-                        <i class="fas fa-file-contract me-2"></i> Licitación
+                        <i class="fas fa-file-contract me-2" aria-hidden="true"></i> Licitación
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="directa-tab" data-bs-toggle="tab" data-bs-target="#directa" type="button" role="tab" aria-controls="directa" aria-selected="false">
-                        <i class="fas fa-handshake me-2"></i> Contratación Directa
+                        <i class="fas fa-handshake me-2" aria-hidden="true"></i> Contratación Directa
                     </button>
                 </li>
             </ul>
@@ -385,35 +437,35 @@
             <section class="tab-pane fade show active" id="menor" role="tabpanel" aria-labelledby="menor-tab">
                 <div class="process-content">
                     <h2 class="process-title">
-                        <i class="fas fa-circle-dollar-to-slot me-2"></i> Menor Cuantía - Bienes y Servicios
+                        <i class="fas fa-circle-dollar-to-slot me-2" aria-hidden="true"></i> Menor Cuantía - Bienes y Servicios
                         <span class="process-badge">Hasta USD 2.000</span>
                     </h2>
                     
                     <div class="stages-container">
                         <div class="stage-card">
                             <div class="card-header inicio-header">
-                                <i class="fas fa-flag me-2"></i> Etapa de Inicio
+                                <i class="fas fa-flag me-2" aria-hidden="true"></i> Etapa de Inicio
                             </div>
                             <div class="card-body p-0">
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-file-alt"></i></span>
+                                    <span class="step-icon"><i class="fas fa-file-alt" aria-hidden="true"></i></span>
                                     <div class="step-content">
                                         <div>Memo de inicio del proceso con necesidad, objeto, alcance, línea presupuestaria referencial y TdR/ET cortos</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
+                                        <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Unidad Requirente</div>
                                     </div>
                                 </div>
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-tasks"></i></span>
+                                    <span class="step-icon"><i class="fas fa-tasks" aria-hidden="true"></i></span>
                                     <div class="step-content">
                                         <div>Preparación de TdR/Especificaciones cortas con línea presupuestaria</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
+                                        <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Unidad Requirente</div>
                                     </div>
                                 </div>
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-check-circle"></i></span>
+                                    <span class="step-icon"><i class="fas fa-check-circle" aria-hidden="true"></i></span>
                                     <div class="step-content">
                                         <div>Autorización de inicio del proceso</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Ejecutiva</div>
+                                        <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Dirección Ejecutiva</div>
                                     </div>
                                 </div>
                             </div>
@@ -421,35 +473,35 @@
                         
                         <div class="stage-card">
                             <div class="card-header precontractual-header">
-                                <i class="fas fa-handshake me-2"></i> Etapa Precontractual
+                                <i class="fas fa-handshake me-2" aria-hidden="true"></i> Etapa Precontractual
                             </div>
                             <div class="card-body p-0">
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-file-invoice-dollar"></i></span>
+                                    <span class="step-icon"><i class="fas fa-file-invoice-dollar" aria-hidden="true"></i></span>
                                     <div class="step-content">
                                         <div>Certificación presupuestaria</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Gerencia Administrativa Financiera (GAF)</div>
+                                        <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Gerencia Administrativa Financiera (GAF)</div>
                                     </div>
                                 </div>
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-search-dollar"></i></span>
+                                    <span class="step-icon"><i class="fas fa-search-dollar" aria-hidden="true"></i></span>
                                     <div class="step-content">
                                         <div>Solicitud de 3 cotizaciones</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
+                                        <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Unidad Requirente</div>
                                     </div>
                                 </div>
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-clipboard-list"></i></span>
+                                    <span class="step-icon"><i class="fas fa-clipboard-list" aria-hidden="true"></i></span>
                                     <div class="step-content">
                                         <div>Elaboración de cuadro comparativo y recomendación</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
+                                        <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Unidad Requirente</div>
                                     </div>
                                 </div>
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-check-double"></i></span>
+                                    <span class="step-icon"><i class="fas fa-check-double" aria-hidden="true"></i></span>
                                     <div class="step-content">
                                         <div>Validación y adjudicación</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> GAF / Ordenador de Gasto</div>
+                                        <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> GAF / Ordenador de Gasto</div>
                                     </div>
                                 </div>
                             </div>
@@ -457,20 +509,20 @@
                         
                         <div class="stage-card">
                             <div class="card-header contractual-header">
-                                <i class="fas fa-file-contract me-2"></i> Etapa Contractual
+                                <i class="fas fa-file-contract me-2" aria-hidden="true"></i> Etapa Contractual
                             </div>
                             <div class="card-body p-0">
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-question-circle"></i></span>
+                                    <span class="step-icon"><i class="fas fa-question-circle" aria-hidden="true"></i></span>
                                     <div class="step-content">
                                         <div>¿Monto menor a USD 200?</div>
                                         <div>→ Sí: Presentación de factura + aprobación del Ordenador de Gasto</div>
                                         <div>→ No: Orden de compra/servicio</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> GAF</div>
+                                        <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> GAF</div>
                                     </div>
                                 </div>
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-question"></i></span>
+                                    <span class="step-icon"><i class="fas fa-question" aria-hidden="true"></i></span>
                                     <div class="step-content">
                                         <div>¿Hay anticipo?</div>
                                         <div>→ Sí:</div>
@@ -480,14 +532,14 @@
                                             - Firma de contrato por Dirección Ejecutiva
                                         </div>
                                         <div>→ No: No aplica contrato</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Ejecutiva / GAF</div>
+                                        <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Dirección Ejecutiva / GAF</div>
                                     </div>
                                 </div>
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-shield-alt"></i></span>
+                                    <span class="step-icon"><i class="fas fa-shield-alt" aria-hidden="true"></i></span>
                                     <div class="step-content">
                                         <div>Custodia de garantías</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Administrativa y RRHH</div>
+                                        <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Dirección Administrativa y RRHH</div>
                                     </div>
                                 </div>
                             </div>
@@ -495,56 +547,53 @@
                     </div>
                     
                     <div class="flujograma-container">
-                        <h4 class="flujograma-title"><i class="fas fa-project-diagram me-2"></i>Flujograma: Menor Cuantía - Bienes y Servicios</h4>
-                        
-                               <img src="https://raw.githubusercontent.com/jaircruz1304/FIAS/main/MC.svg" alt="Flujograma Menor Cuantía" class="img-fluid" style="width: 100%;">
-                           
-                        </div>
-                        <div class="info-panel">
-                            <h4 class="info-title"><i class="fas fa-info-circle me-2"></i>Información del Proceso</h4>
-                            <div class="step-info">
-                                <div class="step-title">Menor Cuantía - Bienes y Servicios (Hasta USD 2.000)</div>
-                                <p class="step-desc">Proceso simplificado para contrataciones de menor valor. No aplica para consultorías.</p>
-                                <div class="responsable"><i class="fas fa-user me-1"></i>Responsables: Unidad Requirente, GAF, Dirección Ejecutiva</div>
-                            </div>
+                        <h4 class="flujograma-title"><i class="fas fa-project-diagram me-2" aria-hidden="true"></i>Flujograma: Menor Cuantía - Bienes y Servicios</h4>
+                        <img src="https://raw.githubusercontent.com/jaircruz1304/FIAS/main/MC.svg" alt="Flujograma del proceso de Menor Cuantía para Bienes y Servicios" class="flujograma-img" loading="lazy">
+                    </div>
+                    <div class="info-panel">
+                        <h4 class="info-title"><i class="fas fa-info-circle me-2" aria-hidden="true"></i>Información del Proceso</h4>
+                        <div class="step-info">
+                            <div class="step-title">Menor Cuantía - Bienes y Servicios (Hasta USD 2.000)</div>
+                            <p class="step-desc">Proceso simplificado para contrataciones de menor valor. No aplica para consultorías.</p>
+                            <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i>Responsables: Unidad Requirente, GAF, Dirección Ejecutiva</div>
                         </div>
                     </div>
-                
+                </div>
             </section>
             
             <!-- LISTA CORTA -->
             <section class="tab-pane fade" id="lista" role="tabpanel" aria-labelledby="lista-tab">
                 <div class="process-content">
                     <h2 class="process-title">
-                        <i class="fas fa-list-ol me-2"></i> Lista Corta - Bienes y Servicios
+                        <i class="fas fa-list-ol me-2" aria-hidden="true"></i> Lista Corta - Bienes y Servicios
                         <span class="process-badge">USD 2.001 - 10.000</span>
                     </h2>
                     
                     <div class="stages-container">
                         <div class="stage-card">
                             <div class="card-header inicio-header">
-                                <i class="fas fa-flag me-2"></i> Etapa de Inicio
+                                <i class="fas fa-flag me-2" aria-hidden="true"></i> Etapa de Inicio
                             </div>
                             <div class="card-body p-0">
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-file-alt"></i></span>
+                                    <span class="step-icon"><i class="fas fa-file-alt" aria-hidden="true"></i></span>
                                     <div class="step-content">
                                         <div>Memo de inicio del proceso con TdR/ET y línea presupuestaria</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
+                                        <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Unidad Requirente</div>
                                     </div>
                                 </div>
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-file-alt"></i></span>
+                                    <span class="step-icon"><i class="fas fa-file-alt" aria-hidden="true"></i></span>
                                     <div class="step-content">
                                         <div>Adjuntar 3 cotizaciones</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
+                                        <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Unidad Requirente</div>
                                     </div>
                                 </div>
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-check-circle"></i></span>
+                                    <span class="step-icon"><i class="fas fa-check-circle" aria-hidden="true"></i></span>
                                     <div class="step-content">
                                         <div>Autorización de inicio del proceso</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Ejecutiva</div>
+                                        <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Dirección Ejecutiva</div>
                                     </div>
                                 </div>
                             </div>
@@ -552,42 +601,42 @@
                         
                         <div class="stage-card">
                             <div class="card-header precontractual-header">
-                                <i class="fas fa-handshake me-2"></i> Etapa Precontractual
+                                <i class="fas fa-handshake me-2" aria-hidden="true"></i> Etapa Precontractual
                             </div>
                             <div class="card-body p-0">
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-file-invoice-dollar"></i></span>
+                                    <span class="step-icon"><i class="fas fa-file-invoice-dollar" aria-hidden="true"></i></span>
                                     <div class="step-content">
                                         <div>Certificación presupuestaria</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Gerencia Administrativa Financiera (GAF)</div>
+                                        <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Gerencia Administrativa Financiera (GAF)</div>
                                     </div>
                                 </div>
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-clipboard-list"></i></span>
+                                    <span class="step-icon"><i class="fas fa-clipboard-list" aria-hidden="true"></i></span>
                                     <div class="step-content">
                                         <div>Elaboración de cuadro comparativo con las 3 cotizaciones</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
+                                        <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Unidad Requirente</div>
                                     </div>
                                 </div>
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-check-double"></i></span>
+                                    <span class="step-icon"><i class="fas fa-check-double" aria-hidden="true"></i></span>
                                     <div class="step-content">
                                         <div>Validación y adjudicación</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> GAF</div>
+                                        <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> GAF</div>
                                     </div>
                                 </div>
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-file-purchase"></i></span>
+                                    <span class="step-icon"><i class="fas fa-file-purchase" aria-hidden="true"></i></span>
                                     <div class="step-content">
                                         <div>Emisión de orden de compra/servicio (adjudicación)</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> GAF</div>
+                                        <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> GAF</div>
                                     </div>
                                 </div>
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-bell"></i></span>
+                                    <span class="step-icon"><i class="fas fa-bell" aria-hidden="true"></i></span>
                                     <div class="step-content">
                                         <div>Notificación al adjudicatario</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
+                                        <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Unidad Requirente</div>
                                     </div>
                                 </div>
                             </div>
@@ -595,11 +644,11 @@
                         
                         <div class="stage-card">
                             <div class="card-header contractual-header">
-                                <i class="fas fa-file-contract me-2"></i> Etapa Contractual
+                                <i class="fas fa-file-contract me-2" aria-hidden="true"></i> Etapa Contractual
                             </div>
                             <div class="card-body p-0">
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-question"></i></span>
+                                    <span class="step-icon"><i class="fas fa-question" aria-hidden="true"></i></span>
                                     <div class="step-content">
                                         <div>¿Hay anticipo?</div>
                                         <div>→ Sí:</div>
@@ -609,14 +658,14 @@
                                             - Firma de contrato por Dirección Ejecutiva
                                         </div>
                                         <div>→ No: Orden de compra/servicio</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Ejecutiva / GAF</div>
+                                        <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Dirección Ejecutiva / GAF</div>
                                     </div>
                                 </div>
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-shield-alt"></i></span>
+                                    <span class="step-icon"><i class="fas fa-shield-alt" aria-hidden="true"></i></span>
                                     <div class="step-content">
                                         <div>Custodia de garantías</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Administrativa y RRHH</div>
+                                        <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Dirección Administrativa y RRHH</div>
                                     </div>
                                 </div>
                             </div>
@@ -624,42 +673,41 @@
                     </div>
 
                     <div class="flujograma-container">
-                        <h4 class="flujograma-title"><i class="fas fa-project-diagram me-2"></i>Flujograma: Lista Corta - Bienes y Servicios</h4>
-                        <img src="https://raw.githubusercontent.com/jaircruz1304/FIAS/main/LC.svg" alt="Flujograma Menor Cuantía" class="img-fluid" style="width: 100%;">
-
+                        <h4 class="flujograma-title"><i class="fas fa-project-diagram me-2" aria-hidden="true"></i>Flujograma: Lista Corta - Bienes y Servicios</h4>
+                        <img src="https://raw.githubusercontent.com/jaircruz1304/FIAS/main/LC.svg" alt="Flujograma del proceso de Lista Corta para Bienes y Servicios" class="flujograma-img" loading="lazy">
                     </div>
 
                     <div class="process-content mt-4">
                         <h2 class="process-title">
-                            <i class="fas fa-list-ol me-2"></i> Lista Corta - Consultorías
+                            <i class="fas fa-list-ol me-2" aria-hidden="true"></i> Lista Corta - Consultorías
                             <span class="process-badge">USD 2.001 - 10.000</span>
                         </h2>
                         
                         <div class="stages-container">
                             <div class="stage-card">
                                 <div class="card-header inicio-header">
-                                    <i class="fas fa-flag me-2"></i> Etapa de Inicio
+                                    <i class="fas fa-flag me-2" aria-hidden="true"></i> Etapa de Inicio
                                 </div>
                                 <div class="card-body p-0">
                                     <div class="process-step">
-                                        <span class="step-icon"><i class="fas fa-file-alt"></i></span>
+                                        <span class="step-icon"><i class="fas fa-file-alt" aria-hidden="true"></i></span>
                                         <div class="step-content">
                                             <div>Memo de inicio del proceso con TdR (productos, metodología, perfiles, cronograma, línea presupuestaria)</div>
-                                            <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
+                                            <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Unidad Requirente</div>
                                         </div>
                                     </div>
                                     <div class="process-step">
-                                        <span class="step-icon"><i class="fas fa-users"></i></span>
+                                        <span class="step-icon"><i class="fas fa-users" aria-hidden="true"></i></span>
                                         <div class="step-content">
                                             <div>Lista corta de consultores (3-6)</div>
-                                            <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
+                                            <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Unidad Requirente</div>
                                         </div>
                                     </div>
                                     <div class="process-step">
-                                        <span class="step-icon"><i class="fas fa-check-circle"></i></span>
+                                        <span class="step-icon"><i class="fas fa-check-circle" aria-hidden="true"></i></span>
                                         <div class="step-content">
                                             <div>Autorización de inicio del proceso</div>
-                                            <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Ejecutiva</div>
+                                            <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Dirección Ejecutiva</div>
                                         </div>
                                     </div>
                                 </div>
@@ -667,57 +715,56 @@
                             
                             <div class="stage-card">
                                 <div class="card-header precontractual-header">
-                                    <i class="fas fa-handshake me-2"></i> Etapa Precontractual
+                                    <i class="fas fa-handshake me-2" aria-hidden="true"></i> Etapa Precontractual
                                 </div>
                                 <div class="card-body p-0">
                                     <div class="process-step">
-                                        <span class="step-icon"><i class="fas fa-file-invoice-dollar"></i></span>
+                                        <span class="step-icon"><i class="fas fa-file-invoice-dollar" aria-hidden="true"></i></span>
                                         <div class="step-content">
                                             <div>Certificación presupuestaria</div>
-                                            <div class="responsable"><i class="fas fa-user me-1"></i> Gerencia Administrativa Financiera (GAF)</div>
+                                            <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Gerencia Administrativa Financiera (GAF)</div>
                                         </div>
                                     </div>
                                     <div class="process-step">
-                                        <span class="step-icon"><i class="fas fa-file-alt"></i></span>
+                                        <span class="step-icon"><i class="fas fa-file-alt" aria-hidden="true"></i></span>
                                         <div class="step-content">
                                             <div>Elaboración de bases y cronograma</div>
-                                            <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
+                                            <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Unidad Requirente</div>
                                         </div>
                                     </div>
-					<div class="process-step">
-                                        <span class="step-icon"><i class="fas fa-envelope"></i></span>
+                                    <div class="process-step">
+                                        <span class="step-icon"><i class="fas fa-envelope" aria-hidden="true"></i></span>
                                         <div class="step-content">
                                             <div>Invitación a consultores de la lista corta (carta, TdR, formato de propuesta)</div>
-                                            <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
+                                            <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Unidad Requirente</div>
                                         </div>
                                     </div>
-				<div class="process-step">
-                                        <span class="step-icon"><i class="fas fa-envelope"></i></span>
+                                    <div class="process-step">
+                                        <span class="step-icon"><i class="fas fa-envelope" aria-hidden="true"></i></span>
                                         <div class="step-content">
                                             <div>Recepción de ofertas (Mínimo 5 días)</div>
-                                            <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
+                                            <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Unidad Requirente</div>
                                         </div>
                                     </div>
-
                                     <div class="process-step">
-                                        <span class="step-icon"><i class="fas fa-clipboard-check"></i></span>
+                                        <span class="step-icon"><i class="fas fa-clipboard-check" aria-hidden="true"></i></span>
                                         <div class="step-content">
                                             <div>Evaluación de propuestas (técnica y económica)-Calificación</div>
-                                            <div class="responsable"><i class="fas fa-user me-1"></i> Comité de Evaluación</div>
+                                            <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Comité de Evaluación</div>
                                         </div>
                                     </div>
                                     <div class="process-step">
-                                        <span class="step-icon"><i class="fas fa-trophy"></i></span>
+                                        <span class="step-icon"><i class="fas fa-trophy" aria-hidden="true"></i></span>
                                         <div class="step-content">
                                             <div>Adjudicación</div>
-                                            <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Ejecutiva</div>
+                                            <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Dirección Ejecutiva</div>
                                         </div>
                                     </div>
                                     <div class="process-step">
-                                        <span class="step-icon"><i class="fas fa-bell"></i></span>
+                                        <span class="step-icon"><i class="fas fa-bell" aria-hidden="true"></i></span>
                                         <div class="step-content">
                                             <div>Notificación al adjudicatario</div>
-                                            <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
+                                            <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Unidad Requirente</div>
                                         </div>
                                     </div>
                                 </div>
@@ -725,28 +772,28 @@
                             
                             <div class="stage-card">
                                 <div class="card-header contractual-header">
-                                    <i class="fas fa-file-contract me-2"></i> Etapa Contractual
+                                    <i class="fas fa-file-contract me-2" aria-hidden="true"></i> Etapa Contractual
                                 </div>
                                 <div class="card-body p-0">
                                     <div class="process-step">
-                                        <span class="step-icon"><i class="fas fa-file-signature"></i></span>
+                                        <span class="step-icon"><i class="fas fa-file-signature" aria-hidden="true"></i></span>
                                         <div class="step-content">
                                             <div>Elaboración de contrato</div>
-                                            <div class="responsable"><i class="fas fa-user me-1"></i> Asesoría Jurídica</div>
+                                            <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Asesoría Jurídica</div>
                                         </div>
                                     </div>
                                     <div class="process-step">
-                                        <span class="step-icon"><i class="fas fa-shield-alt"></i></span>
+                                        <span class="step-icon"><i class="fas fa-shield-alt" aria-hidden="true"></i></span>
                                         <div class="step-content">
                                             <div>Recepción de garantías (si aplica)</div>
-                                            <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Administrativa y RRHH</div>
+                                            <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Dirección Administrativa y RRHH</div>
                                         </div>
                                     </div>
                                     <div class="process-step">
-                                        <span class="step-icon"><i class="fas fa-signature"></i></span>
+                                        <span class="step-icon"><i class="fas fa-signature" aria-hidden="true"></i></span>
                                         <div class="step-content">
                                             <div>Firma de contrato</div>
-                                            <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Ejecutiva</div>
+                                            <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Dirección Ejecutiva</div>
                                         </div>
                                     </div>
                                 </div>
@@ -755,8 +802,8 @@
                     </div>
 
                     <div class="flujograma-container">
-                        <h4 class="flujograma-title"><i class="fas fa-project-diagram me-2"></i>Flujograma: Lista Corta - Consultorías</h4>
-                        <img src="https://raw.githubusercontent.com/jaircruz1304/FIAS/main/LCC.svg" alt="Flujograma Menor Cuantía" class="img-fluid" style="width: 100%;">
+                        <h4 class="flujograma-title"><i class="fas fa-project-diagram me-2" aria-hidden="true"></i>Flujograma: Lista Corta - Consultorías</h4>
+                        <img src="https://raw.githubusercontent.com/jaircruz1304/FIAS/main/LCC.svg" alt="Flujograma del proceso de Lista Corta para Consultorías" class="flujograma-img" loading="lazy">
                     </div>
                 </div>
             </section>
@@ -765,45 +812,45 @@
             <section class="tab-pane fade" id="concurso" role="tabpanel" aria-labelledby="concurso-tab">
                 <div class="process-content">
                     <h2 class="process-title">
-                        <i class="fas fa-gavel me-2"></i> Concurso de Ofertas - Bienes y Servicios
+                        <i class="fas fa-gavel me-2" aria-hidden="true"></i> Concurso de Ofertas - Bienes y Servicios
                         <span class="process-badge">USD 10.001 - 50.000</span>
                     </h2>
                     
                     <div class="stages-container">
                         <div class="stage-card">
                             <div class="card-header inicio-header">
-                                <i class="fas fa-flag me-2"></i> Etapa de Inicio
+                                <i class="fas fa-flag me-2" aria-hidden="true"></i> Etapa de Inicio
                             </div>
                             <div class="card-body p-0">
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-file-alt"></i></span>
+                                    <span class="step-icon"><i class="fas fa-file-alt" aria-hidden="true"></i></span>
                                     <div class="step-content">
                                         <div>Memo de inicio del proceso con TdR/ET y línea presupuestaria</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
+                                        <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Unidad Requirente</div>
                                     </div>
                                 </div>
 
-<div class="process-step">
-                                        <span class="step-icon"><i class="fas fa-users"></i></span>
-                                        <div class="step-content">
-                                            <div>Estudio de Mercado</div>
-                                            <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
-                                        </div>
+                                <div class="process-step">
+                                    <span class="step-icon"><i class="fas fa-users" aria-hidden="true"></i></span>
+                                    <div class="step-content">
+                                        <div>Estudio de Mercado</div>
+                                        <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Unidad Requirente</div>
                                     </div>
-
-				<div class="process-step">
-                                        <span class="step-icon"><i class="fas fa-users"></i></span>
-                                        <div class="step-content">
-                                            <div>Lista corta (En el caso que aplique si son proveedores calificados FIAS o invitados por FIAS)</div>
-                                            <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
-                                        </div>
-                                    </div>
+                                </div>
 
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-check-circle"></i></span>
+                                    <span class="step-icon"><i class="fas fa-users" aria-hidden="true"></i></span>
+                                    <div class="step-content">
+                                        <div>Lista corta (En el caso que aplique si son proveedores calificados FIAS o invitados por FIAS)</div>
+                                        <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Unidad Requirente</div>
+                                    </div>
+                                </div>
+
+                                <div class="process-step">
+                                    <span class="step-icon"><i class="fas fa-check-circle" aria-hidden="true"></i></span>
                                     <div class="step-content">
                                         <div>Autorización de inicio del proceso</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Ejecutiva</div>
+                                        <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Dirección Ejecutiva</div>
                                     </div>
                                 </div>
                             </div>
@@ -811,113 +858,105 @@
                         
                         <div class="stage-card">
                             <div class="card-header precontractual-header">
-                                <i class="fas fa-handshake me-2"></i> Etapa Precontractual
+                                <i class="fas fa-handshake me-2" aria-hidden="true"></i> Etapa Precontractual
                             </div>
                             <div class="card-body p-0">
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-file-invoice-dollar"></i></span>
+                                    <span class="step-icon"><i class="fas fa-file-invoice-dollar" aria-hidden="true"></i></span>
                                     <div class="step-content">
                                         <div>Certificación presupuestaria</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Gerencia Administrativa Financiera (GAF)</div>
+                                        <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Gerencia Administrativa Financiera (GAF)</div>
                                     </div>
                                 </div>
                                
-<div class="process-step">
-                                        <span class="step-icon"><i class="fas fa-file-alt"></i></span>
-                                        <div class="step-content">
-                                            <div>Elaboración de Bases y Cronograma</div>
-                                            <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
-                                        </div>
+                                <div class="process-step">
+                                    <span class="step-icon"><i class="fas fa-file-alt" aria-hidden="true"></i></span>
+                                    <div class="step-content">
+                                        <div>Elaboración de Bases y Cronograma</div>
+                                        <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Unidad Requirente</div>
                                     </div>
+                                </div>
 
- <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-bullhorn"></i></span>
+                                <div class="process-step">
+                                    <span class="step-icon"><i class="fas fa-bullhorn" aria-hidden="true"></i></span>
                                     <div class="step-content">
                                         <div>Convocatoria pública (portal FIAS, redes sociales, medios)</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente / Comunicación</div>
+                                        <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Unidad Requirente / Comunicación</div>
                                     </div>
                                 </div>
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-envelope-open-text"></i></span>
+                                    <span class="step-icon"><i class="fas fa-envelope-open-text" aria-hidden="true"></i></span>
                                     <div class="step-content">
                                         <div>Recepción de ofertas (Mínimo 5 días)</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Comité de Recepción</div>
+                                        <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Comité de Recepción</div>
                                     </div>
                                 </div>
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-clipboard-check"></i></span>
+                                    <span class="step-icon"><i class="fas fa-clipboard-check" aria-hidden="true"></i></span>
                                     <div class="step-content">
                                         <div>Apertura de ofertas (pública)</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Comité de Recepción</div>
+                                        <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Comité de Recepción</div>
                                     </div>
                                 </div>
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-search"></i></span>
+                                    <span class="step-icon"><i class="fas fa-search" aria-hidden="true"></i></span>
                                     <div class="step-content">
                                         <div>Evaluación de ofertas (técnica y económica) -Acta de calificación</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Comité de Evaluación</div>
+                                        <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Comité de Evaluación</div>
                                     </div>
                                 </div>
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-trophy"></i></span>
+                                    <span class="step-icon"><i class="fas fa-trophy" aria-hidden="true"></i></span>
                                     <div class="step-content">
                                         <div>Adjudicación</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Ejecutiva</div>
+                                        <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Dirección Ejecutiva</div>
                                     </div>
                                 </div>
 
-<div class="card-body p-0">
-                                
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-bell"></i></span>
+                                    <span class="step-icon"><i class="fas fa-bell" aria-hidden="true"></i></span>
                                     <div class="step-content">
                                         <div>Notificación al adjudicatario</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
+                                        <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Unidad Requirente</div>
                                     </div>
                                 </div>
                             </div>
-                        </div>  </div>
+                        </div>
                         
                         <div class="stage-card">
                             <div class="card-header contractual-header">
-                                <i class="fas fa-file-contract me-2"></i> Etapa Contractual
+                                <i class="fas fa-file-contract me-2" aria-hidden="true"></i> Etapa Contractual
                             </div>
                             <div class="card-body p-0">
-
-<div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-question"></i></span>
+                                <div class="process-step">
+                                    <span class="step-icon"><i class="fas fa-question" aria-hidden="true"></i></span>
                                     <div class="step-content">
                                         <div>¿Hay anticipo?</div>
-					<div>→ No: No aplica contrato, se emite OC/OS</div>
-                                        
-                                        <div class="ms-3">
-                                            
-                                        </div>
-                                        
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Ejecutiva / GAF</div>
+                                        <div>→ No: No aplica contrato, se emite OC/OS</div>
+                                        <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Dirección Ejecutiva / GAF</div>
                                     </div>
                                 </div>
 
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-file-signature"></i></span>
+                                    <span class="step-icon"><i class="fas fa-file-signature" aria-hidden="true"></i></span>
                                     <div class="step-content">
-<div>→ Sí:</div>
+                                        <div>→ Sí:</div>
                                         <div>Elaboración de contrato</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Asesoría Jurídica</div>
+                                        <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Asesoría Jurídica</div>
                                     </div>
                                 </div>
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-shield-alt"></i></span>
+                                    <span class="step-icon"><i class="fas fa-shield-alt" aria-hidden="true"></i></span>
                                     <div class="step-content">
                                         <div>Recepción de garantías (5% del valor del contrato)</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Administrativa y RRHH</div>
+                                        <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Dirección Administrativa y RRHH</div>
                                     </div>
                                 </div>
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-signature"></i></span>
+                                    <span class="step-icon"><i class="fas fa-signature" aria-hidden="true"></i></span>
                                     <div class="step-content">
                                         <div>Firma de contrato</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Ejecutiva</div>
+                                        <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Dirección Ejecutiva</div>
                                     </div>
                                 </div>
                             </div>
@@ -925,117 +964,109 @@
                     </div>
 
                     <div class="flujograma-container">
-                        <h4 class="flujograma-title"><i class="fas fa-project-diagram me-2"></i>Flujograma: Concurso de Ofertas - Bienes y Servicios</h4>
-                        <img src="https://raw.githubusercontent.com/jaircruz1304/FIAS/main/CONS.svg" alt="Flujograma Menor Cuantía" class="img-fluid" style="width: 100%;">
+                        <h4 class="flujograma-title"><i class="fas fa-project-diagram me-2" aria-hidden="true"></i>Flujograma: Concurso de Ofertas - Bienes y Servicios</h4>
+                        <img src="https://raw.githubusercontent.com/jaircruz1304/FIAS/main/CONS.svg" alt="Flujograma del proceso de Concurso de Ofertas para Bienes y Servicios" class="flujograma-img" loading="lazy">
                     </div>
 
                     <div class="process-content mt-4">
                         <h2 class="process-title">
-                            <i class="fas fa-gavel me-2"></i> Concurso de Ofertas - Consultorías
+                            <i class="fas fa-gavel me-2" aria-hidden="true"></i> Concurso de Ofertas - Consultorías
                             <span class="process-badge">USD 10.001 - 50.000</span>
                         </h2>
                         
                         <div class="stages-container">
-                        <div class="stage-card">
-                            <div class="card-header inicio-header">
-                                <i class="fas fa-flag me-2"></i> Etapa de Inicio
-                            </div>
-                            <div class="card-body p-0">
-                                <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-file-alt"></i></span>
-                                    <div class="step-content">
-                                        <div>Memo de inicio del proceso con TdR/ET y línea presupuestaria</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
-                                    </div>
-                                </div>
-
-				<div class="process-step">
-                                        <span class="step-icon"><i class="fas fa-users"></i></span>
-                                        <div class="step-content">
-                                            <div>Lista corta (En el caso que aplique si son proveedores calificados FIAS o invitados por FIAS)</div>
-                                            <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
-                                        </div>
-                                    </div>
-
-                                <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-check-circle"></i></span>
-                                    <div class="step-content">
-                                        <div>Autorización de inicio del proceso</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Ejecutiva</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                            
                             <div class="stage-card">
-                                <div class="card-header precontractual-header">
-                                    <i class="fas fa-handshake me-2"></i> Etapa Precontractual
+                                <div class="card-header inicio-header">
+                                    <i class="fas fa-flag me-2" aria-hidden="true"></i> Etapa de Inicio
                                 </div>
                                 <div class="card-body p-0">
                                     <div class="process-step">
-                                        <span class="step-icon"><i class="fas fa-file-invoice-dollar"></i></span>
+                                        <span class="step-icon"><i class="fas fa-file-alt" aria-hidden="true"></i></span>
+                                        <div class="step-content">
+                                            <div>Memo de inicio del proceso con TdR/ET y línea presupuestaria</div>
+                                            <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Unidad Requirente</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="process-step">
+                                        <span class="step-icon"><i class="fas fa-users" aria-hidden="true"></i></span>
+                                        <div class="step-content">
+                                            <div>Lista corta (En el caso que aplique si son proveedores calificados FIAS o invitados por FIAS)</div>
+                                            <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Unidad Requirente</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="process-step">
+                                        <span class="step-icon"><i class="fas fa-check-circle" aria-hidden="true"></i></span>
+                                        <div class="step-content">
+                                            <div>Autorización de inicio del proceso</div>
+                                            <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Dirección Ejecutiva</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="stage-card">
+                                <div class="card-header precontractual-header">
+                                    <i class="fas fa-handshake me-2" aria-hidden="true"></i> Etapa Precontractual
+                                </div>
+                                <div class="card-body p-0">
+                                    <div class="process-step">
+                                        <span class="step-icon"><i class="fas fa-file-invoice-dollar" aria-hidden="true"></i></span>
                                         <div class="step-content">
                                             <div>Certificación presupuestaria</div>
-                                            <div class="responsable"><i class="fas fa-user me-1"></i> Gerencia Administrativa Financiera (GAF)</div>
+                                            <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Gerencia Administrativa Financiera (GAF)</div>
                                         </div>
                                     </div>
 
-
-<div class="process-step">
-                                        <span class="step-icon"><i class="fas fa-file-alt"></i></span>
+                                    <div class="process-step">
+                                        <span class="step-icon"><i class="fas fa-file-alt" aria-hidden="true"></i></span>
                                         <div class="step-content">
                                             <div>Elaboración de Bases y Cronograma</div>
-                                            <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
+                                            <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Unidad Requirente</div>
                                         </div>
                                     </div>
 
                                     <div class="process-step">
-                                        <span class="step-icon"><i class="fas fa-bullhorn"></i></span>
+                                        <span class="step-icon"><i class="fas fa-bullhorn" aria-hidden="true"></i></span>
                                         <div class="step-content">
                                             <div>Convocatoria pública (portal FIAS, redes sociales, medios)</div>
-                                            <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente / Comunicación</div>
+                                            <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Unidad Requirente / Comunicación</div>
                                         </div>
                                     </div>
                                     <div class="process-step">
-                                        <span class="step-icon"><i class="fas fa-envelope-open-text"></i></span>
+                                        <span class="step-icon"><i class="fas fa-envelope-open-text" aria-hidden="true"></i></span>
                                         <div class="step-content">
                                             <div>Recepción de propuestas</div>
-                                            <div class="responsable"><i class="fas fa-user me-1"></i> Comité de Recepción</div>
+                                            <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Comité de Recepción</div>
                                         </div>
                                     </div>
                                     <div class="process-step">
-                                        <span class="step-icon"><i class="fas fa-clipboard-check"></i></span>
+                                        <span class="step-icon"><i class="fas fa-clipboard-check" aria-hidden="true"></i></span>
                                         <div class="step-content">
                                             <div>Apertura de propuestas</div>
-                                            <div class="responsable"><i class="fas fa-user me-1"></i> Comité de Recepción</div>
+                                            <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Comité de Recepción</div>
                                         </div>
                                     </div>
                                     <div class="process-step">
-                                        <span class="step-icon"><i class="fas fa-search"></i></span>
+                                        <span class="step-icon"><i class="fas fa-search" aria-hidden="true"></i></span>
                                         <div class="step-content">
                                             <div>Evaluación de propuestas (técnica y económica)-Acta de Comité de contrataciones</div>
-                                            <div class="responsable"><i class="fas fa-user me-1"></i> Comité de Evaluación</div>
+                                            <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Comité de Evaluación</div>
                                         </div>
                                     </div>
-
-
                                     <div class="process-step">
-                                        <span class="step-icon"><i class="fas fa-trophy"></i></span>
+                                        <span class="step-icon"><i class="fas fa-trophy" aria-hidden="true"></i></span>
                                         <div class="step-content">
                                             <div>Adjudicación</div>
-                                            <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Ejecutiva</div>
+                                            <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Dirección Ejecutiva</div>
                                         </div>
                                     </div>
-
-
-
-
                                     <div class="process-step">
-                                        <span class="step-icon"><i class="fas fa-bell"></i></span>
+                                        <span class="step-icon"><i class="fas fa-bell" aria-hidden="true"></i></span>
                                         <div class="step-content">
                                             <div>Notificación al adjudicatario con Orden compra/servicio</div>
-                                            <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
+                                            <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Unidad Requirente</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1043,44 +1074,38 @@
                             
                             <div class="stage-card">
                                 <div class="card-header contractual-header">
-                                    <i class="fas fa-file-contract me-2"></i> Etapa Contractual
+                                    <i class="fas fa-file-contract me-2" aria-hidden="true"></i> Etapa Contractual
                                 </div>
                                 <div class="card-body p-0">
                                     <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-question"></i></span>
-                                    <div class="step-content">
-                                        <div>¿Hay anticipo?</div>
-					<div>→ No: No aplica contrato, se emite OC/OS</div>
-                                        
-                                        <div class="ms-3">
-                                            
+                                        <span class="step-icon"><i class="fas fa-question" aria-hidden="true"></i></span>
+                                        <div class="step-content">
+                                            <div>¿Hay anticipo?</div>
+                                            <div>→ No: No aplica contrato, se emite OC/OS</div>
+                                            <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Dirección Ejecutiva / GAF</div>
                                         </div>
-                                        
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Ejecutiva / GAF</div>
                                     </div>
-                                </div>
 
-                                <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-file-signature"></i></span>
-                                    <div class="step-content">
-<div>→ Sí:</div>
-
+                                    <div class="process-step">
+                                        <span class="step-icon"><i class="fas fa-file-signature" aria-hidden="true"></i></span>
+                                        <div class="step-content">
+                                            <div>→ Sí:</div>
                                             <div>Elaboración de contrato</div>
-                                            <div class="responsable"><i class="fas fa-user me-1"></i> Asesoría Jurídica</div>
+                                            <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Asesoría Jurídica</div>
                                         </div>
                                     </div>
                                     <div class="process-step">
-                                        <span class="step-icon"><i class="fas fa-shield-alt"></i></span>
+                                        <span class="step-icon"><i class="fas fa-shield-alt" aria-hidden="true"></i></span>
                                         <div class="step-content">
                                             <div>Recepción de garantías (si aplica)</div>
-                                            <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Administrativa y RRHH</div>
+                                            <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Dirección Administrativa y RRHH</div>
                                         </div>
                                     </div>
                                     <div class="process-step">
-                                        <span class="step-icon"><i class="fas fa-signature"></i></span>
+                                        <span class="step-icon"><i class="fas fa-signature" aria-hidden="true"></i></span>
                                         <div class="step-content">
                                             <div>Firma de contrato</div>
-                                            <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Ejecutiva</div>
+                                            <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Dirección Ejecutiva</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1089,8 +1114,8 @@
                     </div>
 
                     <div class="flujograma-container">
-                        <h4 class="flujograma-title"><i class="fas fa-project-diagram me-2"></i>Flujograma: Concurso de Ofertas - Consultorías</h4>
-                        <img src="https://raw.githubusercontent.com/jaircruz1304/FIAS/main/CONSD.svg" alt="Flujograma Menor Cuantía" class="img-fluid" style="width: 100%;">
+                        <h4 class="flujograma-title"><i class="fas fa-project-diagram me-2" aria-hidden="true"></i>Flujograma: Concurso de Ofertas - Consultorías</h4>
+                        <img src="https://raw.githubusercontent.com/jaircruz1304/FIAS/main/CONSD.svg" alt="Flujograma del proceso de Concurso de Ofertas para Consultorías" class="flujograma-img" loading="lazy">
                     </div>
                 </div>
             </section>
@@ -1099,45 +1124,45 @@
             <section class="tab-pane fade" id="licitacion" role="tabpanel" aria-labelledby="licitacion-tab">
                 <div class="process-content">
                     <h2 class="process-title">
-                        <i class="fas fa-file-contract me-2"></i> Licitación  - Bienes y Servicios
+                        <i class="fas fa-file-contract me-2" aria-hidden="true"></i> Licitación  - Bienes y Servicios
                         <span class="process-badge">De USD $50.001 en adelante.</span>
                     </h2>
                     
                     <div class="stages-container">
                         <div class="stage-card">
                             <div class="card-header inicio-header">
-                                <i class="fas fa-flag me-2"></i> Etapa de Inicio
+                                <i class="fas fa-flag me-2" aria-hidden="true"></i> Etapa de Inicio
                             </div>
                             <div class="card-body p-0">
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-file-alt"></i></span>
+                                    <span class="step-icon"><i class="fas fa-file-alt" aria-hidden="true"></i></span>
                                     <div class="step-content">
                                         <div>Memo de inicio del proceso con TdR/ET detallados y línea presupuestaria</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
+                                        <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Unidad Requirente</div>
                                     </div>
                                 </div>
 
-<div class="process-step">
-                                        <span class="step-icon"><i class="fas fa-users"></i></span>
-                                        <div class="step-content">
-                                            <div>Estudio de Mercado (En caso de bienes y servicios).</div>
-                                            <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
-                                        </div>
+                                <div class="process-step">
+                                    <span class="step-icon"><i class="fas fa-users" aria-hidden="true"></i></span>
+                                    <div class="step-content">
+                                        <div>Estudio de Mercado (En caso de bienes y servicios).</div>
+                                        <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Unidad Requirente</div>
                                     </div>
-
-				<div class="process-step">
-                                        <span class="step-icon"><i class="fas fa-users"></i></span>
-                                        <div class="step-content">
-                                            <div>Lista corta (En el caso que aplique si son proveedores calificados FIAS o invitados por FIAS)</div>
-                                            <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
-                                        </div>
-                                    </div>
+                                </div>
 
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-check-circle"></i></span>
+                                    <span class="step-icon"><i class="fas fa-users" aria-hidden="true"></i></span>
+                                    <div class="step-content">
+                                        <div>Lista corta (En el caso que aplique si son proveedores calificados FIAS o invitados por FIAS)</div>
+                                        <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Unidad Requirente</div>
+                                    </div>
+                                </div>
+
+                                <div class="process-step">
+                                    <span class="step-icon"><i class="fas fa-check-circle" aria-hidden="true"></i></span>
                                     <div class="step-content">
                                         <div>Autorización de inicio del proceso</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Ejecutiva</div>
+                                        <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Dirección Ejecutiva</div>
                                     </div>
                                 </div>
                             </div>
@@ -1145,68 +1170,66 @@
                         
                         <div class="stage-card">
                             <div class="card-header precontractual-header">
-                                <i class="fas fa-handshake me-2"></i> Etapa Precontractual
+                                <i class="fas fa-handshake me-2" aria-hidden="true"></i> Etapa Precontractual
                             </div>
                             <div class="card-body p-0">
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-file-invoice-dollar"></i></span>
+                                    <span class="step-icon"><i class="fas fa-file-invoice-dollar" aria-hidden="true"></i></span>
                                     <div class="step-content">
                                         <div>Certificación presupuestaria</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Gerencia Administrativa Financiera (GAF)</div>
+                                        <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Gerencia Administrativa Financiera (GAF)</div>
                                     </div>
                                 </div>
 
-
-<div class="process-step">
-                                        <span class="step-icon"><i class="fas fa-file-alt"></i></span>
-                                        <div class="step-content">
-                                            <div>Elaboración de Bases y Cronograma</div>
-                                            <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
-                                        </div>
+                                <div class="process-step">
+                                    <span class="step-icon"><i class="fas fa-file-alt" aria-hidden="true"></i></span>
+                                    <div class="step-content">
+                                        <div>Elaboración de Bases y Cronograma</div>
+                                        <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Unidad Requirente</div>
                                     </div>
-
+                                </div>
 
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-bullhorn"></i></span>
+                                    <span class="step-icon"><i class="fas fa-bullhorn" aria-hidden="true"></i></span>
                                     <div class="step-content">
                                         <div>Convocatoria pública (portal FIAS, redes sociales, medios)</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente / Comunicación</div>
+                                        <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Unidad Requirente / Comunicación</div>
                                     </div>
                                 </div>
                                 
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-envelope-open-text"></i></span>
+                                    <span class="step-icon"><i class="fas fa-envelope-open-text" aria-hidden="true"></i></span>
                                     <div class="step-content">
                                         <div>Recepción de ofertas (Mínimo 5 días)</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Comité de Recepción</div>
+                                        <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Comité de Recepción</div>
                                     </div>
                                 </div>
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-clipboard-check"></i></span>
+                                    <span class="step-icon"><i class="fas fa-clipboard-check" aria-hidden="true"></i></span>
                                     <div class="step-content">
                                         <div>Apertura de ofertas</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Comité de Recepción</div>
+                                        <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Comité de Recepción</div>
                                     </div>
                                 </div>
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-search"></i></span>
+                                    <span class="step-icon"><i class="fas fa-search" aria-hidden="true"></i></span>
                                     <div class="step-content">
                                         <div>Evaluación de ofertas (técnica y económica)- Acta de Comité de Contrataciones</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Comité de Evaluación</div>
+                                        <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Comité de Evaluación</div>
                                     </div>
                                 </div>
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-trophy"></i></span>
+                                    <span class="step-icon"><i class="fas fa-trophy" aria-hidden="true"></i></span>
                                     <div class="step-content">
                                         <div>Adjudicación</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Ejecutiva</div>
+                                        <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Dirección Ejecutiva</div>
                                     </div>
                                 </div>
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-bell"></i></span>
+                                    <span class="step-icon"><i class="fas fa-bell" aria-hidden="true"></i></span>
                                     <div class="step-content">
                                         <div>Notificación al adjudicatario</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
+                                        <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Unidad Requirente</div>
                                     </div>
                                 </div>
                             </div>
@@ -1214,28 +1237,28 @@
                         
                         <div class="stage-card">
                             <div class="card-header contractual-header">
-                                <i class="fas fa-file-contract me-2"></i> Etapa Contractual
+                                <i class="fas fa-file-contract me-2" aria-hidden="true"></i> Etapa Contractual
                             </div>
                             <div class="card-body p-0">
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-file-signature"></i></span>
+                                    <span class="step-icon"><i class="fas fa-file-signature" aria-hidden="true"></i></span>
                                     <div class="step-content">
                                         <div>Elaboración de contrato</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Asesoría Jurídica</div>
+                                        <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Asesoría Jurídica</div>
                                     </div>
                                 </div>
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-shield-alt"></i></span>
+                                    <span class="step-icon"><i class="fas fa-shield-alt" aria-hidden="true"></i></span>
                                     <div class="step-content">
                                         <div>Recepción de garantías (5% del valor del contrato)</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Administrativa y RRHH</div>
+                                        <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Dirección Administrativa y RRHH</div>
                                     </div>
                                 </div>
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-signature"></i></span>
+                                    <span class="step-icon"><i class="fas fa-signature" aria-hidden="true"></i></span>
                                     <div class="step-content">
                                         <div>Firma de contrato</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Ejecutiva</div>
+                                        <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Dirección Ejecutiva</div>
                                     </div>
                                 </div>
                             </div>
@@ -1243,9 +1266,9 @@
                     </div>
 
                     <div class="flujograma-container">
-                        <h4 class="flujograma-title"><i class="fas fa-project-diagram me-2"></i>Flujograma: Licitación - Bienes y Servicios</h4>
-                        <img src="https://raw.githubusercontent.com/jaircruz1304/FIAS/main/LIC.svg" alt="Flujograma Menor Cuantía" class="img-fluid" style="width: 100%;">
-                </div>
+                        <h4 class="flujograma-title"><i class="fas fa-project-diagram me-2" aria-hidden="true"></i>Flujograma: Licitación - Bienes y Servicios</h4>
+                        <img src="https://raw.githubusercontent.com/jaircruz1304/FIAS/main/LIC.svg" alt="Flujograma del proceso de Licitación para Bienes y Servicios" class="flujograma-img" loading="lazy">
+                    </div>
                  </div>
             </section>
             
@@ -1253,34 +1276,33 @@
             <section class="tab-pane fade" id="directa" role="tabpanel" aria-labelledby="directa-tab">
                 <div class="process-content">
                     <h2 class="process-title">
-                        <i class="fas fa-handshake me-2"></i> Contratación Directa - Bienes y Servicios
+                        <i class="fas fa-handshake me-2" aria-hidden="true"></i> Contratación Directa - Bienes y Servicios
                         <span class="process-badge">Cualquier Monto $ - Casos Específicos</span>
                     </h2>
                     
                     <div class="stages-container">
                         <div class="stage-card">
                             <div class="card-header inicio-header">
-                                <i class="fas fa-flag me-2"></i> Etapa de Inicio
+                                <i class="fas fa-flag me-2" aria-hidden="true"></i> Etapa de Inicio
                             </div>
                             <div class="card-body p-0">
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-file-alt"></i></span>
+                                    <span class="step-icon"><i class="fas fa-file-alt" aria-hidden="true"></i></span>
                                     <div class="step-content">
                                         <div>Memo de inicio del proceso con justificación técnica y legal</div>
-					<div>📋	Términos de Referencia (con línea presupuestaria).</div>
-					<div>📋Informe de justificación de contratación directa arpobado por la Comisión o Comité de contrataciones</div>
-					<div>📋Invitación (correo u oficio Coordinar de Proyecto).</div>
-					<div>📋Cotización.</div>
-					<div>📋No objeción Cooperante (Cuando aplique)</div>
-
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
+                                        <div>📋 Términos de Referencia (con línea presupuestaria).</div>
+                                        <div>📋 Informe de justificación de contratación directa aprobado por la Comisión o Comité de contrataciones</div>
+                                        <div>📋 Invitación (correo u oficio Coordinar de Proyecto).</div>
+                                        <div>📋 Cotización.</div>
+                                        <div>📋 No objeción Cooperante (Cuando aplique)</div>
+                                        <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Unidad Requirente</div>
                                     </div>
                                 </div>
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-check-circle"></i></span>
+                                    <span class="step-icon"><i class="fas fa-check-circle" aria-hidden="true"></i></span>
                                     <div class="step-content">
                                         <div>Autorización de inicio del proceso</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Ejecutiva</div>
+                                        <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Dirección Ejecutiva</div>
                                     </div>
                                 </div>
                             </div>
@@ -1288,29 +1310,29 @@
                         
                         <div class="stage-card">
                             <div class="card-header precontractual-header">
-                                <i class="fas fa-handshake me-2"></i> Etapa Precontractual
+                                <i class="fas fa-handshake me-2" aria-hidden="true"></i> Etapa Precontractual
                             </div>
                             <div class="card-body p-0">
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-file-invoice-dollar"></i></span>
+                                    <span class="step-icon"><i class="fas fa-file-invoice-dollar" aria-hidden="true"></i></span>
                                     <div class="step-content">
                                         <div>Certificación presupuestaria</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Gerencia Administrativa Financiera (GAF)</div>
+                                        <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Gerencia Administrativa Financiera (GAF)</div>
                                     </div>
                                 </div>
                                 
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-check-double"></i></span>
+                                    <span class="step-icon"><i class="fas fa-check-double" aria-hidden="true"></i></span>
                                     <div class="step-content">
                                         <div>Validación y adjudicación</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> GAF / Ordenador de Gasto</div>
+                                        <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> GAF / Ordenador de Gasto</div>
                                     </div>
                                 </div>
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-bell"></i></span>
+                                    <span class="step-icon"><i class="fas fa-bell" aria-hidden="true"></i></span>
                                     <div class="step-content">
                                         <div>Notificación al adjudicatario </div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Ejecutiva/ Unidad Requirente</div>
+                                        <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Dirección Ejecutiva/ Unidad Requirente</div>
                                     </div>
                                 </div>
                             </div>
@@ -1318,11 +1340,11 @@
                         
                         <div class="stage-card">
                             <div class="card-header contractual-header">
-                                <i class="fas fa-file-contract me-2"></i> Etapa Contractual
+                                <i class="fas fa-file-contract me-2" aria-hidden="true"></i> Etapa Contractual
                             </div>
                             <div class="card-body p-0">
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-question"></i></span>
+                                    <span class="step-icon"><i class="fas fa-question" aria-hidden="true"></i></span>
                                     <div class="step-content">
                                         <div>¿Requiere contrato?</div>
                                         <div>→ Sí:</div>
@@ -1332,14 +1354,14 @@
                                             - Firma de contrato por Dirección Ejecutiva
                                         </div>
                                         <div>→ No: Orden de compra/servicio hasta $50.000</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Ejecutiva / GAF</div>
+                                        <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Dirección Ejecutiva / GAF</div>
                                     </div>
                                 </div>
                                 <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-shield-alt"></i></span>
+                                    <span class="step-icon"><i class="fas fa-shield-alt" aria-hidden="true"></i></span>
                                     <div class="step-content">
                                         <div>Custodia de garantías (si aplica)</div>
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Administrativa y RRHH</div>
+                                        <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Dirección Administrativa y RRHH</div>
                                     </div>
                                 </div>
                             </div>
@@ -1347,43 +1369,41 @@
                     </div>
 
                     <div class="flujograma-container">
-                        <h4 class="flujograma-title"><i class="fas fa-project-diagram me-2"></i>Flujograma: Contratación Directa - Bienes y Servicios</h4>
-                        <img src="https://raw.githubusercontent.com/jaircruz1304/FIAS/main/DIR.svg" alt="Flujograma Menor Cuantía" class="img-fluid" style="width: 100%;">
+                        <h4 class="flujograma-title"><i class="fas fa-project-diagram me-2" aria-hidden="true"></i>Flujograma: Contratación Directa - Bienes y Servicios</h4>
+                        <img src="https://raw.githubusercontent.com/jaircruz1304/FIAS/main/DIR.svg" alt="Flujograma del proceso de Contratación Directa para Bienes y Servicios" class="flujograma-img" loading="lazy">
                     </div>
 
                     <div class="process-content mt-4">
                         <h2 class="process-title">
-                            <i class="fas fa-handshake me-2"></i> Contratación Directa - Consultorías
+                            <i class="fas fa-handshake me-2" aria-hidden="true"></i> Contratación Directa - Consultorías
                             <span class="process-badge">Casos Específicos</span>
                         </h2>
                         
                         <div class="stages-container">
                             <div class="stage-card">
                                 <div class="card-header inicio-header">
-                                    <i class="fas fa-flag me-2"></i> Etapa de Inicio
+                                    <i class="fas fa-flag me-2" aria-hidden="true"></i> Etapa de Inicio
                                 </div>
                                 <div class="card-body p-0">
                                     <div class="process-step">
-                                    <span class="step-icon"><i class="fas fa-file-alt"></i></span>
-                                    <div class="step-content">
-                                        <div>Memo de inicio del proceso con justificación técnica y legal</div>
-					<div>📋	Términos de Referencia (con línea presupuestaria).</div>
-					<div>📋	Informe de justificación de contratación directa arpobado por la Comisión o Comité de contrataciones</div>
-					<div>📋	Invitación (correo u oficio Coordinar de Proyecto).</div>
-					<div>📋	Propuesta.</div>
-					<div>📋	No objeción Cooperante (Cuando aplique)</div>
-					<div>📋	Otros documentos de soporte</div>
-
-
-                                        <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
+                                        <span class="step-icon"><i class="fas fa-file-alt" aria-hidden="true"></i></span>
+                                        <div class="step-content">
+                                            <div>Memo de inicio del proceso con justificación técnica y legal</div>
+                                            <div>📋 Términos de Referencia (con línea presupuestaria).</div>
+                                            <div>📋 Informe de justificación de contratación directa aprobado por la Comisión o Comité de contrataciones</div>
+                                            <div>📋 Invitación (correo u oficio Coordinar de Proyecto).</div>
+                                            <div>📋 Propuesta.</div>
+                                            <div>📋 No objeción Cooperante (Cuando aplique)</div>
+                                            <div>📋 Otros documentos de soporte</div>
+                                            <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Unidad Requirente</div>
+                                        </div>
                                     </div>
-                                </div>
 
                                     <div class="process-step">
-                                        <span class="step-icon"><i class="fas fa-check-circle"></i></span>
+                                        <span class="step-icon"><i class="fas fa-check-circle" aria-hidden="true"></i></span>
                                         <div class="step-content">
                                             <div>Autorización de inicio del proceso</div>
-                                            <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Ejecutiva</div>
+                                            <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Dirección Ejecutiva</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1391,35 +1411,35 @@
                             
                             <div class="stage-card">
                                 <div class="card-header precontractual-header">
-                                    <i class="fas fa-handshake me-2"></i> Etapa Precontractual
+                                    <i class="fas fa-handshake me-2" aria-hidden="true"></i> Etapa Precontractual
                                 </div>
                                 <div class="card-body p-0">
                                     <div class="process-step">
-                                        <span class="step-icon"><i class="fas fa-file-invoice-dollar"></i></span>
+                                        <span class="step-icon"><i class="fas fa-file-invoice-dollar" aria-hidden="true"></i></span>
                                         <div class="step-content">
                                             <div>Certificación presupuestaria</div>
-                                            <div class="responsable"><i class="fas fa-user me-1"></i> Gerencia Administrativa Financiera (GAF)</div>
+                                            <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Gerencia Administrativa Financiera (GAF)</div>
                                         </div>
                                     </div>
                                     <div class="process-step">
-                                        <span class="step-icon"><i class="fas fa-search-dollar"></i></span>
+                                        <span class="step-icon"><i class="fas fa-search-dollar" aria-hidden="true"></i></span>
                                         <div class="step-content">
                                             <div>Propuesta única</div>
-                                            <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
+                                            <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Unidad Requirente</div>
                                         </div>
                                     </div>
                                     <div class="process-step">
-                                        <span class="step-icon"><i class="fas fa-check-double"></i></span>
+                                        <span class="step-icon"><i class="fas fa-check-double" aria-hidden="true"></i></span>
                                         <div class="step-content">
                                             <div>Validación y adjudicación</div>
-                                            <div class="responsable"><i class="fas fa-user me-1"></i> GAF / Ordenador de Gasto</div>
+                                            <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> GAF / Ordenador de Gasto</div>
                                         </div>
                                     </div>
                                     <div class="process-step">
-                                        <span class="step-icon"><i class="fas fa-bell"></i></span>
+                                        <span class="step-icon"><i class="fas fa-bell" aria-hidden="true"></i></span>
                                         <div class="step-content">
                                             <div>Notificación al adjudicatario</div>
-                                            <div class="responsable"><i class="fas fa-user me-1"></i> Unidad Requirente</div>
+                                            <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Unidad Requirente</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1427,28 +1447,28 @@
                             
                             <div class="stage-card">
                                 <div class="card-header contractual-header">
-                                    <i class="fas fa-file-contract me-2"></i> Etapa Contractual
+                                    <i class="fas fa-file-contract me-2" aria-hidden="true"></i> Etapa Contractual
                                 </div>
                                 <div class="card-body p-0">
                                     <div class="process-step">
-                                        <span class="step-icon"><i class="fas fa-file-signature"></i></span>
+                                        <span class="step-icon"><i class="fas fa-file-signature" aria-hidden="true"></i></span>
                                         <div class="step-content">
                                             <div>Elaboración de contrato</div>
-                                            <div class="responsable"><i class="fas fa-user me-1"></i> Asesoría Jurídica</div>
+                                            <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Asesoría Jurídica</div>
                                         </div>
                                     </div>
                                     <div class="process-step">
-                                        <span class="step-icon"><i class="fas fa-shield-alt"></i></span>
+                                        <span class="step-icon"><i class="fas fa-shield-alt" aria-hidden="true"></i></span>
                                         <div class="step-content">
                                             <div>Recepción de garantías (si aplica)</div>
-                                            <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Administrativa y RRHH</div>
+                                            <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Dirección Administrativa y RRHH</div>
                                         </div>
                                     </div>
                                     <div class="process-step">
-                                        <span class="step-icon"><i class="fas fa-signature"></i></span>
+                                        <span class="step-icon"><i class="fas fa-signature" aria-hidden="true"></i></span>
                                         <div class="step-content">
                                             <div>Firma de contrato</div>
-                                            <div class="responsable"><i class="fas fa-user me-1"></i> Dirección Ejecutiva</div>
+                                            <div class="responsable"><i class="fas fa-user me-1" aria-hidden="true"></i> Dirección Ejecutiva</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1457,8 +1477,8 @@
                     </div>
 
                     <div class="flujograma-container">
-                        <h4 class="flujograma-title"><i class="fas fa-project-diagram me-2"></i>Flujograma: Contratación Directa - Consultorías</h4>
-                        <img src="https://raw.githubusercontent.com/jaircruz1304/FIAS/main/DIRC.svg" alt="Flujograma Menor Cuantía" class="img-fluid" style="width: 100%;">
+                        <h4 class="flujograma-title"><i class="fas fa-project-diagram me-2" aria-hidden="true"></i>Flujograma: Contratación Directa - Consultorías</h4>
+                        <img src="https://raw.githubusercontent.com/jaircruz1304/FIAS/main/DIRC.svg" alt="Flujograma del proceso de Contratación Directa para Consultorías" class="flujograma-img" loading="lazy">
                     </div>
                 </div>
             </section>
@@ -1471,20 +1491,20 @@
                 <div class="col-md-6 mb-4">
                     <h5>FIAS - Fondo de Inversión Ambiental Sostenible</h5>
                     <p>Guía de procesos de contratación institucional</p>
-                    <p>Versión 1.0 - 2025</p>
+                    <p>Versión 2.0 - 2025</p>
                 </div>
                 <div class="col-md-3 mb-4 footer-links">
                     <h5>Enlaces</h5>
                     <ul class="list-unstyled">
-                        <li><a href="https://fias.org.ec/" target="_blank">Sitio web FIAS</a></li>
-                        <li><a href="https://fiasec-my.sharepoint.com/personal/dalvarez_fias_org_ec/_layouts/15/onedrive.aspx?ct=1746474465893&or=OWA%2DNT%2DMail&ga=1&id=%2Fpersonal%2Fdalvarez%5Ffias%5Forg%5Fec%2FDocuments%2FManual%20y%20Documentos%20FIAS%2FManual%20Actualizado%20FIAS%202021%2FAnexo%207%2E%20Manual%20de%20Pol%C3%ADticas%20y%20Procesos%20Administrativo%20FIAS%20%28Actualizado%2011%2006%202021%29%2Epdf&parent=%2Fpersonal%2Fdalvarez%5Ffias%5Forg%5Fec%2FDocuments%2FManual%20y%20Documentos%20FIAS%2FManual%20Actualizado%20FIAS%202021" target="_blank">MANUAL DE POLÍTICAS Y PROCESOS ADMINISTRATIVOS</a></li>
+                        <li><a href="https://fias.org.ec/" target="_blank" rel="noopener">Sitio web FIAS</a></li>
+                        <li><a href="https://fiasec-my.sharepoint.com/personal/dalvarez_fias_org_ec/_layouts/15/onedrive.aspx?ct=1746474465893&or=OWA%2DNT%2DMail&ga=1&id=%2Fpersonal%2Fdalvarez%5Ffias%5Forg%5Fec%2FDocuments%2FManual%20y%20Documentos%20FIAS%2FManual%20Actualizado%20FIAS%202021%2FAnexo%207%2E%20Manual%20de%20Pol%C3%ADticas%20y%20Procesos%20Administrativo%20FIAS%20%28Actualizado%2011%2006%202021%29%2Epdf&parent=%2Fpersonal%2Fdalvarez%5Ffias%5Forg%5Fec%2FDocuments%2FManual%20y%20Documentos%20FIAS%2FManual%20Actualizado%20FIAS%202021" target="_blank" rel="noopener">MANUAL DE POLÍTICAS Y PROCESOS ADMINISTRATIVOS</a></li>
                     </ul>
                 </div>
                 <div class="col-md-3 mb-4 footer-links">
                     <h5>Contacto</h5>
                     <ul class="list-unstyled">
                         <li><a href="mailto:jcruzg@fias.org.ec">jcruzg@fias.org.ec</a></li>
-                                            </ul>
+                    </ul>
                 </div>
             </div>
             <hr class="mt-0 mb-4">
@@ -1521,6 +1541,14 @@
                     event.target.classList.add('active');
                 });
             });
+
+            // Lazy loading para imágenes
+            if ('loading' in HTMLImageElement.prototype) {
+                const images = document.querySelectorAll('img[loading="lazy"]');
+                images.forEach(img => {
+                    img.src = img.src;
+                });
+            }
         });
     </script>
 </body>

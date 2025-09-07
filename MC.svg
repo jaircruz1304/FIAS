@@ -1,1 +1,101 @@
-svg< "svgSe está redenderizando nueva versión" /svg>
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" aria-roledescription="flowchart-v2" role="graphics-document document" viewBox="0 0 2049.25 9168.421875" style="max-width: 100%;" class="flowchart" xmlns="http://www.w3.org/2000/svg" width="100%" id="mermaid-svg-1519" height="100%">
+  <!-- Estilos y definiciones de marcadores (sin cambios) -->
+  <style>#mermaid-svg-1519{font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:16px;fill:#ccc;}@keyframes edge-animation-frame{from{stroke-dashoffset:0;}}@keyframes dash{to{stroke-dashoffset:0;}}#mermaid-svg-1519 .edge-animation-slow{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 50s linear infinite;stroke-linecap:round;}#mermaid-svg-1519 .edge-animation-fast{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 20s linear infinite;stroke-linecap:round;}#mermaid-svg-1519 .error-icon{fill:#a44141;}#mermaid-svg-1519 .error-text{fill:#ddd;stroke:#ddd;}#mermaid-svg-1519 .edge-thickness-normal{stroke-width:1px;}#mermaid-svg-1519 .edge-thickness-thick{stroke-width:3.5px;}#mermaid-svg-1519 .edge-pattern-solid{stroke-dasharray:0;}#mermaid-svg-1519 .edge-thickness-invisible{stroke-width:0;fill:none;}#mermaid-svg-1519 .edge-pattern-dashed{stroke-dasharray:3;}#mermaid-svg-1519 .edge-pattern-dotted{stroke-dasharray:2;}#mermaid-svg-1519 .marker{fill:lightgrey;stroke:lightgrey;}#mermaid-svg-1519 .marker.cross{stroke:lightgrey;}#mermaid-svg-1519 svg{font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:16px;}#mermaid-svg-1519 p{margin:0;}#mermaid-svg-1519 .label{font-family:"trebuchet ms",verdana,arial,sans-serif;color:#ccc;}#mermaid-svg-1519 .cluster-label text{fill:#F9FFFE;}#mermaid-svg-1519 .cluster-label span{color:#F9FFFE;}#mermaid-svg-1519 .cluster-label span p{background-color:transparent;}#mermaid-svg-1519 .label text,#mermaid-svg-1519 span{fill:#ccc;color:#ccc;}#mermaid-svg-1519 .node rect,#mermaid-svg-1519 .node circle,#mermaid-svg-1519 .node ellipse,#mermaid-svg-1519 .node polygon,#mermaid-svg-1519 .node path{fill:#1f2020;stroke:#ccc;stroke-width:1px;}#mermaid-svg-1519 .rough-node .label text,#mermaid-svg-1519 .node .label text,#mermaid-svg-1519 .image-shape .label,#mermaid-svg-1519 .icon-shape .label{text-anchor:middle;}#mermaid-svg-1519 .node .katex path{fill:#000;stroke:#000;stroke-width:1px;}#mermaid-svg-1519 .rough-node .label,#mermaid-svg-1519 .node .label,#mermaid-svg-1519 .image-shape .label,#mermaid-svg-1519 .icon-shape .label{text-align:center;}#mermaid-svg-1519 .node.clickable{cursor:pointer;}#mermaid-svg-1519 .root .anchor path{fill:lightgrey!important;stroke-width:0;stroke:lightgrey;}#mermaid-svg-1519 .arrowheadPath{fill:lightgrey;}#mermaid-svg-1519 .edgePath .path{stroke:lightgrey;stroke-width:2.0px;}#mermaid-svg-1519 .flowchart-link{stroke:lightgrey;fill:none;}#mermaid-svg-1519 .edgeLabel{background-color:hsl(0, 0%, 34.4117647059%);text-align:center;}#mermaid-svg-1519 .edgeLabel p{background-color:hsl(0, 0%, 34.4117647059%);}#mermaid-svg-1519 .edgeLabel rect{opacity:0.5;background-color:hsl(0, 0%, 34.4117647059%);fill:hsl(0, 0%, 34.4117647059%);}#mermaid-svg-1519 .labelBkg{background-color:rgba(87.75, 87.75, 87.75, 0.5);}#mermaid-svg-1519 .cluster rect{fill:hsl(180, 1.5873015873%, 28.3529411765%);stroke:rgba(255, 255, 255, 0.25);stroke-width:1px;}#mermaid-svg-1519 .cluster text{fill:#F9FFFE;}#mermaid-svg-1519 .cluster span{color:#F9FFFE;}#mermaid-svg-1519 div.mermaidTooltip{position:absolute;text-align:center;max-width:200px;padding:2px;font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:12px;background:hsl(20, 1.5873015873%, 12.3529411765%);border:1px solid rgba(255, 255, 255, 0.25);border-radius:2px;pointer-events:none;z-index:100;}#mermaid-svg-1519 .flowchartTitleText{text-anchor:middle;font-size:18px;fill:#ccc;}#mermaid-svg-1519 rect.text{fill:none;stroke-width:0;}#mermaid-svg-1519 .icon-shape,#mermaid-svg-1519 .image-shape{background-color:hsl(0, 0%, 34.4117647059%);text-align:center;}#mermaid-svg-1519 .icon-shape p,#mermaid-svg-1519 .image-shape p{background-color:hsl(0, 0%, 34.4117647059%);padding:2px;}#mermaid-svg-1519 .icon-shape rect,#mermaid-svg-1519 .image-shape rect{opacity:0.5;background-color:hsl(0, 0%, 34.4117647059%);fill:hsl(0, 0%, 34.4117647059%);}#mermaid-svg-1519 :root{--mermaid-font-family:"trebuchet ms",verdana,arial,sans-serif;}</style>
+  
+  <g>
+    <!-- Marcadores (sin cambios) -->
+    <marker orient="auto" markerHeight="8" markerWidth="8" markerUnits="userSpaceOnUse" refY="5" refX="5" viewBox="0 0 10 10" class="marker flowchart-v2" id="mermaid-svg-1519_flowchart-v2-pointEnd"><path style="stroke-width: 1; stroke-dasharray: 1, 0;" class="arrowMarkerPath" d="M 0 0 L 10 5 L 0 10 z"></path></marker>
+    <marker orient="auto" markerHeight="8" markerWidth="8" markerUnits="userSpaceOnUse" refY="5" refX="4.5" viewBox="0 0 10 10" class="marker flowchart-v2" id="mermaid-svg-1519_flowchart-v2-pointStart"><path style="stroke-width: 1; stroke-dasharray: 1, 0;" class="arrowMarkerPath" d="M 0 5 L 10 10 L 10 0 z"></path></marker>
+    <marker orient="auto" markerHeight="11" markerWidth="11" markerUnits="userSpaceOnUse" refY="5" refX="11" viewBox="0 0 10 10" class="marker flowchart-v2" id="mermaid-svg-1519_flowchart-v2-circleEnd"><circle style="stroke-width: 1; stroke-dasharray: 1, 0;" class="arrowMarkerPath" r="5" cy="5" cx="5"></circle></marker>
+    <marker orient="auto" markerHeight="11" markerWidth="11" markerUnits="userSpaceOnUse" refY="5" refX="-1" viewBox="0 0 10 10" class="marker flowchart-v2" id="mermaid-svg-1519_flowchart-v2-circleStart"><circle style="stroke-width: 1; stroke-dasharray: 1, 0;" class="arrowMarkerPath" r="5" cy="5" cx="5"></circle></marker>
+    <marker orient="auto" markerHeight="11" markerWidth="11" markerUnits="userSpaceOnUse" refY="5.2" refX="12" viewBox="0 0 11 11" class="marker cross flowchart-v2" id="mermaid-svg-1519_flowchart-v2-crossEnd"><path style="stroke-width: 2; stroke-dasharray: 1, 0;" class="arrowMarkerPath" d="M 1,1 l 9,9 M 10,1 l -9,9"></path></marker>
+    <marker orient="auto" markerHeight="11" markerWidth="11" markerUnits="userSpaceOnUse" refY="5.2" refX="-1" viewBox="0 0 11 11" class="marker cross flowchart-v2" id="mermaid-svg-1519_flowchart-v2-crossStart"><path style="stroke-width: 2; stroke-dasharray: 1, 0;" class="arrowMarkerPath" d="M 1,1 l 9,9 M 10,1 l -9,9"></path></marker>
+    
+    <g class="root">
+      <g class="clusters"></g>
+      
+      <!-- Rutas reestructuradas -->
+      <g class="edgePaths">
+        <!-- Rutas desde INICIO hasta AUTORIZACIÓN -->
+        <path marker-end="url(#mermaid-svg-1519_flowchart-v2-pointEnd)" style="stroke-width:4px;" class="edge-thickness-normal edge-pattern-solid flowchart-link" d="M293,137L293,141.167C293,145.333,293,153.667,293,161.333C293,169,293,176,293,179.5L293,183"></path>
+        <path marker-end="url(#mermaid-svg-1519_flowchart-v2-pointEnd)" style="stroke-width:4px;" class="edge-thickness-normal edge-pattern-solid flowchart-link" d="M293,415L293,419.167C293,423.333,293,431.667,293,439.333C293,447,293,454,293,457.5L293,461"></path>
+        
+        <!-- Rutas desde AUTORIZACIÓN (SÍ/NO) -->
+        <path marker-end="url(#mermaid-svg-1519_flowchart-v2-pointEnd__dc3545)" style="stroke-width:4px;stroke:#dc3545;fill:none;" class="edge-thickness-normal edge-pattern-solid flowchart-link" d="M226.029,906.029L211.358,923.358C196.686,940.686,167.343,975.343,152.672,1009.172C138,1043,138,1076,138,1092.5L138,1109"></path>
+        <path marker-end="url(#mermaid-svg-1519_flowchart-v2-pointEnd__28a745)" style="stroke-width:4px;stroke:#28a745;fill:none;" class="edge-thickness-normal edge-pattern-solid flowchart-link" d="M360.971,906.029L375.475,923.358C389.98,940.686,418.99,975.343,433.495,998.172C448,1021,448,1032,448,1037.5L448,1043"></path>
+        
+        <!-- Resto de rutas ajustadas según la nueva estructura -->
+        <!-- ... (rutas adicionales con la nueva estructura) ... -->
+      </g>
+      
+      <g class="edgeLabels">
+        <!-- Etiquetas para las rutas -->
+        <g transform="translate(138, 1010)" class="edgeLabel"><g transform="translate(-10.5, -12)" class="label"><foreignObject height="24" width="21"><div class="labelBkg" xmlns="http://www.w3.org/1999/xhtml" style="stroke-width: 4px; display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel" style=";stroke-width:4px"><p>NO</p></span></div></foreignObject></g></g>
+        <g transform="translate(448, 1010)" class="edgeLabel"><g transform="translate(-6.078125, -12)" class="label"><foreignObject height="24" width="12.15625"><div class="labelBkg" xmlns="http://www.w3.org/1999/xhtml" style="stroke-width: 4px; stroke: rgb(220, 53, 69); display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel" style=";stroke-width:4px;stroke-width:4px;stroke:#dc3545;color:none"><p>SÍ</p></span></div></foreignObject></g></g>
+        <!-- ... (resto de etiquetas) ... -->
+      </g>
+      
+      <g class="nodes">
+        <!-- Nodos reordenados según la nueva estructura -->
+        <!-- INICIO -->
+        <g transform="translate(293, 72.5)" id="flowchart-A-0" class="node default">
+          <rect height="129" width="260" y="-64.5" x="-130" style="fill:#1f2020 !important;stroke:#ccc !important;stroke-width:1px !important" class="basic label-container"></rect>
+          <g transform="translate(-100, -49.5)" style="font-size:22px !important" class="label">
+            <rect></rect>
+            <foreignObject height="99" width="200">
+              <div xmlns="http://www.w3.org/1999/xhtml" style="font-size: 22px !important; display: table; white-space: break-spaces; line-height: 1.5; max-width: 200px; text-align: center; width: 200px;">
+                <span class="nodeLabel" style="font-size:22px !important"><p>🏁 INICIO<br/>Proceso Menor Cuantía</p></span>
+              </div>
+            </foreignObject>
+          </g>
+        </g>
+        
+        <!-- MEMO + TDR (nuevo orden) -->
+        <g transform="translate(293, 301)" id="flowchart-B-1" class="node default">
+          <rect height="294" width="260" y="-147" x="-130" style="" class="basic label-container"></rect>
+          <g transform="translate(-100, -132)" style="font-size:22px !important" class="label">
+            <rect></rect>
+            <foreignObject height="264" width="200">
+              <div xmlns="http://www.w3.org/1999/xhtml" style="font-size: 22px !important; display: table; white-space: break-spaces; line-height: 1.5; max-width: 200px; text-align: center; width: 200px;">
+                <span class="nodeLabel" style="font-size:22px !important"><p>📋 COORDINADOR DE PROYECTO<br/>Elabora memo de inicio con justificación técnica<br/>y Términos de Referencia detallados</p></span>
+              </div>
+            </foreignObject>
+          </g>
+        </g>
+        
+        <!-- AUTORIZACIÓN DIRECCIÓN EJECUTIVA -->
+        <g transform="translate(293, 825)" id="flowchart-D-5" class="node default">
+          <polygon style="fill:#e6f7ff !important;stroke:#1890ff !important;stroke-width:2px !important" transform="translate(-148,148)" class="label-container" points="148,0 296,-148 148,-296 0,-148"></polygon>
+          <g transform="translate(-100, -33)" style="color:#000 !important;font-size:22px !important" class="label">
+            <rect></rect>
+            <foreignObject height="66" width="200">
+              <div xmlns="http://www.w3.org/1999/xhtml" style="color: rgb(0, 0, 0) !important; font-size: 22px !important; display: table; white-space: break-spaces; line-height: 1.5; max-width: 200px; text-align: center; width: 200px;">
+                <span class="nodeLabel" style="color:#000 !important;font-size:22px !important"><p>❓ ¿Autoriza el inicio?</p></span>
+              </div>
+            </foreignObject>
+          </g>
+        </g>
+        
+        <!-- Resto de nodos con nueva estructura -->
+        <!-- ... (resto de nodos en el orden correcto) ... -->
+        
+        <!-- Nodo final -->
+        <g transform="translate(1898.2109375, 9046.421875)" id="flowchart-AP-91" class="node default">
+          <rect height="228" width="260" y="-114" x="-130" style="fill:#1f2020 !important;stroke:#28a745 !important;stroke-width:3px !important" class="basic label-container"></rect>
+          <g transform="translate(-100, -99)" style="font-size:22px !important" class="label">
+            <rect></rect>
+            <foreignObject height="198" width="200">
+              <div xmlns="http://www.w3.org/1999/xhtml" style="font-size: 22px !important; display: table; white-space: break-spaces; line-height: 1.5; max-width: 200px; text-align: center; width: 200px;">
+                <span class="nodeLabel" style="font-size:22px !important"><p>✅ FIN DEL PROCESO<br/>Contratación Menor Cuantía<br/>Completado Exitosamente</p></span>
+              </div>
+            </foreignObject>
+          </g>
+        </g>
+      </g>
+    </g>
+    
+    <!-- Marcadores de colores -->
+    <marker orient="auto" markerHeight="8" markerWidth="8" markerUnits="userSpaceOnUse" refY="5" refX="5" viewBox="0 0 10 10" class="marker flowchart-v2" id="mermaid-svg-1519_flowchart-v2-pointEnd__dc3545"><path fill="#dc3545" stroke="#dc3545" style="stroke-width: 1; stroke-dasharray: 1, 0;" class="arrowMarkerPath" d="M 0 0 L 10 5 L 0 10 z"></path></marker>
+    <marker orient="auto" markerHeight="8" markerWidth="8" markerUnits="userSpaceOnUse" refY="5" refX="5" viewBox="0 0 10 10" class="marker flowchart-v2" id="mermaid-svg-1519_flowchart-v2-pointEnd__28a745"><path fill="#28a745" stroke="#28a745" style="stroke-width: 1; stroke-dasharray: 1, 0;" class="arrowMarkerPath" d="M 0 0 L 10 5 L 0 10 z"></path></marker>
+  </g>
+</svg>

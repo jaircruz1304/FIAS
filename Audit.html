@@ -161,6 +161,10 @@
             max-height: 200px;
             overflow-y: auto;
         }
+
+        .error-card {
+            border-left: 5px solid #dc3545;
+        }
     </style>
 </head>
 <body>
@@ -276,6 +280,35 @@
                             <div class="debug-info" id="debugInfo"></div>
                             <button class="btn btn-sm btn-outline-secondary mt-2" onclick="toggleDebugInfo()">
                                 <i class="fas fa-eye-slash me-1"></i> Ocultar información
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel de error (se muestra cuando hay problemas) -->
+            <div class="row mb-4" id="errorContainer" style="display: none;">
+                <div class="col-12">
+                    <div class="card error-card">
+                        <div class="card-header bg-danger text-white">
+                            <h5 class="mb-0"><i class="fas fa-exclamation-triangle me-2"></i>Error de Conexión</h5>
+                        </div>
+                        <div class="card-body">
+                            <p id="errorMessage"></p>
+                            <div class="mt-3">
+                                <h6>Posibles soluciones:</h6>
+                                <ol>
+                                    <li>Verifique que el archivo Excel exista y esté disponible</li>
+                                    <li>Asegúrese de tener permisos para acceder al archivo</li>
+                                    <li>Compruebe que el ID del archivo sea correcto</li>
+                                    <li>Verifique que el nombre de la hoja sea exacto</li>
+                                </ol>
+                            </div>
+                            <button class="btn btn-primary mt-2" onclick="loadDataFromExcel()">
+                                <i class="fas fa-sync-alt me-1"></i> Reintentar
+                            </button>
+                            <button class="btn btn-outline-secondary mt-2 ms-2" onclick="toggleDebugInfo()">
+                                <i class="fas fa-bug me-1"></i> Ver detalles técnicos
                             </button>
                         </div>
                     </div>
@@ -553,104 +586,80 @@
         async function loadDataFromExcel() {
             showLoading(true);
             document.getElementById('loadingText').textContent = "Cargando datos desde Excel Online...";
+            hideError();
             
             try {
                 if (!accessToken) {
                     await acquireToken();
                 }
                 
-                // Obtener datos del Excel - URL corregida
-                // Primero intentamos obtener información sobre el archivo para determinar su ubicación
-                let fileInfoResponse;
-                try {
-                    fileInfoResponse = await fetch(
-                        `https://graph.microsoft.com/v1.0/drives/root/items/${EXCEL_FILE_ID}`,
-                        {
+                addDebugInfo("Token de acceso obtenido correctamente");
+                
+                // Intentar diferentes formatos de URL para acceder al archivo
+                const urlAttempts = [
+                    // Formato para archivos en SharePoint
+                    `https://graph.microsoft.com/v1.0/drives/root/items/${EXCEL_FILE_ID}/workbook/worksheets('${EXCEL_SHEET_NAME}')/usedRange`,
+                    
+                    // Formato alternativo para OneDrive/SharePoint
+                    `https://graph.microsoft.com/v1.0/me/drive/items/${EXCEL_FILE_ID}/workbook/worksheets('${EXCEL_SHEET_NAME}')/usedRange`,
+                    
+                    // Formato con sitio específico (común en SharePoint)
+                    `https://graph.microsoft.com/v1.0/sites/root/drive/items/${EXCEL_FILE_ID}/workbook/worksheets('${EXCEL_SHEET_NAME}')/usedRange`
+                ];
+                
+                let response = null;
+                let lastError = null;
+                
+                // Probar cada URL hasta que una funcione
+                for (let i = 0; i < urlAttempts.length; i++) {
+                    const url = urlAttempts[i];
+                    addDebugInfo(`Intentando con URL: ${url}`);
+                    
+                    try {
+                        response = await fetch(url, {
                             headers: {
-                                'Authorization': `Bearer ${accessToken}`
+                                'Authorization': `Bearer ${accessToken}`,
+                                'Content-Type': 'application/json'
                             }
+                        });
+                        
+                        addDebugInfo(`Respuesta: ${response.status} ${response.statusText}`);
+                        
+                        if (response.ok) {
+                            addDebugInfo(`✅ URL exitosa: ${url}`);
+                            break;
+                        } else {
+                            lastError = `Error ${response.status}: ${response.statusText}`;
+                            addDebugInfo(`❌ Error con URL: ${lastError}`);
                         }
-                    );
-                    
-                    if (!fileInfoResponse.ok) {
-                        throw new Error(`Error obteniendo información del archivo: ${fileInfoResponse.status} ${fileInfoResponse.statusText}`);
+                    } catch (error) {
+                        lastError = error.message;
+                        addDebugInfo(`❌ Excepción con URL: ${error.message}`);
                     }
-                    
-                    const fileInfo = await fileInfoResponse.json();
-                    addDebugInfo(`Información del archivo: ${JSON.stringify(fileInfo, null, 2)}`);
-                    
-                    // Construir la URL correcta según la ubicación del archivo
-                    let excelUrl;
-                    if (fileInfo.parentReference && fileInfo.parentReference.siteId) {
-                        // El archivo está en un sitio de SharePoint
-                        excelUrl = `https://graph.microsoft.com/v1.0/sites/${fileInfo.parentReference.siteId}/drive/items/${EXCEL_FILE_ID}/workbook/worksheets('${EXCEL_SHEET_NAME}')/usedRange`;
-                    } else {
-                        // El archivo está en el OneDrive del usuario
-                        excelUrl = `https://graph.microsoft.com/v1.0/me/drive/items/${EXCEL_FILE_ID}/workbook/worksheets('${EXCEL_SHEET_NAME}')/usedRange`;
-                    }
-                    
-                    addDebugInfo(`URL construida: ${excelUrl}`);
-                    
-                    // Obtener los datos del Excel
-                    const response = await fetch(excelUrl, {
-                        headers: {
-                            'Authorization': `Bearer ${accessToken}`
-                        }
-                    });
-                    
-                    if (!response.ok) {
-                        throw new Error(`Error ${response.status}: ${response.statusText}`);
-                    }
-                    
-                    const data = await response.json();
-                    addDebugInfo(`Datos recibidos: ${JSON.stringify(data, null, 2)}`);
-                    
-                    recommendationsData = processExcelData(data.values);
-                    
-                    if (recommendationsData.length === 0) {
-                        throw new Error("No se encontraron datos en el archivo Excel");
-                    }
-                    
-                    updateDashboard();
-                    updateLastUpdateTime();
-                    
-                } catch (fileError) {
-                    console.error('Error accediendo al archivo:', fileError);
-                    
-                    // Intentar con la URL alternativa (formato anterior)
-                    addDebugInfo(`Intentando con URL alternativa...`);
-                    
-                    const altResponse = await fetch(
-                        `https://graph.microsoft.com/v1.0/me/drive/items/${EXCEL_FILE_ID}/workbook/worksheets('${EXCEL_SHEET_NAME}')/usedRange`,
-                        {
-                            headers: {
-                                'Authorization': `Bearer ${accessToken}`
-                            }
-                        }
-                    );
-                    
-                    if (!altResponse.ok) {
-                        throw new Error(`Error ${altResponse.status}: ${altResponse.statusText} (URL alternativa)`);
-                    }
-                    
-                    const altData = await altResponse.json();
-                    addDebugInfo(`Datos recibidos (URL alternativa): ${JSON.stringify(altData, null, 2)}`);
-                    
-                    recommendationsData = processExcelData(altData.values);
-                    
-                    if (recommendationsData.length === 0) {
-                        throw new Error("No se encontraron datos en el archivo Excel (URL alternativa)");
-                    }
-                    
-                    updateDashboard();
-                    updateLastUpdateTime();
                 }
+                
+                // Si ninguna URL funcionó, mostrar error
+                if (!response || !response.ok) {
+                    throw new Error(lastError || "No se pudo acceder al archivo Excel con ninguna de las URL probadas");
+                }
+                
+                const data = await response.json();
+                addDebugInfo(`Datos recibidos: ${JSON.stringify(data, null, 2)}`);
+                
+                recommendationsData = processExcelData(data.values);
+                
+                if (recommendationsData.length === 0) {
+                    throw new Error("No se encontraron datos en el archivo Excel");
+                }
+                
+                updateDashboard();
+                updateLastUpdateTime();
                 
             } catch (error) {
                 console.error('Error cargando datos:', error);
                 showError('Error al cargar datos: ' + error.message);
                 
-                // Mostrar estado vacío en lugar de datos de demostración
+                // Mostrar estado vacío
                 showEmptyState();
             } finally {
                 showLoading(false);
@@ -665,9 +674,6 @@
                         <i class="fas fa-exclamation-triangle fa-3x mb-3 text-warning"></i>
                         <h4>No se pudieron cargar los datos</h4>
                         <p>No fue posible conectar con el archivo Excel o el archivo está vacío.</p>
-                        <button class="btn btn-primary mt-2" onclick="loadDataFromExcel()">
-                            <i class="fas fa-sync-alt me-1"></i> Reintentar
-                        </button>
                     </div>
                 </div>
             `;
@@ -1115,14 +1121,20 @@
         // Función para mostrar errores
         function showError(message) {
             console.error(message);
-            // Podrías implementar un sistema de notificaciones más elegante aquí
-            alert(message);
+            document.getElementById('errorMessage').textContent = message;
+            document.getElementById('errorContainer').style.display = 'block';
+        }
+
+        // Función para ocultar el panel de error
+        function hideError() {
+            document.getElementById('errorContainer').style.display = 'none';
         }
 
         // Función para agregar información de depuración
         function addDebugInfo(message) {
             const debugInfo = document.getElementById('debugInfo');
             debugInfo.innerHTML += `<div>${new Date().toLocaleTimeString()}: ${message}</div>`;
+            debugInfo.scrollTop = debugInfo.scrollHeight;
         }
 
         // Función para mostrar/ocultar información de depuración

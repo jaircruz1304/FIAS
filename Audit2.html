@@ -1,108 +1,191 @@
-// === NUEVA FUNCIÓN: Obtener IDs del archivo compartido ===
-async function getSharedFileInfo() {
-    const response = await fetch(
-        "https://graph.microsoft.com/v1.0/me/drive/sharedWithMe",
-        { headers: { 'Authorization': `Bearer ${accessToken}` } }
-    );
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seguimiento de Recomendaciones - FIAS</title>
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- DataTables -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/dataTables.bootstrap5.min.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div id="authContainer" class="container text-center mt-5" style="display:none;">
+    <h3>Autenticación requerida</h3>
+    <p>Inicie sesión con su cuenta de Microsoft para acceder al Excel.</p>
+    <button id="loginBtn" class="btn btn-success"><i class="fas fa-sign-in-alt me-2"></i> Iniciar sesión</button>
+  </div>
 
-    if (!response.ok) {
-        throw new Error(`Error al obtener archivos compartidos: ${response.status}`);
+  <div id="mainContent" style="display:none;">
+    <div class="container mt-4">
+      <h3 class="mb-4">Seguimiento de Recomendaciones - FIAS</h3>
+      <div class="table-responsive">
+        <table id="recommendationsTable" class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th>Proyecto</th>
+              <th>Año</th>
+              <th>Riesgo</th>
+              <th>Deficiencia</th>
+              <th>Recomendación</th>
+              <th>Estado</th>
+              <th>Responsable</th>
+              <th>Fecha Seguimiento</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- JS libs -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script>
+  <script src="https://alcdn.msauth.net/browser/2.24.0/js/msal-browser.min.js"></script>
+
+  <script>
+    // === Configuración MSAL ===
+    const msalConfig = {
+      auth: {
+        clientId: "deff0a8a-9d8b-4463-8d8f-382b82476757", // tu clientId
+        authority: "https://login.microsoftonline.com/5e23e4af-237d-4d97-bf6e-dca808015787", // tu tenantId
+        redirectUri: window.location.origin
+      }
+    };
+    const msalInstance = new msal.PublicClientApplication(msalConfig);
+    let accessToken = null;
+
+    // === Autenticación ===
+    async function acquireToken() {
+      const accounts = msalInstance.getAllAccounts();
+      if (accounts.length === 0) throw new Error("No hay cuentas activas");
+      const silentRequest = {
+        scopes: ["https://graph.microsoft.com/.default"],
+        account: accounts[0]
+      };
+      const response = await msalInstance.acquireTokenSilent(silentRequest);
+      accessToken = response.accessToken;
+      return accessToken;
     }
 
-    const data = await response.json();
-    // Buscar el archivo por nombre o por el ID parcial que ya tienes
-    const file = data.value.find(item => 
+    // === Buscar archivo compartido ===
+    async function getSharedFileInfo() {
+      const response = await fetch("https://graph.microsoft.com/v1.0/me/drive/sharedWithMe", {
+        headers: { 'Authorization': `Bearer ${accessToken}` }
+      });
+      if (!response.ok) throw new Error(`Error obteniendo archivos compartidos: ${response.status}`);
+      const data = await response.json();
+      const file = data.value.find(item => 
         item.name.includes("RECOMENDACIONES") || 
         item.id.includes("EfVHs2JdDFFEn1rTdQSlg2MBicSrs01kGjrGKjnxbMhP4w")
-    );
-
-    if (!file) throw new Error("No se encontró el archivo compartido en OneDrive/SharePoint");
-
-    return { driveId: file.remoteItem.parentReference.driveId, itemId: file.remoteItem.id };
-}
-
-// === FUNCIÓN PARA CARGAR DATOS DESDE EXCEL CORREGIDA ===
-async function loadDataFromExcel() {
-    showLoading(true);
-    document.getElementById('loadingText').textContent = "Cargando datos desde Excel Online...";
-
-    try {
-        if (!accessToken) {
-            await acquireToken();
-        }
-
-        // Obtener driveId y itemId dinámicamente
-        const { driveId, itemId } = await getSharedFileInfo();
-
-        // Consultar rango usado de la hoja
-        const response = await fetch(
-            `https://graph.microsoft.com/v1.0/drives/${driveId}/items/${itemId}/workbook/worksheets('RECOMENDACIONES AUD EXTERNA')/usedRange`,
-            { headers: { 'Authorization': `Bearer ${accessToken}` } }
-        );
-
-        if (!response.ok) {
-            throw new Error(`Error ${response.status}: ${response.statusText}`);
-        }
-
-        const data = await response.json();
-        recommendationsData = processExcelData(data.values);
-
-        if (recommendationsData.length === 0) {
-            throw new Error("No se encontraron datos en el archivo Excel");
-        }
-
-        updateDashboard();
-        updateLastUpdateTime();
-
-    } catch (error) {
-        console.error('Error cargando datos:', error);
-        showError('Error al cargar datos: ' + error.message);
-        showEmptyState();
-    } finally {
-        showLoading(false);
+      );
+      if (!file) throw new Error("Archivo no encontrado en OneDrive/SharePoint");
+      return { driveId: file.remoteItem.parentReference.driveId, itemId: file.remoteItem.id };
     }
-}
 
-// === PROCESAR DATOS DE EXCEL (adaptado a tus cabeceras) ===
-function processExcelData(excelData) {
-    const processedData = [];
-    if (!excelData || excelData.length === 0) return processedData;
-
-    // Buscar la fila de encabezados
-    let headerRowIndex = excelData.findIndex(row => 
+    // === Procesar datos Excel ===
+    function processExcelData(excelData) {
+      const processedData = [];
+      if (!excelData || excelData.length === 0) return processedData;
+      let headerRowIndex = excelData.findIndex(row => 
         row.some(cell => cell && cell.toString().toLowerCase().includes("proyecto"))
-    );
-    if (headerRowIndex === -1) return processedData;
+      );
+      if (headerRowIndex === -1) return processedData;
+      const headers = excelData[headerRowIndex];
+      const projectIndex       = headers.findIndex(h => h && h.toLowerCase().includes("proyecto"));
+      const yearIndex          = headers.findIndex(h => h && h.toLowerCase().includes("año"));
+      const riskIndex          = headers.findIndex(h => h && h.toLowerCase().includes("riesgo"));
+      const deficiencyIndex    = headers.findIndex(h => h && h.toLowerCase().includes("deficiencia"));
+      const recommendationIndex= headers.findIndex(h => h && h.toLowerCase().includes("recomendación"));
+      const statusIndex        = headers.findIndex(h => h && (h.toLowerCase().includes("status") || h.toLowerCase().includes("estado")));
+      const responsibleIndex   = headers.findIndex(h => h && h.toLowerCase().includes("responsable"));
+      const dateIndex          = headers.findIndex(h => h && h.toLowerCase().includes("fecha"));
 
-    const headers = excelData[headerRowIndex];
-
-    // Mapear columnas a índices correctos
-    const projectIndex       = headers.findIndex(h => h && h.toString().toLowerCase().includes("proyecto"));
-    const yearIndex          = headers.findIndex(h => h && h.toString().toLowerCase().includes("año"));
-    const riskIndex          = headers.findIndex(h => h && h.toString().toLowerCase().includes("riesgo"));
-    const deficiencyIndex    = headers.findIndex(h => h && h.toString().toLowerCase().includes("deficiencia"));
-    const recommendationIndex= headers.findIndex(h => h && h.toString().toLowerCase().includes("recomendación"));
-    const statusIndex        = headers.findIndex(h => h && 
-                                        (h.toString().toLowerCase().includes("status") || 
-                                         h.toString().toLowerCase().includes("estado")));
-    const responsibleIndex   = headers.findIndex(h => h && h.toString().toLowerCase().includes("responsable"));
-    const dateIndex          = headers.findIndex(h => h && h.toString().toLowerCase().includes("fecha"));
-
-    // Procesar filas de datos
-    for (let i = headerRowIndex + 1; i < excelData.length; i++) {
+      for (let i = headerRowIndex + 1; i < excelData.length; i++) {
         const row = excelData[i];
         if (row && row[projectIndex]) {
-            processedData.push({
-                proyecto:        row[projectIndex] || '',
-                año:             row[yearIndex] ? row[yearIndex].toString() : '',
-                riesgo:          row[riskIndex] || '',
-                deficiencia:     row[deficiencyIndex] || '',
-                recomendacion:   row[recommendationIndex] || '',
-                estado:          row[statusIndex] || '',
-                responsable:     row[responsibleIndex] || '',
-                fechaSeguimiento:row[dateIndex] || ''
-            });
+          processedData.push({
+            proyecto: row[projectIndex] || '',
+            año: row[yearIndex] ? row[yearIndex].toString() : '',
+            riesgo: row[riskIndex] || '',
+            deficiencia: row[deficiencyIndex] || '',
+            recomendacion: row[recommendationIndex] || '',
+            estado: row[statusIndex] || '',
+            responsable: row[responsibleIndex] || '',
+            fechaSeguimiento: row[dateIndex] || ''
+          });
         }
+      }
+      return processedData;
     }
-    return processedData;
-}
+
+    // === Cargar datos Excel ===
+    async function loadDataFromExcel() {
+      if (!accessToken) await acquireToken();
+      const { driveId, itemId } = await getSharedFileInfo();
+      const response = await fetch(
+        `https://graph.microsoft.com/v1.0/drives/${driveId}/items/${itemId}/workbook/worksheets('RECOMENDACIONES AUD EXTERNA')/usedRange`,
+        { headers: { 'Authorization': `Bearer ${accessToken}` } }
+      );
+      if (!response.ok) throw new Error(`Error ${response.status}: ${response.statusText}`);
+      const data = await response.json();
+      const recommendationsData = processExcelData(data.values);
+      initDataTable(recommendationsData);
+    }
+
+    // === Inicializar DataTable ===
+    function initDataTable(data) {
+      $('#recommendationsTable').DataTable({
+        destroy: true,
+        data: data,
+        columns: [
+          { data: 'proyecto' },
+          { data: 'año' },
+          { data: 'riesgo' },
+          { data: 'deficiencia' },
+          { data: 'recomendacion' },
+          { data: 'estado' },
+          { data: 'responsable' },
+          { data: 'fechaSeguimiento' }
+        ],
+        language: { url: '//cdn.datatables.net/plug-ins/1.13.5/i18n/es-ES.json' }
+      });
+    }
+
+    // === Inicialización ===
+    $(document).ready(async function() {
+      const accounts = msalInstance.getAllAccounts();
+      if (accounts.length > 0) {
+        try {
+          await acquireToken();
+          $('#authContainer').hide();
+          $('#mainContent').show();
+          await loadDataFromExcel();
+        } catch (err) {
+          console.error(err);
+          $('#authContainer').show();
+        }
+      } else {
+        $('#authContainer').show();
+      }
+
+      $('#loginBtn').click(async function() {
+        try {
+          await msalInstance.loginPopup({ scopes: ["https://graph.microsoft.com/.default"] });
+          await acquireToken();
+          $('#authContainer').hide();
+          $('#mainContent').show();
+          await loadDataFromExcel();
+        } catch (err) {
+          console.error("Error login:", err);
+        }
+      });
+    });
+  </script>
+</body>
+</html>

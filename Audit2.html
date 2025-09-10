@@ -610,12 +610,11 @@
                 debugLog("Usando hoja: " + sheetName);
                 
                 const sheet = workbook.Sheets[sheetName];
-                const jsonData = XLSX.utils.sheet_to_json(sheet);
+                const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
                 debugLog(`Datos crudos obtenidos: ${jsonData.length} filas`);
                 
                 if (jsonData.length > 0) {
-                    debugLog("Primera fila de datos: " + JSON.stringify(jsonData[0]));
-                    debugLog("Columnas disponibles: " + Object.keys(jsonData[0]).join(", "));
+                    debugLog("Primeras filas de datos: " + JSON.stringify(jsonData.slice(0, 5)));
                 }
                 
                 // Procesar los datos para adaptarlos a la estructura esperada
@@ -641,7 +640,7 @@
             }
         }
 
-        // Procesar datos de Excel (adaptado para el formato JSON de XLSX)
+        // Procesar datos de Excel (adaptado para el formato específico de tu archivo)
         function processExcelData(jsonData) {
             const processedData = [];
             
@@ -650,34 +649,71 @@
                 return processedData;
             }
             
-            // Mostrar información sobre las columnas disponibles para depuración
-            const firstRow = jsonData[0];
-            const availableColumns = Object.keys(firstRow);
-            debugLog("Columnas disponibles en los datos: " + availableColumns.join(", "));
+            // Encontrar la fila que contiene los encabezados de columna
+            let headerRowIndex = -1;
+            for (let i = 0; i < jsonData.length; i++) {
+                if (jsonData[i] && jsonData[i].length > 0 && 
+                    (jsonData[i][0] === "Proyecto" || jsonData[i][1] === "Proyecto")) {
+                    headerRowIndex = i;
+                    break;
+                }
+            }
             
-            // Procesar cada fila de datos
-            jsonData.forEach((row, index) => {
-                // Intentar mapear diferentes nombres de columnas posibles
-                const proyecto = row.Proyecto || row.PROYECTO || row.ProyectoAuditoria || row["Nombre Proyecto"] || '';
-                const año = row.Año || row.AÑO || row.Year || (row.Fecha ? new Date(row.Fecha).getFullYear().toString() : '') || '';
-                const riesgo = row.Riesgo || row.RIESGO || row["Nivel de Riesgo"] || row["NIVEL DE RIESGO"] || row.Risk || '';
-                const deficiencia = row.Deficiencia || row.DEFICIENCIA || row["Deficiencia de Control Interno"] || row.Observación || row.OBSERVACIÓN || '';
-                const recomendacion = row.Recomendacion || row.RECOMENDACION || row.Recomendación || row["Acción Correctiva"] || '';
-                const estado = row.Estado || row.ESTADO || row.Status || row.STATUS || row["Estado Implementación"] || '';
-                const responsable = row.Responsable || row.RESPONSABLE || row["Persona Responsable"] || '';
-                const fechaSeguimiento = row["Fecha de seguimiento"] || row.FechaSeguimiento || row.FECHA_SEGUIMIENTO || row["Último Seguimiento"] || '';
-
-                processedData.push({
-                    proyecto,
-                    año,
-                    riesgo,
-                    deficiencia,
-                    recomendacion,
-                    estado,
-                    responsable,
-                    fechaSeguimiento
-                });
-            });
+            if (headerRowIndex === -1) {
+                debugLog("No se encontró la fila de encabezados");
+                return processedData;
+            }
+            
+            debugLog("Fila de encabezados encontrada en índice: " + headerRowIndex);
+            
+            // Obtener índices de columnas basados en los encabezados
+            const headers = jsonData[headerRowIndex];
+            debugLog("Encabezados encontrados: " + headers.join(", "));
+            
+            const proyectoIndex = headers.findIndex(h => h && h.toString().toLowerCase().includes("proyecto"));
+            const añoIndex = headers.findIndex(h => h && h.toString().toLowerCase().includes("año"));
+            const riesgoIndex = headers.findIndex(h => h && h.toString().toLowerCase().includes("riesgo"));
+            const deficienciaIndex = headers.findIndex(h => h && h.toString().toLowerCase().includes("deficiencia"));
+            const recomendacionIndex = headers.findIndex(h => h && h.toString().toLowerCase().includes("recomendación") || h && h.toString().toLowerCase().includes("recomendacion"));
+            const estadoIndex = headers.findIndex(h => h && h.toString().toLowerCase().includes("estado"));
+            const responsableIndex = headers.findIndex(h => h && h.toString().toLowerCase().includes("responsable"));
+            const fechaIndex = headers.findIndex(h => h && h.toString().toLowerCase().includes("fecha"));
+            
+            debugLog(`Índices: Proyecto=${proyectoIndex}, Año=${añoIndex}, Riesgo=${riesgoIndex}, Deficiencia=${deficienciaIndex}, Recomendación=${recomendacionIndex}, Estado=${estadoIndex}, Responsable=${responsableIndex}, Fecha=${fechaIndex}`);
+            
+            // Procesar cada fila de datos después de los encabezados
+            for (let i = headerRowIndex + 1; i < jsonData.length; i++) {
+                const row = jsonData[i];
+                
+                // Saltar filas vacías o que no tengan datos relevantes
+                if (!row || row.length === 0 || !row[proyectoIndex] || row[proyectoIndex] === "") {
+                    continue;
+                }
+                
+                // Extraer datos de cada columna
+                const proyecto = row[proyectoIndex] || '';
+                const año = row[añoIndex] || '';
+                const riesgo = row[riesgoIndex] || '';
+                const deficiencia = row[deficienciaIndex] || '';
+                const recomendacion = row[recomendacionIndex] || '';
+                const estado = row[estadoIndex] || '';
+                const responsable = row[responsableIndex] || '';
+                const fechaSeguimiento = row[fechaIndex] || '';
+                
+                // Solo agregar si hay datos válidos
+                if (proyecto || año || riesgo || deficiencia || recomendacion || estado || responsable || fechaSeguimiento) {
+                    processedData.push({
+                        proyecto: proyecto.toString().trim(),
+                        año: año.toString().trim(),
+                        riesgo: riesgo.toString().trim(),
+                        deficiencia: deficiencia.toString().trim(),
+                        recomendacion: recomendacion.toString().trim(),
+                        estado: estado.toString().trim(),
+                        responsable: responsable.toString().trim(),
+                        fechaSeguimiento: fechaSeguimiento.toString().trim()
+                    });
+                }
+            }
             
             debugLog(`Procesados ${processedData.length} registros`);
             if (processedData.length > 0) {

@@ -1,0 +1,108 @@
+// === NUEVA FUNCIÓN: Obtener IDs del archivo compartido ===
+async function getSharedFileInfo() {
+    const response = await fetch(
+        "https://graph.microsoft.com/v1.0/me/drive/sharedWithMe",
+        { headers: { 'Authorization': `Bearer ${accessToken}` } }
+    );
+
+    if (!response.ok) {
+        throw new Error(`Error al obtener archivos compartidos: ${response.status}`);
+    }
+
+    const data = await response.json();
+    // Buscar el archivo por nombre o por el ID parcial que ya tienes
+    const file = data.value.find(item => 
+        item.name.includes("RECOMENDACIONES") || 
+        item.id.includes("EfVHs2JdDFFEn1rTdQSlg2MBicSrs01kGjrGKjnxbMhP4w")
+    );
+
+    if (!file) throw new Error("No se encontró el archivo compartido en OneDrive/SharePoint");
+
+    return { driveId: file.remoteItem.parentReference.driveId, itemId: file.remoteItem.id };
+}
+
+// === FUNCIÓN PARA CARGAR DATOS DESDE EXCEL CORREGIDA ===
+async function loadDataFromExcel() {
+    showLoading(true);
+    document.getElementById('loadingText').textContent = "Cargando datos desde Excel Online...";
+
+    try {
+        if (!accessToken) {
+            await acquireToken();
+        }
+
+        // Obtener driveId y itemId dinámicamente
+        const { driveId, itemId } = await getSharedFileInfo();
+
+        // Consultar rango usado de la hoja
+        const response = await fetch(
+            `https://graph.microsoft.com/v1.0/drives/${driveId}/items/${itemId}/workbook/worksheets('RECOMENDACIONES AUD EXTERNA')/usedRange`,
+            { headers: { 'Authorization': `Bearer ${accessToken}` } }
+        );
+
+        if (!response.ok) {
+            throw new Error(`Error ${response.status}: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        recommendationsData = processExcelData(data.values);
+
+        if (recommendationsData.length === 0) {
+            throw new Error("No se encontraron datos en el archivo Excel");
+        }
+
+        updateDashboard();
+        updateLastUpdateTime();
+
+    } catch (error) {
+        console.error('Error cargando datos:', error);
+        showError('Error al cargar datos: ' + error.message);
+        showEmptyState();
+    } finally {
+        showLoading(false);
+    }
+}
+
+// === PROCESAR DATOS DE EXCEL (adaptado a tus cabeceras) ===
+function processExcelData(excelData) {
+    const processedData = [];
+    if (!excelData || excelData.length === 0) return processedData;
+
+    // Buscar la fila de encabezados
+    let headerRowIndex = excelData.findIndex(row => 
+        row.some(cell => cell && cell.toString().toLowerCase().includes("proyecto"))
+    );
+    if (headerRowIndex === -1) return processedData;
+
+    const headers = excelData[headerRowIndex];
+
+    // Mapear columnas a índices correctos
+    const projectIndex       = headers.findIndex(h => h && h.toString().toLowerCase().includes("proyecto"));
+    const yearIndex          = headers.findIndex(h => h && h.toString().toLowerCase().includes("año"));
+    const riskIndex          = headers.findIndex(h => h && h.toString().toLowerCase().includes("riesgo"));
+    const deficiencyIndex    = headers.findIndex(h => h && h.toString().toLowerCase().includes("deficiencia"));
+    const recommendationIndex= headers.findIndex(h => h && h.toString().toLowerCase().includes("recomendación"));
+    const statusIndex        = headers.findIndex(h => h && 
+                                        (h.toString().toLowerCase().includes("status") || 
+                                         h.toString().toLowerCase().includes("estado")));
+    const responsibleIndex   = headers.findIndex(h => h && h.toString().toLowerCase().includes("responsable"));
+    const dateIndex          = headers.findIndex(h => h && h.toString().toLowerCase().includes("fecha"));
+
+    // Procesar filas de datos
+    for (let i = headerRowIndex + 1; i < excelData.length; i++) {
+        const row = excelData[i];
+        if (row && row[projectIndex]) {
+            processedData.push({
+                proyecto:        row[projectIndex] || '',
+                año:             row[yearIndex] ? row[yearIndex].toString() : '',
+                riesgo:          row[riskIndex] || '',
+                deficiencia:     row[deficiencyIndex] || '',
+                recomendacion:   row[recommendationIndex] || '',
+                estado:          row[statusIndex] || '',
+                responsable:     row[responsibleIndex] || '',
+                fechaSeguimiento:row[dateIndex] || ''
+            });
+        }
+    }
+    return processedData;
+}

@@ -1178,5 +1178,68 @@
         // Inicializar la aplicación cuando se carga la página
         document.addEventListener('DOMContentLoaded', initializeApp);
     </script>
+    <script type="text/javascript">
+  const excelUrl = "https://fiasec-my.sharepoint.com/:x:/g/personal/paraujo_fias_org_ec/EfVHs2JdDFFEn1rTdQSlg2MBicSrs01kGjrGKjnxbMhP4w?e=lTYAYd";
+
+  async function fetchExcelData() {
+    try {
+      const response = await fetch(excelUrl);
+      if (!response.ok) throw new Error("No se pudo acceder al archivo Excel.");
+
+      const blob = await response.blob();
+      const data = await blob.arrayBuffer();
+
+      const workbook = XLSX.read(data, { type: "array" });
+      const sheetName = workbook.SheetNames[0];
+      const sheet = workbook.Sheets[sheetName];
+      const jsonData = XLSX.utils.sheet_to_json(sheet);
+
+      renderTable(jsonData);
+    } catch (error) {
+      console.error("Error al leer el archivo Excel:", error);
+      document.querySelector("table").innerHTML = "<tr><td colspan='8'>Error al cargar los datos.</td></tr>";
+    }
+  }
+
+  function renderTable(data) {
+    const table = document.querySelector("table");
+    let html = `
+      <tr>
+        <th>Proyecto</th>
+        <th>Año</th>
+        <th>Riesgo</th>
+        <th>Deficiencia</th>
+        <th>Recomendación</th>
+        <th>Estado</th>
+        <th>Responsable</th>
+        <th>Fecha Seguimiento</th>
+      </tr>
+    `;
+
+    data.forEach(row => {
+      html += `
+        <tr>
+          <td>${row.Proyecto || ""}</td>
+          <td>${row.Año || ""}</td>
+          <td>${row["Nivel de Riesgo"] || ""}</td>
+          <td>${row[" Deficiencia de Control Interno"] || ""}</td>
+          <td>${row.Recomendación || ""}</td>
+          <td>${row.Status || ""}</td>
+          <td>${row.Responsable || ""}</td>
+          <td>${row["Fecha de seguimiento"] || ""}</td>
+        </tr>
+      `;
+    });
+
+    table.innerHTML = html;
+  }
+
+  // Cargar datos al iniciar
+  fetchExcelData();
+</script>
+
+<!-- Asegúrate de incluir la librería XLSX -->
+https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js</script>
+
 </body>
 </html>

@@ -433,7 +433,10 @@
     <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://alcdn.msauth.net/browser/2.24.0/js/msal-browser.min.js"></script>
+    <!-- MSAL para autenticación -->
+    <script src="https://alcdn.msauth.net/browser/2.32.0/js/msal-browser.min.js"></script>
+    <!-- XLSX para procesar Excel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     
     <script>
         // Configuración de MSAL con los datos proporcionados
@@ -453,7 +456,7 @@
         let accessToken = null;
 
         // Configuración del archivo Excel
-        const EXCEL_FILE_ID = "aHR0cHM6Ly9maWFzZWMtbXkuc2hhcmVwb2ludC5jb20vOng6L2cvcGVyc29uYWwvcGFyYXVqb19maWFzX29yZ19lYy9FZlZIczJKZERGRkVuMXJUZFFTbGcyTUJpY1NyczAxa0dqckdLam54Yk1oUDR3";
+        const EXCEL_FILE_ID = "u!aHR0cHM6Ly9maWFzZWMtbXkuc2hhcmVwb2ludC5jb20vOng6L2cvcGVyc29uYWwvcGFyYXVqb19maWFzX29yZ19lYy9FZlZIczJKZERGRkVuMXJUZFFTbGcyTUJpY1NyczAxa0dqckdLam54Yk1oUDR3";
         const EXCEL_SHEET_NAME = "RECOMENDACIONES AUD EXTERNA";
         
         // Variables globales
@@ -505,7 +508,7 @@
                 if (accounts.length === 0) throw new Error("No hay cuentas activas");
                 
                 const silentRequest = {
-                    scopes: ["https://graph.microsoft.com/.default"],
+                    scopes: ["Files.Read.All", "Sites.Read.All"],
                     account: accounts[0]
                 };
                 
@@ -528,22 +531,31 @@
                     await acquireToken();
                 }
                 
-                // Obtener datos del Excel
-                const response = await fetch(
-                    `https://graph.microsoft.com/v1.0/drives/root/items/${EXCEL_FILE_ID}/workbook/worksheets('${EXCEL_SHEET_NAME}')/usedRange`,
-                    {
-                        headers: {
-                            'Authorization': `Bearer ${accessToken}`
-                        }
+                // Obtener datos del Excel usando el método del código proporcionado
+                const graphUrl = `https://graph.microsoft.com/v1.0/shares/${EXCEL_FILE_ID}/driveItem/content`;
+                const response = await fetch(graphUrl, {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`
                     }
-                );
+                });
+
+                if (!response.ok) throw new Error(`Error ${response.status}: ${response.statusText}`);
+
+                const blob = await response.blob();
+                const data = await blob.arrayBuffer();
+
+                const workbook = XLSX.read(data, { type: "array" });
+                const sheetName = workbook.SheetNames.find(name => 
+                    name.toLowerCase().includes("recomendaciones") || 
+                    name.toLowerCase().includes("auditoria") ||
+                    name.toLowerCase().includes("externa")
+                ) || workbook.SheetNames[0];
                 
-                if (!response.ok) {
-                    throw new Error(`Error ${response.status}: ${response.statusText}`);
-                }
+                const sheet = workbook.Sheets[sheetName];
+                const jsonData = XLSX.utils.sheet_to_json(sheet);
                 
-                const data = await response.json();
-                recommendationsData = processExcelData(data.values);
+                // Procesar los datos para adaptarlos a la estructura esperada
+                recommendationsData = processExcelData(jsonData);
                 
                 if (recommendationsData.length === 0) {
                     throw new Error("No se encontraron datos en el archivo Excel");
@@ -561,6 +573,31 @@
             } finally {
                 showLoading(false);
             }
+        }
+
+        // Procesar datos de Excel (adaptado para el formato JSON de XLSX)
+        function processExcelData(jsonData) {
+            const processedData = [];
+            
+            if (!jsonData || jsonData.length === 0) {
+                return processedData;
+            }
+            
+            // Procesar cada fila de datos
+            jsonData.forEach(row => {
+                processedData.push({
+                    proyecto: row.Proyecto || row.PROYECTO || row.ProyectoAuditoria || '',
+                    año: row.Año || row.AÑO || row.Year || (row.Fecha ? new Date(row.Fecha).getFullYear().toString() : ''),
+                    riesgo: row.Riesgo || row.RIESGO || row["Nivel de Riesgo"] || row["NIVEL DE RIESGO"] || '',
+                    deficiencia: row.Deficiencia || row.DEFICIENCIA || row["Deficiencia de Control Interno"] || '',
+                    recomendacion: row.Recomendacion || row.RECOMENDACION || row.Recomendación || '',
+                    estado: row.Estado || row.ESTADO || row.Status || row.STATUS || '',
+                    responsable: row.Responsable || row.RESPONSABLE || '',
+                    fechaSeguimiento: row["Fecha de seguimiento"] || row.FechaSeguimiento || row.FECHA_SEGUIMIENTO || ''
+                });
+            });
+            
+            return processedData;
         }
 
         // Mostrar estado vacío
@@ -631,62 +668,6 @@
                     }
                 }
             });
-        }
-
-        // Procesar datos de Excel
-        function processExcelData(excelData) {
-            const processedData = [];
-            
-            if (!excelData || excelData.length === 0) {
-                return processedData;
-            }
-            
-            // Buscar la fila que contiene los encabezados
-            let headerRowIndex = -1;
-            for (let i = 0; i < excelData.length; i++) {
-                if (excelData[i] && excelData[i].some(cell => cell && cell.toString().toLowerCase().includes("proyecto"))) {
-                    headerRowIndex = i;
-                    break;
-                }
-            }
-            
-            if (headerRowIndex === -1) {
-                return processedData;
-            }
-            
-            // Obtener encabezados
-            const headers = excelData[headerRowIndex];
-            
-            // Encontrar índices de columnas
-            const projectIndex = headers.findIndex(h => h && h.toString().toLowerCase().includes("proyecto"));
-            const yearIndex = headers.findIndex(h => h && h.toString().toLowerCase().includes("año"));
-            const riskIndex = headers.findIndex(h => h && h.toString().toLowerCase().includes("riesgo"));
-            const deficiencyIndex = headers.findIndex(h => h && h.toString().toLowerCase().includes("deficiencia"));
-            const recommendationIndex = headers.findIndex(h => h && h.toString().toLowerCase().includes("recomendación"));
-            const statusIndex = headers.findIndex(h => h && h.toString().toLowerCase().includes("status"));
-            const responsibleIndex = headers.findIndex(h => h && h.toString().toLowerCase().includes("responsable"));
-            const dateIndex = headers.findIndex(h => h && h.toString().toLowerCase().includes("fecha"));
-            
-            // Procesar filas de datos (empezando desde la fila después de los encabezados)
-            for (let i = headerRowIndex + 1; i < excelData.length; i++) {
-                const row = excelData[i];
-                
-                // Solo procesar filas con datos en la columna de proyecto
-                if (row && row[projectIndex]) {
-                    processedData.push({
-                        proyecto: row[projectIndex] || '',
-                        año: row[yearIndex] ? row[yearIndex].toString() : '',
-                        riesgo: row[riskIndex] || '',
-                        deficiencia: row[deficiencyIndex] || '',
-                        recomendacion: row[recommendationIndex] || '',
-                        estado: row[statusIndex] || '',
-                        responsable: row[responsibleIndex] || '',
-                        fechaSeguimiento: row[dateIndex] || ''
-                    });
-                }
-            }
-            
-            return processedData;
         }
 
         // Función para actualizar el dashboard completo
@@ -860,6 +841,7 @@
                 },
                 pageLength: 10,
                 createdRow: function(row, data, dataIndex) {
+                    // Añadir clases según el nivel de riesgo
                     if (data.riesgo === 'ALTO') {
                         $(row).addClass('risk-high');
                     } else if (data.riesgo === 'MEDIO') {
@@ -869,77 +851,84 @@
                     }
                 }
             });
-
+            
             // Aplicar filtros
-            $('#projectFilter, #yearFilter, #statusFilter, #riskFilter').off('change').on('change', function() {
+            $('#projectFilter, #yearFilter, #statusFilter, #riskFilter').on('change', function() {
                 table.draw();
             });
-
+            
+            // Filtro personalizado
             $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
                 const project = $('#projectFilter').val();
                 const year = $('#yearFilter').val();
                 const status = $('#statusFilter').val();
                 const risk = $('#riskFilter').val();
                 
-                const rowProject = data[0];
-                const rowYear = data[1];
-                const rowStatus = data[5];
-                const rowRisk = data[2];
+                // Verificar filtro de proyecto
+                if (project && data[0] !== project) return false;
                 
-                if (
-                    (project === '' || rowProject === project) &&
-                    (year === '' || rowYear === year) &&
-                    (status === '' || rowStatus.includes(status)) &&
-                    (risk === '' || rowRisk === risk)
-                ) {
-                    return true;
-                }
-                return false;
+                // Verificar filtro de año
+                if (year && data[1] !== year) return false;
+                
+                // Verificar filtro de estado
+                if (status && !data[5].includes(status)) return false;
+                
+                // Verificar filtro de riesgo
+                if (risk && data[2] !== risk) return false;
+                
+                return true;
             });
-
-            // Abrir modal con detalles al hacer clic en una fila
-            $('#recommendationsTable tbody').off('click').on('click', 'tr', function() {
+            
+            // Evento para mostrar detalles al hacer clic en una fila
+            $('#recommendationsTable tbody').on('click', 'tr', function() {
                 const data = table.row(this).data();
-                $('#modal-project').text(data.proyecto);
-                $('#modal-year').text(data.año);
-                $('#modal-risk').text(data.riesgo);
-                $('#modal-status').text(data.estado);
-                $('#modal-responsible').text(data.responsable);
-                $('#modal-date').text(data.fechaSeguimiento || 'No especificada');
-                $('#modal-deficiency').text(data.deficiencia);
-                $('#modal-recommendation').text(data.recomendacion);
-                
-                $('#detailModal').modal('show');
+                if (data) {
+                    showDetailsModal(data);
+                }
             });
         }
 
         // Función para actualizar los gráficos
         function updateCharts() {
-            // Datos para gráficos
-            const statusCounts = {
-                'En Proceso': recommendationsData.filter(item => 
-                    item.estado && (item.estado.includes("En Proceso") || item.estado.includes("Proceso"))).length,
-                'Cumplido': recommendationsData.filter(item => 
-                    item.estado && (item.estado.includes("Cumplido") || item.estado.includes("implementará"))).length,
-                'No Cumplido': recommendationsData.filter(item => 
-                    item.estado && item.estado.includes("No Cumplido")).length,
-                'Pendiente': recommendationsData.filter(item => 
-                    item.estado && item.estado.includes("Pendiente")).length,
-                'No Aplica': recommendationsData.filter(item => 
-                    item.estado && item.estado.includes("Aplica")).length
-            };
+            // Datos para gráfico de estado
+            const statusCounts = {};
+            recommendationsData.forEach(item => {
+                let estado = item.estado || 'Sin especificar';
+                if (estado.includes('En Proceso') || estado.includes('Proceso')) estado = 'En Proceso';
+                if (estado.includes('Cumplido') || estado.includes('implementará')) estado = 'Cumplido';
+                if (estado.includes('No Cumplido')) estado = 'No Cumplido';
+                if (estado.includes('Pendiente')) estado = 'Pendiente';
+                if (estado.includes('Aplica')) estado = 'No Aplica';
+                
+                statusCounts[estado] = (statusCounts[estado] || 0) + 1;
+            });
             
+            // Datos para gráfico de riesgo
             const riskCounts = {
-                'ALTO': recommendationsData.filter(item => item.riesgo === 'ALTO').length,
-                'MEDIO': recommendationsData.filter(item => item.riesgo === 'MEDIO').length,
-                'BAJO': recommendationsData.filter(item => item.riesgo === 'BAJO').length
+                'ALTO': 0,
+                'MEDIO': 0,
+                'BAJO': 0,
+                'Sin especificar': 0
             };
             
-            // Destruir gráficos existentes si existen
-            if (statusChart) statusChart.destroy();
-            if (riskChart) riskChart.destroy();
+            recommendationsData.forEach(item => {
+                const riesgo = item.riesgo || 'Sin especificar';
+                if (riesgo === 'ALTO' || riesgo === 'MEDIO' || riesgo === 'BAJO') {
+                    riskCounts[riesgo]++;
+                } else {
+                    riskCounts['Sin especificar']++;
+                }
+            });
             
-            // Gráfico de estado
+            // Destruir gráficos existentes
+            if (statusChart) {
+                statusChart.destroy();
+            }
+            if (riskChart) {
+                riskChart.destroy();
+            }
+            
+            // Crear gráfico de estado
             const statusCtx = document.getElementById('statusChart').getContext('2d');
             statusChart = new Chart(statusCtx, {
                 type: 'doughnut',
@@ -948,11 +937,11 @@
                     datasets: [{
                         data: Object.values(statusCounts),
                         backgroundColor: [
-                            '#ffc107',
-                            '#28a745',
-                            '#dc3545',
-                            '#007bff',
-                            '#6c757d'
+                            '#28a745', // Cumplido - Verde
+                            '#ffc107', // En Proceso - Amarillo
+                            '#dc3545', // No Cumplido - Rojo
+                            '#17a2b8', // Pendiente - Azul
+                            '#6c757d'  // No Aplica - Gris
                         ]
                     }]
                 },
@@ -967,7 +956,7 @@
                 }
             });
             
-            // Gráfico de riesgo
+            // Crear gráfico de riesgo
             const riskCtx = document.getElementById('riskChart').getContext('2d');
             riskChart = new Chart(riskCtx, {
                 type: 'bar',
@@ -977,9 +966,10 @@
                         label: 'Recomendaciones por Nivel de Riesgo',
                         data: Object.values(riskCounts),
                         backgroundColor: [
-                            '#dc3545',
-                            '#ffc107',
-                            '#28a745'
+                            '#dc3545', // ALTO - Rojo
+                            '#ffc107', // MEDIO - Amarillo
+                            '#28a745', // BAJO - Verde
+                            '#6c757d'  // Sin especificar - Gris
                         ]
                     }]
                 },
@@ -995,92 +985,104 @@
             });
         }
 
-        // Función para mostrar/ocultar loading
+        // Función para mostrar el modal de detalles
+        function showDetailsModal(data) {
+            document.getElementById('modal-project').textContent = data.proyecto || 'No especificado';
+            document.getElementById('modal-year').textContent = data.año || 'No especificado';
+            document.getElementById('modal-risk').textContent = data.riesgo || 'No especificado';
+            document.getElementById('modal-status').textContent = data.estado || 'No especificado';
+            document.getElementById('modal-responsible').textContent = data.responsable || 'No especificado';
+            document.getElementById('modal-date').textContent = data.fechaSeguimiento || 'No especificada';
+            document.getElementById('modal-deficiency').textContent = data.deficiencia || 'No especificada';
+            document.getElementById('modal-recommendation').textContent = data.recomendacion || 'No especificada';
+            
+            const modal = new bootstrap.Modal(document.getElementById('detailModal'));
+            modal.show();
+        }
+
+        // Función para actualizar la última fecha de actualización
+        function updateLastUpdateTime() {
+            const now = new Date();
+            const formattedDate = now.toLocaleDateString('es-ES', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            document.getElementById('lastUpdate').textContent = formattedDate;
+        }
+
+        // Función para mostrar/ocultar el overlay de carga
         function showLoading(show) {
             document.getElementById('loadingOverlay').style.display = show ? 'flex' : 'none';
         }
 
         // Función para mostrar errores
         function showError(message) {
-            // Crear alerta de error
-            const alertDiv = document.createElement('div');
-            alertDiv.className = 'alert alert-warning alert-dismissible fade show position-fixed';
-            alertDiv.style.top = '80px';
-            alertDiv.style.right = '20px';
-            alertDiv.style.zIndex = '1000';
-            alertDiv.style.maxWidth = '400px';
-            alertDiv.innerHTML = `
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            `;
-            
-            document.body.appendChild(alertDiv);
-            
-            // Auto-cerrar después de 5 segundos
-            setTimeout(() => {
-                if (alertDiv.parentNode) {
-                    alertDiv.parentNode.removeChild(alertDiv);
-                }
-            }, 5000);
+            // Podría implementarse un sistema de notificaciones más sofisticado
+            console.error(message);
+            alert('Error: ' + message);
         }
 
-        // Función para actualizar la hora de última actualización
-        function updateLastUpdateTime() {
-            const now = new Date();
-            document.getElementById('lastUpdate').textContent = now.toLocaleString('es-EC');
-        }
-
-        // Inicializar cuando el documento esté listo
-        $(document).ready(function() {
-            // Configurar evento para el botón de login
-            $('#loginBtn').click(async function() {
-                try {
-                    showLoading(true);
-                    const loginRequest = {
-                        scopes: ["https://graph.microsoft.com/.default"]
-                    };
-                    await msalInstance.loginPopup(loginRequest);
-                    await acquireToken();
-                    document.getElementById('authContainer').style.display = 'none';
-                    document.getElementById('mainContent').style.display = 'block';
-                    document.getElementById('configContainer').style.display = 'none';
-                    await loadDataFromExcel();
-                } catch (error) {
-                    console.error('Error durante el login:', error);
-                    
-                    if (error.errorCode === "redirect_uri_mismatch") {
-                        document.getElementById('configContainer').style.display = 'block';
-                        document.getElementById('authContainer').style.display = 'none';
-                        document.getElementById('mainContent').style.display = 'none';
-                    }
-                    
-                    showError('Error durante el inicio de sesión: ' + error.message);
-                } finally {
-                    showLoading(false);
-                }
-            });
-            
-            // Configurar evento para el botón de logout
-            $('#logoutBtn').click(function() {
-                msalInstance.logoutPopup();
-                document.getElementById('authContainer').style.display = 'block';
-                document.getElementById('mainContent').style.display = 'none';
-                document.getElementById('configContainer').style.display = 'none';
-            });
-            
-            // Configurar evento para el botón de actualizar
-            $('#refreshData').click(function() {
-                loadDataFromExcel();
-            });
-            
-            // Configurar evento para el botón de exportar
-            $('#exportBtn').click(function() {
-                window.open(`https://fiasec-my.sharepoint.com/:x:/g/personal/paraujo_fias_org_ec/${EXCEL_FILE_ID}?e=lTYAYd&download=1`, '_blank');
-            });
-            
-            // Inicializar la aplicación
-            initializeApp();
+        // Event Listeners
+        document.getElementById('loginBtn').addEventListener('click', async () => {
+            showLoading(true);
+            try {
+                await msalInstance.loginPopup({
+                    scopes: ["Files.Read.All", "Sites.Read.All"]
+                });
+                await acquireToken();
+                document.getElementById('authContainer').style.display = 'none';
+                document.getElementById('mainContent').style.display = 'block';
+                await loadDataFromExcel();
+            } catch (error) {
+                console.error('Error en login:', error);
+                showError('Error al iniciar sesión: ' + error.message);
+            } finally {
+                showLoading(false);
+            }
         });
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            msalInstance.logoutPopup({
+                postLogoutRedirectUri: window.location.origin,
+                mainWindowRedirectUri: window.location.origin
+            });
+        });
+
+        document.getElementById('refreshData').addEventListener('click', async () => {
+            await loadDataFromExcel();
+        });
+
+        document.getElementById('exportBtn').addEventListener('click', () => {
+            // Crear un libro de trabajo
+            const wb = XLSX.utils.book_new();
+            
+            // Preparar datos para exportación
+            const exportData = recommendationsData.map(item => ({
+                'Proyecto': item.proyecto,
+                'Año': item.año,
+                'Nivel de Riesgo': item.riesgo,
+                'Deficiencia de Control Interno': item.deficiencia,
+                'Recomendación': item.recomendacion,
+                'Estado': item.estado,
+                'Responsable': item.responsable,
+                'Fecha de seguimiento': item.fechaSeguimiento
+            }));
+            
+            // Crear hoja de trabajo
+            const ws = XLSX.utils.json_to_sheet(exportData);
+            
+            // Añadir hoja al libro
+            XLSX.utils.book_append_sheet(wb, ws, "Recomendaciones");
+            
+            // Descargar archivo
+            XLSX.writeFile(wb, "Recomendaciones_FIAS.xlsx");
+        });
+
+        // Inicializar la aplicación cuando se carga el DOM
+        document.addEventListener('DOMContentLoaded', initializeApp);
     </script>
 </body>
 </html>

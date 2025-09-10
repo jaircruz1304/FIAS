@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seguimiento de Recomendaciones - FIAS</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/dataTables.bootstrap5.min.css">
+    <style>
+        :root {
+            --fias-primary: #2c7d32;
+            --fias-secondary: #8bc34a;
+            --fias-accent: #ffc107;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .navbar {
+            background-color: var(--fias-primary);
+        }
+        
+        .card-header {
+            background-color: var(--fias-primary);
+            color: white;
+        }
+        
+        .status-badge {
+            padding: 0.5em 1em;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        
+        .status-en-proceso {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-cumplido {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .status-no-cumplido {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .status-pendiente {
+            background-color: #cce5ff;
+            color: #004085;
+        }
+        
+        .status-no-aplica {
+            background-color: #e2e3e5;
+            color: #383d41;
+        }
+        
+        .risk-high {
+            border-left: 5px solid #dc3545;
+        }
+        
+        .risk-medium {
+            border-left: 5px solid #ffc107;
+        }
+        
+        .risk-low {
+            border-left: 5px solid #28a745;
+        }
+        
+        .dashboard-card {
+            transition: transform 0.3s;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 250px;
+        }
+        
+        .progress {
+            height: 10px;
+        }
+        
+        .filter-section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo-icon {
+            font-size: 24px;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <div class="logo-container">
+                <i class="fas fa-leaf logo-icon"></i>
+                <a class="navbar-brand" href="#">FIAS - Seguimiento de Recomendaciones</a>
+            </div>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#"><i class="fas fa-home me-1"></i> Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="fas fa-chart-bar me-1"></i> Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="fas fa-list me-1"></i> Recomendaciones</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="fas fa-user me-1"></i> Auditoría Interna</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <!-- Filtros -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="filter-section">
+                    <div class="row">
+                        <div class="col-md-3 mb-2">
+                            <label for="projectFilter" class="form-label">Proyecto</label>
+                            <select class="form-select" id="projectFilter">
+                                <option value="">Todos los proyectos</option>
+                                <option value="Amazonía Norte">Amazonía Norte</option>
+                                <option value="FAP">FAP</option>
+                                <option value="FEIG">FEIG</option>
+                                <option value="FIAS">FIAS</option>
+                                <option value="FSB">FSB</option>
+                                <option value="MATPEL">MATPEL</option>
+                                <option value="REM">REM</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <label for="yearFilter" class="form-label">Año</label>
+                            <select class="form-select" id="yearFilter">
+                                <option value="">Todos los años</option>
+                                <option value="2018">2018</option>
+                                <option value="2019">2019</option>
+                                <option value="2020">2020</option>
+                                <option value="2021">2021</option>
+                                <option value="2022">2022</option>
+                                <option value="2023">2023</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <label for="statusFilter" class="form-label">Estado</label>
+                            <select class="form-select" id="statusFilter">
+                                <option value="">Todos los estados</option>
+                                <option value="En Proceso">En Proceso</option>
+                                <option value="Cumplido">Cumplido</option>
+                                <option value="No Cumplido">No Cumplido</option>
+                                <option value="Pendiente">Pendiente</option>
+                                <option value="No Aplica">No Aplica</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <label for="riskFilter" class="form-label">Nivel de Riesgo</label>
+                            <select class="form-select" id="riskFilter">
+                                <option value="">Todos los niveles</option>
+                                <option value="ALTO">ALTO</option>
+                                <option value="MEDIO">MEDIO</option>
+                                <option value="BAJO">BAJO</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Cards -->
+        <div class="row mb-4">
+            <div class="col-md-3 mb-3">
+                <div class="card dashboard-card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Recomendaciones</h5>
+                        <h2 class="card-text text-primary">46</h2>
+                        <p class="text-muted">Recomendaciones registradas</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card dashboard-card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Cumplidas</h5>
+                        <h2 class="card-text text-success">8</h2>
+                        <div class="progress mt-2">
+                            <div class="progress-bar bg-success" style="width: 17%"></div>
+                        </div>
+                        <p class="text-muted mt-2">17% de cumplimiento</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card dashboard-card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">En Proceso</h5>
+                        <h2 class="card-text text-warning">16</h2>
+                        <div class="progress mt-2">
+                            <div class="progress-bar bg-warning" style="width: 35%"></div>
+                        </div>
+                        <p class="text-muted mt-2">35% en ejecución</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card dashboard-card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">No Cumplidas</h5>
+                        <h2 class="card-text text-danger">15</h2>
+                        <div class="progress mt-2">
+                            <div class="progress-bar bg-danger" style="width: 33%"></div>
+                        </div>
+                        <p class="text-muted mt-2">33% pendientes</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="row mb-4">
+            <div class="col-md-6 mb-3">
+                <div class="card dashboard-card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Recomendaciones por Estado</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="statusChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="card dashboard-card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Recomendaciones por Nivel de Riesgo</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="riskChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabla de Recomendaciones -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card dashboard-card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Lista de Recomendaciones</h5>
+                        <div>
+                            <button class="btn btn-sm btn-outline-light" id="exportBtn">
+                                <i class="fas fa-download me-1"></i> Exportar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="recommendationsTable" class="table table-hover table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Proyecto</th>
+                                        <th>Año</th>
+                                        <th>Riesgo</th>
+                                        <th>Deficiencia</th>
+                                        <th>Recomendación</th>
+                                        <th>Estado</th>
+                                        <th>Responsable</th>
+                                        <th>Fecha Seguimiento</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Los datos se cargarán mediante JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para ver detalles -->
+    <div class="modal fade" id="detailModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Detalle de Recomendación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Proyecto:</strong> <span id="modal-project"></span></p>
+                            <p><strong>Año:</strong> <span id="modal-year"></span></p>
+                            <p><strong>Nivel de Riesgo:</strong> <span id="modal-risk"></span></p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Estado:</strong> <span id="modal-status"></span></p>
+                            <p><strong>Responsable:</strong> <span id="modal-responsible"></span></p>
+                            <p><strong>Fecha Seguimiento:</strong> <span id="modal-date"></span></p>
+                        </div>
+                    </div>
+                    <hr>
+                    <p><strong>Deficiencia:</strong></p>
+                    <p id="modal-deficiency" class="bg-light p-3 rounded"></p>
+                    <p><strong>Recomendación:</strong></p>
+                    <p id="modal-recommendation" class="bg-light p-3 rounded"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white mt-5 py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>FIAS - Fondo de Inversión Ambiental Sostenible</h5>
+                    <p>Auditoría Interna - Desarrollado por Jair Cruz</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p>&copy; 2023 FIAS. Todos los derechos reservados.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script>
+        // Datos de ejemplo (en una aplicación real, estos datos vendrían de una API)
+        const recommendationsData = [
+            {
+                proyecto: "Amazonía Norte",
+                año: "2019",
+                riesgo: "MEDIO",
+                deficiencia: "1.- Bancos: No se recibió la conciliación bancaria del Banco Procredit que permita la razonabilidad del saldo US$ 8,479 y cumplir con lo establecido en la cláusula cuarta 'creación de una sub cuenta para el Proyecto del Convenio para la administración de Aportes Especiales para el Programa'",
+                recomendacion: "Realizar los correctivos al respecto.",
+                estado: "No se implementará",
+                responsable: "Nelson",
+                fechaSeguimiento: "No Aplica: La subcuenta está creada, lo que no se tiene es una cuenta bancaria independiente."
+            },
+            {
+                proyecto: "Amazonía Norte",
+                año: "2019",
+                riesgo: "BAJO",
+                deficiencia: "2.- Actas del Comité Directivo del Programa: Incumplimiento a la cláusula décima, numeral 3 'el Comité Directivo del Proyecto, sesionará de manera ordinaria al menos dos veces al año (...)'",
+                recomendacion: "Cumplir con lo mencionado en la cláusula del Convenio.",
+                estado: "No se implementará",
+                responsable: "Raque",
+                fechaSeguimiento: ""
+            },
+            {
+                proyecto: "Amazonía Norte",
+                año: "2019",
+                riesgo: "BAJO",
+                deficiencia: "3.- 2. Incumplimiento de la cláusula 10.3 del Convenio: Incumplimiento a la cláusula décima, numeral 3 'el Comité Directivo del Proyecto, sesionará de manera ordinaria al menos dos veces al año (...)'",
+                recomendacion: "Sesionar de manera ordinaria al menos dos veces al año, tal como lo requiere la cláusula 10.3 del Convenio",
+                estado: "No se implementará",
+                responsable: "?",
+                fechaSeguimiento: ""
+            },
+            // Agregar más datos según sea necesario...
+            {
+                proyecto: "FAP",
+                año: "2021",
+                riesgo: "ALTO",
+                deficiencia: "Durante nuestra revisión al área administrativa del Área protegida, identificamos que los bienes adquiridos durante los últimos meses del año no poseían las etiquetas de identificación.",
+                recomendacion: "Reserva Ecológica Mache Chindul: Para poder llevar un control exhaustivo de los bienes, se recomienda que apenas se adquiera el bien y antes de ser entregado al custodio se plasmen las etiquetas.",
+                estado: "No Cumplido",
+                responsable: "Santiago",
+                fechaSeguimiento: ""
+            },
+            {
+                proyecto: "FIAS",
+                año: "2019",
+                riesgo: "ALTO",
+                deficiencia: "Durante nuestra revisión se identificó que no se cuenta con políticas y procedimientos documentados como, por ejemplo: • Gestión de Cambios con el proveedor (Usuarios autorizadores, pruebas de aceptación, proceso puesto a producción). • Proceso de respaldos (periodicidad, pruebas). • Gestión de Usuarios (creación, eliminación y modificación). Esta situación podría generar que las actividades no se estén realizando de forma ordenada y de manera eficaz y eficiente.",
+                recomendacion: "Elaborar los procedimientos de Gestión de Cambios, Proceso de Respaldos y Gestión de Usuarios, donde se detalle los pasos que se deben seguir para cada actividad, los cuales deben ser aprobados y formalizados.",
+                estado: "En Proceso",
+                responsable: "Nelson",
+                fechaSeguimiento: "Pendiente: 18 meses- Proyecto de Desarrollo Institucional"
+            }
+        ];
+
+        // Inicializar DataTable
+        $(document).ready(function() {
+            const table = $('#recommendationsTable').DataTable({
+                data: recommendationsData,
+                columns: [
+                    { data: 'proyecto' },
+                    { data: 'año' },
+                    { 
+                        data: 'riesgo',
+                        render: function(data, type, row) {
+                            let riskClass = '';
+                            if (data === 'ALTO') riskClass = 'danger';
+                            else if (data === 'MEDIO') riskClass = 'warning';
+                            else if (data === 'BAJO') riskClass = 'success';
+                            
+                            return `<span class="badge bg-${riskClass}">${data}</span>`;
+                        }
+                    },
+                    { 
+                        data: 'deficiencia',
+                        render: function(data) {
+                            return data.length > 100 ? data.substr(0, 100) + '...' : data;
+                        }
+                    },
+                    { 
+                        data: 'recomendacion',
+                        render: function(data) {
+                            return data.length > 100 ? data.substr(0, 100) + '...' : data;
+                        }
+                    },
+                    { 
+                        data: 'estado',
+                        render: function(data) {
+                            let statusClass = '';
+                            if (data.includes('En Proceso') || data.includes('Proceso')) statusClass = 'status-en-proceso';
+                            else if (data.includes('Cumplido') || data.includes('implementará')) statusClass = 'status-cumplido';
+                            else if (data.includes('No Cumplido')) statusClass = 'status-no-cumplido';
+                            else if (data.includes('Pendiente')) statusClass = 'status-pendiente';
+                            else if (data.includes('Aplica')) statusClass = 'status-no-aplica';
+                            
+                            return `<span class="status-badge ${statusClass}">${data}</span>`;
+                        }
+                    },
+                    { data: 'responsable' },
+                    { data: 'fechaSeguimiento' }
+                ],
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.13.5/i18n/es-ES.json'
+                },
+                pageLength: 10,
+                createdRow: function(row, data, dataIndex) {
+                    if (data.riesgo === 'ALTO') {
+                        $(row).addClass('risk-high');
+                    } else if (data.riesgo === 'MEDIO') {
+                        $(row).addClass('risk-medium');
+                    } else if (data.riesgo === 'BAJO') {
+                        $(row).addClass('risk-low');
+                    }
+                }
+            });
+
+            // Aplicar filtros
+            $('#projectFilter, #yearFilter, #statusFilter, #riskFilter').on('change', function() {
+                table.draw();
+            });
+
+            $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+                const project = $('#projectFilter').val();
+                const year = $('#yearFilter').val();
+                const status = $('#statusFilter').val();
+                const risk = $('#riskFilter').val();
+                
+                const rowProject = data[0];
+                const rowYear = data[1];
+                const rowStatus = data[5];
+                const rowRisk = data[2];
+                
+                if (
+                    (project === '' || rowProject === project) &&
+                    (year === '' || rowYear === year) &&
+                    (status === '' || rowStatus.includes(status)) &&
+                    (risk === '' || rowRisk === risk)
+                ) {
+                    return true;
+                }
+                return false;
+            });
+
+            // Abrir modal con detalles al hacer clic en una fila
+            $('#recommendationsTable tbody').on('click', 'tr', function() {
+                const data = table.row(this).data();
+                $('#modal-project').text(data.proyecto);
+                $('#modal-year').text(data.año);
+                $('#modal-risk').text(data.riesgo);
+                $('#modal-status').text(data.estado);
+                $('#modal-responsible').text(data.responsable);
+                $('#modal-date').text(data.fechaSeguimiento || 'No especificada');
+                $('#modal-deficiency').text(data.deficiencia);
+                $('#modal-recommendation').text(data.recomendacion);
+                
+                $('#detailModal').modal('show');
+            });
+
+            // Inicializar gráficos
+            const statusCtx = document.getElementById('statusChart').getContext('2d');
+            const statusChart = new Chart(statusCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['En Proceso', 'Cumplido', 'No Cumplido', 'Pendiente', 'No Aplica'],
+                    datasets: [{
+                        data: [16, 8, 15, 5, 2],
+                        backgroundColor: [
+                            '#ffc107',
+                            '#28a745',
+                            '#dc3545',
+                            '#007bff',
+                            '#6c757d'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+
+            const riskCtx = document.getElementById('riskChart').getContext('2d');
+            const riskChart = new Chart(riskCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['ALTO', 'MEDIO', 'BAJO'],
+                    datasets: [{
+                        label: 'Recomendaciones por Nivel de Riesgo',
+                        data: [18, 15, 13],
+                        backgroundColor: [
+                            '#dc3545',
+                            '#ffc107',
+                            '#28a745'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // Exportar datos
+            $('#exportBtn').click(function() {
+                // En una aplicación real, aquí se implementaría la funcionalidad de exportación
+                alert('Funcionalidad de exportación se implementaría aquí. Podría exportar a Excel, PDF o CSV.');
+            });
+        });
+    </script>
+</body>
+</html>

@@ -145,6 +145,12 @@
             padding: 15px;
             margin-top: 20px;
         }
+        
+        .no-data-message {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+        }
     </style>
 </head>
 <body>
@@ -154,7 +160,7 @@
             <div class="spinner-border text-success" role="status">
                 <span class="visually-hidden">Cargando...</span>
             </div>
-            <p class="mt-3" id="loadingText">Cargando datos desde Excel Online...</p>
+            <p class="mt-3" id="loadingText">Conectando con Excel Online...</p>
         </div>
     </div>
 
@@ -290,7 +296,13 @@
 
             <!-- Dashboard Cards -->
             <div class="row mb-4" id="dashboardCards">
-                <!-- Se llenará dinámicamente -->
+                <div class="col-12">
+                    <div class="no-data-message">
+                        <i class="fas fa-database fa-3x mb-3"></i>
+                        <h4>Esperando datos de Excel</h4>
+                        <p>Los datos se cargarán automáticamente después de la autenticación.</p>
+                    </div>
+                </div>
             </div>
 
             <!-- Charts -->
@@ -334,7 +346,12 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <div class="table-responsive">
+                            <div class="no-data-message">
+                                <i class="fas fa-table fa-3x mb-3"></i>
+                                <h4>Tabla de recomendaciones</h4>
+                                <p>Los datos se mostrarán aquí después de cargarse desde Excel.</p>
+                            </div>
+                            <div class="table-responsive" id="tableContainer" style="display: none;">
                                 <table id="recommendationsTable" class="table table-hover table-striped">
                                     <thead>
                                         <tr>
@@ -528,6 +545,10 @@
                 const data = await response.json();
                 recommendationsData = processExcelData(data.values);
                 
+                if (recommendationsData.length === 0) {
+                    throw new Error("No se encontraron datos en el archivo Excel");
+                }
+                
                 updateDashboard();
                 updateLastUpdateTime();
                 
@@ -535,54 +556,81 @@
                 console.error('Error cargando datos:', error);
                 showError('Error al cargar datos: ' + error.message);
                 
-                // Como alternativa, cargar datos de muestra para demostración
-                loadSampleData();
+                // Mostrar estado vacío en lugar de datos de demostración
+                showEmptyState();
             } finally {
                 showLoading(false);
             }
         }
 
-        // Función para cargar datos de muestra (solo para demostración)
-        function loadSampleData() {
-            document.getElementById('loadingText').textContent = "Cargando datos de muestra...";
+        // Mostrar estado vacío
+        function showEmptyState() {
+            document.getElementById('dashboardCards').innerHTML = `
+                <div class="col-12">
+                    <div class="no-data-message">
+                        <i class="fas fa-exclamation-triangle fa-3x mb-3 text-warning"></i>
+                        <h4>No se pudieron cargar los datos</h4>
+                        <p>No fue posible conectar con el archivo Excel o el archivo está vacío.</p>
+                        <button class="btn btn-primary mt-2" onclick="loadDataFromExcel()">
+                            <i class="fas fa-sync-alt me-1"></i> Reintentar
+                        </button>
+                    </div>
+                </div>
+            `;
             
-            // Datos de ejemplo para demostración
-            recommendationsData = [
-                {
-                    proyecto: "Amazonía Norte",
-                    año: "2019",
-                    riesgo: "MEDIO",
-                    deficiencia: "1.- Bancos: No se recibió la conciliación bancaria del Banco Procredit que permita la razonabilidad del saldo US$ 8,479 y cumplir con lo establecido en la cláusula cuarta 'creación de una sub cuenta para el Proyecto del Convenio para la administración de Aportes Especiales para el Programa'",
-                    recomendacion: "Realizar los correctivos al respecto.",
-                    estado: "No se implementará",
-                    responsable: "Nelson",
-                    fechaSeguimiento: "No Aplica: La subcuenta está creada, lo que no se tiene es una cuenta bancaria independiente."
+            // Limpiar gráficos
+            if (statusChart) {
+                statusChart.destroy();
+                statusChart = null;
+            }
+            if (riskChart) {
+                riskChart.destroy();
+                riskChart = null;
+            }
+            
+            // Mostrar gráficos vacíos
+            const statusCtx = document.getElementById('statusChart').getContext('2d');
+            statusChart = new Chart(statusCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Sin datos'],
+                    datasets: [{
+                        data: [1],
+                        backgroundColor: ['#e9ecef']
+                    }]
                 },
-                {
-                    proyecto: "Amazonía Norte",
-                    año: "2019",
-                    riesgo: "BAJO",
-                    deficiencia: "2.- Actas del Comité Directivo del Programa: Incumplimiento a la cláusula décima, numeral 3 'el Comité Directivo del Proyecto, sesionará de manera ordinaria al menos dos veces al año (...)'",
-                    recomendacion: "Cumplir con lo mencionado en la cláusula del Convenio.",
-                    estado: "No se implementará",
-                    responsable: "Raque",
-                    fechaSeguimiento: ""
-                },
-                {
-                    proyecto: "FAP",
-                    año: "2021",
-                    riesgo: "ALTO",
-                    deficiencia: "Durante nuestra revisión al área administrativa del Área protegida, identificamos que los bienes adquiridos durante los últimos meses del año no poseían las etiquetas de identificación.",
-                    recomendacion: "Reserva Ecológica Mache Chindul: Para poder llevar un control exhaustivo de los bienes, se recomienda que apenas se adquiera el bien y antes de ser entregado al custodio se plasmen las etiquetas.",
-                    estado: "No Cumplido",
-                    responsable: "Santiago",
-                    fechaSeguimiento: ""
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
                 }
-            ];
+            });
             
-            updateDashboard();
-            updateLastUpdateTime();
-            showError("Se están mostrando datos de muestra. Configure el Redirect URI en Azure AD para acceder a los datos reales.");
+            const riskCtx = document.getElementById('riskChart').getContext('2d');
+            riskChart = new Chart(riskCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Sin datos'],
+                    datasets: [{
+                        label: 'Recomendaciones por Nivel de Riesgo',
+                        data: [0],
+                        backgroundColor: ['#e9ecef']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
         }
 
         // Procesar datos de Excel
@@ -593,8 +641,21 @@
                 return processedData;
             }
             
-            // Asumiendo que la primera fila contiene los encabezados
-            const headers = excelData[0];
+            // Buscar la fila que contiene los encabezados
+            let headerRowIndex = -1;
+            for (let i = 0; i < excelData.length; i++) {
+                if (excelData[i] && excelData[i].some(cell => cell && cell.toString().toLowerCase().includes("proyecto"))) {
+                    headerRowIndex = i;
+                    break;
+                }
+            }
+            
+            if (headerRowIndex === -1) {
+                return processedData;
+            }
+            
+            // Obtener encabezados
+            const headers = excelData[headerRowIndex];
             
             // Encontrar índices de columnas
             const projectIndex = headers.findIndex(h => h && h.toString().toLowerCase().includes("proyecto"));
@@ -606,12 +667,12 @@
             const responsibleIndex = headers.findIndex(h => h && h.toString().toLowerCase().includes("responsable"));
             const dateIndex = headers.findIndex(h => h && h.toString().toLowerCase().includes("fecha"));
             
-            // Procesar filas de datos (empezando desde la segunda fila)
-            for (let i = 1; i < excelData.length; i++) {
+            // Procesar filas de datos (empezando desde la fila después de los encabezados)
+            for (let i = headerRowIndex + 1; i < excelData.length; i++) {
                 const row = excelData[i];
                 
-                // Solo procesar filas con datos
-                if (row[projectIndex] && row[yearIndex]) {
+                // Solo procesar filas con datos en la columna de proyecto
+                if (row && row[projectIndex]) {
                     processedData.push({
                         proyecto: row[projectIndex] || '',
                         año: row[yearIndex] ? row[yearIndex].toString() : '',
@@ -634,6 +695,10 @@
             updateFilters();
             initDataTable();
             updateCharts();
+            
+            // Ocultar mensaje de no datos y mostrar tabla
+            document.getElementById('tableContainer').style.display = 'block';
+            document.querySelectorAll('.no-data-message').forEach(el => el.style.display = 'none');
         }
 
         // Función para actualizar las tarjetas del dashboard

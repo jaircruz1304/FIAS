@@ -379,11 +379,11 @@
     <script src="https://alcdn.msauth.net/browser/2.24.0/js/msal-browser.min.js"></script>
     
     <script>
-        // Configuración de MSAL
+        // Configuración de MSAL con los datos proporcionados
         const msalConfig = {
             auth: {
-                clientId: "TU_CLIENT_ID_AQUI", // Reemplazar con el Client ID de tu aplicación Azure AD
-                authority: "https://login.microsoftonline.com/fiasec.org.ec", // Usuario FIAS
+                clientId: "deff0a8a-9d8b-4463-8d8f-382b82476757",
+                authority: "https://login.microsoftonline.com/5e23e4af-237d-4d97-bf6e-dca808015787",
                 redirectUri: window.location.origin
             },
             cache: {
@@ -491,18 +491,22 @@
         function processExcelData(excelData) {
             const processedData = [];
             
+            if (!excelData || excelData.length === 0) {
+                return processedData;
+            }
+            
             // Asumiendo que la primera fila contiene los encabezados
             const headers = excelData[0];
             
             // Encontrar índices de columnas
-            const projectIndex = headers.findIndex(h => h.toLowerCase().includes("proyecto"));
-            const yearIndex = headers.findIndex(h => h.toLowerCase().includes("año"));
-            const riskIndex = headers.findIndex(h => h.toLowerCase().includes("riesgo"));
-            const deficiencyIndex = headers.findIndex(h => h.toLowerCase().includes("deficiencia"));
-            const recommendationIndex = headers.findIndex(h => h.toLowerCase().includes("recomendación"));
-            const statusIndex = headers.findIndex(h => h.toLowerCase().includes("status"));
-            const responsibleIndex = headers.findIndex(h => h.toLowerCase().includes("responsable"));
-            const dateIndex = headers.findIndex(h => h.toLowerCase().includes("fecha"));
+            const projectIndex = headers.findIndex(h => h && h.toString().toLowerCase().includes("proyecto"));
+            const yearIndex = headers.findIndex(h => h && h.toString().toLowerCase().includes("año"));
+            const riskIndex = headers.findIndex(h => h && h.toString().toLowerCase().includes("riesgo"));
+            const deficiencyIndex = headers.findIndex(h => h && h.toString().toLowerCase().includes("deficiencia"));
+            const recommendationIndex = headers.findIndex(h => h && h.toString().toLowerCase().includes("recomendación"));
+            const statusIndex = headers.findIndex(h => h && h.toString().toLowerCase().includes("status"));
+            const responsibleIndex = headers.findIndex(h => h && h.toString().toLowerCase().includes("responsable"));
+            const dateIndex = headers.findIndex(h => h && h.toString().toLowerCase().includes("fecha"));
             
             // Procesar filas de datos (empezando desde la segunda fila)
             for (let i = 1; i < excelData.length; i++) {
@@ -512,7 +516,7 @@
                 if (row[projectIndex] && row[yearIndex]) {
                     processedData.push({
                         proyecto: row[projectIndex] || '',
-                        año: row[yearIndex] || '',
+                        año: row[yearIndex] ? row[yearIndex].toString() : '',
                         riesgo: row[riskIndex] || '',
                         deficiencia: row[deficiencyIndex] || '',
                         recomendacion: row[recommendationIndex] || '',
@@ -538,11 +542,11 @@
         function updateDashboardCards() {
             const total = recommendationsData.length;
             const cumplido = recommendationsData.filter(item => 
-                item.estado.includes("Cumplido") || item.estado.includes("implementará")).length;
+                item.estado && (item.estado.includes("Cumplido") || item.estado.includes("implementará"))).length;
             const enProceso = recommendationsData.filter(item => 
-                item.estado.includes("En Proceso") || item.estado.includes("Proceso")).length;
+                item.estado && (item.estado.includes("En Proceso") || item.estado.includes("Proceso"))).length;
             const noCumplido = recommendationsData.filter(item => 
-                item.estado.includes("No Cumplido")).length;
+                item.estado && item.estado.includes("No Cumplido")).length;
             
             const cumplidoPercent = total > 0 ? Math.round((cumplido / total) * 100) : 0;
             const enProcesoPercent = total > 0 ? Math.round((enProceso / total) * 100) : 0;
@@ -603,6 +607,7 @@
             const proyectos = [...new Set(recommendationsData.map(item => item.proyecto))].filter(Boolean);
             const años = [...new Set(recommendationsData.map(item => item.año))].filter(Boolean);
             const estados = [...new Set(recommendationsData.map(item => {
+                if (!item.estado) return '';
                 if (item.estado.includes("En Proceso") || item.estado.includes("Proceso")) return "En Proceso";
                 if (item.estado.includes("Cumplido") || item.estado.includes("implementará")) return "Cumplido";
                 if (item.estado.includes("No Cumplido")) return "No Cumplido";
@@ -647,6 +652,7 @@
                     { 
                         data: 'riesgo',
                         render: function(data, type, row) {
+                            if (!data) return '';
                             let riskClass = '';
                             if (data === 'ALTO') riskClass = 'danger';
                             else if (data === 'MEDIO') riskClass = 'warning';
@@ -658,18 +664,21 @@
                     { 
                         data: 'deficiencia',
                         render: function(data) {
+                            if (!data) return '';
                             return data.length > 100 ? data.substr(0, 100) + '...' : data;
                         }
                     },
                     { 
                         data: 'recomendacion',
                         render: function(data) {
+                            if (!data) return '';
                             return data.length > 100 ? data.substr(0, 100) + '...' : data;
                         }
                     },
                     { 
                         data: 'estado',
                         render: function(data) {
+                            if (!data) return '';
                             let statusClass = '';
                             if (data.includes('En Proceso') || data.includes('Proceso')) statusClass = 'status-en-proceso';
                             else if (data.includes('Cumplido') || data.includes('implementará')) statusClass = 'status-cumplido';
@@ -746,15 +755,15 @@
             // Datos para gráficos
             const statusCounts = {
                 'En Proceso': recommendationsData.filter(item => 
-                    item.estado.includes("En Proceso") || item.estado.includes("Proceso")).length,
+                    item.estado && (item.estado.includes("En Proceso") || item.estado.includes("Proceso"))).length,
                 'Cumplido': recommendationsData.filter(item => 
-                    item.estado.includes("Cumplido") || item.estado.includes("implementará")).length,
+                    item.estado && (item.estado.includes("Cumplido") || item.estado.includes("implementará"))).length,
                 'No Cumplido': recommendationsData.filter(item => 
-                    item.estado.includes("No Cumplido")).length,
+                    item.estado && item.estado.includes("No Cumplido")).length,
                 'Pendiente': recommendationsData.filter(item => 
-                    item.estado.includes("Pendiente")).length,
+                    item.estado && item.estado.includes("Pendiente")).length,
                 'No Aplica': recommendationsData.filter(item => 
-                    item.estado.includes("Aplica")).length
+                    item.estado && item.estado.includes("Aplica")).length
             };
             
             const riskCounts = {

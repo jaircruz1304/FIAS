@@ -1,17 +1,16 @@
 <!DOCTYPE html>
-
 <html lang="es">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Seguimiento de Recomendaciones - FIAS</title>
-<!-- Bootstrap CSS -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
-<!-- Font Awesome -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
-<!-- DataTables CSS -->
-<link href="https://cdn.datatables.net/1.13.5/css/dataTables.bootstrap5.min.css" rel="stylesheet"/>
-<style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seguimiento de Recomendaciones - FIAS</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/dataTables.bootstrap5.min.css">
+    <style>
         :root {
             --fias-primary: #2c7d32;
             --fias-secondary: #8bc34a;
@@ -139,237 +138,287 @@
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
+        
+        .config-help {
+            background-color: #f8f9fa;
+            border-left: 4px solid #0d6efd;
+            padding: 15px;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
-<!-- Loading Overlay -->
-<div class="loading-overlay" id="loadingOverlay">
-<div class="text-center">
-<div class="spinner-border text-success" role="status">
-<span class="visually-hidden">Cargando...</span>
-</div>
-<p class="mt-3">Cargando datos desde Excel Online...</p>
-</div>
-</div>
-<!-- Contenedor de autenticación (inicialmente oculto) -->
-<div class="auth-container" id="authContainer" style="display: none;">
-<div class="text-center mb-4">
-<i class="fas fa-leaf fa-3x text-success"></i>
-<h3 class="mt-2">Autenticación requerida</h3>
-<p>Para acceder a los datos del Excel, necesita autenticarse con su cuenta de Office 365.</p>
-</div>
-<button class="btn btn-success w-100" id="loginBtn">
-<i class="fas fa-sign-in-alt me-2"></i> Iniciar sesión con Microsoft
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="text-center">
+            <div class="spinner-border text-success" role="status">
+                <span class="visually-hidden">Cargando...</span>
+            </div>
+            <p class="mt-3" id="loadingText">Cargando datos desde Excel Online...</p>
+        </div>
+    </div>
+
+    <!-- Contenedor de configuración para desarrollo -->
+    <div id="configContainer" class="auth-container" style="display: none;">
+        <div class="text-center mb-4">
+            <i class="fas fa-cogs fa-3x text-primary"></i>
+            <h3 class="mt-2">Configuración Requerida</h3>
+            <p>Para que la aplicación funcione correctamente, necesita configurar el Redirect URI en Azure AD.</p>
+        </div>
+        
+        <div class="config-help">
+            <h5>Pasos para configurar Azure AD:</h5>
+            <ol>
+                <li>Inicie sesión en <a href="https://portal.azure.com/" target="_blank">Azure Portal</a></li>
+                <li>Vaya a <strong>Azure Active Directory</strong> > <strong>Registros de aplicaciones</strong></li>
+                <li>Seleccione su aplicación <strong>"Auditoria - Recomendaciones"</strong></li>
+                <li>Vaya a la sección <strong>"Autenticación"</strong></li>
+                <li>Agregue estos Redirect URIs:
+                    <ul>
+                        <li><code>https://jaircruz1304.github.io</code></li>
+                        <li><code>http://localhost:8000</code> (para desarrollo)</li>
+                    </ul>
+                </li>
+                <li>Guarde los cambios</li>
+            </ol>
+            <p class="mb-0">Después de configurar, <button class="btn btn-sm btn-success" onclick="location.reload()">recargue la página</button></p>
+        </div>
+        
+        <div class="mt-3">
+            <button class="btn btn-primary w-100" onclick="window.open('https://portal.azure.com/', '_blank')">
+                <i class="fas fa-external-link-alt me-2"></i> Abrir Azure Portal
+            </button>
+        </div>
+    </div>
+
+    <!-- Contenedor de autenticación (inicialmente oculto) -->
+    <div id="authContainer" class="auth-container" style="display: none;">
+        <div class="text-center mb-4">
+            <i class="fas fa-leaf fa-3x text-success"></i>
+            <h3 class="mt-2">Autenticación requerida</h3>
+            <p>Para acceder a los datos del Excel, necesita autenticarse con su cuenta de Office 365.</p>
+        </div>
+        <button id="loginBtn" class="btn btn-success w-100">
+            <i class="fas fa-sign-in-alt me-2"></i> Iniciar sesión con Microsoft
         </button>
-<div class="mt-3 text-center">
-<small class="text-muted">Utilice su cuenta corporativa de FIAS</small>
-</div>
-</div>
-<!-- Contenido principal (inicialmente oculto) -->
-<div id="mainContent" style="display: none;">
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark">
-<div class="container">
-<div class="logo-container">
-<i class="fas fa-leaf logo-icon"></i>
-<a class="navbar-brand" href="#">FIAS - Seguimiento de Recomendaciones</a>
-</div>
-<button class="navbar-toggler" data-bs-target="#navbarNav" data-bs-toggle="collapse" type="button">
-<span class="navbar-toggler-icon"></span>
-</button>
-<div class="collapse navbar-collapse" id="navbarNav">
-<ul class="navbar-nav ms-auto">
-<li class="nav-item">
-<a class="nav-link active" href="#"><i class="fas fa-home me-1"></i> Inicio</a>
-</li>
-<li class="nav-item">
-<a class="nav-link" href="#"><i class="fas fa-chart-bar me-1"></i> Dashboard</a>
-</li>
-<li class="nav-item">
-<a class="nav-link" href="#"><i class="fas fa-list me-1"></i> Recomendaciones</a>
-</li>
-<li class="nav-item">
-<a class="nav-link" href="#"><i class="fas fa-user me-1"></i> Auditoría Interna</a>
-</li>
-<li class="nav-item">
-<button class="btn btn-outline-light btn-sm mt-1" id="refreshData">
-<i class="fas fa-sync-alt me-1"></i> Actualizar
+        <div class="mt-3 text-center">
+            <small class="text-muted">Utilice su cuenta corporativa de FIAS</small>
+        </div>
+    </div>
+
+    <!-- Contenido principal (inicialmente oculto) -->
+    <div id="mainContent" style="display: none;">
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <div class="container">
+                <div class="logo-container">
+                    <i class="fas fa-leaf logo-icon"></i>
+                    <a class="navbar-brand" href="#">FIAS - Seguimiento de Recomendaciones</a>
+                </div>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#"><i class="fas fa-home me-1"></i> Inicio</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#"><i class="fas fa-chart-bar me-1"></i> Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#"><i class="fas fa-list me-1"></i> Recomendaciones</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#"><i class="fas fa-user me-1"></i> Auditoría Interna</a>
+                        </li>
+                        <li class="nav-item">
+                            <button class="btn btn-outline-light btn-sm mt-1" id="refreshData">
+                                <i class="fas fa-sync-alt me-1"></i> Actualizar
                             </button>
-</li>
-<li class="nav-item">
-<button class="btn btn-outline-light btn-sm mt-1 ms-2" id="logoutBtn">
-<i class="fas fa-sign-out-alt me-1"></i> Cerrar sesión
+                        </li>
+                        <li class="nav-item">
+                            <button class="btn btn-outline-light btn-sm mt-1 ms-2" id="logoutBtn">
+                                <i class="fas fa-sign-out-alt me-1"></i> Cerrar sesión
                             </button>
-</li>
-</ul>
-</div>
-</div>
-</nav>
-<div class="container mt-4">
-<!-- Filtros -->
-<div class="row mb-4">
-<div class="col-12">
-<div class="filter-section">
-<div class="row">
-<div class="col-md-3 mb-2">
-<label class="form-label" for="projectFilter">Proyecto</label>
-<select class="form-select" id="projectFilter">
-<option value="">Todos los proyectos</option>
-<!-- Se llenará dinámicamente -->
-</select>
-</div>
-<div class="col-md-3 mb-2">
-<label class="form-label" for="yearFilter">Año</label>
-<select class="form-select" id="yearFilter">
-<option value="">Todos los años</option>
-<!-- Se llenará dinámicamente -->
-</select>
-</div>
-<div class="col-md-3 mb-2">
-<label class="form-label" for="statusFilter">Estado</label>
-<select class="form-select" id="statusFilter">
-<option value="">Todos los estados</option>
-<!-- Se llenará dinámicamente -->
-</select>
-</div>
-<div class="col-md-3 mb-2">
-<label class="form-label" for="riskFilter">Nivel de Riesgo</label>
-<select class="form-select" id="riskFilter">
-<option value="">Todos los niveles</option>
-<option value="ALTO">ALTO</option>
-<option value="MEDIO">MEDIO</option>
-<option value="BAJO">BAJO</option>
-</select>
-</div>
-</div>
-</div>
-</div>
-</div>
-<!-- Dashboard Cards -->
-<div class="row mb-4" id="dashboardCards">
-<!-- Se llenará dinámicamente -->
-</div>
-<!-- Charts -->
-<div class="row mb-4">
-<div class="col-md-6 mb-3">
-<div class="card dashboard-card">
-<div class="card-header">
-<h5 class="mb-0">Recomendaciones por Estado</h5>
-</div>
-<div class="card-body">
-<div class="chart-container">
-<canvas id="statusChart"></canvas>
-</div>
-</div>
-</div>
-</div>
-<div class="col-md-6 mb-3">
-<div class="card dashboard-card">
-<div class="card-header">
-<h5 class="mb-0">Recomendaciones por Nivel de Riesgo</h5>
-</div>
-<div class="card-body">
-<div class="chart-container">
-<canvas id="riskChart"></canvas>
-</div>
-</div>
-</div>
-</div>
-</div>
-<!-- Tabla de Recomendaciones -->
-<div class="row">
-<div class="col-12">
-<div class="card dashboard-card">
-<div class="card-header d-flex justify-content-between align-items-center">
-<h5 class="mb-0">Lista de Recomendaciones</h5>
-<div>
-<button class="btn btn-sm btn-outline-light" id="exportBtn">
-<i class="fas fa-download me-1"></i> Exportar
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container mt-4">
+            <!-- Filtros -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="filter-section">
+                        <div class="row">
+                            <div class="col-md-3 mb-2">
+                                <label for="projectFilter" class="form-label">Proyecto</label>
+                                <select class="form-select" id="projectFilter">
+                                    <option value="">Todos los proyectos</option>
+                                    <!-- Se llenará dinámicamente -->
+                                </select>
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <label for="yearFilter" class="form-label">Año</label>
+                                <select class="form-select" id="yearFilter">
+                                    <option value="">Todos los años</option>
+                                    <!-- Se llenará dinámicamente -->
+                                </select>
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <label for="statusFilter" class="form-label">Estado</label>
+                                <select class="form-select" id="statusFilter">
+                                    <option value="">Todos los estados</option>
+                                    <!-- Se llenará dinámicamente -->
+                                </select>
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <label for="riskFilter" class="form-label">Nivel de Riesgo</label>
+                                <select class="form-select" id="riskFilter">
+                                    <option value="">Todos los niveles</option>
+                                    <option value="ALTO">ALTO</option>
+                                    <option value="MEDIO">MEDIO</option>
+                                    <option value="BAJO">BAJO</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard Cards -->
+            <div class="row mb-4" id="dashboardCards">
+                <!-- Se llenará dinámicamente -->
+            </div>
+
+            <!-- Charts -->
+            <div class="row mb-4">
+                <div class="col-md-6 mb-3">
+                    <div class="card dashboard-card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Recomendaciones por Estado</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="statusChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="card dashboard-card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Recomendaciones por Nivel de Riesgo</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="riskChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabla de Recomendaciones -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card dashboard-card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">Lista de Recomendaciones</h5>
+                            <div>
+                                <button class="btn btn-sm btn-outline-light" id="exportBtn">
+                                    <i class="fas fa-download me-1"></i> Exportar
                                 </button>
-</div>
-</div>
-<div class="card-body">
-<div class="table-responsive">
-<table class="table table-hover table-striped" id="recommendationsTable">
-<thead>
-<tr>
-<th>Proyecto</th>
-<th>Año</th>
-<th>Riesgo</th>
-<th>Deficiencia</th>
-<th>Recomendación</th>
-<th>Estado</th>
-<th>Responsable</th>
-<th>Fecha Seguimiento</th>
-</tr>
-</thead>
-<tbody>
-<!-- Los datos se cargarán mediante JavaScript -->
-</tbody>
-</table>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<!-- Modal para ver detalles -->
-<div class="modal fade" id="detailModal" tabindex="-1">
-<div class="modal-dialog modal-lg">
-<div class="modal-content">
-<div class="modal-header">
-<h5 class="modal-title">Detalle de Recomendación</h5>
-<button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
-</div>
-<div class="modal-body">
-<div class="row">
-<div class="col-md-6">
-<p><strong>Proyecto:</strong> <span id="modal-project"></span></p>
-<p><strong>Año:</strong> <span id="modal-year"></span></p>
-<p><strong>Nivel de Riesgo:</strong> <span id="modal-risk"></span></p>
-</div>
-<div class="col-md-6">
-<p><strong>Estado:</strong> <span id="modal-status"></span></p>
-<p><strong>Responsable:</strong> <span id="modal-responsible"></span></p>
-<p><strong>Fecha Seguimiento:</strong> <span id="modal-date"></span></p>
-</div>
-</div>
-<hr/>
-<p><strong>Deficiencia:</strong></p>
-<p class="bg-light p-3 rounded" id="modal-deficiency"></p>
-<p><strong>Recomendación:</strong></p>
-<p class="bg-light p-3 rounded" id="modal-recommendation"></p>
-</div>
-<div class="modal-footer">
-<button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Cerrar</button>
-</div>
-</div>
-</div>
-</div>
-<!-- Footer -->
-<footer class="bg-dark text-white mt-5 py-4">
-<div class="container">
-<div class="row">
-<div class="col-md-6">
-<h5>FIAS - Fondo de Inversión Ambiental Sostenible</h5>
-<p>Auditoría Interna - Desarrollado por Jair Cruz</p>
-<p class="small">Última actualización: <span id="lastUpdate"></span></p>
-</div>
-<div class="col-md-6 text-md-end">
-<p>© 2023 FIAS. Todos los derechos reservados.</p>
-</div>
-</div>
-</div>
-</footer>
-</div>
-<!-- Scripts -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://alcdn.msauth.net/browser/2.24.0/js/msal-browser.min.js"></script>
-<script>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table id="recommendationsTable" class="table table-hover table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Proyecto</th>
+                                            <th>Año</th>
+                                            <th>Riesgo</th>
+                                            <th>Deficiencia</th>
+                                            <th>Recomendación</th>
+                                            <th>Estado</th>
+                                            <th>Responsable</th>
+                                            <th>Fecha Seguimiento</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Los datos se cargarán mediante JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal para ver detalles -->
+        <div class="modal fade" id="detailModal" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Detalle de Recomendación</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Proyecto:</strong> <span id="modal-project"></span></p>
+                                <p><strong>Año:</strong> <span id="modal-year"></span></p>
+                                <p><strong>Nivel de Riesgo:</strong> <span id="modal-risk"></span></p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Estado:</strong> <span id="modal-status"></span></p>
+                                <p><strong>Responsable:</strong> <span id="modal-responsible"></span></p>
+                                <p><strong>Fecha Seguimiento:</strong> <span id="modal-date"></span></p>
+                            </div>
+                        </div>
+                        <hr>
+                        <p><strong>Deficiencia:</strong></p>
+                        <p id="modal-deficiency" class="bg-light p-3 rounded"></p>
+                        <p><strong>Recomendación:</strong></p>
+                        <p id="modal-recommendation" class="bg-light p-3 rounded"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="bg-dark text-white mt-5 py-4">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>FIAS - Fondo de Inversión Ambiental Sostenible</h5>
+                        <p>Auditoría Interna - Desarrollado por Jair Cruz</p>
+                        <p class="small">Última actualización: <span id="lastUpdate"></span></p>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <p>&copy; 2023 FIAS. Todos los derechos reservados.</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://alcdn.msauth.net/browser/2.24.0/js/msal-browser.min.js"></script>
+    
+    <script>
         // Configuración de MSAL con los datos proporcionados
         const msalConfig = {
             auth: {
@@ -407,15 +456,26 @@
                     await acquireToken();
                     document.getElementById('authContainer').style.display = 'none';
                     document.getElementById('mainContent').style.display = 'block';
+                    document.getElementById('configContainer').style.display = 'none';
                     await loadDataFromExcel();
                 } else {
                     // Mostrar interfaz de autenticación
                     document.getElementById('authContainer').style.display = 'block';
                     document.getElementById('mainContent').style.display = 'none';
+                    document.getElementById('configContainer').style.display = 'none';
                 }
             } catch (error) {
                 console.error('Error inicializando la aplicación:', error);
-                showError('Error al inicializar la aplicación: ' + error.message);
+                
+                // Mostrar mensaje de ayuda para configuración
+                if (error.errorCode === "redirect_uri_mismatch") {
+                    document.getElementById('configContainer').style.display = 'block';
+                    document.getElementById('authContainer').style.display = 'none';
+                    document.getElementById('mainContent').style.display = 'none';
+                    showError('Error de configuración: ' + error.message);
+                } else {
+                    showError('Error al inicializar la aplicación: ' + error.message);
+                }
             } finally {
                 showLoading(false);
             }
@@ -444,6 +504,7 @@
         // Función para cargar datos desde Excel Online
         async function loadDataFromExcel() {
             showLoading(true);
+            document.getElementById('loadingText').textContent = "Cargando datos desde Excel Online...";
             
             try {
                 if (!accessToken) {
@@ -473,9 +534,55 @@
             } catch (error) {
                 console.error('Error cargando datos:', error);
                 showError('Error al cargar datos: ' + error.message);
+                
+                // Como alternativa, cargar datos de muestra para demostración
+                loadSampleData();
             } finally {
                 showLoading(false);
             }
+        }
+
+        // Función para cargar datos de muestra (solo para demostración)
+        function loadSampleData() {
+            document.getElementById('loadingText').textContent = "Cargando datos de muestra...";
+            
+            // Datos de ejemplo para demostración
+            recommendationsData = [
+                {
+                    proyecto: "Amazonía Norte",
+                    año: "2019",
+                    riesgo: "MEDIO",
+                    deficiencia: "1.- Bancos: No se recibió la conciliación bancaria del Banco Procredit que permita la razonabilidad del saldo US$ 8,479 y cumplir con lo establecido en la cláusula cuarta 'creación de una sub cuenta para el Proyecto del Convenio para la administración de Aportes Especiales para el Programa'",
+                    recomendacion: "Realizar los correctivos al respecto.",
+                    estado: "No se implementará",
+                    responsable: "Nelson",
+                    fechaSeguimiento: "No Aplica: La subcuenta está creada, lo que no se tiene es una cuenta bancaria independiente."
+                },
+                {
+                    proyecto: "Amazonía Norte",
+                    año: "2019",
+                    riesgo: "BAJO",
+                    deficiencia: "2.- Actas del Comité Directivo del Programa: Incumplimiento a la cláusula décima, numeral 3 'el Comité Directivo del Proyecto, sesionará de manera ordinaria al menos dos veces al año (...)'",
+                    recomendacion: "Cumplir con lo mencionado en la cláusula del Convenio.",
+                    estado: "No se implementará",
+                    responsable: "Raque",
+                    fechaSeguimiento: ""
+                },
+                {
+                    proyecto: "FAP",
+                    año: "2021",
+                    riesgo: "ALTO",
+                    deficiencia: "Durante nuestra revisión al área administrativa del Área protegida, identificamos que los bienes adquiridos durante los últimos meses del año no poseían las etiquetas de identificación.",
+                    recomendacion: "Reserva Ecológica Mache Chindul: Para poder llevar un control exhaustivo de los bienes, se recomienda que apenas se adquiera el bien y antes de ser entregado al custodio se plasmen las etiquetas.",
+                    estado: "No Cumplido",
+                    responsable: "Santiago",
+                    fechaSeguimiento: ""
+                }
+            ];
+            
+            updateDashboard();
+            updateLastUpdateTime();
+            showError("Se están mostrando datos de muestra. Configure el Redirect URI en Azure AD para acceder a los datos reales.");
         }
 
         // Procesar datos de Excel
@@ -871,9 +978,17 @@
                     await acquireToken();
                     document.getElementById('authContainer').style.display = 'none';
                     document.getElementById('mainContent').style.display = 'block';
+                    document.getElementById('configContainer').style.display = 'none';
                     await loadDataFromExcel();
                 } catch (error) {
                     console.error('Error durante el login:', error);
+                    
+                    if (error.errorCode === "redirect_uri_mismatch") {
+                        document.getElementById('configContainer').style.display = 'block';
+                        document.getElementById('authContainer').style.display = 'none';
+                        document.getElementById('mainContent').style.display = 'none';
+                    }
+                    
                     showError('Error durante el inicio de sesión: ' + error.message);
                 } finally {
                     showLoading(false);
@@ -885,6 +1000,7 @@
                 msalInstance.logoutPopup();
                 document.getElementById('authContainer').style.display = 'block';
                 document.getElementById('mainContent').style.display = 'none';
+                document.getElementById('configContainer').style.display = 'none';
             });
             
             // Configurar evento para el botón de actualizar
@@ -901,67 +1017,5 @@
             initializeApp();
         });
     </script>
-<script src="https://alcdn.msauth.net/browser/2.32.0/js/msal-browser.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script><script>
-const msalConfig = {
-    auth: {
-        clientId: "deff0a8a-9d8b-4463-8d8f-382b82476757",
-        authority: "https://login.microsoftonline.com/5e23e4af-237d-4d97-bf6e-dca808015787",
-        redirectUri: window.location.href
-    }
-};
-
-const msalInstance = new msal.PublicClientApplication(msalConfig);
-
-async function login() {
-    try {
-        const loginResponse = await msalInstance.loginPopup({ scopes: ["Files.Read"] });
-        const account = loginResponse.account;
-        msalInstance.setActiveAccount(account);
-        const tokenResponse = await msalInstance.acquireTokenSilent({ scopes: ["Files.Read"] });
-        const accessToken = tokenResponse.accessToken;
-        fetchExcel(accessToken);
-    } catch (error) {
-        console.error("Error de autenticación:", error);
-    }
-}
-
-async function fetchExcel(token) {
-    const url = "https://fiasec-my.sharepoint.com/:x:/g/personal/paraujo_fias_org_ec/EfVHs2JdDFFEn1rTdQSlg2MBicSrs01kGjrGKjnxbMhP4w?e=lTYAYd";
-    const response = await fetch(url, {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    });
-
-    const blob = await response.blob();
-    const reader = new FileReader();
-    reader.onload = function (e) {
-        const data = new Uint8Array(e.target.result);
-        const workbook = XLSX.read(data, { type: "array" });
-        const sheetName = workbook.SheetNames[0];
-        const sheet = workbook.Sheets[sheetName];
-        const json = XLSX.utils.sheet_to_json(sheet);
-        populateTable(json);
-    };
-    reader.readAsArrayBuffer(blob);
-}
-
-function populateTable(data) {
-    const table = document.querySelector("table");
-    data.forEach(row => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-            <td>${row.Proyecto || ""}</td>
-            <td>${row.Año || ""}</td>
-            <td>${row["Nivel de Riesgo"] || ""}</td>
-            <td>${row[" Deficiencia de Control Interno"] || ""}</td>
-            <td>${row.Recomendación || ""}</td>
-            <td>${row.Status || ""}</td>
-            <td>${row.Responsable || ""}</td>
-            <td>${row["Fecha de seguimiento"] || ""}</td>
-        `;
-        table.appendChild(tr);
-    });
-}
-</script></body>
+</body>
 </html>

@@ -737,331 +737,211 @@
         }
 
         // Función para actualizar las tarjetas del dashboard
-        function updateDashboardCards() {
-            const total = filteredData.length;
-            const cumplido = filteredData.filter(item => 
-                item.estado && (item.estado.toLowerCase().includes("cumplido") || item.estado.toLowerCase().includes("implementado"))).length;
-            const enProceso = filteredData.filter(item => 
-                item.estado && (item.estado.toLowerCase().includes("proceso") || item.estado.toLowerCase().includes("en curso"))).length;
-            const noCumplido = filteredData.filter(item => 
-                item.estado && item.estado.toLowerCase().includes("no cumplido")).length;
-            const pendiente = filteredData.filter(item => 
-                item.estado && item.estado.toLowerCase().includes("pendiente")).length;
-            const noAplica = filteredData.filter(item => 
-                item.estado && item.estado.toLowerCase().includes("no aplica")).length;
-            
-            const cumplidoPercent = total > 0 ? Math.round((cumplido / total) * 100) : 0;
-            const enProcesoPercent = total > 0 ? Math.round((enProceso / total) * 100) : 0;
-            const noCumplidoPercent = total > 0 ? Math.round((noCumplido / total) * 100) : 0;
+       // Función para actualizar las tarjetas del dashboard CORREGIDA
+function updateDashboardCards() {
+    const total = filteredData.length;
+    
+    // Cálculos corregidos - sin "Pendiente" y "No Aplica" como categorías separadas
+    const cumplido = filteredData.filter(item => 
+        item.estado && item.estado.toLowerCase().includes("cumplido")).length;
+    
+    const enProceso = filteredData.filter(item => 
+        item.estado && (item.estado.toLowerCase().includes("proceso") || 
+                       item.estado.toLowerCase().includes("pendiente"))).length;
+    
+    const noCumplido = filteredData.filter(item => 
+        item.estado && item.estado.toLowerCase().includes("no cumplido")).length;
+    
+    // Verificación: la suma debe ser igual al total
+    const suma = cumplido + enProceso + noCumplido;
+    
+    // Si hay discrepancias, mostramos advertencia en consola
+    if (suma !== total) {
+        console.warn(`Discrepancia en los cálculos: Total=${total}, Suma=${suma}`);
+        console.warn("Revisar los criterios de clasificación de estados");
+    }
+    
+    const cumplidoPercent = total > 0 ? Math.round((cumplido / total) * 100) : 0;
+    const enProcesoPercent = total > 0 ? Math.round((enProceso / total) * 100) : 0;
+    const noCumplidoPercent = total > 0 ? Math.round((noCumplido / total) * 100) : 0;
             
             document.getElementById('dashboardCards').innerHTML = `
-                <div class="col-md-2 mb-3">
-                    <div class="card dashboard-card text-center">
-                        <div class="card-body">
-                            <h5 class="card-title">Total</h5>
-                            <h2 class="card-text text-primary">${total}</h2>
-                            <p class="text-muted">Recomendaciones</p>
-                        </div>
-                    </div>
+        <div class="col-md-4 mb-3">
+            <div class="card dashboard-card text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Total</h5>
+                    <h2 class="card-text text-primary">${total}</h2>
+                    <p class="text-muted">Recomendaciones</p>
                 </div>
-                <div class="col-md-2 mb-3">
-                    <div class="card dashboard-card text-center">
-                        <div class="card-body">
-                            <h5 class="card-title">Cumplidas</h5>
-                            <h2 class="card-text text-success">${cumplido}</h2>
-                            <div class="progress mt-2">
-                                <div class="progress-bar bg-success" style="width: ${cumplidoPercent}%"></div>
-                            </div>
-                            <p class="text-muted mt-2">${cumplidoPercent}%</p>
-                        </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card dashboard-card text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Cumplidas</h5>
+                    <h2 class="card-text text-success">${cumplido}</h2>
+                    <div class="progress mt-2">
+                        <div class="progress-bar bg-success" style="width: ${cumplidoPercent}%"></div>
                     </div>
+                    <p class="text-muted mt-2">${cumplidoPercent}%</p>
                 </div>
-                <div class="col-md-2 mb-3">
-                    <div class="card dashboard-card text-center">
-                        <div class="card-body">
-                            <h5 class="card-title">En Proceso</h5>
-                            <h2 class="card-text text-warning">${enProceso}</h2>
-                            <div class="progress mt-2">
-                                <div class="progress-bar bg-warning" style="width: ${enProcesoPercent}%"></div>
-                            </div>
-                            <p class="text-muted mt-2">${enProcesoPercent}%</p>
-                        </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card dashboard-card text-center">
+                <div class="card-body">
+                    <h5 class="card-title">En Proceso</h5>
+                    <h2 class="card-text text-warning">${enProceso}</h2>
+                    <div class="progress mt-2">
+                        <div class="progress-bar bg-warning" style="width: ${enProcesoPercent}%"></div>
                     </div>
+                    <p class="text-muted mt-2">${enProcesoPercent}%</p>
                 </div>
-                <div class="col-md-2 mb-3">
-                    <div class="card dashboard-card text-center">
-                        <div class="card-body">
-                            <h5 class="card-title">No Cumplidas</h5>
-                            <h2 class="card-text text-danger">${noCumplido}</h2>
-                            <div class="progress mt-2">
-                                <div class="progress-bar bg-danger" style="width: ${noCumplidoPercent}%"></div>
-                            </div>
-                            <p class="text-muted mt-2">${noCumplidoPercent}%</p>
-                        </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card dashboard-card text-center">
+                <div class="card-body">
+                    <h5 class="card-title">No Cumplidas</h5>
+                    <h2 class="card-text text-danger">${noCumplido}</h2>
+                    <div class="progress mt-2">
+                        <div class="progress-bar bg-danger" style="width: ${noCumplidoPercent}%"></div>
                     </div>
+                    <p class="text-muted mt-2">${noCumplidoPercent}%</p>
                 </div>
-                <div class="col-md-2 mb-3">
-                    <div class="card dashboard-card text-center">
-                        <div class="card-body">
-                            <h5 class="card-title">Pendientes</h5>
-                            <h2 class="card-text text-info">${pendiente}</h2>
-                            <p class="text-muted mt-2">Recomendaciones</p>
-                        </div>
-                    </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card dashboard-card text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Verificación</h5>
+                    <h2 class="card-text ${suma === total ? 'text-success' : 'text-danger'}">${suma}/${total}</h2>
+                    <p class="text-muted mt-2">${suma === total ? '✓ Coincide' : '✗ No coincide'}</p>
                 </div>
-                <div class="col-md-2 mb-3">
-                    <div class="card dashboard-card text-center">
-                        <div class="card-body">
-                            <h5 class="card-title">No Aplica</h5>
-                            <h2 class="card-text text-secondary">${noAplica}</h2>
-                            <p class="text-muted mt-2">Recomendaciones</p>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
+            </div>
+        </div>
+    `;
+}
 
-        // Función para actualizar los filtros
-        function updateFilters() {
-            // Obtener valores únicos para los filtros
-            const proyectos = [...new Set(recommendationsData.map(item => item.proyecto))].filter(Boolean);
-            const años = [...new Set(recommendationsData.map(item => item.año))].filter(Boolean);
-            const estados = [...new Set(recommendationsData.map(item => {
-                if (!item.estado) return '';
-                if (item.estado.toLowerCase().includes("proceso") || item.estado.toLowerCase().includes("en curso")) return "En Proceso";
-                if (item.estado.toLowerCase().includes("cumplido") || item.estado.toLowerCase().includes("implementado")) return "Cumplido";
-                if (item.estado.toLowerCase().includes("no cumplido")) return "No Cumplido";
-                if (item.estado.toLowerCase().includes("pendiente")) return "Pendiente";
-                if (item.estado.toLowerCase().includes("no aplica")) return "No Aplica";
-                return item.estado;
-            }))].filter(Boolean);
-            
-            // Llenar filtro de proyectos
-            const projectFilter = document.getElementById('projectFilter');
-            projectFilter.innerHTML = '<option value="">Todos los proyectos</option>';
-            proyectos.forEach(proyecto => {
-                projectFilter.innerHTML += `<option value="${proyecto}">${proyecto}</option>`;
-            });
-            
-            // Llenar filtro de años
-            const yearFilter = document.getElementById('yearFilter');
-            yearFilter.innerHTML = '<option value="">Todos los años</option>';
-            años.sort().reverse().forEach(año => {
-                yearFilter.innerHTML += `<option value="${año}">${año}</option>`;
-            });
-            
-            // Llenar filtro de estados
-            const statusFilter = document.getElementById('statusFilter');
-            statusFilter.innerHTML = '<option value="">Todos los estados</option>';
-            estados.forEach(estado => {
-                statusFilter.innerHTML += `<option value="${estado}">${estado}</option>`;
-            });
+// Función para actualizar los gráficos CORREGIDA
+function updateCharts() {
+    // Datos para gráfico de estado - SOLO 3 CATEGORÍAS
+    const statusCounts = {
+        'Cumplido': 0,
+        'En Proceso': 0,
+        'No Cumplido': 0
+    };
+    
+    filteredData.forEach(item => {
+        if (!item.estado) {
+            return; // Saltar elementos sin estado
         }
-
-        // Función para aplicar filtros
-        function applyFilters() {
-            const projectValue = document.getElementById('projectFilter').value;
-            const yearValue = document.getElementById('yearFilter').value;
-            const statusValue = document.getElementById('statusFilter').value;
-            const riskValue = document.getElementById('riskFilter').value;
-            
-            filteredData = recommendationsData.filter(item => {
-                return (projectValue === "" || item.proyecto === projectValue) &&
-                       (yearValue === "" || item.año.toString() === yearValue) &&
-                       (statusValue === "" || item.estado.includes(statusValue)) &&
-                       (riskValue === "" || item.riesgo === riskValue);
-            });
-            
-            updateDashboardCards();
-            updateCharts();
-            
-            if (table) {
-                table.clear();
-                table.rows.add(filteredData);
-                table.draw();
-            }
+        
+        const estado = item.estado.toLowerCase();
+        
+        if (estado.includes("cumplido")) {
+            statusCounts['Cumplido']++;
+        } else if (estado.includes("proceso") || estado.includes("pendiente")) {
+            statusCounts['En Proceso']++;
+        } else if (estado.includes("no cumplido")) {
+            statusCounts['No Cumplido']++;
+        } else {
+            // Para estados no reconocidos, los agregamos a "En Proceso" como categoría por defecto
+            statusCounts['En Proceso']++;
+            console.log(`Estado no reconocido: "${item.estado}" - asignado a "En Proceso"`);
         }
-
-        // Función para inicializar la tabla de datos
-        function initDataTable() {
-            if ($.fn.DataTable.isDataTable('#recommendationsTable')) {
-                table.destroy();
-            }
-            
-            table = $('#recommendationsTable').DataTable({
-                data: filteredData,
-                columns: [
-                    { data: 'proyecto' },
-                    { data: 'año' },
-                    { 
-                        data: 'riesgo',
-                        render: function(data, type, row) {
-                            if (!data) return '';
-                            let riskClass = '';
-                            if (data === 'ALTO') riskClass = 'danger';
-                            else if (data === 'MEDIO') riskClass = 'warning';
-                            else if (data === 'BAJO') riskClass = 'success';
-                            
-                            return `<span class="badge bg-${riskClass}">${data}</span>`;
-                        }
-                    },
-                    { 
-                        data: 'deficiencia',
-                        render: function(data) {
-                            if (!data) return '';
-                            return data.length > 100 ? data.substr(0, 100) + '...' : data;
-                        }
-                    },
-                    { 
-                        data: 'recomendacion',
-                        render: function(data) {
-                            if (!data) return '';
-                            return data.length > 100 ? data.substr(0, 100) + '...' : data;
-                        }
-                    },
-                    { 
-                        data: 'estado',
-                        render: function(data) {
-                            if (!data) return '';
-                            let statusClass = '';
-                            if (data.includes('En Proceso') || data.includes('Proceso')) statusClass = 'status-en-proceso';
-                            else if (data.includes('Cumplido') || data.includes('implementará')) statusClass = 'status-cumplido';
-                            else if (data.includes('No Cumplido')) statusClass = 'status-no-cumplido';
-                            else if (data.includes('Pendiente')) statusClass = 'status-pendiente';
-                            else if (data.includes('Aplica')) statusClass = 'status-no-aplica';
-                            
-                            return `<span class="status-badge ${statusClass}">${data}</span>`;
-                        }
-                    },
-                    { data: 'responsable' },
-                    { data: 'fechaSeguimiento' }
-                ],
-                language: {
-                    url: '//cdn.datatables.net/plug-ins/1.13.5/i18n/es-ES.json'
+    });
+    
+    // Datos para gráfico de riesgo
+    const riskCounts = {
+        'ALTO': 0,
+        'MEDIO': 0,
+        'BAJO': 0,
+        'Sin especificar': 0
+    };
+    
+    filteredData.forEach(item => {
+        const riesgo = item.riesgo || 'Sin especificar';
+        if (riesgo === 'ALTO' || riesgo === 'MEDIO' || riesgo === 'BAJO') {
+            riskCounts[riesgo]++;
+        } else {
+            riskCounts['Sin especificar']++;
+        }
+    });
+    
+    // Destruir gráficos existentes
+    if (statusChart) {
+        statusChart.destroy();
+    }
+    if (riskChart) {
+        riskChart.destroy();
+    }
+    
+    // Crear gráfico de estado - SOLO 3 CATEGORÍAS
+    const statusCtx = document.getElementById('statusChart').getContext('2d');
+    statusChart = new Chart(statusCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Cumplido', 'En Proceso', 'No Cumplido'],
+            datasets: [{
+                data: [statusCounts['Cumplido'], statusCounts['En Proceso'], statusCounts['No Cumplido']],
+                backgroundColor: [
+                    '#28a745', // Cumplido - Verde
+                    '#ffc107', // En Proceso - Amarillo
+                    '#dc3545'  // No Cumplido - Rojo
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom'
                 },
-                pageLength: 10,
-                createdRow: function(row, data, dataIndex) {
-                    // Añadir clases según el nivel de riesgo
-                    if (data.riesgo === 'ALTO') {
-                        $(row).addClass('risk-high');
-                    } else if (data.riesgo === 'MEDIO') {
-                        $(row).addClass('risk-medium');
-                    } else if (data.riesgo === 'BAJO') {
-                        $(row).addClass('risk-low');
-                    }
-                }
-            });
-            
-            // Aplicar filtros
-            $('#projectFilter, #yearFilter, #statusFilter, #riskFilter').on('change', function() {
-                applyFilters();
-            });
-            
-            // Evento para mostrar detalles al hacer clic en una fila
-            $('#recommendationsTable tbody').on('click', 'tr', function() {
-                const data = table.row(this).data();
-                if (data) {
-                    showDetailsModal(data);
-                }
-            });
-        }
-
-        // Función para actualizar los gráficos
-        function updateCharts() {
-            // Datos para gráfico de estado
-            const statusCounts = {};
-            filteredData.forEach(item => {
-                let estado = item.estado || 'Sin especificar';
-                if (estado.includes('En Proceso') || estado.includes('Proceso')) estado = 'En Proceso';
-                if (estado.includes('Cumplido') || estado.includes('implementará')) estado = 'Cumplido';
-                if (estado.includes('No Cumplido')) estado = 'No Cumplido';
-                if (estado.includes('Pendiente')) estado = 'Pendiente';
-                if (estado.includes('Aplica')) estado = 'No Aplica';
-                
-                statusCounts[estado] = (statusCounts[estado] || 0) + 1;
-            });
-            
-            // Datos para gráfico de riesgo
-            const riskCounts = {
-                'ALTO': 0,
-                'MEDIO': 0,
-                'BAJO': 0,
-                'Sin especificar': 0
-            };
-            
-            filteredData.forEach(item => {
-                const riesgo = item.riesgo || 'Sin especificar';
-                if (riesgo === 'ALTO' || riesgo === 'MEDIO' || riesgo === 'BAJO') {
-                    riskCounts[riesgo]++;
-                } else {
-                    riskCounts['Sin especificar']++;
-                }
-            });
-            
-            // Destruir gráficos existentes
-            if (statusChart) {
-                statusChart.destroy();
-            }
-            if (riskChart) {
-                riskChart.destroy();
-            }
-            
-            // Crear gráfico de estado
-            const statusCtx = document.getElementById('statusChart').getContext('2d');
-            statusChart = new Chart(statusCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: Object.keys(statusCounts),
-                    datasets: [{
-                        data: Object.values(statusCounts),
-                        backgroundColor: [
-                            '#28a745', // Cumplido - Verde
-                            '#ffc107', // En Proceso - Amarillo
-                            '#dc3545', // No Cumplido - Rojo
-                            '#17a2b8', // Pendiente - Azul
-                            '#6c757d'  // No Aplica - Gris
-                        ]
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom'
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const label = context.label || '';
+                            const value = context.raw || 0;
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const percentage = Math.round((value / total) * 100);
+                            return `${label}: ${value} (${percentage}%)`;
                         }
                     }
                 }
-            });
-            
-            // Crear gráfico de riesgo
-            const riskCtx = document.getElementById('riskChart').getContext('2d');
-            riskChart = new Chart(riskCtx, {
-                type: 'bar',
-                data: {
-                    labels: Object.keys(riskCounts),
-                    datasets: [{
-                        label: 'Recomendaciones por Nivel de Riesgo',
-                        data: Object.values(riskCounts),
-                        backgroundColor: [
-                            '#dc3545', // ALTO - Rojo
-                            '#ffc107', // MEDIO - Amarillo
-                            '#28a745', // BAJO - Verde
-                            '#6c757d'  // Sin especificar - Gris
-                        ]
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
+            }
         }
+    });
+    
+    // Crear gráfico de riesgo
+    const riskCtx = document.getElementById('riskChart').getContext('2d');
+    riskChart = new Chart(riskCtx, {
+        type: 'bar',
+        data: {
+            labels: Object.keys(riskCounts),
+            datasets: [{
+                label: 'Recomendaciones por Nivel de Riesgo',
+                data: Object.values(riskCounts),
+                backgroundColor: [
+                    '#dc3545', // ALTO - Rojo
+                    '#ffc107', // MEDIO - Amarillo
+                    '#28a745', // BAJO - Verde
+                    '#6c757d'  // Sin especificar - Gris
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+}
 
         // Función para mostrar el modal de detalles
         function showDetailsModal(data) {

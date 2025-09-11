@@ -608,15 +608,16 @@
             
             // Procesar cada fila de datos
             jsonData.forEach(row => {
-                // Limpiar y normalizar los datos
-                const proyecto = cleanData(row.Proyecto || row.PROYECTO || row.ProyectoAuditoria || '');
-                const año = cleanData(row.Año || row.AÑO || row.Year || (row.Fecha ? new Date(row.Fecha).getFullYear().toString() : ''));
-                const riesgo = cleanData(row.Riesgo || row.RIESGO || row["Nivel de Riesgo"] || row["NIVEL DE RIESGO"] || '');
-                const deficiencia = cleanData(row.Deficiencia || row.DEFICIENCIA || row["Deficiencia de Control Interno"] || '');
-                const recomendacion = cleanData(row.Recomendacion || row.RECOMENDACION || row.Recomendación || '');
-                const estado = cleanData(row.Estado || row.ESTADO || row.Status || row.STATUS || '');
-                const responsable = cleanData(row.Responsable || row.RESPONSABLE || '');
-                const fechaSeguimiento = cleanData(row["Fecha de seguimiento"] || row.FechaSeguimiento || row.FECHA_SEGUIMIENTO || '');
+                // Limpiar y normalizar los datos según la estructura del Excel proporcionado
+                const proyecto = cleanData(row.PROYECTO || row.Proyecto || '');
+                const año = cleanData(row.AÑO || row.Año || '');
+                const riesgo = cleanData(row.RIESGO || row.Riesgo || '');
+                const deficiencia = cleanData(row.DEFICIENCIA || row.Deficiencia || '');
+                const recomendacion = cleanData(row.RECOMENDACION || row.Recomendación || '');
+                const estado = cleanData(row.ESTADO || row.Estado || '');
+                const responsable = cleanData(row.RESPONSABLE || row.Responsable || '');
+                const fechaSeguimiento = cleanData(row["FECHA SEGUIMIENTO"] || row.FechaSeguimiento || '');
+                const observacion = cleanData(row.OBSERVACIÓN || row.Observación || '');
                 
                 processedData.push({
                     proyecto,
@@ -626,7 +627,8 @@
                     recomendacion,
                     estado,
                     responsable,
-                    fechaSeguimiento
+                    fechaSeguimiento,
+                    observacion
                 });
             });
             
@@ -642,11 +644,6 @@
             // Si es un número, convertirlo a string
             if (typeof value === 'number') {
                 return value.toString();
-            }
-            
-            // Si es una fecha, formatearla
-            if (value instanceof Date) {
-                return value.toLocaleDateString('es-ES');
             }
             
             // Limpiar saltos de línea y espacios múltiples
@@ -742,12 +739,41 @@
         function updateDashboardCards() {
             const dataToUse = isFiltered ? filteredData : recommendationsData;
             const total = dataToUse.length;
-            const cumplido = dataToUse.filter(item => 
-                item.estado && (item.estado.includes("Cumplido") || item.estado.includes("implementará"))).length;
-            const enProceso = dataToUse.filter(item => 
-                item.estado && (item.estado.includes("En Proceso") || item.estado.includes("Proceso"))).length;
-            const noCumplido = dataToUse.filter(item => 
-                item.estado && item.estado.includes("No Cumplido")).length;
+            
+            // Contar estados de manera precisa
+            const estadoCounts = {
+                'Cumplido': 0,
+                'En Proceso': 0,
+                'No Cumplido': 0,
+                'Pendiente': 0,
+                'No Aplica': 0,
+                'No se implementará': 0,
+                'Otro': 0
+            };
+            
+            dataToUse.forEach(item => {
+                const estado = item.estado || 'Sin especificar';
+                
+                if (estado.includes('Cumplido') || estado.includes('Cumplida')) {
+                    estadoCounts['Cumplido']++;
+                } else if (estado.includes('En Proceso') || estado.includes('Proceso')) {
+                    estadoCounts['En Proceso']++;
+                } else if (estado.includes('No Cumplido') || estado.includes('No Cumplida')) {
+                    estadoCounts['No Cumplido']++;
+                } else if (estado.includes('Pendiente')) {
+                    estadoCounts['Pendiente']++;
+                } else if (estado.includes('No Aplica') || estado.includes('No aplica')) {
+                    estadoCounts['No Aplica']++;
+                } else if (estado.includes('No se implementará')) {
+                    estadoCounts['No se implementará']++;
+                } else {
+                    estadoCounts['Otro']++;
+                }
+            });
+            
+            const cumplido = estadoCounts['Cumplido'];
+            const enProceso = estadoCounts['En Proceso'];
+            const noCumplido = estadoCounts['No Cumplido'];
             
             const cumplidoPercent = total > 0 ? Math.round((cumplido / total) * 100) : 0;
             const enProcesoPercent = total > 0 ? Math.round((enProceso / total) * 100) : 0;
@@ -809,11 +835,13 @@
             const años = [...new Set(recommendationsData.map(item => item.año))].filter(Boolean);
             const estados = [...new Set(recommendationsData.map(item => {
                 if (!item.estado) return '';
-                if (item.estado.includes("En Proceso") || item.estado.includes("Proceso")) return "En Proceso";
-                if (item.estado.includes("Cumplido") || item.estado.includes("implementará")) return "Cumplido";
-                if (item.estado.includes("No Cumplido")) return "No Cumplido";
-                if (item.estado.includes("Pendiente")) return "Pendiente";
-                if (item.estado.includes("Aplica")) return "No Aplica";
+                const estado = item.estado.toLowerCase();
+                if (estado.includes('cumplido') || estado.includes('cumplida')) return "Cumplido";
+                if (estado.includes('proceso')) return "En Proceso";
+                if (estado.includes('no cumplido') || estado.includes('no cumplida')) return "No Cumplido";
+                if (estado.includes('pendiente')) return "Pendiente";
+                if (estado.includes('no aplica') || estado.includes('no aplica')) return "No Aplica";
+                if (estado.includes('no se implementará')) return "No se implementará";
                 return item.estado;
             }))].filter(Boolean);
             
@@ -905,26 +933,25 @@
                 'No Cumplido': 0,
                 'Pendiente': 0,
                 'No Aplica': 0,
+                'No se implementará': 0,
                 'Otro': 0
             };
             
             data.forEach(item => {
-                if (!item.estado) {
-                    statusCounts['Otro']++;
-                    return;
-                }
+                const estado = item.estado || 'Sin especificar';
                 
-                const estado = item.estado.toLowerCase();
-                if (estado.includes("cumplido") || estado.includes("implementará")) {
+                if (estado.includes('Cumplido') || estado.includes('Cumplida')) {
                     statusCounts['Cumplido']++;
-                } else if (estado.includes("proceso")) {
+                } else if (estado.includes('En Proceso') || estado.includes('Proceso')) {
                     statusCounts['En Proceso']++;
-                } else if (estado.includes("no cumplido")) {
+                } else if (estado.includes('No Cumplido') || estado.includes('No Cumplida')) {
                     statusCounts['No Cumplido']++;
-                } else if (estado.includes("pendiente")) {
+                } else if (estado.includes('Pendiente')) {
                     statusCounts['Pendiente']++;
-                } else if (estado.includes("aplica")) {
+                } else if (estado.includes('No Aplica') || estado.includes('No aplica')) {
                     statusCounts['No Aplica']++;
+                } else if (estado.includes('No se implementará')) {
+                    statusCounts['No se implementará']++;
                 } else {
                     statusCounts['Otro']++;
                 }
@@ -940,6 +967,7 @@
                     case 'No Cumplido': return '#dc3545';
                     case 'Pendiente': return '#17a2b8';
                     case 'No Aplica': return '#6c757d';
+                    case 'No se implementará': return '#343a40';
                     default: return '#e9ecef';
                 }
             });
@@ -1084,11 +1112,13 @@
                 // Normalizar estado para comparación
                 let normalizedEstado = '';
                 if (item.estado) {
-                    if (item.estado.includes("En Proceso") || item.estado.includes("Proceso")) normalizedEstado = "En Proceso";
-                    else if (item.estado.includes("Cumplido") || item.estado.includes("implementará")) normalizedEstado = "Cumplido";
-                    else if (item.estado.includes("No Cumplido")) normalizedEstado = "No Cumplido";
-                    else if (item.estado.includes("Pendiente")) normalizedEstado = "Pendiente";
-                    else if (item.estado.includes("Aplica")) normalizedEstado = "No Aplica";
+                    const estado = item.estado.toLowerCase();
+                    if (estado.includes('cumplido') || estado.includes('cumplida')) normalizedEstado = "Cumplido";
+                    else if (estado.includes('proceso')) normalizedEstado = "En Proceso";
+                    else if (estado.includes('no cumplido') || estado.includes('no cumplida')) normalizedEstado = "No Cumplido";
+                    else if (estado.includes('pendiente')) normalizedEstado = "Pendiente";
+                    else if (estado.includes('no aplica') || estado.includes('no aplica')) normalizedEstado = "No Aplica";
+                    else if (estado.includes('no se implementará')) normalizedEstado = "No se implementará";
                     else normalizedEstado = item.estado;
                 }
                 
@@ -1163,11 +1193,12 @@
             if (!estado) return 'status-no-aplica';
             
             const estadoLower = estado.toLowerCase();
-            if (estadoLower.includes('cumplido') || estadoLower.includes('implementará')) return 'status-cumplido';
+            if (estadoLower.includes('cumplido') || estadoLower.includes('cumplida')) return 'status-cumplido';
             if (estadoLower.includes('proceso')) return 'status-en-proceso';
-            if (estadoLower.includes('no cumplido')) return 'status-no-cumplido';
+            if (estadoLower.includes('no cumplido') || estadoLower.includes('no cumplida')) return 'status-no-cumplido';
             if (estadoLower.includes('pendiente')) return 'status-pendiente';
-            if (estadoLower.includes('aplica')) return 'status-no-aplica';
+            if (estadoLower.includes('no aplica') || estadoLower.includes('no aplica')) return 'status-no-aplica';
+            if (estadoLower.includes('no se implementará')) return 'status-no-aplica';
             return 'status-no-aplica';
         }
 
@@ -1176,10 +1207,11 @@
             if (!estado) return 'No especificado';
             
             if (estado.includes("En Proceso") || estado.includes("Proceso")) return "En Proceso";
-            if (estado.includes("Cumplido") || estado.includes("implementará")) return "Cumplido";
-            if (estado.includes("No Cumplido")) return "No Cumplido";
+            if (estado.includes("Cumplido") || estado.includes("Cumplida")) return "Cumplido";
+            if (estado.includes("No Cumplido") || estado.includes("No Cumplida")) return "No Cumplido";
             if (estado.includes("Pendiente")) return "Pendiente";
-            if (estado.includes("Aplica")) return "No Aplica";
+            if (estado.includes("No Aplica") || estado.includes("No aplica")) return "No Aplica";
+            if (estado.includes("No se implementará")) return "No se implementará";
             
             return estado;
         }

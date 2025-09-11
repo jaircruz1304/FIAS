@@ -4,8 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Seguimiento de Recomendaciones - FIAS</title>
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/dataTables.bootstrap5.min.css">
     <style>
         :root {
@@ -148,9 +151,25 @@
             padding: 40px;
             color: #6c757d;
         }
+        
+        .filter-active {
+            background-color: #e8f5e9;
+            border-left: 4px solid var(--fias-primary);
+        }
+        
+        .card-counter {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+        
+        .card-title-small {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
     </style>
 </head>
 <body>
+    <!-- Loading Overlay -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="text-center">
             <div class="spinner-border text-success" role="status">
@@ -160,38 +179,7 @@
         </div>
     </div>
 
-    <div id="configContainer" class="auth-container" style="display: none;">
-        <div class="text-center mb-4">
-            <i class="fas fa-cogs fa-3x text-primary"></i>
-            <h3 class="mt-2">Configuración Requerida</h3>
-            <p>Para que la aplicación funcione correctamente, necesita configurar el Redirect URI en Azure AD.</p>
-        </div>
-        
-        <div class="config-help">
-            <h5>Pasos para configurar Azure AD:</h5>
-            <ol>
-                <li>Inicie sesión en <a href="https://portal.azure.com/" target="_blank">Azure Portal</a></li>
-                <li>Vaya a <strong>Azure Active Directory</strong> > <strong>Registros de aplicaciones</strong></li>
-                <li>Seleccione su aplicación <strong>"Auditoria - Recomendaciones"</strong></li>
-                <li>Vaya a la sección <strong>"Autenticación"</strong></li>
-                <li>Agregue estos Redirect URIs:
-                    <ul>
-                        <li><code>https://jaircruz1304.github.io</code></li>
-                        <li><code>http://localhost:8000</code> (para desarrollo)</li>
-                    </ul>
-                </li>
-                <li>Guarde los cambios</li>
-            </ol>
-            <p class="mb-0">Después de configurar, <button class="btn btn-sm btn-success" onclick="location.reload()">recargue la página</button></p>
-        </div>
-        
-        <div class="mt-3">
-            <button class="btn btn-primary w-100" onclick="window.open('https://portal.azure.com/', '_blank')">
-                <i class="fas fa-external-link-alt me-2"></i> Abrir Azure Portal
-            </button>
-        </div>
-    </div>
-
+    <!-- Contenedor de autenticación (inicialmente oculto) -->
     <div id="authContainer" class="auth-container" style="display: none;">
         <div class="text-center mb-4">
             <i class="fas fa-leaf fa-3x text-success"></i>
@@ -206,7 +194,9 @@
         </div>
     </div>
 
+    <!-- Contenido principal (inicialmente oculto) -->
     <div id="mainContent" style="display: none;">
+        <!-- Navbar -->
         <nav class="navbar navbar-expand-lg navbar-dark">
             <div class="container">
                 <div class="logo-container">
@@ -220,15 +210,6 @@
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
                             <a class="nav-link active" href="#"><i class="fas fa-home me-1"></i> Inicio</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#"><i class="fas fa-chart-bar me-1"></i> Dashboard</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#"><i class="fas fa-list me-1"></i> Recomendaciones</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#"><i class="fas fa-user me-1"></i> Auditoría Interna</a>
                         </li>
                         <li class="nav-item">
                             <button class="btn btn-outline-light btn-sm mt-1" id="refreshData">
@@ -246,6 +227,7 @@
         </nav>
 
         <div class="container mt-4">
+            <!-- Filtros -->
             <div class="row mb-4">
                 <div class="col-12">
                     <div class="filter-section">
@@ -254,19 +236,22 @@
                                 <label for="projectFilter" class="form-label">Proyecto</label>
                                 <select class="form-select" id="projectFilter">
                                     <option value="">Todos los proyectos</option>
-                                    </select>
+                                    <!-- Se llenará dinámicamente -->
+                                </select>
                             </div>
                             <div class="col-md-3 mb-2">
                                 <label for="yearFilter" class="form-label">Año</label>
                                 <select class="form-select" id="yearFilter">
                                     <option value="">Todos los años</option>
-                                    </select>
+                                    <!-- Se llenará dinámicamente -->
+                                </select>
                             </div>
                             <div class="col-md-3 mb-2">
                                 <label for="statusFilter" class="form-label">Estado</label>
                                 <select class="form-select" id="statusFilter">
                                     <option value="">Todos los estados</option>
-                                    </select>
+                                    <!-- Se llenará dinámicamente -->
+                                </select>
                             </div>
                             <div class="col-md-3 mb-2">
                                 <label for="riskFilter" class="form-label">Nivel de Riesgo</label>
@@ -278,20 +263,67 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="row mt-2">
+                            <div class="col-12 text-end">
+                                <button id="clearFilters" class="btn btn-sm btn-outline-secondary">
+                                    <i class="fas fa-times me-1"></i> Limpiar filtros
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
+            <!-- Dashboard Cards -->
             <div class="row mb-4" id="dashboardCards">
-                <div class="col-12">
-                    <div class="no-data-message">
-                        <i class="fas fa-database fa-3x mb-3"></i>
-                        <h4>Esperando datos de Excel</h4>
-                        <p>Los datos se cargarán automáticamente después de la autenticación.</p>
+                <div class="col-md-3 mb-3">
+                    <div class="card dashboard-card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title">Total Recomendaciones</h5>
+                            <h2 class="card-text text-primary card-counter" id="totalCounter">0</h2>
+                            <p class="text-muted card-title-small">Recomendaciones registradas</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card dashboard-card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title">Cumplidas</h5>
+                            <h2 class="card-text text-success card-counter" id="completedCounter">0</h2>
+                            <div class="progress mt-2">
+                                <div class="progress-bar bg-success" id="completedProgress" style="width: 0%"></div>
+                            </div>
+                            <p class="text-muted mt-2 card-title-small"><span id="completedPercent">0</span>% de cumplimiento</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card dashboard-card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title">En Proceso</h5>
+                            <h2 class="card-text text-warning card-counter" id="progressCounter">0</h2>
+                            <div class="progress mt-2">
+                                <div class="progress-bar bg-warning" id="progressProgress" style="width: 0%"></div>
+                            </div>
+                            <p class="text-muted mt-2 card-title-small"><span id="progressPercent">0</span>% en ejecución</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card dashboard-card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title">No Cumplidas</h5>
+                            <h2 class="card-text text-danger card-counter" id="notCompletedCounter">0</h2>
+                            <div class="progress mt-2">
+                                <div class="progress-bar bg-danger" id="notCompletedProgress" style="width: 0%"></div>
+                            </div>
+                            <p class="text-muted mt-2 card-title-small"><span id="notCompletedPercent">0</span>% pendientes</p>
+                        </div>
                     </div>
                 </div>
             </div>
 
+            <!-- Charts -->
             <div class="row mb-4">
                 <div class="col-md-6 mb-3">
                     <div class="card dashboard-card">
@@ -319,6 +351,7 @@
                 </div>
             </div>
 
+            <!-- Tabla de Recomendaciones -->
             <div class="row">
                 <div class="col-12">
                     <div class="card dashboard-card">
@@ -331,12 +364,7 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <div class="no-data-message">
-                                <i class="fas fa-table fa-3x mb-3"></i>
-                                <h4>Tabla de recomendaciones</h4>
-                                <p>Los datos se mostrarán aquí después de cargarse desde Excel.</p>
-                            </div>
-                            <div class="table-responsive" id="tableContainer" style="display: none;">
+                            <div class="table-responsive">
                                 <table id="recommendationsTable" class="table table-hover table-striped">
                                     <thead>
                                         <tr>
@@ -351,7 +379,8 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        </tbody>
+                                        <!-- Los datos se cargarán mediante JavaScript -->
+                                    </tbody>
                                 </table>
                             </div>
                         </div>
@@ -360,45 +389,13 @@
             </div>
         </div>
 
-        <div class="modal fade" id="detailModal" tabindex="-1">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Detalle de Recomendación</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <p><strong>Proyecto:</strong> <span id="modal-project"></span></p>
-                                <p><strong>Año:</strong> <span id="modal-year"></span></p>
-                                <p><strong>Nivel de Riesgo:</strong> <span id="modal-risk"></span></p>
-                            </div>
-                            <div class="col-md-6">
-                                <p><strong>Estado:</strong> <span id="modal-status"></span></p>
-                                <p><strong>Responsable:</strong> <span id="modal-responsible"></span></p>
-                                <p><strong>Fecha Seguimiento:</strong> <span id="modal-date"></span></p>
-                            </div>
-                        </div>
-                        <hr>
-                        <p><strong>Deficiencia:</strong></p>
-                        <p id="modal-deficiency" class="bg-light p-3 rounded"></p>
-                        <p><strong>Recomendación:</strong></p>
-                        <p id="modal-recommendation" class="bg-light p-3 rounded"></p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+        <!-- Footer -->
         <footer class="bg-dark text-white mt-5 py-4">
             <div class="container">
                 <div class="row">
                     <div class="col-md-6">
                         <h5>FIAS - Fondo de Inversión Ambiental Sostenible</h5>
-                        <p>Auditoría Interna - Desarrollado por Jair Cruz</p>
+                        <p>Auditoría Interna</p>
                         <p class="small">Última actualización: <span id="lastUpdate"></span></p>
                     </div>
                     <div class="col-md-6 text-md-end">
@@ -409,20 +406,19 @@
         </footer>
     </div>
 
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- MSAL para autenticación -->
     <script src="https://alcdn.msauth.net/browser/2.32.0/js/msal-browser.min.js"></script>
+    <!-- XLSX para procesar Excel -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     
     <script>
-        // ====================================================================================
-        // INICIO DEL BLOQUE DE SCRIPT CORREGIDO
-        // ====================================================================================
-
-        // Configuración de MSAL (sin cambios, está correcta)
+        // Configuración de MSAL con los datos proporcionados
         const msalConfig = {
             auth: {
                 clientId: "deff0a8a-9d8b-4463-8d8f-382b82476757",
@@ -440,88 +436,71 @@
 
         // Configuración del archivo Excel
         const EXCEL_FILE_ID = "u!aHR0cHM6Ly9maWFzZWMtbXkuc2hhcmVwb2ludC5jb20vOng6L2cvcGVyc29uYWwvcGFyYXVqb19maWFzX29yZ19lYy9FZlZIczJKZERGRkVuMXJUZFFTbGcyTUJpY1NyczAxa0dqckdLam54Yk1oUDR3";
-        
-        // **CAMBIO IMPORTANTE**: Asegúrate de que este nombre coincida EXACTAMENTE con el de tu archivo Excel.
         const EXCEL_SHEET_NAME = "RECOMENDACIONES AUD EXTERNA";
         
         // Variables globales
         let recommendationsData = [];
+        let filteredData = [];
         let table;
         let statusChart, riskChart;
         
         // Inicializar la aplicación
         async function initializeApp() {
-            showLoading(true, "Iniciando aplicación...");
+            showLoading(true);
             
-            await msalInstance.handleRedirectPromise().catch(err => {
-                console.error("Error en handleRedirectPromise:", err);
-                showError("Error durante el proceso de autenticación. Por favor, intente recargar la página.");
-            });
-
-            const accounts = msalInstance.getAllAccounts();
-            if (accounts.length > 0) {
-                msalInstance.setActiveAccount(accounts[0]);
-                try {
+            try {
+                // Verificar si hay una sesión activa
+                const accounts = msalInstance.getAllAccounts();
+                if (accounts.length > 0) {
+                    // Usuario ya autenticado
                     await acquireToken();
                     document.getElementById('authContainer').style.display = 'none';
                     document.getElementById('mainContent').style.display = 'block';
                     await loadDataFromExcel();
-                } catch (error) {
-                    console.error('Error de inicialización con sesión activa:', error);
-                    showLoginUI(); 
+                } else {
+                    // Mostrar interfaz de autenticación
+                    document.getElementById('authContainer').style.display = 'block';
+                    document.getElementById('mainContent').style.display = 'none';
                 }
-            } else {
-                showLoginUI();
+            } catch (error) {
+                console.error('Error inicializando la aplicación:', error);
+                showError('Error al inicializar la aplicación: ' + error.message);
+            } finally {
+                showLoading(false);
             }
-            showLoading(false);
-        }
-
-        function showLoginUI() {
-            document.getElementById('authContainer').style.display = 'block';
-            document.getElementById('mainContent').style.display = 'none';
-            document.getElementById('configContainer').style.display = 'none';
-            showLoading(false);
         }
 
         // Adquirir token de acceso
         async function acquireToken() {
-            const account = msalInstance.getActiveAccount();
-            if (!account) {
-                throw new Error("No hay cuenta activa. Se requiere iniciar sesión.");
-            }
-            
-            const silentRequest = {
-                scopes: ["Files.Read.All", "Sites.Read.All"],
-                account: account
-            };
-            
             try {
+                const accounts = msalInstance.getAllAccounts();
+                if (accounts.length === 0) throw new Error("No hay cuentas activas");
+                
+                const silentRequest = {
+                    scopes: ["Files.Read.All", "Sites.Read.All"],
+                    account: accounts[0]
+                };
+                
                 const response = await msalInstance.acquireTokenSilent(silentRequest);
                 accessToken = response.accessToken;
+                return accessToken;
             } catch (error) {
-                console.warn('Fallo al adquirir token silencioso, intentando con popup:', error);
-                const interactiveRequest = { scopes: ["Files.Read.All", "Sites.Read.All"] };
-                const response = await msalInstance.acquireTokenPopup(interactiveRequest);
-                accessToken = response.accessToken;
+                console.error('Error adquiriendo token:', error);
+                throw error;
             }
         }
 
         // Función para cargar datos desde Excel Online
         async function loadDataFromExcel() {
-            //...dentro de la función loadDataFromExcel, después de procesar los datos...
-//recommendationsData = processExcelData(jsonData);
-
-// AÑADE ESTA LÍNEA PARA DEPURAR
-//console.log("Datos de la primera fila:", recommendationsData[0]); 
-
-if (recommendationsData.length === 0) { //...el resto del código sigue igual
-            showLoading(true, "Cargando datos desde Excel Online...");
+            showLoading(true);
+            document.getElementById('loadingText').textContent = "Cargando datos desde Excel Online...";
             
             try {
                 if (!accessToken) {
                     await acquireToken();
                 }
                 
+                // Obtener datos del Excel usando el método del código proporcionado
                 const graphUrl = `https://graph.microsoft.com/v1.0/shares/${EXCEL_FILE_ID}/driveItem/content`;
                 const response = await fetch(graphUrl, {
                     headers: {
@@ -529,27 +508,27 @@ if (recommendationsData.length === 0) { //...el resto del código sigue igual
                     }
                 });
 
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(`Error ${response.status}: ${errorData.error.message}`);
-                }
+                if (!response.ok) throw new Error(`Error ${response.status}: ${response.statusText}`);
 
                 const blob = await response.blob();
                 const data = await blob.arrayBuffer();
-                const workbook = XLSX.read(data, { type: "array" });
 
-                // **CAMBIO CLAVE**: Usar directamente el nombre de la hoja definido en la constante.
-                const sheet = workbook.Sheets[EXCEL_SHEET_NAME];
-                if (!sheet) {
-                    throw new Error(`No se encontró la hoja de cálculo con el nombre "${EXCEL_SHEET_NAME}". Hojas disponibles: ${workbook.SheetNames.join(", ")}`);
-                }
+                const workbook = XLSX.read(data, { type: "array" });
+                const sheetName = workbook.SheetNames.find(name => 
+                    name.toLowerCase().includes("recomendaciones") || 
+                    name.toLowerCase().includes("auditoria") ||
+                    name.toLowerCase().includes("externa")
+                ) || workbook.SheetNames[0];
                 
-                const jsonData = XLSX.utils.sheet_to_json(sheet);
+                const sheet = workbook.Sheets[sheetName];
+                const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+                
+                // Procesar los datos para adaptarlos a la estructura esperada
                 recommendationsData = processExcelData(jsonData);
+                filteredData = [...recommendationsData];
                 
                 if (recommendationsData.length === 0) {
-                    showEmptyState("No se encontraron filas de datos en la hoja del archivo Excel.");
-                    return;
+                    throw new Error("No se encontraron datos en el archivo Excel");
                 }
                 
                 updateDashboard();
@@ -558,19 +537,78 @@ if (recommendationsData.length === 0) { //...el resto del código sigue igual
             } catch (error) {
                 console.error('Error cargando datos:', error);
                 showError('Error al cargar datos: ' + error.message);
-                showEmptyState(error.message);
+                
+                // Mostrar estado vacío
+                showEmptyState();
             } finally {
                 showLoading(false);
             }
         }
 
-        function showEmptyState(message = "No fue posible conectar con el archivo Excel o el archivo está vacío.") {
+        // Procesar datos de Excel (adaptado para el formato JSON de XLSX)
+        function processExcelData(jsonData) {
+            const processedData = [];
+            
+            if (!jsonData || jsonData.length === 0) {
+                return processedData;
+            }
+            
+            // Encontrar la fila de encabezados
+            let headerRowIndex = -1;
+            for (let i = 0; i < jsonData.length; i++) {
+                if (jsonData[i] && jsonData[i].length > 0 && 
+                    (jsonData[i][0] === "Proyecto" || (jsonData[i][1] && jsonData[i][1].toString().includes("Proyecto")))) {
+                    headerRowIndex = i;
+                    break;
+                }
+            }
+            
+            if (headerRowIndex === -1) {
+                return processedData;
+            }
+            
+            const headers = jsonData[headerRowIndex];
+            
+            // Obtener índices de columnas
+            const projectIndex = headers.findIndex(h => h && h.toString().toLowerCase().includes("proyecto"));
+            const yearIndex = headers.findIndex(h => h && h.toString().toLowerCase().includes("año"));
+            const riskIndex = headers.findIndex(h => h && h.toString().toLowerCase().includes("riesgo"));
+            const deficiencyIndex = headers.findIndex(h => h && h.toString().toLowerCase().includes("deficiencia"));
+            const recommendationIndex = headers.findIndex(h => h && h.toString().toLowerCase().includes("recomendación"));
+            const statusIndex = headers.findIndex(h => h && h.toString().toLowerCase().includes("estado"));
+            const responsibleIndex = headers.findIndex(h => h && h.toString().toLowerCase().includes("responsable"));
+            const dateIndex = headers.findIndex(h => h && h.toString().toLowerCase().includes("fecha"));
+            
+            // Procesar cada fila de datos
+            for (let i = headerRowIndex + 1; i < jsonData.length; i++) {
+                const row = jsonData[i];
+                
+                // Saltar filas vacías
+                if (!row || row.length === 0 || !row[projectIndex]) continue;
+                
+                processedData.push({
+                    proyecto: row[projectIndex] || '',
+                    año: row[yearIndex] || '',
+                    riesgo: row[riskIndex] || '',
+                    deficiencia: row[deficiencyIndex] || '',
+                    recomendacion: row[recommendationIndex] || '',
+                    estado: row[statusIndex] || '',
+                    responsable: row[responsibleIndex] || '',
+                    fechaSeguimiento: row[dateIndex] || ''
+                });
+            }
+            
+            return processedData;
+        }
+
+        // Mostrar estado vacío
+        function showEmptyState() {
             document.getElementById('dashboardCards').innerHTML = `
                 <div class="col-12">
                     <div class="no-data-message">
                         <i class="fas fa-exclamation-triangle fa-3x mb-3 text-warning"></i>
                         <h4>No se pudieron cargar los datos</h4>
-                        <p>${message}</p>
+                        <p>No fue posible conectar con el archivo Excel o el archivo está vacío.</p>
                         <button class="btn btn-primary mt-2" onclick="loadDataFromExcel()">
                             <i class="fas fa-sync-alt me-1"></i> Reintentar
                         </button>
@@ -578,133 +616,87 @@ if (recommendationsData.length === 0) { //...el resto del código sigue igual
                 </div>
             `;
             
-            if (statusChart) statusChart.destroy();
-            if (riskChart) riskChart.destroy();
-            document.getElementById('tableContainer').style.display = 'none';
-            document.querySelectorAll('.no-data-message').forEach(el => el.style.display = 'block');
+            // Limpiar gráficos
+            if (statusChart) {
+                statusChart.destroy();
+                statusChart = null;
+            }
+            if (riskChart) {
+                riskChart.destroy();
+                riskChart = null;
+            }
         }
 
-        function showLoading(show, text = "Cargando...") {
-            const overlay = document.getElementById('loadingOverlay');
-            document.getElementById('loadingText').textContent = text;
-            overlay.style.display = show ? 'flex' : 'none';
-        }
-
-        function processExcelData(jsonData) {
-            const processedData = [];
-            if (!jsonData || jsonData.length === 0) return processedData;
-            
-            jsonData.forEach(row => {
-                processedData.push({
-                    proyecto: row.Proyecto || row.PROYECTO || row.ProyectoAuditoria || '',
-                    año: row.Año || row.AÑO || row.Year || (row.Fecha ? new Date(row.Fecha).getFullYear().toString() : ''),
-                    riesgo: row.Riesgo || row.RIESGO || row["Nivel de Riesgo"] || row["NIVEL DE RIESGO"] || '',
-                    deficiencia: row.Deficiencia || row.DEFICIENCIA || row["Deficiencia de Control Interno"] || '',
-                    recomendacion: row.Recomendacion || row.RECOMENDACION || row.Recomendación || '',
-                    estado: row.Estado || row.ESTADO || row.Status || row.STATUS || '',
-                    responsable: row.Responsable || row.RESPONSABLE || '',
-                    fechaSeguimiento: row["Fecha de seguimiento"] || row.FechaSeguimiento || row.FECHA_SEGUIMIENTO || ''
-                });
-            });
-            return processedData;
-        }
-
+        // Función para actualizar el dashboard completo
         function updateDashboard() {
             updateDashboardCards();
             updateFilters();
             initDataTable();
             updateCharts();
-            document.getElementById('tableContainer').style.display = 'block';
-            document.querySelectorAll('.no-data-message').forEach(el => el.style.display = 'none');
         }
 
+        // Función para actualizar las tarjetas del dashboard
         function updateDashboardCards() {
-            const total = recommendationsData.length;
-            const cumplido = recommendationsData.filter(item => 
-                item.estado && (item.estado.includes("Cumplido") || item.estado.includes("implementará"))).length;
-            const enProceso = recommendationsData.filter(item => 
-                item.estado && (item.estado.includes("En Proceso") || item.estado.includes("Proceso"))).length;
-            const noCumplido = recommendationsData.filter(item => 
-                item.estado && item.estado.includes("No Cumplido")).length;
+            const total = filteredData.length;
+            const cumplido = filteredData.filter(item => 
+                item.estado && (item.estado.toLowerCase().includes("cumplido") || item.estado.toLowerCase().includes("implementará"))).length;
+            const enProceso = filteredData.filter(item => 
+                item.estado && (item.estado.toLowerCase().includes("en proceso") || item.estado.toLowerCase().includes("proceso"))).length;
+            const noCumplido = filteredData.filter(item => 
+                item.estado && item.estado.toLowerCase().includes("no cumplido")).length;
             
             const cumplidoPercent = total > 0 ? Math.round((cumplido / total) * 100) : 0;
             const enProcesoPercent = total > 0 ? Math.round((enProceso / total) * 100) : 0;
             const noCumplidoPercent = total > 0 ? Math.round((noCumplido / total) * 100) : 0;
             
-            document.getElementById('dashboardCards').innerHTML = `
-                <div class="col-md-3 mb-3">
-                    <div class="card dashboard-card text-center">
-                        <div class="card-body">
-                            <h5 class="card-title">Total Recomendaciones</h5>
-                            <h2 class="card-text text-primary">${total}</h2>
-                            <p class="text-muted">Recomendaciones registradas</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3 mb-3">
-                    <div class="card dashboard-card text-center">
-                        <div class="card-body">
-                            <h5 class="card-title">Cumplidas</h5>
-                            <h2 class="card-text text-success">${cumplido}</h2>
-                            <div class="progress mt-2">
-                                <div class="progress-bar bg-success" style="width: ${cumplidoPercent}%"></div>
-                            </div>
-                            <p class="text-muted mt-2">${cumplidoPercent}% de cumplimiento</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3 mb-3">
-                    <div class="card dashboard-card text-center">
-                        <div class="card-body">
-                            <h5 class="card-title">En Proceso</h5>
-                            <h2 class="card-text text-warning">${enProceso}</h2>
-                            <div class="progress mt-2">
-                                <div class="progress-bar bg-warning" style="width: ${enProcesoPercent}%"></div>
-                            </div>
-                            <p class="text-muted mt-2">${enProcesoPercent}% en ejecución</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3 mb-3">
-                    <div class="card dashboard-card text-center">
-                        <div class="card-body">
-                            <h5 class="card-title">No Cumplidas</h5>
-                            <h2 class="card-text text-danger">${noCumplido}</h2>
-                            <div class="progress mt-2">
-                                <div class="progress-bar bg-danger" style="width: ${noCumplidoPercent}%"></div>
-                            </div>
-                            <p class="text-muted mt-2">${noCumplidoPercent}% pendientes</p>
-                        </div>
-                    </div>
-                </div>
-            `;
+            // Actualizar contadores
+            document.getElementById('totalCounter').textContent = total;
+            document.getElementById('completedCounter').textContent = cumplido;
+            document.getElementById('progressCounter').textContent = enProceso;
+            document.getElementById('notCompletedCounter').textContent = noCumplido;
+            
+            // Actualizar barras de progreso
+            document.getElementById('completedProgress').style.width = `${cumplidoPercent}%`;
+            document.getElementById('progressProgress').style.width = `${enProcesoPercent}%`;
+            document.getElementById('notCompletedProgress').style.width = `${noCumplidoPercent}%`;
+            
+            // Actualizar porcentajes
+            document.getElementById('completedPercent').textContent = cumplidoPercent;
+            document.getElementById('progressPercent').textContent = enProcesoPercent;
+            document.getElementById('notCompletedPercent').textContent = noCumplidoPercent;
         }
 
+        // Función para actualizar los filtros
         function updateFilters() {
+            // Obtener valores únicos para los filtros
             const proyectos = [...new Set(recommendationsData.map(item => item.proyecto))].filter(Boolean);
             const años = [...new Set(recommendationsData.map(item => item.año))].filter(Boolean);
             const estados = [...new Set(recommendationsData.map(item => {
                 if (!item.estado) return '';
-                if (item.estado.includes("En Proceso") || item.estado.includes("Proceso")) return "En Proceso";
-                if (item.estado.includes("Cumplido") || item.estado.includes("implementará")) return "Cumplido";
-                if (item.estado.includes("No Cumplido")) return "No Cumplido";
-                if (item.estado.includes("Pendiente")) return "Pendiente";
-                if (item.estado.includes("Aplica")) return "No Aplica";
+                const estado = item.estado.toLowerCase();
+                if (estado.includes("en proceso") || estado.includes("proceso")) return "En Proceso";
+                if (estado.includes("cumplido") || estado.includes("implementará")) return "Cumplido";
+                if (estado.includes("no cumplido")) return "No Cumplido";
+                if (estado.includes("pendiente")) return "Pendiente";
+                if (estado.includes("aplica")) return "No Aplica";
                 return item.estado;
             }))].filter(Boolean);
             
+            // Llenar filtro de proyectos
             const projectFilter = document.getElementById('projectFilter');
             projectFilter.innerHTML = '<option value="">Todos los proyectos</option>';
             proyectos.forEach(proyecto => {
                 projectFilter.innerHTML += `<option value="${proyecto}">${proyecto}</option>`;
             });
             
+            // Llenar filtro de años
             const yearFilter = document.getElementById('yearFilter');
             yearFilter.innerHTML = '<option value="">Todos los años</option>';
             años.sort().reverse().forEach(año => {
                 yearFilter.innerHTML += `<option value="${año}">${año}</option>`;
             });
             
+            // Llenar filtro de estados
             const statusFilter = document.getElementById('statusFilter');
             statusFilter.innerHTML = '<option value="">Todos los estados</option>';
             estados.forEach(estado => {
@@ -712,13 +704,61 @@ if (recommendationsData.length === 0) { //...el resto del código sigue igual
             });
         }
 
+        // Función para aplicar filtros
+        function applyFilters() {
+            const projectValue = document.getElementById('projectFilter').value;
+            const yearValue = document.getElementById('yearFilter').value;
+            const statusValue = document.getElementById('statusFilter').value;
+            const riskValue = document.getElementById('riskFilter').value;
+            
+            filteredData = recommendationsData.filter(item => {
+                // Verificar filtro de proyecto
+                if (projectValue && item.proyecto !== projectValue) return false;
+                
+                // Verificar filtro de año
+                if (yearValue && item.año !== yearValue) return false;
+                
+                // Verificar filtro de estado
+                if (statusValue) {
+                    let estadoNormalizado = '';
+                    if (item.estado) {
+                        const estado = item.estado.toLowerCase();
+                        if (estado.includes("en proceso") || estado.includes("proceso")) estadoNormalizado = "En Proceso";
+                        else if (estado.includes("cumplido") || estado.includes("implementará")) estadoNormalizado = "Cumplido";
+                        else if (estado.includes("no cumplido")) estadoNormalizado = "No Cumplido";
+                        else if (estado.includes("pendiente")) estadoNormalizado = "Pendiente";
+                        else if (estado.includes("aplica")) estadoNormalizado = "No Aplica";
+                        else estadoNormalizado = item.estado;
+                    }
+                    if (estadoNormalizado !== statusValue) return false;
+                }
+                
+                // Verificar filtro de riesgo
+                if (riskValue && item.riesgo !== riskValue) return false;
+                
+                return true;
+            });
+            
+            // Actualizar la tabla
+            if ($.fn.DataTable.isDataTable('#recommendationsTable')) {
+                table.clear();
+                table.rows.add(filteredData);
+                table.draw();
+            }
+            
+            // Actualizar dashboard y gráficos
+            updateDashboardCards();
+            updateCharts();
+        }
+
+        // Función para inicializar la tabla de datos
         function initDataTable() {
             if ($.fn.DataTable.isDataTable('#recommendationsTable')) {
                 table.destroy();
             }
             
             table = $('#recommendationsTable').DataTable({
-                data: recommendationsData,
+                data: filteredData,
                 columns: [
                     { data: 'proyecto' },
                     { data: 'año' },
@@ -770,71 +810,59 @@ if (recommendationsData.length === 0) { //...el resto del código sigue igual
                 },
                 pageLength: 10,
                 createdRow: function(row, data, dataIndex) {
-                    if (data.riesgo === 'ALTO') $(row).addClass('risk-high');
-                    else if (data.riesgo === 'MEDIO') $(row).addClass('risk-medium');
-                    else if (data.riesgo === 'BAJO') $(row).addClass('risk-low');
+                    // Añadir clases según el nivel de riesgo
+                    if (data.riesgo === 'ALTO') {
+                        $(row).addClass('risk-high');
+                    } else if (data.riesgo === 'MEDIO') {
+                        $(row).addClass('risk-medium');
+                    } else if (data.riesgo === 'BAJO') {
+                        $(row).addClass('risk-low');
+                    }
                 }
-            });
-            
-            $('#projectFilter, #yearFilter, #statusFilter, #riskFilter').off('change').on('change', function() {
-                table.draw();
-            });
-            
-            $.fn.dataTable.ext.search.pop(); // Limpiar filtros previos para evitar duplicados
-            $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
-                const project = $('#projectFilter').val();
-                const year = $('#yearFilter').val();
-                const status = $('#statusFilter').val();
-                const risk = $('#riskFilter').val();
-                
-                let rowData = recommendationsData[dataIndex];
-                
-                if (project && rowData.proyecto !== project) return false;
-                if (year && rowData.año.toString() !== year) return false;
-                if (risk && rowData.riesgo !== risk) return false;
-                
-                if (status) {
-                    let estadoNormalizado = '';
-                    if (rowData.estado.includes("En Proceso") || rowData.estado.includes("Proceso")) estadoNormalizado = "En Proceso";
-                    else if (rowData.estado.includes("Cumplido") || rowData.estado.includes("implementará")) estadoNormalizado = "Cumplido";
-                    else if (rowData.estado.includes("No Cumplido")) estadoNormalizado = "No Cumplido";
-                    else if (rowData.estado.includes("Pendiente")) estadoNormalizado = "Pendiente";
-                    else if (rowData.estado.includes("Aplica")) estadoNormalizado = "No Aplica";
-                    if (status !== estadoNormalizado) return false;
-                }
-                
-                return true;
-            });
-            
-            $('#recommendationsTable tbody').off('click').on('click', 'tr', function() {
-                const data = table.row(this).data();
-                if (data) showDetailsModal(data);
             });
         }
 
+        // Función para actualizar los gráficos
         function updateCharts() {
+            // Datos para gráfico de estado
             const statusCounts = {};
-            recommendationsData.forEach(item => {
+            filteredData.forEach(item => {
                 let estado = item.estado || 'Sin especificar';
                 if (estado.includes('En Proceso') || estado.includes('Proceso')) estado = 'En Proceso';
-                else if (estado.includes('Cumplido') || estado.includes('implementará')) estado = 'Cumplido';
-                else if (estado.includes('No Cumplido')) estado = 'No Cumplido';
-                else if (estado.includes('Pendiente')) estado = 'Pendiente';
-                else if (estado.includes('Aplica')) estado = 'No Aplica';
+                if (estado.includes('Cumplido') || estado.includes('implementará')) estado = 'Cumplido';
+                if (estado.includes('No Cumplido')) estado = 'No Cumplido';
+                if (estado.includes('Pendiente')) estado = 'Pendiente';
+                if (estado.includes('Aplica')) estado = 'No Aplica';
+                
                 statusCounts[estado] = (statusCounts[estado] || 0) + 1;
             });
             
-            const riskCounts = { 'ALTO': 0, 'MEDIO': 0, 'BAJO': 0, 'Sin especificar': 0 };
-            recommendationsData.forEach(item => {
+            // Datos para gráfico de riesgo
+            const riskCounts = {
+                'ALTO': 0,
+                'MEDIO': 0,
+                'BAJO': 0,
+                'Sin especificar': 0
+            };
+            
+            filteredData.forEach(item => {
                 const riesgo = item.riesgo || 'Sin especificar';
-                if (riskCounts.hasOwnProperty(riesgo)) {
+                if (riesgo === 'ALTO' || riesgo === 'MEDIO' || riesgo === 'BAJO') {
                     riskCounts[riesgo]++;
                 } else {
                     riskCounts['Sin especificar']++;
                 }
             });
             
-            if (statusChart) statusChart.destroy();
+            // Destruir gráficos existentes
+            if (statusChart) {
+                statusChart.destroy();
+            }
+            if (riskChart) {
+                riskChart.destroy();
+            }
+            
+            // Crear gráfico de estado
             const statusCtx = document.getElementById('statusChart').getContext('2d');
             statusChart = new Chart(statusCtx, {
                 type: 'doughnut',
@@ -842,13 +870,27 @@ if (recommendationsData.length === 0) { //...el resto del código sigue igual
                     labels: Object.keys(statusCounts),
                     datasets: [{
                         data: Object.values(statusCounts),
-                        backgroundColor: ['#28a745','#ffc107','#dc3545','#17a2b8','#6c757d']
+                        backgroundColor: [
+                            '#28a745', // Cumplido - Verde
+                            '#ffc107', // En Proceso - Amarillo
+                            '#dc3545', // No Cumplido - Rojo
+                            '#17a2b8', // Pendiente - Azul
+                            '#6c757d'  // No Aplica - Gris
+                        ]
                     }]
                 },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' }}}
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
             });
             
-            if (riskChart) riskChart.destroy();
+            // Crear gráfico de riesgo
             const riskCtx = document.getElementById('riskChart').getContext('2d');
             riskChart = new Chart(riskCtx, {
                 type: 'bar',
@@ -857,42 +899,62 @@ if (recommendationsData.length === 0) { //...el resto del código sigue igual
                     datasets: [{
                         label: 'Recomendaciones por Nivel de Riesgo',
                         data: Object.values(riskCounts),
-                        backgroundColor: ['#dc3545','#ffc107','#28a745','#6c757d']
+                        backgroundColor: [
+                            '#dc3545', // ALTO - Rojo
+                            '#ffc107', // MEDIO - Amarillo
+                            '#28a745', // BAJO - Verde
+                            '#6c757d'  // Sin especificar - Gris
+                        ]
                     }]
                 },
-                options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true }}}
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
             });
         }
 
-        function showDetailsModal(data) {
-            document.getElementById('modal-project').textContent = data.proyecto || 'N/A';
-            document.getElementById('modal-year').textContent = data.año || 'N/A';
-            document.getElementById('modal-risk').textContent = data.riesgo || 'N/A';
-            document.getElementById('modal-status').textContent = data.estado || 'N/A';
-            document.getElementById('modal-responsible').textContent = data.responsable || 'N/A';
-            document.getElementById('modal-date').textContent = data.fechaSeguimiento || 'N/A';
-            document.getElementById('modal-deficiency').textContent = data.deficiencia || 'N/A';
-            document.getElementById('modal-recommendation').textContent = data.recomendacion || 'N/A';
-            new bootstrap.Modal(document.getElementById('detailModal')).show();
-        }
-
+        // Función para actualizar la última fecha de actualización
         function updateLastUpdateTime() {
             const now = new Date();
-            document.getElementById('lastUpdate').textContent = now.toLocaleString('es-ES');
+            const formattedDate = now.toLocaleDateString('es-ES', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            document.getElementById('lastUpdate').textContent = formattedDate;
         }
 
+        // Función para mostrar/ocultar el overlay de carga
+        function showLoading(show) {
+            document.getElementById('loadingOverlay').style.display = show ? 'flex' : 'none';
+        }
+
+        // Función para mostrar errores
         function showError(message) {
+            // Podría implementarse un sistema de notificaciones más sofisticado
             console.error(message);
             alert('Error: ' + message);
         }
 
+        // Event Listeners
         document.getElementById('loginBtn').addEventListener('click', async () => {
-            showLoading(true, "Iniciando sesión...");
+            showLoading(true);
             try {
                 await msalInstance.loginPopup({
                     scopes: ["Files.Read.All", "Sites.Read.All"]
                 });
-                await initializeApp();
+                await acquireToken();
+                document.getElementById('authContainer').style.display = 'none';
+                document.getElementById('mainContent').style.display = 'block';
+                await loadDataFromExcel();
             } catch (error) {
                 console.error('Error en login:', error);
                 showError('Error al iniciar sesión: ' + error.message);
@@ -908,25 +970,53 @@ if (recommendationsData.length === 0) { //...el resto del código sigue igual
             });
         });
 
-        document.getElementById('refreshData').addEventListener('click', loadDataFromExcel);
+        document.getElementById('refreshData').addEventListener('click', async () => {
+            await loadDataFromExcel();
+        });
 
         document.getElementById('exportBtn').addEventListener('click', () => {
+            // Crear un libro de trabajo
             const wb = XLSX.utils.book_new();
-            const exportData = recommendationsData.map(item => ({
-                'Proyecto': item.proyecto, 'Año': item.año, 'Nivel de Riesgo': item.riesgo,
-                'Deficiencia de Control Interno': item.deficiencia, 'Recomendación': item.recomendacion,
-                'Estado': item.estado, 'Responsable': item.responsable, 'Fecha de seguimiento': item.fechaSeguimiento
+            
+            // Preparar datos para exportación
+            const exportData = filteredData.map(item => ({
+                'Proyecto': item.proyecto,
+                'Año': item.año,
+                'Nivel de Riesgo': item.riesgo,
+                'Deficiencia de Control Interno': item.deficiencia,
+                'Recomendación': item.recomendacion,
+                'Estado': item.estado,
+                'Responsable': item.responsable,
+                'Fecha de seguimiento': item.fechaSeguimiento
             }));
+            
+            // Crear hoja de trabajo
             const ws = XLSX.utils.json_to_sheet(exportData);
+            
+            // Añadir hoja al libro
             XLSX.utils.book_append_sheet(wb, ws, "Recomendaciones");
+            
+            // Descargar archivo
             XLSX.writeFile(wb, "Recomendaciones_FIAS.xlsx");
         });
-        
-        document.addEventListener('DOMContentLoaded', initializeApp);
 
-        // ====================================================================================
-        // FIN DEL BLOQUE DE SCRIPT CORREGIDO
-        // ====================================================================================
+        // Aplicar filtros cuando cambien los select
+        document.getElementById('projectFilter').addEventListener('change', applyFilters);
+        document.getElementById('yearFilter').addEventListener('change', applyFilters);
+        document.getElementById('statusFilter').addEventListener('change', applyFilters);
+        document.getElementById('riskFilter').addEventListener('change', applyFilters);
+
+        // Limpiar filtros
+        document.getElementById('clearFilters').addEventListener('click', () => {
+            document.getElementById('projectFilter').value = '';
+            document.getElementById('yearFilter').value = '';
+            document.getElementById('statusFilter').value = '';
+            document.getElementById('riskFilter').value = '';
+            applyFilters();
+        });
+
+        // Inicializar la aplicación cuando se carga el DOM
+        document.addEventListener('DOMContentLoaded', initializeApp);
     </script>
 </body>
 </html>

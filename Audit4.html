@@ -47,14 +47,19 @@
             color: #155724;
         }
         
+        .status-cumplido-parcial {
+            background-color: #cce5ff;
+            color: #004085;
+        }
+        
         .status-no-cumplido {
             background-color: #f8d7da;
             color: #721c24;
         }
         
         .status-pendiente {
-            background-color: #cce5ff;
-            color: #004085;
+            background-color: #e2e3e5;
+            color: #383d41;
         }
         
         .status-no-aplica {
@@ -456,7 +461,7 @@
         let accessToken = null;
 
         // Configuración del archivo Excel
-        const EXCEL_FILE_ID = "u!aHR0cHM6Ly9maWFzZWMuc2hhcmVwb2ludC5jb20vOng6L3MvRk9ORE9ERUlOVkVSU0lPTkFNQklFTlRBTFNPU1RFTklCTEUvRWZDR0VScHdWRGRIa25tWmR6Rjlqa29CWFVobTU4d1R3ODRfbVk5ZVFheXFGdz9lPUtISlIwRw==";
+        const EXCEL_FILE_ID = "u!aHR0cHM6Ly9maWFzZWMuc2hhcmVwb2ludC5jb20vOng6L3MvRk9ORE9ERUlOVkVSU0lPTkFNQklFTlRBTFNPVEVOSUJMRUYvRWZDR0VScHdWRGRIa25tWmR6Rjlqa29CWFVobTU4d1R3ODRfbVk5ZVFheXFGdz9lPUtISlIwRw==";
         const EXCEL_SHEET_NAME = "RECOMENDACIONES AUD EXTERNA";
         
         // Variables globales
@@ -593,7 +598,8 @@
                     recomendacion: row.Recomendacion || row.RECOMENDACION || row.Recomendación || '',
                     estado: row.Estado || row.ESTADO || row.Status || row.STATUS || '',
                     responsable: row.Responsable || row.RESPONSABLE || '',
-                    fechaSeguimiento: row["Fecha de seguimiento"] || row.FechaSeguimiento || row.FECHA_SEGUIMIENTO || ''
+                    fechaSeguimiento: row["Fecha de seguimiento"] || row.FechaSeguimiento || row.FECHA_SEGUIMIENTO || '',
+                    observacion: row.Observacion || row.OBSERVACION || row.Observación || ''
                 });
             });
             
@@ -682,295 +688,157 @@
             document.querySelectorAll('.no-data-message').forEach(el => el.style.display = 'none');
         }
 
-       function updateDashboardCards() {
-    const total = recommendationsData.length;
-    
-    // Contar cada estado según la nueva estructura
-    const estadoCounts = {
-        'Cumplido': 0,
-        'Cumplido parcialmente': 0,
-        'No cumplido': 0,
-        'No se implementará': 0,
-        'En proceso': 0,
-        'No aplica': 0,
-        'Otro': 0
-    };
-    
-    recommendationsData.forEach(item => {
-        const estado = item.estado || '';
-        
-        if (estado.includes('Cumplido') && estado.includes('parcialmente')) {
-            estadoCounts['Cumplido parcialmente']++;
-        } else if (estado.includes('Cumplido')) {
-            estadoCounts['Cumplido']++;
-        } else if (estado.includes('No cumplido')) {
-            estadoCounts['No cumplido']++;
-        } else if (estado.includes('No se implementará')) {
-            estadoCounts['No se implementará']++;
-        } else if (estado.includes('En proceso')) {
-            estadoCounts['En proceso']++;
-        } else if (estado.includes('No aplica')) {
-            estadoCounts['No aplica']++;
-        } else if (estado.trim() !== '') {
-            estadoCounts['Otro']++;
-        }
-    });
-    
-    // Verificar que la suma coincide con el total
-    const sumaEstados = Object.values(estadoCounts).reduce((a, b) => a + b, 0);
-    const diferencia = total - sumaEstados;
-    
-    // Si hay diferencia, agregarla a "Otro"
-    if (diferencia > 0) {
-        estadoCounts['Otro'] += diferencia;
-    }
-    
-    // Calcular porcentajes
-    const cumplidoPercent = total > 0 ? Math.round((estadoCounts['Cumplido'] / total) * 100) : 0;
-    const enProcesoPercent = total > 0 ? Math.round((estadoCounts['En proceso'] / total) * 100) : 0;
-    const noCumplidoPercent = total > 0 ? Math.round(((estadoCounts['No cumplido'] + estadoCounts['No se implementará']) / total) * 100) : 0;
-    
-    document.getElementById('dashboardCards').innerHTML = `
-        <div class="col-md-3 mb-3">
-            <div class="card dashboard-card text-center">
-                <div class="card-body">
-                    <h5 class="card-title">Total Recomendaciones</h5>
-                    <h2 class="card-text text-primary">${total}</h2>
-                    <p class="text-muted">Recomendaciones registradas</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 mb-3">
-            <div class="card dashboard-card text-center">
-                <div class="card-body">
-                    <h5 class="card-title">Cumplidas</h5>
-                    <h2 class="card-text text-success">${estadoCounts['Cumplido']}</h2>
-                    <div class="progress mt-2">
-                        <div class="progress-bar bg-success" style="width: ${cumplidoPercent}%"></div>
-                    </div>
-                    <p class="text-muted mt-2">${cumplidoPercent}% de cumplimiento</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 mb-3">
-            <div class="card dashboard-card text-center">
-                <div class="card-body">
-                    <h5 class="card-title">En Proceso</h5>
-                    <h2 class="card-text text-warning">${estadoCounts['En proceso']}</h2>
-                    <div class="progress mt-2">
-                        <div class="progress-bar bg-warning" style="width: ${enProcesoPercent}%"></div>
-                    </div>
-                    <p class="text-muted mt-2">${enProcesoPercent}% en ejecución</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 mb-3">
-            <div class="card dashboard-card text-center">
-                <div class="card-body">
-                    <h5 class="card-title">Pendientes</h5>
-                    <h2 class="card-text text-danger">${estadoCounts['No cumplido'] + estadoCounts['No se implementará']}</h2>
-                    <div class="progress mt-2">
-                        <div class="progress-bar bg-danger" style="width: ${noCumplidoPercent}%"></div>
-                    </div>
-                    <p class="text-muted mt-2">${noCumplidoPercent}% pendientes</p>
-                </div>
-            </div>
-        </div>
-    `;
-}
-
-// Función para actualizar los gráficos - VERSIÓN CORREGIDA
-function updateCharts() {
-    // Datos para gráfico de estado
-    const statusCounts = {
-        'Cumplido': 0,
-        'Cumplido parcialmente': 0,
-        'No cumplido': 0,
-        'No se implementará': 0,
-        'En proceso': 0,
-        'No aplica': 0,
-        'Sin especificar': 0
-    };
-    
-    recommendationsData.forEach(item => {
-        const estado = item.estado || '';
-        
-        if (estado.includes('Cumplido') && estado.includes('parcialmente')) {
-            statusCounts['Cumplido parcialmente']++;
-        } else if (estado.includes('Cumplido')) {
-            statusCounts['Cumplido']++;
-        } else if (estado.includes('No cumplido')) {
-            statusCounts['No cumplido']++;
-        } else if (estado.includes('No se implementará')) {
-            statusCounts['No se implementará']++;
-        } else if (estado.includes('En proceso')) {
-            statusCounts['En proceso']++;
-        } else if (estado.includes('No aplica')) {
-            statusCounts['No aplica']++;
-        } else if (estado.trim() !== '') {
-            statusCounts[estado] = (statusCounts[estado] || 0) + 1;
-        } else {
-            statusCounts['Sin especificar']++;
-        }
-    });
-    
-    // Filtrar estados con 0 valores y preparar datos para el gráfico
-    const statusLabels = [];
-    const statusData = [];
-    const statusColors = [];
-    
-    Object.keys(statusCounts).forEach(estado => {
-        if (statusCounts[estado] > 0) {
-            statusLabels.push(estado);
-            statusData.push(statusCounts[estado]);
+        // Función para actualizar las tarjetas del dashboard - VERSIÓN CORREGIDA
+        function updateDashboardCards() {
+            const total = recommendationsData.length;
             
-            // Asignar colores según el estado
-            if (estado.includes('Cumplido')) {
-                statusColors.push(estado.includes('parcialmente') ? '#ffc107' : '#28a745');
-            } else if (estado.includes('No cumplido') || estado.includes('No se implementará')) {
-                statusColors.push('#dc3545');
-            } else if (estado.includes('En proceso')) {
-                statusColors.push('#17a2b8');
-            } else if (estado.includes('No aplica')) {
-                statusColors.push('#6c757d');
-            } else {
-                statusColors.push('#adb5bd');
-            }
-        }
-    });
-    
-    // Datos para gráfico de riesgo (sin cambios)
-    const riskCounts = {
-        'ALTO': 0,
-        'MEDIO': 0,
-        'BAJO': 0,
-        'Sin especificar': 0
-    };
-    
-    recommendationsData.forEach(item => {
-        const riesgo = item.riesgo || 'Sin especificar';
-        if (riesgo === 'ALTO' || riesgo === 'MEDIO' || riesgo === 'BAJO') {
-            riskCounts[riesgo]++;
-        } else {
-            riskCounts['Sin especificar']++;
-        }
-    });
-    
-    // Destruir gráficos existentes
-    if (statusChart) {
-        statusChart.destroy();
-    }
-    if (riskChart) {
-        riskChart.destroy();
-    }
-    
-    // Crear gráfico de estado
-    const statusCtx = document.getElementById('statusChart').getContext('2d');
-    statusChart = new Chart(statusCtx, {
-        type: 'doughnut',
-        data: {
-            labels: statusLabels,
-            datasets: [{
-                data: statusData,
-                backgroundColor: statusColors
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: {
-                        boxWidth: 15,
-                        padding: 15
-                    }
+            // Contar cada estado según la nueva estructura
+            const estadoCounts = {
+                'Cumplido': 0,
+                'Cumplido parcialmente': 0,
+                'No cumplido': 0,
+                'No se implementará': 0,
+                'En proceso': 0,
+                'No aplica': 0,
+                'Otro': 0
+            };
+            
+            recommendationsData.forEach(item => {
+                const estado = item.estado || '';
+                
+                if (estado.includes('Cumplido') && estado.includes('parcialmente')) {
+                    estadoCounts['Cumplido parcialmente']++;
+                } else if (estado.includes('Cumplido')) {
+                    estadoCounts['Cumplido']++;
+                } else if (estado.includes('No cumplido')) {
+                    estadoCounts['No cumplido']++;
+                } else if (estado.includes('No se implementará')) {
+                    estadoCounts['No se implementará']++;
+                } else if (estado.includes('En proceso')) {
+                    estadoCounts['En proceso']++;
+                } else if (estado.includes('No aplica')) {
+                    estadoCounts['No aplica']++;
+                } else if (estado.trim() !== '') {
+                    estadoCounts['Otro']++;
                 }
+            });
+            
+            // Verificar que la suma coincide con el total
+            const sumaEstados = Object.values(estadoCounts).reduce((a, b) => a + b, 0);
+            const diferencia = total - sumaEstados;
+            
+            // Si hay diferencia, agregarla a "Otro"
+            if (diferencia > 0) {
+                estadoCounts['Otro'] += diferencia;
             }
+            
+            // Calcular porcentajes
+            const cumplidoPercent = total > 0 ? Math.round(((estadoCounts['Cumplido'] + estadoCounts['Cumplido parcialmente']) / total) * 100) : 0;
+            const enProcesoPercent = total > 0 ? Math.round((estadoCounts['En proceso'] / total) * 100) : 0;
+            const noCumplidoPercent = total > 0 ? Math.round(((estadoCounts['No cumplido'] + estadoCounts['No se implementará']) / total) * 100) : 0;
+            
+            document.getElementById('dashboardCards').innerHTML = `
+                <div class="col-md-3 mb-3">
+                    <div class="card dashboard-card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title">Total Recomendaciones</h5>
+                            <h2 class="card-text text-primary">${total}</h2>
+                            <p class="text-muted">Recomendaciones registradas</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card dashboard-card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title">Cumplidas</h5>
+                            <h2 class="card-text text-success">${estadoCounts['Cumplido'] + estadoCounts['Cumplido parcialmente']}</h2>
+                            <div class="progress mt-2">
+                                <div class="progress-bar bg-success" style="width: ${cumplidoPercent}%"></div>
+                            </div>
+                            <p class="text-muted mt-2">${cumplidoPercent}% de cumplimiento</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card dashboard-card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title">En Proceso</h5>
+                            <h2 class="card-text text-warning">${estadoCounts['En proceso']}</h2>
+                            <div class="progress mt-2">
+                                <div class="progress-bar bg-warning" style="width: ${enProcesoPercent}%"></div>
+                            </div>
+                            <p class="text-muted mt-2">${enProcesoPercent}% en ejecución</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card dashboard-card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title">Pendientes</h5>
+                            <h2 class="card-text text-danger">${estadoCounts['No cumplido'] + estadoCounts['No se implementará']}</h2>
+                            <div class="progress mt-2">
+                                <div class="progress-bar bg-danger" style="width: ${noCumplidoPercent}%"></div>
+                            </div>
+                            <p class="text-muted mt-2">${noCumplidoPercent}% pendientes</p>
+                        </div>
+                    </div>
+                </div>
+            `;
         }
-    });
-    
-    // Crear gráfico de riesgo
-    const riskCtx = document.getElementById('riskChart').getContext('2d');
-    riskChart = new Chart(riskCtx, {
-        type: 'bar',
-        data: {
-            labels: Object.keys(riskCounts),
-            datasets: [{
-                label: 'Recomendaciones por Nivel de Riesgo',
-                data: Object.values(riskCounts),
-                backgroundColor: [
-                    '#dc3545', // ALTO - Rojo
-                    '#ffc107', // MEDIO - Amarillo
-                    '#28a745', // BAJO - Verde
-                    '#6c757d'  // Sin especificar - Gris
-                ]
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
-}
 
-// Función para actualizar los filtros - VERSIÓN CORREGIDA
-function updateFilters() {
-    // Obtener valores únicos para los filtros
-    const proyectos = [...new Set(recommendationsData.map(item => item.proyecto))].filter(Boolean);
-    const años = [...new Set(recommendationsData.map(item => item.año))].filter(Boolean);
-    
-    // Obtener estados únicos según la nueva clasificación
-    const estadosUnicos = new Set();
-    
-    recommendationsData.forEach(item => {
-        const estado = item.estado || '';
-        
-        if (estado.includes('Cumplido') && estado.includes('parcialmente')) {
-            estadosUnicos.add('Cumplido parcialmente');
-        } else if (estado.includes('Cumplido')) {
-            estadosUnicos.add('Cumplido');
-        } else if (estado.includes('No cumplido')) {
-            estadosUnicos.add('No cumplido');
-        } else if (estado.includes('No se implementará')) {
-            estadosUnicos.add('No se implementará');
-        } else if (estado.includes('En proceso')) {
-            estadosUnicos.add('En proceso');
-        } else if (estado.includes('No aplica')) {
-            estadosUnicos.add('No aplica');
-        } else if (estado.trim() !== '') {
-            estadosUnicos.add(estado);
+        // Función para actualizar los filtros - VERSIÓN CORREGIDA
+        function updateFilters() {
+            // Obtener valores únicos para los filtros
+            const proyectos = [...new Set(recommendationsData.map(item => item.proyecto))].filter(Boolean);
+            const años = [...new Set(recommendationsData.map(item => item.año))].filter(Boolean);
+            
+            // Obtener estados únicos según la nueva clasificación
+            const estadosUnicos = new Set();
+            
+            recommendationsData.forEach(item => {
+                const estado = item.estado || '';
+                
+                if (estado.includes('Cumplido') && estado.includes('parcialmente')) {
+                    estadosUnicos.add('Cumplido parcialmente');
+                } else if (estado.includes('Cumplido')) {
+                    estadosUnicos.add('Cumplido');
+                } else if (estado.includes('No cumplido')) {
+                    estadosUnicos.add('No cumplido');
+                } else if (estado.includes('No se implementará')) {
+                    estadosUnicos.add('No se implementará');
+                } else if (estado.includes('En proceso')) {
+                    estadosUnicos.add('En proceso');
+                } else if (estado.includes('No aplica')) {
+                    estadosUnicos.add('No aplica');
+                } else if (estado.trim() !== '') {
+                    estadosUnicos.add(estado);
+                }
+            });
+            
+            const estados = Array.from(estadosUnicos).filter(Boolean);
+            
+            // Llenar filtro de proyectos
+            const projectFilter = document.getElementById('projectFilter');
+            projectFilter.innerHTML = '<option value="">Todos los proyectos</option>';
+            proyectos.forEach(proyecto => {
+                projectFilter.innerHTML += `<option value="${proyecto}">${proyecto}</option>`;
+            });
+            
+            // Llenar filtro de años
+            const yearFilter = document.getElementById('yearFilter');
+            yearFilter.innerHTML = '<option value="">Todos los años</option>';
+            años.sort().reverse().forEach(año => {
+                yearFilter.innerHTML += `<option value="${año}">${año}</option>`;
+            });
+            
+            // Llenar filtro de estados
+            const statusFilter = document.getElementById('statusFilter');
+            statusFilter.innerHTML = '<option value="">Todos los estados</option>';
+            estados.forEach(estado => {
+                statusFilter.innerHTML += `<option value="${estado}">${estado}</option>`;
+            });
         }
-    });
-    
-    const estados = Array.from(estadosUnicos).filter(Boolean);
-    
-    // Llenar filtro de proyectos
-    const projectFilter = document.getElementById('projectFilter');
-    projectFilter.innerHTML = '<option value="">Todos los proyectos</option>';
-    proyectos.forEach(proyecto => {
-        projectFilter.innerHTML += `<option value="${proyecto}">${proyecto}</option>`;
-    });
-    
-    // Llenar filtro de años
-    const yearFilter = document.getElementById('yearFilter');
-    yearFilter.innerHTML = '<option value="">Todos los años</option>';
-    años.sort().reverse().forEach(año => {
-        yearFilter.innerHTML += `<option value="${año}">${año}</option>`;
-    });
-    
-    // Llenar filtro de estados
-    const statusFilter = document.getElementById('statusFilter');
-    statusFilter.innerHTML = '<option value="">Todos los estados</option>';
-    estados.forEach(estado => {
-        statusFilter.innerHTML += `<option value="${estado}">${estado}</option>`;
-    });
-}
+
         // Función para inicializar la tabla de datos
         function initDataTable() {
             if ($.fn.DataTable.isDataTable('#recommendationsTable')) {
@@ -1013,40 +881,26 @@ function updateFilters() {
                         render: function(data) {
                             if (!data) return '';
                             let statusClass = '';
-                            if (data.includes('En Proceso') || data.includes('Proceso')) statusClass = 'status-en-proceso';
-                            else if (data.includes('Cumplido') || data.includes('implementará')) statusClass = 'status-cumplido';
-                            else if (data.includes('No Cumplido')) statusClass = 'status-no-cumplido';
-                            else if (data.includes('Pendiente')) statusClass = 'status-pendiente';
-                            else if (data.includes('Aplica')) statusClass = 'status-no-aplica';
+                            
+                            if (data.includes('Cumplido') && data.includes('parcialmente')) {
+                                statusClass = 'status-cumplido-parcial';
+                            } else if (data.includes('Cumplido')) {
+                                statusClass = 'status-cumplido';
+                            } else if (data.includes('No cumplido') || data.includes('No se implementará')) {
+                                statusClass = 'status-no-cumplido';
+                            } else if (data.includes('En proceso')) {
+                                statusClass = 'status-en-proceso';
+                            } else if (data.includes('No aplica')) {
+                                statusClass = 'status-no-aplica';
+                            } else if (data.includes('Pendiente')) {
+                                statusClass = 'status-pendiente';
+                            }
                             
                             return `<span class="status-badge ${statusClass}">${data}</span>`;
                         }
                     },
                     { data: 'responsable' },
                     { data: 'fechaSeguimiento' }
-                    { 
-    data: 'estado',
-    render: function(data) {
-        if (!data) return '';
-        let statusClass = '';
-        
-        if (data.includes('Cumplido') && data.includes('parcialmente')) {
-            statusClass = 'status-en-proceso'; // Usar clase de "en proceso" para parcialmente
-        } else if (data.includes('Cumplido')) {
-            statusClass = 'status-cumplido';
-        } else if (data.includes('No cumplido') || data.includes('No se implementará')) {
-            statusClass = 'status-no-cumplido';
-        } else if (data.includes('En proceso')) {
-            statusClass = 'status-en-proceso';
-        } else if (data.includes('No aplica')) {
-            statusClass = 'status-no-aplica';
-        } else if (data.includes('Pendiente')) {
-            statusClass = 'status-pendiente';
-        }
-        
-        return `<span class="status-badge ${statusClass}">${data}</span>`;
-    }
-}
                 ],
                 language: {
                     url: '//cdn.datatables.net/plug-ins/1.13.5/i18n/es-ES.json'
@@ -1070,47 +924,47 @@ function updateFilters() {
             });
             
             // Filtro personalizado
-           $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
-    const project = $('#projectFilter').val();
-    const year = $('#yearFilter').val();
-    const status = $('#statusFilter').val();
-    const risk = $('#riskFilter').val();
-    
-    // Verificar filtro de proyecto
-    if (project && data[0] !== project) return false;
-    
-    // Verificar filtro de año
-    if (year && data[1] !== year) return false;
-    
-    // Verificar filtro de estado (lógica mejorada)
-    if (status) {
-        const estado = data[5] || '';
-        let estadoNormalizado = '';
-        
-        if (estado.includes('Cumplido') && estado.includes('parcialmente')) {
-            estadoNormalizado = 'Cumplido parcialmente';
-        } else if (estado.includes('Cumplido')) {
-            estadoNormalizado = 'Cumplido';
-        } else if (estado.includes('No cumplido')) {
-            estadoNormalizado = 'No cumplido';
-        } else if (estado.includes('No se implementará')) {
-            estadoNormalizado = 'No se implementará';
-        } else if (estado.includes('En proceso')) {
-            estadoNormalizado = 'En proceso';
-        } else if (estado.includes('No aplica')) {
-            estadoNormalizado = 'No aplica';
-        } else {
-            estadoNormalizado = estado;
-        }
-        
-        if (estadoNormalizado !== status) return false;
-    }
-    
-    // Verificar filtro de riesgo
-    if (risk && data[2] !== risk) return false;
-    
-    return true;
-});
+            $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+                const project = $('#projectFilter').val();
+                const year = $('#yearFilter').val();
+                const status = $('#statusFilter').val();
+                const risk = $('#riskFilter').val();
+                
+                // Verificar filtro de proyecto
+                if (project && data[0] !== project) return false;
+                
+                // Verificar filtro de año
+                if (year && data[1] !== year) return false;
+                
+                // Verificar filtro de estado (lógica mejorada)
+                if (status) {
+                    const estado = data[5] || '';
+                    let estadoNormalizado = '';
+                    
+                    if (estado.includes('Cumplido') && estado.includes('parcialmente')) {
+                        estadoNormalizado = 'Cumplido parcialmente';
+                    } else if (estado.includes('Cumplido')) {
+                        estadoNormalizado = 'Cumplido';
+                    } else if (estado.includes('No cumplido')) {
+                        estadoNormalizado = 'No cumplido';
+                    } else if (estado.includes('No se implementará')) {
+                        estadoNormalizado = 'No se implementará';
+                    } else if (estado.includes('En proceso')) {
+                        estadoNormalizado = 'En proceso';
+                    } else if (estado.includes('No aplica')) {
+                        estadoNormalizado = 'No aplica';
+                    } else {
+                        estadoNormalizado = estado;
+                    }
+                    
+                    if (estadoNormalizado !== status) return false;
+                }
+                
+                // Verificar filtro de riesgo
+                if (risk && data[2] !== risk) return false;
+                
+                return true;
+            });
             
             // Evento para mostrar detalles al hacer clic en una fila
             $('#recommendationsTable tbody').on('click', 'tr', function() {
@@ -1121,19 +975,64 @@ function updateFilters() {
             });
         }
 
-        // Función para actualizar los gráficos
+        // Función para actualizar los gráficos - VERSIÓN CORREGIDA
         function updateCharts() {
             // Datos para gráfico de estado
-            const statusCounts = {};
+            const statusCounts = {
+                'Cumplido': 0,
+                'Cumplido parcialmente': 0,
+                'No cumplido': 0,
+                'No se implementará': 0,
+                'En proceso': 0,
+                'No aplica': 0,
+                'Sin especificar': 0
+            };
+            
             recommendationsData.forEach(item => {
-                let estado = item.estado || 'Sin especificar';
-                if (estado.includes('En Proceso') || estado.includes('Proceso')) estado = 'En Proceso';
-                if (estado.includes('Cumplido') || estado.includes('implementará')) estado = 'Cumplido';
-                if (estado.includes('No Cumplido')) estado = 'No Cumplido';
-                if (estado.includes('Pendiente')) estado = 'Pendiente';
-                if (estado.includes('Aplica')) estado = 'No Aplica';
+                const estado = item.estado || '';
                 
-                statusCounts[estado] = (statusCounts[estado] || 0) + 1;
+                if (estado.includes('Cumplido') && estado.includes('parcialmente')) {
+                    statusCounts['Cumplido parcialmente']++;
+                } else if (estado.includes('Cumplido')) {
+                    statusCounts['Cumplido']++;
+                } else if (estado.includes('No cumplido')) {
+                    statusCounts['No cumplido']++;
+                } else if (estado.includes('No se implementará')) {
+                    statusCounts['No se implementará']++;
+                } else if (estado.includes('En proceso')) {
+                    statusCounts['En proceso']++;
+                } else if (estado.includes('No aplica')) {
+                    statusCounts['No aplica']++;
+                } else if (estado.trim() !== '') {
+                    statusCounts[estado] = (statusCounts[estado] || 0) + 1;
+                } else {
+                    statusCounts['Sin especificar']++;
+                }
+            });
+            
+            // Filtrar estados con 0 valores y preparar datos para el gráfico
+            const statusLabels = [];
+            const statusData = [];
+            const statusColors = [];
+            
+            Object.keys(statusCounts).forEach(estado => {
+                if (statusCounts[estado] > 0) {
+                    statusLabels.push(estado);
+                    statusData.push(statusCounts[estado]);
+                    
+                    // Asignar colores según el estado
+                    if (estado.includes('Cumplido')) {
+                        statusColors.push(estado.includes('parcialmente') ? '#ffc107' : '#28a745');
+                    } else if (estado.includes('No cumplido') || estado.includes('No se implementará')) {
+                        statusColors.push('#dc3545');
+                    } else if (estado.includes('En proceso')) {
+                        statusColors.push('#17a2b8');
+                    } else if (estado.includes('No aplica')) {
+                        statusColors.push('#6c757d');
+                    } else {
+                        statusColors.push('#adb5bd');
+                    }
+                }
             });
             
             // Datos para gráfico de riesgo
@@ -1166,16 +1065,10 @@ function updateFilters() {
             statusChart = new Chart(statusCtx, {
                 type: 'doughnut',
                 data: {
-                    labels: Object.keys(statusCounts),
+                    labels: statusLabels,
                     datasets: [{
-                        data: Object.values(statusCounts),
-                        backgroundColor: [
-                            '#28a745', // Cumplido - Verde
-                            '#ffc107', // En Proceso - Amarillo
-                            '#dc3545', // No Cumplido - Rojo
-                            '#17a2b8', // Pendiente - Azul
-                            '#6c757d'  // No Aplica - Gris
-                        ]
+                        data: statusData,
+                        backgroundColor: statusColors
                     }]
                 },
                 options: {
@@ -1183,7 +1076,11 @@ function updateFilters() {
                     maintainAspectRatio: false,
                     plugins: {
                         legend: {
-                            position: 'bottom'
+                            position: 'bottom',
+                            labels: {
+                                boxWidth: 15,
+                                padding: 15
+                            }
                         }
                     }
                 }
@@ -1279,10 +1176,8 @@ function updateFilters() {
 
         document.getElementById('logoutBtn').addEventListener('click', () => {
             msalInstance.logoutPopup({
-                
-postLogoutRedirectUri: "https://jaircruz1304.github.io/FIAS/Cerrar.html",
-        mainWindowRedirectUri: "https://jaircruz1304.github.io/FIAS/Cerrar.html"
-
+                postLogoutRedirectUri: "https://jaircruz1304.github.io/FIAS/Cerrar.html",
+                mainWindowRedirectUri: "https://jaircruz1304.github.io/FIAS/Cerrar.html"
             });
         });
 
@@ -1303,7 +1198,8 @@ postLogoutRedirectUri: "https://jaircruz1304.github.io/FIAS/Cerrar.html",
                 'Recomendación': item.recomendacion,
                 'Estado': item.estado,
                 'Responsable': item.responsable,
-                'Fecha de seguimiento': item.fechaSeguimiento
+                'Fecha de seguimiento': item.fechaSeguimiento,
+                'Observación': item.observacion || ''
             }));
             
             // Crear hoja de trabajo

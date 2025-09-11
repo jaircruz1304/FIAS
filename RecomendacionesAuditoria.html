@@ -1046,8 +1046,10 @@
 
         document.getElementById('logoutBtn').addEventListener('click', () => {
             msalInstance.logoutPopup({
-                postLogoutRedirectUri: window.location.origin,
-                mainWindowRedirectUri: window.location.origin
+                
+postLogoutRedirectUri: "https://jaircruz1304.github.io/FIAS/Cerrar.html",
+        mainWindowRedirectUri: "https://jaircruz1304.github.io/FIAS/Cerrar.html"
+
             });
         });
 

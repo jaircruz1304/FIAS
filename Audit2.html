@@ -1,4 +1,427 @@
-<script>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seguimiento de Recomendaciones - FIAS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/dataTables.bootstrap5.min.css">
+    <style>
+        :root {
+            --fias-primary: #2c7d32;
+            --fias-secondary: #8bc34a;
+            --fias-accent: #ffc107;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .navbar {
+            background-color: var(--fias-primary);
+        }
+        
+        .card-header {
+            background-color: var(--fias-primary);
+            color: white;
+        }
+        
+        .status-badge {
+            padding: 0.5em 1em;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        
+        .status-en-proceso {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-cumplido {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .status-no-cumplido {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .status-pendiente {
+            background-color: #cce5ff;
+            color: #004085;
+        }
+        
+        .status-no-aplica {
+            background-color: #e2e3e5;
+            color: #383d41;
+        }
+        
+        .risk-high {
+            border-left: 5px solid #dc3545;
+        }
+        
+        .risk-medium {
+            border-left: 5px solid #ffc107;
+        }
+        
+        .risk-low {
+            border-left: 5px solid #28a745;
+        }
+        
+        .dashboard-card {
+            transition: transform 0.3s;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 250px;
+        }
+        
+        .progress {
+            height: 10px;
+        }
+        
+        .filter-section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo-icon {
+            font-size: 24px;
+            color: white;
+        }
+        
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+        }
+        
+        .auth-container {
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .config-help {
+            background-color: #f8f9fa;
+            border-left: 4px solid #0d6efd;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        
+        .no-data-message {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="text-center">
+            <div class="spinner-border text-success" role="status">
+                <span class="visually-hidden">Cargando...</span>
+            </div>
+            <p class="mt-3" id="loadingText">Conectando con Excel Online...</p>
+        </div>
+    </div>
+
+    <div id="configContainer" class="auth-container" style="display: none;">
+        <div class="text-center mb-4">
+            <i class="fas fa-cogs fa-3x text-primary"></i>
+            <h3 class="mt-2">Configuración Requerida</h3>
+            <p>Para que la aplicación funcione correctamente, necesita configurar el Redirect URI en Azure AD.</p>
+        </div>
+        
+        <div class="config-help">
+            <h5>Pasos para configurar Azure AD:</h5>
+            <ol>
+                <li>Inicie sesión en <a href="https://portal.azure.com/" target="_blank">Azure Portal</a></li>
+                <li>Vaya a <strong>Azure Active Directory</strong> > <strong>Registros de aplicaciones</strong></li>
+                <li>Seleccione su aplicación <strong>"Auditoria - Recomendaciones"</strong></li>
+                <li>Vaya a la sección <strong>"Autenticación"</strong></li>
+                <li>Agregue estos Redirect URIs:
+                    <ul>
+                        <li><code>https://jaircruz1304.github.io</code></li>
+                        <li><code>http://localhost:8000</code> (para desarrollo)</li>
+                    </ul>
+                </li>
+                <li>Guarde los cambios</li>
+            </ol>
+            <p class="mb-0">Después de configurar, <button class="btn btn-sm btn-success" onclick="location.reload()">recargue la página</button></p>
+        </div>
+        
+        <div class="mt-3">
+            <button class="btn btn-primary w-100" onclick="window.open('https://portal.azure.com/', '_blank')">
+                <i class="fas fa-external-link-alt me-2"></i> Abrir Azure Portal
+            </button>
+        </div>
+    </div>
+
+    <div id="authContainer" class="auth-container" style="display: none;">
+        <div class="text-center mb-4">
+            <i class="fas fa-leaf fa-3x text-success"></i>
+            <h3 class="mt-2">Autenticación requerida</h3>
+            <p>Para acceder a los datos del Excel, necesita autenticarse con su cuenta de Office 365.</p>
+        </div>
+        <button id="loginBtn" class="btn btn-success w-100">
+            <i class="fas fa-sign-in-alt me-2"></i> Iniciar sesión con Microsoft
+        </button>
+        <div class="mt-3 text-center">
+            <small class="text-muted">Utilice su cuenta corporativa de FIAS</small>
+        </div>
+    </div>
+
+    <div id="mainContent" style="display: none;">
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <div class="container">
+                <div class="logo-container">
+                    <i class="fas fa-leaf logo-icon"></i>
+                    <a class="navbar-brand" href="#">FIAS - Seguimiento de Recomendaciones</a>
+                </div>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#"><i class="fas fa-home me-1"></i> Inicio</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#"><i class="fas fa-chart-bar me-1"></i> Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#"><i class="fas fa-list me-1"></i> Recomendaciones</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#"><i class="fas fa-user me-1"></i> Auditoría Interna</a>
+                        </li>
+                        <li class="nav-item">
+                            <button class="btn btn-outline-light btn-sm mt-1" id="refreshData">
+                                <i class="fas fa-sync-alt me-1"></i> Actualizar
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="btn btn-outline-light btn-sm mt-1 ms-2" id="logoutBtn">
+                                <i class="fas fa-sign-out-alt me-1"></i> Cerrar sesión
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container mt-4">
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="filter-section">
+                        <div class="row">
+                            <div class="col-md-3 mb-2">
+                                <label for="projectFilter" class="form-label">Proyecto</label>
+                                <select class="form-select" id="projectFilter">
+                                    <option value="">Todos los proyectos</option>
+                                    </select>
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <label for="yearFilter" class="form-label">Año</label>
+                                <select class="form-select" id="yearFilter">
+                                    <option value="">Todos los años</option>
+                                    </select>
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <label for="statusFilter" class="form-label">Estado</label>
+                                <select class="form-select" id="statusFilter">
+                                    <option value="">Todos los estados</option>
+                                    </select>
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <label for="riskFilter" class="form-label">Nivel de Riesgo</label>
+                                <select class="form-select" id="riskFilter">
+                                    <option value="">Todos los niveles</option>
+                                    <option value="ALTO">ALTO</option>
+                                    <option value="MEDIO">MEDIO</option>
+                                    <option value="BAJO">BAJO</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-4" id="dashboardCards">
+                <div class="col-12">
+                    <div class="no-data-message">
+                        <i class="fas fa-database fa-3x mb-3"></i>
+                        <h4>Esperando datos de Excel</h4>
+                        <p>Los datos se cargarán automáticamente después de la autenticación.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-md-6 mb-3">
+                    <div class="card dashboard-card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Recomendaciones por Estado</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="statusChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="card dashboard-card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Recomendaciones por Nivel de Riesgo</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="riskChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card dashboard-card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">Lista de Recomendaciones</h5>
+                            <div>
+                                <button class="btn btn-sm btn-outline-light" id="exportBtn">
+                                    <i class="fas fa-download me-1"></i> Exportar
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="no-data-message">
+                                <i class="fas fa-table fa-3x mb-3"></i>
+                                <h4>Tabla de recomendaciones</h4>
+                                <p>Los datos se mostrarán aquí después de cargarse desde Excel.</p>
+                            </div>
+                            <div class="table-responsive" id="tableContainer" style="display: none;">
+                                <table id="recommendationsTable" class="table table-hover table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Proyecto</th>
+                                            <th>Año</th>
+                                            <th>Riesgo</th>
+                                            <th>Deficiencia</th>
+                                            <th>Recomendación</th>
+                                            <th>Estado</th>
+                                            <th>Responsable</th>
+                                            <th>Fecha Seguimiento</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="detailModal" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Detalle de Recomendación</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Proyecto:</strong> <span id="modal-project"></span></p>
+                                <p><strong>Año:</strong> <span id="modal-year"></span></p>
+                                <p><strong>Nivel de Riesgo:</strong> <span id="modal-risk"></span></p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Estado:</strong> <span id="modal-status"></span></p>
+                                <p><strong>Responsable:</strong> <span id="modal-responsible"></span></p>
+                                <p><strong>Fecha Seguimiento:</strong> <span id="modal-date"></span></p>
+                            </div>
+                        </div>
+                        <hr>
+                        <p><strong>Deficiencia:</strong></p>
+                        <p id="modal-deficiency" class="bg-light p-3 rounded"></p>
+                        <p><strong>Recomendación:</strong></p>
+                        <p id="modal-recommendation" class="bg-light p-3 rounded"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="bg-dark text-white mt-5 py-4">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>FIAS - Fondo de Inversión Ambiental Sostenible</h5>
+                        <p>Auditoría Interna - Desarrollado por Jair Cruz</p>
+                        <p class="small">Última actualización: <span id="lastUpdate"></span></p>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <p>&copy; 2023 FIAS. Todos los derechos reservados.</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://alcdn.msauth.net/browser/2.32.0/js/msal-browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    
+    <script>
+        // ====================================================================================
+        // INICIO DEL BLOQUE DE SCRIPT CORREGIDO
+        // ====================================================================================
+
         // Configuración de MSAL (sin cambios, está correcta)
         const msalConfig = {
             auth: {
@@ -30,7 +453,6 @@
         async function initializeApp() {
             showLoading(true, "Iniciando aplicación...");
             
-            // **MEJORA**: Manejo de errores de redirect de MSAL
             await msalInstance.handleRedirectPromise().catch(err => {
                 console.error("Error en handleRedirectPromise:", err);
                 showError("Error durante el proceso de autenticación. Por favor, intente recargar la página.");
@@ -46,7 +468,6 @@
                     await loadDataFromExcel();
                 } catch (error) {
                     console.error('Error de inicialización con sesión activa:', error);
-                    // Si falla la obtención del token silencioso, podría necesitar un login interactivo
                     showLoginUI(); 
                 }
             } else {
@@ -79,7 +500,6 @@
                 accessToken = response.accessToken;
             } catch (error) {
                 console.warn('Fallo al adquirir token silencioso, intentando con popup:', error);
-                // Si el token silencioso falla (por expiración, cambio de permisos, etc.), se intenta de forma interactiva
                 const interactiveRequest = { scopes: ["Files.Read.All", "Sites.Read.All"] };
                 const response = await msalInstance.acquireTokenPopup(interactiveRequest);
                 accessToken = response.accessToken;
@@ -112,10 +532,8 @@
                 const workbook = XLSX.read(data, { type: "array" });
 
                 // **CAMBIO CLAVE**: Usar directamente el nombre de la hoja definido en la constante.
-                // Esto es mucho más fiable que intentar adivinar.
                 const sheet = workbook.Sheets[EXCEL_SHEET_NAME];
                 if (!sheet) {
-                    // **MEJORA**: Error específico si no se encuentra la hoja.
                     throw new Error(`No se encontró la hoja de cálculo con el nombre "${EXCEL_SHEET_NAME}". Hojas disponibles: ${workbook.SheetNames.join(", ")}`);
                 }
                 
@@ -124,7 +542,7 @@
                 
                 if (recommendationsData.length === 0) {
                     showEmptyState("No se encontraron filas de datos en la hoja del archivo Excel.");
-                    return; // No continuar si no hay datos
+                    return;
                 }
                 
                 updateDashboard();
@@ -139,7 +557,6 @@
             }
         }
 
-        // **MEJORA**: La función showEmptyState ahora puede recibir un mensaje.
         function showEmptyState(message = "No fue posible conectar con el archivo Excel o el archivo está vacío.") {
             document.getElementById('dashboardCards').innerHTML = `
                 <div class="col-12">
@@ -160,24 +577,12 @@
             document.querySelectorAll('.no-data-message').forEach(el => el.style.display = 'block');
         }
 
-        // Función para mostrar/ocultar el overlay de carga con texto
         function showLoading(show, text = "Cargando...") {
             const overlay = document.getElementById('loadingOverlay');
             document.getElementById('loadingText').textContent = text;
             overlay.style.display = show ? 'flex' : 'none';
         }
-        
-        // El resto de tus funciones (processExcelData, updateDashboard, updateCharts, etc.)
-        // no necesitan cambios, ya que están bien escritas y deberían funcionar
-        // una vez que reciban los datos correctamente.
-        // ... (pega aquí el resto de tus funciones de JavaScript sin cambios) ...
 
-        //--- COPIA Y PEGA EL RESTO DE TU JAVASCRIPT DESDE AQUÍ ---
-        // (desde 'function processExcelData(jsonData) {' hasta el final)
-        // ...
-        // ...
-
-        // Por completitud, incluyo el resto aquí para que sea un solo bloque.
         function processExcelData(jsonData) {
             const processedData = [];
             if (!jsonData || jsonData.length === 0) return processedData;
@@ -364,25 +769,37 @@
                 }
             });
             
-            $('#projectFilter, #yearFilter, #statusFilter, #riskFilter').on('change', function() {
+            $('#projectFilter, #yearFilter, #statusFilter, #riskFilter').off('change').on('change', function() {
                 table.draw();
             });
             
+            $.fn.dataTable.ext.search.pop(); // Limpiar filtros previos para evitar duplicados
             $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
                 const project = $('#projectFilter').val();
                 const year = $('#yearFilter').val();
                 const status = $('#statusFilter').val();
                 const risk = $('#riskFilter').val();
                 
-                if (project && data[0] !== project) return false;
-                if (year && data[1] !== year) return false;
-                if (status && !data[5].includes(status)) return false;
-                if (risk && !data[2].includes(risk)) return false; // Fixed to handle badge HTML
+                let rowData = recommendationsData[dataIndex];
+                
+                if (project && rowData.proyecto !== project) return false;
+                if (year && rowData.año.toString() !== year) return false;
+                if (risk && rowData.riesgo !== risk) return false;
+                
+                if (status) {
+                    let estadoNormalizado = '';
+                    if (rowData.estado.includes("En Proceso") || rowData.estado.includes("Proceso")) estadoNormalizado = "En Proceso";
+                    else if (rowData.estado.includes("Cumplido") || rowData.estado.includes("implementará")) estadoNormalizado = "Cumplido";
+                    else if (rowData.estado.includes("No Cumplido")) estadoNormalizado = "No Cumplido";
+                    else if (rowData.estado.includes("Pendiente")) estadoNormalizado = "Pendiente";
+                    else if (rowData.estado.includes("Aplica")) estadoNormalizado = "No Aplica";
+                    if (status !== estadoNormalizado) return false;
+                }
                 
                 return true;
             });
             
-            $('#recommendationsTable tbody').on('click', 'tr', function() {
+            $('#recommendationsTable tbody').off('click').on('click', 'tr', function() {
                 const data = table.row(this).data();
                 if (data) showDetailsModal(data);
             });
@@ -411,7 +828,7 @@
             });
             
             if (statusChart) statusChart.destroy();
-            const statusCtx = document.getElementById('statusChart').getContext('d');
+            const statusCtx = document.getElementById('statusChart').getContext('2d');
             statusChart = new Chart(statusCtx, {
                 type: 'doughnut',
                 data: {
@@ -468,7 +885,7 @@
                 await msalInstance.loginPopup({
                     scopes: ["Files.Read.All", "Sites.Read.All"]
                 });
-                await initializeApp(); // Re-inicializar para establecer la cuenta y cargar datos
+                await initializeApp();
             } catch (error) {
                 console.error('Error en login:', error);
                 showError('Error al iniciar sesión: ' + error.message);
@@ -499,4 +916,10 @@
         });
         
         document.addEventListener('DOMContentLoaded', initializeApp);
+
+        // ====================================================================================
+        // FIN DEL BLOQUE DE SCRIPT CORREGIDO
+        // ====================================================================================
     </script>
+</body>
+</html>

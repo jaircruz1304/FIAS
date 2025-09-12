@@ -69,14 +69,14 @@
             return jsonData.map(row => ({
                 proyecto: row.Proyecto || row.PROYECTO || row.ProyectoAuditoria || 'N/A',
                 año: row.Año || row.AÑO || row.Year || (row.Fecha ? new Date(row.Fecha).getFullYear().toString() : 'N/A'),
-                riesgo: (row.Riesgo || row["RIESGO"] || row["NIVEL DE RIESGO"] || 'N/A').toUpperCase(),
+                riesgo: (row.RIESGO || row["RIESGO"] || row["NIVEL DE RIESGO"] || 'N/A').toUpperCase(),
                 deficiencia: row.Deficiencia || row.DEFICIENCIA || row["Deficiencia de Control Interno"] || '',
                 recomendacion: row.Recomendacion || row.RECOMENDACION || row.Recomendación || '',
                 estadoOriginal: row.Estado || row.ESTADO || row.Status || row.STATUS || 'Sin especificar',
                 estado: normalizeStatus(row.Estado || row.ESTADO || row.Status || row.STATUS),
                 responsable: row.Responsable || row.RESPONSABLE || 'N/A',
                 fechaSeguimiento: row["Fecha de seguimiento"] || row.FechaSeguimiento || row.FECHA_SEGUIMIENTO || 'N/A',
-            observacion: row.Observación || row.OBSERVACION || 'N/A',
+                observacion: row.Observación || row.OBSERVACION || row.OBSERVACIÓN || 'N/A'
             }));
         }
         /**PROYECTO	AÑO	RIESGO	DEFICIENCIA	RECOMENDACION	ESTADO	RESPONSABLE	FECHA_SEGUIMIENTO	OBSERVACION
@@ -242,7 +242,7 @@
                     },
                     { data: 'responsable' },
                     { data: 'fechaSeguimiento' },
-               { data: 'observacion' }                                                                             
+                       { data: 'observacion' }                                                                             
                 ],
                 language: { url: '//cdn.datatables.net/plug-ins/1.13.5/i18n/es-ES.json' },
                 pageLength: 10,
@@ -927,8 +927,8 @@
                 estadoOriginal: row.Estado || row.ESTADO || row.Status || row.STATUS || 'Sin especificar',
                 estado: normalizeStatus(row.Estado || row.ESTADO || row.Status || row.STATUS),
                 responsable: row.Responsable || row.RESPONSABLE || 'N/A',
-                observacion: row.Observacion || row.OBSERVACION || 'N/A',
-                fechaSeguimiento: row["Fecha de seguimiento"] || row.FechaSeguimiento || row.FECHA_SEGUIMIENTO || 'N/A'
+                fechaSeguimiento: row["Fecha de seguimiento"] || row.FechaSeguimiento || row.FECHA_SEGUIMIENTO || 'N/A',
+                observacion: row.Observacion || row.OBSERVACION || row.OBSERVACIÓN ||'N/A'
             }));
         }
         

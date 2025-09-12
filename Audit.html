@@ -782,10 +782,10 @@
                 <div class="col-md-3 mb-3">
                     <div class="card dashboard-card text-center">
                         <div class="card-body">
-                            <h5 class="card-title">En Proceso</h5>
-                            <h2 class="card-text text-warning">${statusCounts["En proceso"]}</h2>
+                            <h5 class="card-title">No cumplido</h5>
+                            <h2 class="card-text text-warning">${statusCounts["No Cumplido"]}</h2>
                             <div class="progress mt-2">
-                                <div class="progress-bar bg-warning" style="width: ${total > 0 ? Math.round((statusCounts["En proceso"] / total) * 100) : 0}%"></div>
+                                <div class="progress-bar bg-warning" style="width: ${total > 0 ? Math.round((statusCounts["No Cumplido"] / total) * 100) : 0}%"></div>
                             </div>
                             <p class="text-muted mt-2">En implementación</p>
                         </div>
@@ -795,9 +795,9 @@
                     <div class="card dashboard-card text-center">
                         <div class="card-body">
                             <h5 class="card-title">Pendientes</h5>
-                            <h2 class="card-text text-danger">${statusCounts["No cumplido"] + statusCounts["No se implementará"]}</h2>
+                            <h2 class="card-text text-danger">${statusCounts["En Proceso"] }</h2>
                             <div class="progress mt-2">
-                                <div class="progress-bar bg-danger" style="width: ${total > 0 ? Math.round(((statusCounts["No cumplido"] + statusCounts["No se implementará"]) / total) * 100) : 0}%"></div>
+                                <div class="progress-bar bg-danger" style="width: ${total > 0 ? Math.round(((statusCounts["No cumplido"]) / total) * 100) : 0}%"></div>
                             </div>
                             <p class="text-muted mt-2">Por atender</p>
                         </div>

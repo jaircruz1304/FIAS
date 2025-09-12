@@ -3,405 +3,1504 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard de Seguimiento de Auditoría - FIAS</title>
-
+    <title>Seguimiento de Recomendaciones - FIAS</title>
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <!-- Font Awesome para iconos -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- DataTables CSS -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.bootstrap5.min.css">
-
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <!-- MSAL -->
-    <script src="https://alcdn.msauth.net/browser/2.14.2/js/msal-browser.min.js"></script>
-
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.0/css/buttons.bootstrap5.min.css">
     <style>
         :root {
             --fias-primary: #2c7d32;
+            --fias-primary-light: #4caf50;
+            --fias-primary-dark: #1b5e20;
             --fias-secondary: #8bc34a;
             --fias-accent: #ffc107;
+            --fias-danger: #dc3545;
+            --fias-warning: #ff9800;
+            --fias-info: #17a2b8;
+            --fias-light: #f8f9fa;
+            --fias-dark: #343a40;
         }
+        
         body {
-            background-color: #f8f9fa;
+            background-color: #f5f7f9;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
         }
-        .navbar, .card-header {
-            background-color: var(--fias-primary);
-            color: white;
+        
+        .navbar {
+            background: linear-gradient(135deg, var(--fias-primary) 0%, var(--fias-primary-dark) 100%);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
-        .footer {
-            background-color: #343a40;
-            color: white;
-            padding: 1rem 0;
+        
+        .sidebar {
+            background-color: white;
+            min-height: calc(100vh - 73px);
+            box-shadow: 3px 0 10px rgba(0, 0, 0, 0.08);
+            padding-top: 20px;
+        }
+        
+        .sidebar .nav-link {
+            color: #495057;
+            border-radius: 5px;
+            margin: 5px 10px;
+            padding: 10px 15px;
+            transition: all 0.3s;
+        }
+        
+        .sidebar .nav-link:hover, .sidebar .nav-link.active {
+            background-color: rgba(44, 125, 50, 0.1);
+            color: var(--fias-primary);
+        }
+        
+        .sidebar .nav-link i {
+            width: 24px;
             text-align: center;
+            margin-right: 10px;
         }
+        
+        .main-content {
+            padding: 20px;
+            background-color: #f5f7f9;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+            margin-bottom: 20px;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, var(--fias-primary) 0%, var(--fias-primary-light) 100%);
+            color: white;
+            border-radius: 10px 10px 0 0 !important;
+            padding: 15px 20px;
+            font-weight: 600;
+        }
+        
         .kpi-card {
-            border-left: 5px solid var(--fias-primary);
+            text-align: center;
+            padding: 20px 15px;
         }
-        /* Estilo para el loader */
-        #loading {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.6);
+        
+        .kpi-value {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin: 10px 0;
+        }
+        
+        .kpi-title {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #6c757d;
+        }
+        
+        .kpi-trend {
+            font-size: 0.85rem;
             display: flex;
             align-items: center;
             justify-content: center;
+        }
+        
+        .kpi-trend.up {
+            color: #28a745;
+        }
+        
+        .kpi-trend.down {
+            color: #dc3545;
+        }
+        
+        .status-badge {
+            padding: 0.5em 1em;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        
+        .status-en-proceso {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-cumplido {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .status-no-cumplido {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .status-pendiente {
+            background-color: #cce5ff;
+            color: #004085;
+        }
+        
+        .status-no-aplica {
+            background-color: #e2e3e5;
+            color: #383d41;
+        }
+        
+        .status-no-implementara {
+            background-color: #e2e3e5;
+            color: #383d41;
+        }
+        
+        .risk-badge {
+            padding: 0.4em 0.8em;
+            border-radius: 15px;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+        
+        .risk-high {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .risk-medium {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .risk-low {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 250px;
+        }
+        
+        .filter-section {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo-icon {
+            font-size: 24px;
+            color: white;
+        }
+        
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
             z-index: 9999;
-            opacity: 1;
-            transition: opacity 0.3s ease;
         }
-        .spinner {
-            border: 8px solid #f3f3f3;
-            border-top: 8px solid var(--fias-primary);
+        
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+        }
+        
+        .auth-container {
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .config-help {
+            background-color: #f8f9fa;
+            border-left: 4px solid #0d6efd;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 5px;
+        }
+        
+        .no-data-message {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+        }
+        
+        .progress-thin {
+            height: 6px;
+        }
+        
+        .dashboard-summary {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .summary-item {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            flex: 1;
+            min-width: 200px;
+            margin: 0 10px 10px 0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .summary-icon {
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            animation: spin 1.5s linear infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 1.5rem;
         }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        
+        .summary-content {
+            flex: 1;
+        }
+        
+        .summary-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+        
+        .summary-label {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .sidebar {
+                min-height: auto;
+                margin-bottom: 20px;
+            }
+            
+            .summary-item {
+                min-width: 100%;
+                margin-right: 0;
+            }
+            
+            .kpi-value {
+                font-size: 1.8rem;
+            }
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+        
+        /* Table improvements */
+        .table-hover tbody tr {
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .table-hover tbody tr:hover {
+            background-color: rgba(44, 125, 50, 0.05);
+        }
+        
+        /* Button improvements */
+        .btn-fias {
+            background: linear-gradient(135deg, var(--fias-primary) 0%, var(--fias-primary-light) 100%);
+            border: none;
+            color: white;
+            border-radius: 6px;
+            padding: 8px 16px;
+            transition: all 0.3s;
+        }
+        
+        .btn-fias:hover {
+            background: linear-gradient(135deg, var(--fias-primary-dark) 0%, var(--fias-primary) 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            color: white;
+        }
+        
+        /* Filter chips */
+        .filter-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 15px;
+        }
+        
+        .filter-chip {
+            background-color: #e9ecef;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .filter-chip .close {
+            margin-left: 5px;
+            cursor: pointer;
         }
     </style>
 </head>
-<body class="d-flex flex-column min-vh-100">
-
-    <!-- Pantalla de Carga -->
-    <div id="loading">
-        <div class="spinner"></div>
-    </div>
-
-    <!-- Pantalla de Login -->
-    <div id="login-screen" class="container">
-        <div class="row min-vh-100 justify-content-center align-items-center">
-            <div class="col-md-6 text-center">
-                <div class="card shadow-lg">
-                    <div class="card-body p-5">
-                         <img src="https://placehold.co/150x80/2c7d32/FFFFFF?text=FIAS+Logo" alt="Logo FIAS" class="mx-auto mb-4">
-                        <h1 class="card-title h3 mb-3">Dashboard de Seguimiento de Auditoría</h1>
-                        <p class="card-text text-muted mb-4">Por favor, inicie sesión para continuar.</p>
-                        <button id="signInButton" class="btn btn-success btn-lg w-100">
-                            <i class="fab fa-microsoft me-2"></i> Iniciar Sesión con Microsoft
-                        </button>
-                    </div>
-                </div>
+<body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="text-center">
+            <div class="spinner-border text-success" role="status">
+                <span class="visually-hidden">Cargando...</span>
             </div>
+            <p class="mt-3" id="loadingText">Conectando con Excel Online...</p>
         </div>
     </div>
 
-    <!-- Contenido Principal del Dashboard (oculto por defecto) -->
-    <div id="dashboard-content" class="d-none flex-grow-1">
-        <!-- Encabezado -->
-        <nav class="navbar navbar-expand-lg navbar-dark shadow-sm">
+    <!-- Contenedor de configuración para desarrollo -->
+    <div id="configContainer" class="auth-container" style="display: none;">
+        <div class="text-center mb-4">
+            <i class="fas fa-cogs fa-3x text-primary"></i>
+            <h3 class="mt-2">Configuración Requerida</h3>
+            <p>Para que la aplicación funcione correctamente, necesita configurar el Redirect URI en Azure AD.</p>
+        </div>
+        
+        <div class="config-help">
+            <h5>Pasos para configurar Azure AD:</h5>
+            <ol>
+                <li>Inicie sesión en <a href="https://portal.azure.com/" target="_blank">Azure Portal</a></li>
+                <li>Vaya a <strong>Azure Active Directory</strong> > <strong>Registros de aplicaciones</strong></li>
+                <li>Seleccione su aplicación <strong>"Auditoria - Recomendaciones"</strong></li>
+                <li>Vaya a la sección <strong>"Autenticación"</strong></li>
+                <li>Agregue estos Redirect URIs:
+                    <ul>
+                        <li><code>https://jaircruz1304.github.io</code></li>
+                        <li><code>http://localhost:8000</code> (para desarrollo)</li>
+                    </ul>
+                </li>
+                <li>Guarde los cambios</li>
+            </ol>
+            <p class="mb-0">Después de configurar, <button class="btn btn-sm btn-success" onclick="location.reload()">recargue la página</button></p>
+        </div>
+        
+        <div class="mt-3">
+            <button class="btn btn-primary w-100" onclick="window.open('https://portal.azure.com/', '_blank')">
+                <i class="fas fa-external-link-alt me-2"></i> Abrir Azure Portal
+            </button>
+        </div>
+    </div>
+
+    <!-- Contenedor de autenticación (inicialmente oculto) -->
+    <div id="authContainer" class="auth-container" style="display: none;">
+        <div class="text-center mb-4">
+            <i class="fas fa-leaf fa-3x text-success"></i>
+            <h3 class="mt-2">Autenticación requerida</h3>
+            <p>Para acceder a los datos del Excel, necesita autenticarse con su cuenta de Office 365.</p>
+        </div>
+        <button id="loginBtn" class="btn btn-success w-100 py-2">
+            <i class="fas fa-sign-in-alt me-2"></i> Iniciar sesión con Microsoft
+        </button>
+        <div class="mt-3 text-center">
+            <small class="text-muted">Utilice su cuenta corporativa de FIAS</small>
+        </div>
+    </div>
+
+    <!-- Contenido principal (inicialmente oculto) -->
+    <div id="mainContent" style="display: none;">
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-dark">
             <div class="container-fluid">
-                <a class="navbar-brand" href="#">
-                    <i class="fas fa-tasks me-2"></i> Dashboard de Recomendaciones
-                </a>
-                <div class="d-flex align-items-center">
-                    <span id="welcome-message" class="navbar-text me-3 d-none d-md-block"></span>
-                    <button id="refreshData" class="btn btn-light me-2" title="Actualizar Datos">
-                        <i class="fas fa-sync-alt"></i>
-                    </button>
-                    <button id="signOutButton" class="btn btn-danger">
-                        <i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión
-                    </button>
+                <div class="logo-container">
+                    <i class="fas fa-leaf logo-icon"></i>
+                    <a class="navbar-brand" href="#">FIAS - Seguimiento de Recomendaciones</a>
+                </div>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <button class="btn btn-outline-light btn-sm mt-1 me-2" id="refreshData">
+                                <i class="fas fa-sync-alt me-1"></i> Actualizar
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="btn btn-outline-light btn-sm mt-1" id="logoutBtn">
+                                <i class="fas fa-sign-out-alt me-1"></i> Cerrar sesión
+                            </button>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </nav>
 
-        <!-- Contenido principal -->
-        <main class="container-fluid mt-4">
-            <!-- Filtros -->
-            <div class="card shadow-sm mb-4">
-                <div class="card-header">
-                    <h5 class="mb-0"><i class="fas fa-filter me-2"></i>Filtros</h5>
-                </div>
-                <div class="card-body">
-                    <div class="row g-3 align-items-end">
-                        <div class="col-md-3">
-                            <label for="filter-year" class="form-label">Año</label>
-                            <select id="filter-year" class="form-select"><option value="">Todos</option></select>
-                        </div>
-                        <div class="col-md-3">
-                            <label for="filter-risk" class="form-label">Nivel de Riesgo</label>
-                            <select id="filter-risk" class="form-select"><option value="">Todos</option></select>
-                        </div>
-                        <div class="col-md-3">
-                            <label for="filter-status" class="form-label">Estado</label>
-                            <select id="filter-status" class="form-select"><option value="">Todos</option></select>
-                        </div>
-                        <div class="col-md-3 d-flex">
-                            <button id="apply-filters" class="btn btn-primary w-50 me-2"><i class="fas fa-check me-2"></i>Aplicar</button>
-                            <button id="reset-filters" class="btn btn-secondary w-50"><i class="fas fa-undo me-2"></i>Limpiar</button>
+        <div class="container-fluid">
+            <div class="row">
+                <!-- Sidebar -->
+                <div class="col-md-2 col-lg-2 d-md-block sidebar collapse p-0" id="sidebarMenu">
+                    <div class="position-sticky pt-3">
+                        <ul class="nav flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link active" href="#">
+                                    <i class="fas fa-chart-line"></i>
+                                    Dashboard
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">
+                                    <i class="fas fa-list-alt"></i>
+                                    Lista de Recomendaciones
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">
+                                    <i class="fas fa-chart-pie"></i>
+                                    Análisis por Área
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    Seguimiento Temporal
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    Indicadores de Riesgo
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">
+                                    <i class="fas fa-cog"></i>
+                                    Configuración
+                                </a>
+                            </li>
+                        </ul>
+                        
+                        <hr>
+                        
+                        <h6 class="sidebar-heading px-3 mt-4 mb-1 text-muted text-uppercase">
+                            <small>Filtros</small>
+                        </h6>
+                        
+                        <div class="px-3">
+                            <div class="mb-3">
+                                <label class="form-label small mb-1">Estado</label>
+                                <select class="form-select form-select-sm" id="filterStatus">
+                                    <option value="">Todos los estados</option>
+                                    <option value="En proceso">En proceso</option>
+                                    <option value="Cumplido">Cumplido</option>
+                                    <option value="No cumplido">No cumplido</option>
+                                    <option value="Pendiente">Pendiente</option>
+                                    <option value="No aplica">No aplica</option>
+                                    <option value="No implementará">No implementará</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label small mb-1">Área</label>
+                                <select class="form-select form-select-sm" id="filterArea">
+                                    <option value="">Todas las áreas</option>
+                                    <!-- Las opciones se llenarán dinámicamente -->
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label small mb-1">Prioridad</label>
+                                <select class="form-select form-select-sm" id="filterPriority">
+                                    <option value="">Todas las prioridades</option>
+                                    <option value="Alta">Alta</option>
+                                    <option value="Media">Media</option>
+                                    <option value="Baja">Baja</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label small mb-1">Fecha de Cumplimiento</label>
+                                <input type="month" class="form-control form-control-sm" id="filterDate">
+                            </div>
+                            
+                            <button class="btn btn-fias btn-sm w-100" id="applyFilters">
+                                <i class="fas fa-filter me-1"></i> Aplicar Filtros
+                            </button>
+                            
+                            <button class="btn btn-outline-secondary btn-sm w-100 mt-2" id="clearFilters">
+                                <i class="fas fa-times me-1"></i> Limpiar
+                            </button>
                         </div>
                     </div>
                 </div>
-            </div>
-            
-            <!-- KPIs -->
-            <div class="row g-4 mb-4">
-                <div class="col-md-3"><div class="card kpi-card shadow-sm"><div class="card-body text-center"><p class="text-muted">Total Recomendaciones</p><h3 id="kpi-total" class="fw-bold">0</h3></div></div></div>
-                <div class="col-md-3"><div class="card kpi-card shadow-sm"><div class="card-body text-center"><p class="text-muted">Cumplidas</p><h3 id="kpi-completed" class="fw-bold">0</h3></div></div></div>
-                <div class="col-md-3"><div class="card kpi-card shadow-sm"><div class="card-body text-center"><p class="text-muted">En Proceso</p><h3 id="kpi-in-progress" class="fw-bold">0</h3></div></div></div>
-                <div class="col-md-3"><div class="card kpi-card shadow-sm"><div class="card-body text-center"><p class="text-muted">Pendientes</p><h3 id="kpi-pending" class="fw-bold">0</h3></div></div></div>
-            </div>
 
-            <!-- Gráficos -->
-            <div class="row g-4 mb-4">
-                <div class="col-lg-5">
-                    <div class="card shadow-sm h-100"><div class="card-body"><h5 class="card-title">Recomendaciones por Estado</h5><canvas id="statusChart"></canvas></div></div>
-                </div>
-                 <div class="col-lg-7">
-                    <div class="card shadow-sm h-100"><div class="card-body"><h5 class="card-title">Recomendaciones por Nivel de Riesgo</h5><canvas id="riskChart"></canvas></div></div>
-                </div>
+                <!-- Main Content -->
+                <main class="col-md-10 ms-sm-auto col-lg-10 px-md-4 main-content">
+                    <!-- Dashboard Summary -->
+                    <div class="dashboard-summary">
+                        <div class="summary-item">
+                            <div class="summary-icon bg-primary bg-opacity-10 text-primary">
+                                <i class="fas fa-list-check"></i>
+                            </div>
+                            <div class="summary-content">
+                                <div class="summary-value" id="totalRecommendations">0</div>
+                                <div class="summary-label">Total Recomendaciones</div>
+                            </div>
+                        </div>
+                        
+                        <div class="summary-item">
+                            <div class="summary-icon bg-success bg-opacity-10 text-success">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="summary-content">
+                                <div class="summary-value" id="completedRecommendations">0</div>
+                                <div class="summary-label">Cumplidas</div>
+                            </div>
+                        </div>
+                        
+                        <div class="summary-item">
+                            <div class="summary-icon bg-warning bg-opacity-10 text-warning">
+                                <i class="fas fa-spinner"></i>
+                            </div>
+                            <div class="summary-content">
+                                <div class="summary-value" id="inProgressRecommendations">0</div>
+                                <div class="summary-label">En Proceso</div>
+                            </div>
+                        </div>
+                        
+                        <div class="summary-item">
+                            <div class="summary-icon bg-danger bg-opacity-10 text-danger">
+                                <i class="fas fa-exclamation-circle"></i>
+                            </div>
+                            <div class="summary-content">
+                                <div class="summary-value" id="pendingRecommendations">0</div>
+                                <div class="summary-label">Pendientes</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Filter Chips -->
+                    <div class="filter-chips" id="filterChips"></div>
+                    
+                    <!-- KPI Cards -->
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="card">
+                                <div class="card-body kpi-card">
+                                    <div class="kpi-title">Porcentaje Cumplimiento</div>
+                                    <div class="kpi-value text-success" id="completionRate">0%</div>
+                                    <div class="progress progress-thin mt-2">
+                                        <div class="progress-bar bg-success" id="completionProgress" role="progressbar" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-3">
+                            <div class="card">
+                                <div class="card-body kpi-card">
+                                    <div class="kpi-title">Promedio de Avance</div>
+                                    <div class="kpi-value text-primary" id="averageProgress">0%</div>
+                                    <div class="progress progress-thin mt-2">
+                                        <div class="progress-bar bg-primary" id="averageProgressBar" role="progressbar" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-3">
+                            <div class="card">
+                                <div class="card-body kpi-card">
+                                    <div class="kpi-title">Vencidas</div>
+                                    <div class="kpi-value text-danger" id="overdueCount">0</div>
+                                    <div class="kpi-trend down">
+                                        <i class="fas fa-arrow-up me-1"></i> <span id="overdueTrend">0%</span> desde último mes
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-3">
+                            <div class="card">
+                                <div class="card-body kpi-card">
+                                    <div class="kpi-title">Alto Riesgo</div>
+                                    <div class="kpi-value text-warning" id="highRiskCount">0</div>
+                                    <div class="kpi-trend up">
+                                        <i class="fas fa-arrow-down me-1"></i> <span id="riskTrend">0%</span> desde último mes
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Charts Row -->
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <span>Estado de Recomendaciones</span>
+                                    <div class="dropdown">
+                                        <button class="btn btn-sm btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                            <i class="fas fa-ellipsis-v"></i>
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="#" id="exportStatusChart">Exportar como imagen</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="chart-container">
+                                        <canvas id="statusChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <span>Recomendaciones por Área</span>
+                                    <div class="dropdown">
+                                        <button class="btn btn-sm btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                            <i class="fas fa-ellipsis-v"></i>
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="#" id="exportAreaChart">Exportar como imagen</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="chart-container">
+                                        <canvas id="areaChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Second Charts Row -->
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <span>Distribución por Prioridad</span>
+                                    <div class="dropdown">
+                                        <button class="btn btn-sm btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                            <i class="fas fa-ellipsis-v"></i>
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="#" id="exportPriorityChart">Exportar como imagen</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="chart-container">
+                                        <canvas id="priorityChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <span>Evolución Mensual</span>
+                                    <div class="dropdown">
+                                        <button class="btn btn-sm btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                            <i class="fas fa-ellipsis-v"></i>
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="#" id="exportTimelineChart">Exportar como imagen</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="chart-container">
+                                        <canvas id="timelineChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Data Table -->
+                    <div class="card mt-4">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <span>Lista de Recomendaciones</span>
+                            <div>
+                                <button class="btn btn-sm btn-outline-secondary me-2" id="toggleSearch">
+                                    <i class="fas fa-search me-1"></i> Búsqueda
+                                </button>
+                                <button class="btn btn-sm btn-fias" id="exportTable">
+                                    <i class="fas fa-download me-1"></i> Exportar
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover table-striped" id="recommendationsTable">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Recomendación</th>
+                                            <th>Área</th>
+                                            <th>Estado</th>
+                                            <th>Prioridad</th>
+                                            <th>% Avance</th>
+                                            <th>Fecha Límite</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Los datos se llenarán dinámicamente -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </main>
             </div>
-
-            <!-- Tabla de Datos -->
-            <div class="card shadow-sm">
-                <div class="card-header"><h5 class="mb-0">Detalle de Recomendaciones</h5></div>
-                <div class="card-body"><div class="table-responsive"><table id="recommendationsTable" class="table table-striped table-hover w-100"></table></div></div>
-            </div>
-        </main>
-    </div>
-    
-    <!-- Footer -->
-    <footer class="footer mt-auto">
-        <div class="container">
-            <span>Desarrollado por Jair Cruz</span>
         </div>
-    </footer>
+    </div>
 
-    <!-- Scripts -->
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.datatables.net/2.0.7/js/dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/2.0.7/js/dataTables.bootstrap5.min.js"></script>
-
-    <script type="module">
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- DataTables -->
+    <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.0/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.0/js/buttons.bootstrap5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.0/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.0/js/buttons.print.min.js"></script>
+    <!-- MSAL.js -->
+    <script src="https://alcdn.msauth.net/browser/2.24.0/js/msal-browser.min.js"></script>
+    <!-- Microsoft Graph Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@microsoft/microsoft-graph-client/lib/graph-js-sdk.js"></script>
+    
+    <script>
+        // Configuración de la aplicación
         const msalConfig = {
             auth: {
-                clientId: "deff0a8a-9d8b-4463-8d8f-382b82476757",
-                authority: "https://login.microsoftonline.com/5e23e4af-237d-4d97-bf6e-dca808015787",
+                clientId: "d9cb8198-49c9-4d15-8457-3532f65f904c", // ID de aplicación en Azure
+                authority: "https://login.microsoftonline.com/common",
                 redirectUri: window.location.origin
             },
-            cache: { cacheLocation: "sessionStorage", storeAuthStateInCookie: false }
+            cache: {
+                cacheLocation: "sessionStorage",
+                storeAuthStateInCookie: false
+            }
         };
 
+        const graphConfig = {
+            graphMeEndpoint: "https://graph.microsoft.com/v1.0/me",
+            graphDriveEndpoint: "https://graph.microsoft.com/v1.0/me/drive"
+        };
+
+        const excelFileId = "01YH3N2VNMJR7R2X7T2K2Z2Y2V2Z2Y2Z2Y2"; // ID del archivo Excel en SharePoint
+        const worksheetName = "Hoja1"; // Nombre de la hoja de Excel
+
+        // Inicializar MSAL
         const msalInstance = new msal.PublicClientApplication(msalConfig);
-        const graphApiEndpoint = "https://graph.microsoft.com/v1.0/sites/fias.sharepoint.com,d1418e69-1c9f-442d-a640-59f772421bb9,420b70d8-4f91-455c-a56b-2f08518903c7/drives/b!aZ4Y0Z8cLUSmQFn3ckIbuZgwcEkR-VxFpWsvmAhRgzfB7XC0n5FrSYsU3M58Kx7I/items/01AZTUUFJQ6B6P2O53BGY2L2752X3V6PXH/workbook/worksheets('RECOMENDACIONES AUD EXTERNA')/usedRange";
-        const loginRequest = { scopes: ["User.Read", "Sites.Read.All"] };
 
-        let allRecommendations = [];
+        // Variables globales
+        let graphClient;
+        let recommendationsData = [];
+        let filteredData = [];
+        let statusChart, areaChart, priorityChart, timelineChart;
         let dataTable;
-        let statusChartInstance, riskChartInstance;
-        
-        const loadingEl = document.getElementById('loading');
-        const loginScreenEl = document.getElementById('login-screen');
-        const dashboardContentEl = document.getElementById('dashboard-content');
 
+        // Inicializar la aplicación
         async function initializeApp() {
+            showLoading("Inicializando aplicación...");
+            
             try {
-                const accounts = msalInstance.getAllAccounts();
-                if (accounts.length > 0) {
-                    msalInstance.setActiveAccount(accounts[0]);
-                    await showDashboard(accounts[0]);
+                // Verificar si estamos en localhost o GitHub Pages
+                const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                const isGitHubPages = window.location.hostname.includes('github.io');
+                
+                if (!isLocalhost && !isGitHubPages) {
+                    document.getElementById('configContainer').style.display = 'block';
+                    hideLoading();
+                    return;
+                }
+
+                // Verificar si hay una respuesta de autenticación
+                const response = await msalInstance.handleRedirectPromise();
+                if (response) {
+                    // El usuario ha sido autenticado
+                    await initializeGraphClient(response.account);
+                    await loadExcelData();
+                    showMainContent();
                 } else {
-                    showLogin();
+                    // Verificar si ya hay una sesión activa
+                    const accounts = msalInstance.getAllAccounts();
+                    if (accounts.length > 0) {
+                        await initializeGraphClient(accounts[0]);
+                        await loadExcelData();
+                        showMainContent();
+                    } else {
+                        // Mostrar la interfaz de autenticación
+                        showAuthUI();
+                    }
                 }
             } catch (error) {
-                console.error("Initialization error:", error);
-                showLogin();
+                console.error("Error inicializando la aplicación:", error);
+                hideLoading();
+                alert("Error al inicializar la aplicación: " + error.message);
             }
         }
 
-        async function signIn() {
-            try {
-                const response = await msalInstance.loginPopup(loginRequest);
-                msalInstance.setActiveAccount(response.account);
-                await showDashboard(response.account);
-            } catch (error) { console.error("Login failed:", error); }
-        }
-
-        function signOut() {
-            msalInstance.logoutPopup({ account: msalInstance.getActiveAccount() });
-        }
-        
-        async function getToken() {
-            const account = msalInstance.getActiveAccount();
-            if (!account) throw new Error("No active account!");
-            const request = { ...loginRequest, account };
-            try {
-                const response = await msalInstance.acquireTokenSilent(request);
-                return response.accessToken;
-            } catch (error) {
-                if (error instanceof msal.InteractionRequiredAuthError) {
-                    const response = await msalInstance.acquireTokenPopup(request);
-                    return response.accessToken;
+        // Inicializar el cliente de Graph
+        async function initializeGraphClient(account) {
+            // Configurar el proveedor de autenticación para el cliente de Graph
+            const authProvider = {
+                getAccessToken: async () => {
+                    try {
+                        const response = await msalInstance.acquireTokenSilent({
+                            scopes: ["User.Read", "Files.Read.All"],
+                            account: account
+                        });
+                        return response.accessToken;
+                    } catch (error) {
+                        console.error("Error obteniendo token:", error);
+                        throw error;
+                    }
                 }
-                throw error;
-            }
+            };
+
+            // Inicializar el cliente de Graph
+            graphClient = MicrosoftGraph.Client.initWithMiddleware({ authProvider });
         }
 
-        function showLogin() {
-            loadingEl.style.display = 'none';
-            loginScreenEl.classList.remove('d-none');
-            dashboardContentEl.classList.add('d-none');
-        }
-        
-        async function showDashboard(account) {
-            document.getElementById('welcome-message').innerText = `Bienvenido, ${account.name}`;
-            loginScreenEl.classList.add('d-none');
-            dashboardContentEl.classList.remove('d-none');
-            loadingEl.style.display = 'flex';
+        // Cargar datos de Excel
+        async function loadExcelData() {
+            showLoading("Cargando datos desde Excel...");
             
-            await loadDataFromExcel();
-            
-            loadingEl.style.display = 'none';
-        }
-
-        async function loadDataFromExcel() {
-            loadingEl.style.display = 'flex';
             try {
-                const token = await getToken();
-                const response = await fetch(graphApiEndpoint, { headers: { 'Authorization': `Bearer ${token}` } });
-                if (!response.ok) throw new Error(`API Error: ${response.statusText}`);
-                
-                const data = await response.json();
-                
-                // Normalizar encabezados y mapear datos
-                const headers = data.values[0].map(header => 
-                    header.toLowerCase().trim()
-                    .replace(/ /g, '_')
-                    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-                );
-                
-                allRecommendations = data.values.slice(1).map(row => {
-                    const item = {};
-                    headers.forEach((key, index) => {
-                        item[key] = row[index] || '';
-                    });
-                    return item;
-                }).filter(item => item.proyecto); // Filtrar filas vacías
+                // Obtener el libro de Excel
+                const workbook = await graphClient
+                    .api(`/me/drive/items/${excelFileId}/workbook`)
+                    .get();
 
-                populateFilters();
-                if (!dataTable) initializeDataTable();
-                updateDashboard(allRecommendations);
+                // Obtener los nombres de las hojas
+                const worksheets = await graphClient
+                    .api(`/me/drive/items/${excelFileId}/workbook/worksheets`)
+                    .get();
 
+                // Encontrar la hoja por nombre
+                let worksheetId;
+                for (let worksheet of worksheets.value) {
+                    if (worksheet.name === worksheetName) {
+                        worksheetId = worksheet.id;
+                        break;
+                    }
+                }
+
+                if (!worksheetId) {
+                    throw new Error(`No se encontró la hoja "${worksheetName}" en el archivo Excel`);
+                }
+
+                // Obtener el rango usado en la hoja
+                const usedRange = await graphClient
+                    .api(`/me/drive/items/${excelFileId}/workbook/worksheets/${worksheetId}/usedRange`)
+                    .get();
+
+                // Obtener los valores del rango
+                const values = usedRange.values;
+                
+                // Procesar los datos (asumiendo que la primera fila son los encabezados)
+                const headers = values[0];
+                recommendationsData = [];
+                
+                for (let i = 1; i < values.length; i++) {
+                    if (values[i].length === 0) continue; // Saltar filas vacías
+                    
+                    const row = {};
+                    for (let j = 0; j < headers.length; j++) {
+                        row[headers[j]] = values[i][j] || '';
+                    }
+                    recommendationsData.push(row);
+                }
+                
+                filteredData = [...recommendationsData];
+                
+                // Actualizar la interfaz con los datos
+                updateDashboard();
+                hideLoading();
             } catch (error) {
-                console.error('Failed to load data:', error);
-                alert("Error al cargar los datos. Verifique la consola e intente iniciar sesión de nuevo.");
-                signOut();
-            } finally {
-                loadingEl.style.display = 'none';
+                console.error("Error cargando datos de Excel:", error);
+                hideLoading();
+                alert("Error cargando datos: " + error.message);
             }
         }
 
-        function populateFilters() {
-            // Renombrar 'ano' a 'año' para que coincida con el encabezado normalizado
-            const years = [...new Set(allRecommendations.map(item => item.año))].sort((a,b) => b-a);
-            const risks = [...new Set(allRecommendations.map(item => item.riesgo))].sort();
-            const statuses = [...new Set(allRecommendations.map(item => item.estado))].sort();
-            
-            const populate = (el, items) => { el.innerHTML = '<option value="">Todos</option>' + items.map(i => `<option value="${i}">${i}</option>`).join(''); };
-            populate(document.getElementById('filter-year'), years);
-            populate(document.getElementById('filter-risk'), risks);
-            populate(document.getElementById('filter-status'), statuses);
-        }
-        
-        function applyFilters() {
-            const selectedYear = document.getElementById('filter-year').value;
-            const selectedRisk = document.getElementById('filter-risk').value;
-            const selectedStatus = document.getElementById('filter-status').value;
-            
-            const filteredData = allRecommendations.filter(item => 
-                (!selectedYear || item.año == selectedYear) &&
-                (!selectedRisk || item.riesgo === selectedRisk) &&
-                (!selectedStatus || item.estado === selectedStatus)
-            );
-            updateDashboard(filteredData);
+        // Actualizar el dashboard con los datos
+        function updateDashboard() {
+            updateSummaryCards();
+            updateCharts();
+            updateDataTable();
+            updateFilterOptions();
         }
 
-        function resetFilters() {
-            document.getElementById('filter-year').value = '';
-            document.getElementById('filter-risk').value = '';
-            document.getElementById('filter-status').value = '';
-            updateDashboard(allRecommendations);
-        }
-        
-        function initializeDataTable() {
-            dataTable = $('#recommendationsTable').DataTable({
-                data: [],
-                columns: [
-                    { data: 'proyecto', title: 'Proyecto' },
-                    { data: 'año', title: 'Año' },
-                    { data: 'riesgo', title: 'Riesgo' },
-                    { data: 'recomendacion', title: 'Recomendación' },
-                    { data: 'estado', title: 'Estado' },
-                    { data: 'responsable', title: 'Responsable' }
-                ],
-                responsive: true,
-                language: { url: '//cdn.datatables.net/plug-ins/2.0.7/i18n/es-ES.json' },
+        // Actualizar las tarjetas de resumen
+        function updateSummaryCards() {
+            const total = filteredData.length;
+            const completed = filteredData.filter(item => item.Estado === "Cumplido").length;
+            const inProgress = filteredData.filter(item => item.Estado === "En proceso").length;
+            const pending = filteredData.filter(item => item.Estado === "Pendiente").length;
+            
+            document.getElementById("totalRecommendations").textContent = total;
+            document.getElementById("completedRecommendations").textContent = completed;
+            document.getElementById("inProgressRecommendations").textContent = inProgress;
+            document.getElementById("pendingRecommendations").textContent = pending;
+            
+            // Calcular porcentaje de cumplimiento
+            const completionRate = total > 0 ? Math.round((completed / total) * 100) : 0;
+            document.getElementById("completionRate").textContent = `${completionRate}%`;
+            document.getElementById("completionProgress").style.width = `${completionRate}%`;
+            
+            // Calcular promedio de avance
+            let totalProgress = 0;
+            let progressCount = 0;
+            
+            filteredData.forEach(item => {
+                if (item["% Avance"] !== undefined && item["% Avance"] !== "") {
+                    totalProgress += parseInt(item["% Avance"]) || 0;
+                    progressCount++;
+                }
             });
-        }
-        
-        function updateDashboard(data) {
-            const total = data.length;
-            const completed = data.filter(r => r.estado?.toLowerCase().includes('cumplido')).length;
-            const inProgress = data.filter(r => r.estado?.toLowerCase().includes('proceso')).length;
-            const pending = total - completed - inProgress;
-
-            document.getElementById('kpi-total').innerText = total;
-            document.getElementById('kpi-completed').innerText = completed;
-            document.getElementById('kpi-in-progress').innerText = inProgress;
-            document.getElementById('kpi-pending').innerText = pending;
-
-            updateStatusChart(data);
-            updateRiskChart(data);
             
-            dataTable.clear().rows.add(data).draw();
+            const averageProgress = progressCount > 0 ? Math.round(totalProgress / progressCount) : 0;
+            document.getElementById("averageProgress").textContent = `${averageProgress}%`;
+            document.getElementById("averageProgressBar").style.width = `${averageProgress}%`;
+            
+            // Contar vencidas (ejemplo simplificado)
+            const today = new Date();
+            const overdue = filteredData.filter(item => {
+                if (!item["Fecha límite de cumplimiento"]) return false;
+                const dueDate = new Date(item["Fecha límite de cumplimiento"]);
+                return dueDate < today && item.Estado !== "Cumplido";
+            }).length;
+            
+            document.getElementById("overdueCount").textContent = overdue;
+            
+            // Contar alto riesgo (ejemplo simplificado)
+            const highRisk = filteredData.filter(item => item.Prioridad === "Alta" && item.Estado !== "Cumplido").length;
+            document.getElementById("highRiskCount").textContent = highRisk;
         }
 
-        function updateStatusChart(data) {
+        // Actualizar gráficos
+        function updateCharts() {
+            updateStatusChart();
+            updateAreaChart();
+            updatePriorityChart();
+            updateTimelineChart();
+        }
+
+        // Actualizar gráfico de estados
+        function updateStatusChart() {
             const ctx = document.getElementById('statusChart').getContext('2d');
-            const statusCounts = data.reduce((acc, {estado}) => { acc[estado] = (acc[estado] || 0) + 1; return acc; }, {});
-            if (statusChartInstance) statusChartInstance.destroy();
-            statusChartInstance = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: Object.keys(statusCounts),
-                    datasets: [{ data: Object.values(statusCounts), backgroundColor: ['#28a745', '#ffc107', '#dc3545', '#6c757d'] }]
-                },
-                options: { responsive: true, maintainAspectRatio: false }
+            
+            // Contar por estado
+            const statusCounts = {};
+            filteredData.forEach(item => {
+                const status = item.Estado || 'Sin especificar';
+                statusCounts[status] = (statusCounts[status] || 0) + 1;
             });
+            
+            const labels = Object.keys(statusCounts);
+            const data = Object.values(statusCounts);
+            
+            // Colores para cada estado
+            const backgroundColors = labels.map(status => {
+                switch(status) {
+                    case 'Cumplido': return '#28a745';
+                    case 'En proceso': return '#ffc107';
+                    case 'Pendiente': return '#dc3545';
+                    case 'No aplica': return '#6c757d';
+                    case 'No implementará': return '#6c757d';
+                    default: return '#17a2b8';
+                }
+            });
+            
+            if (statusChart) {
+                statusChart.data.labels = labels;
+                statusChart.data.datasets[0].data = data;
+                statusChart.data.datasets[0].backgroundColor = backgroundColors;
+                statusChart.update();
+            } else {
+                statusChart = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            data: data,
+                            backgroundColor: backgroundColors,
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'right'
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const label = context.label || '';
+                                        const value = context.raw || 0;
+                                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                        const percentage = Math.round((value / total) * 100);
+                                        return `${label}: ${value} (${percentage}%)`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
         }
-        
-        function updateRiskChart(data) {
-            const ctx = document.getElementById('riskChart').getContext('2d');
-            const riskCounts = data.reduce((acc, {riesgo}) => { acc[riesgo] = (acc[riesgo] || 0) + 1; return acc; }, {});
-            if (riskChartInstance) riskChartInstance.destroy();
-            riskChartInstance = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: Object.keys(riskCounts),
-                    datasets: [{ label: '# de Recomendaciones', data: Object.values(riskCounts), backgroundColor: ['#dc3545', '#ffc107', '#28a745'] }]
-                },
-                options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } }, plugins: { legend: { display: false } } }
+
+        // Actualizar gráfico por área
+        function updateAreaChart() {
+            const ctx = document.getElementById('areaChart').getContext('2d');
+            
+            // Contar por área
+            const areaCounts = {};
+            filteredData.forEach(item => {
+                const area = item.Área || 'Sin especificar';
+                areaCounts[area] = (areaCounts[area] || 0) + 1;
+            });
+            
+            // Ordenar áreas por cantidad (descendente)
+            const sortedAreas = Object.entries(areaCounts)
+                .sort((a, b) => b[1] - a[1])
+                .reduce((obj, [key, value]) => {
+                    obj[key] = value;
+                    return obj;
+                }, {});
+            
+            const labels = Object.keys(sortedAreas);
+            const data = Object.values(sortedAreas);
+            
+            if (areaChart) {
+                areaChart.data.labels = labels;
+                areaChart.data.datasets[0].data = data;
+                areaChart.update();
+            } else {
+                areaChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Recomendaciones por Área',
+                            data: data,
+                            backgroundColor: '#4caf50',
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    precision: 0
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        // Actualizar gráfico por prioridad
+        function updatePriorityChart() {
+            const ctx = document.getElementById('priorityChart').getContext('2d');
+            
+            // Contar por prioridad
+            const priorityCounts = {
+                'Alta': 0,
+                'Media': 0,
+                'Baja': 0,
+                'Sin especificar': 0
+            };
+            
+            filteredData.forEach(item => {
+                const priority = item.Prioridad || 'Sin especificar';
+                if (priorityCounts.hasOwnProperty(priority)) {
+                    priorityCounts[priority]++;
+                } else {
+                    priorityCounts['Sin especificar']++;
+                }
+            });
+            
+            const labels = Object.keys(priorityCounts);
+            const data = Object.values(priorityCounts);
+            
+            // Colores para prioridades
+            const backgroundColors = labels.map(priority => {
+                switch(priority) {
+                    case 'Alta': return '#dc3545';
+                    case 'Media': return '#ffc107';
+                    case 'Baja': return '#28a745';
+                    default: return '#6c757d';
+                }
+            });
+            
+            if (priorityChart) {
+                priorityChart.data.labels = labels;
+                priorityChart.data.datasets[0].data = data;
+                priorityChart.data.datasets[0].backgroundColor = backgroundColors;
+                priorityChart.update();
+            } else {
+                priorityChart = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            data: data,
+                            backgroundColor: backgroundColors,
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'right'
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        // Actualizar gráfico de línea de tiempo
+        function updateTimelineChart() {
+            const ctx = document.getElementById('timelineChart').getContext('2d');
+            
+            // Agrupar por mes (ejemplo simplificado)
+            const monthlyData = {
+                'Ene': 12,
+                'Feb': 19,
+                'Mar': 15,
+                'Abr': 17,
+                'May': 14,
+                'Jun': 16
+            };
+            
+            const labels = Object.keys(monthlyData);
+            const data = Object.values(monthlyData);
+            
+            if (timelineChart) {
+                timelineChart.data.labels = labels;
+                timelineChart.data.datasets[0].data = data;
+                timelineChart.update();
+            } else {
+                timelineChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Recomendaciones por Mes',
+                            data: data,
+                            backgroundColor: 'rgba(76, 175, 80, 0.2)',
+                            borderColor: 'rgba(76, 175, 80, 1)',
+                            borderWidth: 2,
+                            tension: 0.3,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        // Actualizar la tabla de datos
+        function updateDataTable() {
+            const tableBody = document.querySelector('#recommendationsTable tbody');
+            tableBody.innerHTML = '';
+            
+            filteredData.forEach(item => {
+                const row = document.createElement('tr');
+                
+                // Determinar clase de estado
+                let statusClass = '';
+                switch(item.Estado) {
+                    case 'Cumplido': statusClass = 'status-cumplido'; break;
+                    case 'En proceso': statusClass = 'status-en-proceso'; break;
+                    case 'No cumplido': statusClass = 'status-no-cumplido'; break;
+                    case 'Pendiente': statusClass = 'status-pendiente'; break;
+                    case 'No aplica': statusClass = 'status-no-aplica'; break;
+                    case 'No implementará': statusClass = 'status-no-implementara'; break;
+                }
+                
+                // Determinar clase de prioridad
+                let priorityClass = '';
+                switch(item.Prioridad) {
+                    case 'Alta': priorityClass = 'risk-high'; break;
+                    case 'Media': priorityClass = 'risk-medium'; break;
+                    case 'Baja': priorityClass = 'risk-low'; break;
+                }
+                
+                // Formatear fecha
+                let formattedDate = '';
+                if (item["Fecha límite de cumplimiento"]) {
+                    const date = new Date(item["Fecha límite de cumplimiento"]);
+                    formattedDate = date.toLocaleDateString('es-ES');
+                }
+                
+                row.innerHTML = `
+                    <td>${item.ID || ''}</td>
+                    <td>${item.Recomendación || ''}</td>
+                    <td>${item.Área || ''}</td>
+                    <td><span class="status-badge ${statusClass}">${item.Estado || ''}</span></td>
+                    <td><span class="risk-badge ${priorityClass}">${item.Prioridad || ''}</span></td>
+                    <td>
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar" role="progressbar" style="width: ${item["% Avance"] || 0}%;"></div>
+                        </div>
+                        <small>${item["% Avance"] || 0}%</small>
+                    </td>
+                    <td>${formattedDate}</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+            
+            // Inicializar DataTables si no existe
+            if (!dataTable) {
+                dataTable = $('#recommendationsTable').DataTable({
+                    language: {
+                        url: '//cdn.datatables.net/plug-ins/1.13.5/i18n/es-ES.json'
+                    },
+                    dom: 'Bfrtip',
+                    buttons: [
+                        'copy', 'csv', 'excel', 'pdf', 'print'
+                    ]
+                });
+            } else {
+                dataTable.destroy();
+                dataTable = $('#recommendationsTable').DataTable({
+                    language: {
+                        url: '//cdn.datatables.net/plug-ins/1.13.5/i18n/es-ES.json'
+                    },
+                    dom: 'Bfrtip',
+                    buttons: [
+                        'copy', 'csv', 'excel', 'pdf', 'print'
+                    ]
+                });
+            }
+        }
+
+        // Actualizar opciones de filtro
+        function updateFilterOptions() {
+            const areaFilter = document.getElementById('filterArea');
+            
+            // Obtener áreas únicas
+            const areas = [...new Set(recommendationsData.map(item => item.Área).filter(Boolean))];
+            
+            // Limpiar opciones actuales (excepto la primera)
+            while (areaFilter.options.length > 1) {
+                areaFilter.remove(1);
+            }
+            
+            // Agregar opciones de áreas
+            areas.sort().forEach(area => {
+                const option = document.createElement('option');
+                option.value = area;
+                option.textContent = area;
+                areaFilter.appendChild(option);
             });
         }
 
-        document.getElementById('signInButton').addEventListener('click', signIn);
-        document.getElementById('signOutButton').addEventListener('click', signOut);
-        document.getElementById('refreshData').addEventListener('click', loadDataFromExcel);
-        document.getElementById('apply-filters').addEventListener('click', applyFilters);
-        document.getElementById('reset-filters').addEventListener('click', resetFilters);
+        // Aplicar filtros
+        function applyFilters() {
+            const statusFilter = document.getElementById('filterStatus').value;
+            const areaFilter = document.getElementById('filterArea').value;
+            const priorityFilter = document.getElementById('filterPriority').value;
+            const dateFilter = document.getElementById('filterDate').value;
+            
+            filteredData = recommendationsData.filter(item => {
+                // Filtrar por estado
+                if (statusFilter && item.Estado !== statusFilter) return false;
+                
+                // Filtrar por área
+                if (areaFilter && item.Área !== areaFilter) return false;
+                
+                // Filtrar por prioridad
+                if (priorityFilter && item.Prioridad !== priorityFilter) return false;
+                
+                // Filtrar por fecha (si se implementa)
+                if (dateFilter) {
+                    // Implementar filtrado por fecha si es necesario
+                }
+                
+                return true;
+            });
+            
+            updateFilterChips(statusFilter, areaFilter, priorityFilter, dateFilter);
+            updateDashboard();
+        }
 
-        initializeApp();
+        // Actualizar chips de filtros aplicados
+        function updateFilterChips(status, area, priority, date) {
+            const chipsContainer = document.getElementById('filterChips');
+            chipsContainer.innerHTML = '';
+            
+            if (status) {
+                chipsContainer.appendChild(createFilterChip('Estado: ' + status, () => {
+                    document.getElementById('filterStatus').value = '';
+                    applyFilters();
+                }));
+            }
+            
+            if (area) {
+                chipsContainer.appendChild(createFilterChip('Área: ' + area, () => {
+                    document.getElementById('filterArea').value = '';
+                    applyFilters();
+                }));
+            }
+            
+            if (priority) {
+                chipsContainer.appendChild(createFilterChip('Prioridad: ' + priority, () => {
+                    document.getElementById('filterPriority').value = '';
+                    applyFilters();
+                }));
+            }
+            
+            if (date) {
+                chipsContainer.appendChild(createFilterChip('Fecha: ' + date, () => {
+                    document.getElementById('filterDate').value = '';
+                    applyFilters();
+                }));
+            }
+        }
+
+        // Crear un chip de filtro
+        function createFilterChip(text, onClick) {
+            const chip = document.createElement('div');
+            chip.className = 'filter-chip';
+            chip.innerHTML = `
+                ${text}
+                <span class="close" onclick="event.stopPropagation(); ${onClick.toString().replace(/\s+/g, ' ')}">&times;</span>
+            `;
+            return chip;
+        }
+
+        // Limpiar filtros
+        function clearFilters() {
+            document.getElementById('filterStatus').value = '';
+            document.getElementById('filterArea').value = '';
+            document.getElementById('filterPriority').value = '';
+            document.getElementById('filterDate').value = '';
+            
+            filteredData = [...recommendationsData];
+            updateFilterChips('', '', '', '');
+            updateDashboard();
+        }
+
+        // Mostrar interfaz de autenticación
+        function showAuthUI() {
+            hideLoading();
+            document.getElementById('authContainer').style.display = 'block';
+            
+            document.getElementById('loginBtn').addEventListener('click', () => {
+                msalInstance.loginRedirect({
+                    scopes: ["User.Read", "Files.Read.All"]
+                });
+            });
+        }
+
+        // Mostrar contenido principal
+        function showMainContent() {
+            document.getElementById('authContainer').style.display = 'none';
+            document.getElementById('configContainer').style.display = 'none';
+            document.getElementById('mainContent').style.display = 'block';
+            
+            // Configurar event listeners
+            document.getElementById('applyFilters').addEventListener('click', applyFilters);
+            document.getElementById('clearFilters').addEventListener('click', clearFilters);
+            document.getElementById('refreshData').addEventListener('click', () => loadExcelData());
+            document.getElementById('logoutBtn').addEventListener('click', () => {
+                msalInstance.logoutRedirect();
+            });
+        }
+
+        // Mostrar overlay de carga
+        function showLoading(message = "Cargando...") {
+            document.getElementById('loadingOverlay').style.display = 'flex';
+            document.getElementById('loadingText').textContent = message;
+        }
+
+        // Ocultar overlay de carga
+        function hideLoading() {
+            document.getElementById('loadingOverlay').style.display = 'none';
+        }
+
+        // Inicializar la aplicación cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', initializeApp);
     </script>
 </body>
 </html>
-

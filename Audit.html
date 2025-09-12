@@ -484,6 +484,7 @@
         
         // Variables globales
         let recommendationsData = [];
+        let filteredData = [];
         let table;
         let statusChart, riskChart;
         
@@ -579,6 +580,7 @@
                 
                 // Procesar los datos para adaptarlos a la estructura esperada
                 recommendationsData = processExcelData(jsonData);
+                filteredData = [...recommendationsData]; // Inicializar datos filtrados
                 
                 if (recommendationsData.length === 0) {
                     throw new Error("No se encontraron datos en el archivo Excel");
@@ -706,14 +708,49 @@
             document.querySelectorAll('.no-data-message').forEach(el => el.style.display = 'none');
         }
 
+        // Función para aplicar filtros
+        function applyFilters() {
+            const project = document.getElementById('projectFilter').value;
+            const year = document.getElementById('yearFilter').value;
+            const status = document.getElementById('statusFilter').value;
+            const risk = document.getElementById('riskFilter').value;
+            
+            filteredData = recommendationsData.filter(item => {
+                // Filtro por proyecto
+                if (project && item.proyecto !== project) return false;
+                
+                // Filtro por año
+                if (year && item.año != year) return false;
+                
+                // Filtro por estado
+                if (status && item.estado !== status) return false;
+                
+                // Filtro por riesgo
+                if (risk && item.riesgo !== risk) return false;
+                
+                return true;
+            });
+            
+            // Actualizar dashboard con datos filtrados
+            updateDashboardCards();
+            updateCharts();
+            
+            // Actualizar tabla DataTables
+            if ($.fn.DataTable.isDataTable('#recommendationsTable')) {
+                table.clear();
+                table.rows.add(filteredData);
+                table.draw();
+            }
+        }
+
         // Función para actualizar las tarjetas del dashboard - CORREGIDA
         function updateDashboardCards() {
-            const total = recommendationsData.length;
+            const total = filteredData.length;
             
             // Contar por estado - CORREGIDO: Incluir todos los estados posibles
             const statusCounts = {};
             possibleStatuses.forEach(status => {
-                statusCounts[status] = recommendationsData.filter(item => 
+                statusCounts[status] = filteredData.filter(item => 
                     item.estado && item.estado.toLowerCase().includes(status.toLowerCase())).length;
             });
             
@@ -797,6 +834,12 @@
             estados.forEach(estado => {
                 statusFilter.innerHTML += `<option value="${estado}">${estado}</option>`;
             });
+            
+            // Agregar event listeners para los filtros
+            projectFilter.addEventListener('change', applyFilters);
+            yearFilter.addEventListener('change', applyFilters);
+            statusFilter.addEventListener('change', applyFilters);
+            document.getElementById('riskFilter').addEventListener('change', applyFilters);
         }
 
         // Función para inicializar la tabla de datos - ACTUALIZADA con observaciones
@@ -806,7 +849,7 @@
             }
             
             table = $('#recommendationsTable').DataTable({
-                data: recommendationsData,
+                data: filteredData,
                 columns: [
                     { data: 'proyecto' },
                     { data: 'año' },
@@ -878,33 +921,6 @@
                 }
             });
             
-            // Aplicar filtros
-            $('#projectFilter, #yearFilter, #statusFilter, #riskFilter').on('change', function() {
-                table.draw();
-            });
-            
-            // Filtro personalizado
-            $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
-                const project = $('#projectFilter').val();
-                const year = $('#yearFilter').val();
-                const status = $('#statusFilter').val();
-                const risk = $('#riskFilter').val();
-                
-                // Verificar filtro de proyecto
-                if (project && data[0] !== project) return false;
-                
-                // Verificar filtro de año
-                if (year && data[1] !== year) return false;
-                
-                // Verificar filtro de estado
-                if (status && !data[5].includes(status)) return false;
-                
-                // Verificar filtro de riesgo
-                if (risk && data[2] !== risk) return false;
-                
-                return true;
-            });
-            
             // Evento para mostrar detalles al hacer clic en una fila
             $('#recommendationsTable tbody').on('click', 'tr', function() {
                 const data = table.row(this).data();
@@ -914,12 +930,12 @@
             });
         }
 
-        // Función para actualizar los gráficos - ACTUALIZADA
+        // Función para actualizar los gráficos - ACTUALIZADA para usar datos filtrados
         function updateCharts() {
             // Datos para gráfico de estado
             const statusCounts = {};
             possibleStatuses.forEach(status => {
-                statusCounts[status] = recommendationsData.filter(item => 
+                statusCounts[status] = filteredData.filter(item => 
                     item.estado && item.estado.toLowerCase().includes(status.toLowerCase())).length;
             });
             
@@ -931,7 +947,7 @@
                 'Sin especificar': 0
             };
             
-            recommendationsData.forEach(item => {
+            filteredData.forEach(item => {
                 const riesgo = item.riesgo || 'Sin especificar';
                 if (riesgo === 'ALTO' || riesgo === 'MEDIO' || riesgo === 'BAJO') {
                     riskCounts[riesgo]++;
@@ -1093,7 +1109,7 @@
             const wb = XLSX.utils.book_new();
             
             // Preparar datos para exportación
-            const exportData = recommendationsData.map(item => ({
+            const exportData = filteredData.map(item => ({
                 'Proyecto': item.proyecto,
                 'Año': item.año,
                 'Nivel de Riesgo': item.riesgo,

@@ -755,7 +755,7 @@
             });
             
             // Calcular porcentaje de cumplimiento (Cumplido + Cumplido parcialmente)
-            const cumplidas = statusCounts["Cumplido"] + statusCounts["Cumplido parcialmente"];
+            const cumplidas = statusCounts["Cumplido"];
             const cumplimientoPercentage = total > 0 ? Math.round((cumplidas / total) * 100) : 0;
             
             document.getElementById('dashboardCards').innerHTML = `
@@ -772,12 +772,11 @@
                     <div class="card dashboard-card text-center">
                         <div class="card-body">
                             <h5 class="card-title">% Cumplimiento</h5>
-                            <h2 class="card-text text-success">${cumplimientoPercentage}%</h2>
+                            <h2 class="card-text text-success">${cumplidas} de ${total} cumplidas - ${cumplimientoPercentage}%</h2>
                             <div class="progress mt-2">
                                 <div class="progress-bar bg-success" style="width: ${cumplimientoPercentage}%"></div>
                             </div>
-                            <p class="text-muted mt-2">${cumplidas} de ${total} cumplidas</p>
-                        </div>
+                            </div>
                     </div>
                 </div>
                 <div class="col-md-3 mb-3">

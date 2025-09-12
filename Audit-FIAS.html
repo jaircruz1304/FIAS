@@ -69,16 +69,17 @@
             return jsonData.map(row => ({
                 proyecto: row.Proyecto || row.PROYECTO || row.ProyectoAuditoria || 'N/A',
                 año: row.Año || row.AÑO || row.Year || (row.Fecha ? new Date(row.Fecha).getFullYear().toString() : 'N/A'),
-                riesgo: (row.Riesgo || row["Nivel de Riesgo"] || row["NIVEL DE RIESGO"] || 'N/A').toUpperCase(),
+                riesgo: (row.Riesgo || row["riesgo"] || row["NIVEL DE RIESGO"] || 'N/A').toUpperCase(),
                 deficiencia: row.Deficiencia || row.DEFICIENCIA || row["Deficiencia de Control Interno"] || '',
                 recomendacion: row.Recomendacion || row.RECOMENDACION || row.Recomendación || '',
                 estadoOriginal: row.Estado || row.ESTADO || row.Status || row.STATUS || 'Sin especificar',
                 estado: normalizeStatus(row.Estado || row.ESTADO || row.Status || row.STATUS),
                 responsable: row.Responsable || row.RESPONSABLE || 'N/A',
-                fechaSeguimiento: row["Fecha de seguimiento"] || row.FechaSeguimiento || row.FECHA_SEGUIMIENTO || 'N/A'
+                fechaSeguimiento: row["Fecha de seguimiento"] || row.FechaSeguimiento || row.FECHA_SEGUIMIENTO || 'N/A',
+            obseervacion: row.Observación || row.OBSERVACION || 'N/A',
             }));
         }
-        
+        /**PROYECTO	AÑO	RIESGO	DEFICIENCIA	RECOMENDACION	ESTADO	RESPONSABLE	FECHA_SEGUIMIENTO	OBSERVACION
         /**
          * Actualiza las tarjetas de KPI, los gráficos de estado y riesgo con los datos proporcionados.
          * Esta función ahora recibe los datos a mostrar, haciéndola dinámica.
@@ -241,6 +242,7 @@
                     },
                     { data: 'responsable' },
                     { data: 'fechaSeguimiento' }
+               { data: 'observacion' }                                                                             
                 ],
                 language: { url: '//cdn.datatables.net/plug-ins/1.13.5/i18n/es-ES.json' },
                 pageLength: 10,
@@ -369,6 +371,7 @@
             $('#modal-risk').text(data.riesgo || 'N/A');
             $('#modal-status').text(data.estadoOriginal || 'N/A');
             $('#modal-responsible').text(data.responsable || 'N/A');
+            $('#modal-responsible1').text(data.observacion || 'N/A');
             $('#modal-date').text(data.fechaSeguimiento || 'N/A');
             $('#modal-deficiency').text(data.deficiencia || 'N/A');
             $('#modal-recommendation').text(data.recomendacion || 'N/A');
@@ -426,7 +429,7 @@
             const exportData = table.rows({ search: 'applied' }).data().toArray().map(item => ({
                 'Proyecto': item.proyecto, 'Año': item.año, 'Nivel de Riesgo': item.riesgo,
                 'Deficiencia de Control Interno': item.deficiencia, 'Recomendación': item.recomendacion,
-                'Estado': item.estadoOriginal, 'Responsable': item.responsable, 'Fecha de seguimiento': item.fechaSeguimiento
+                'Estado': item.estadoOriginal, 'Responsable': item.responsable, 'Observacion': item.observacion,'Fecha de seguimiento': item.fechaSeguimiento
             }));
             const ws = XLSX.utils.json_to_sheet(exportData);
             const wb = XLSX.utils.book_new();
@@ -816,6 +819,7 @@
                             <div class="col-md-6">
                                 <p><strong>Estado:</strong> <span id="modal-status"></span></p>
                                 <p><strong>Responsable:</strong> <span id="modal-responsible"></span></p>
+                                 <p><strong>Observacion:</strong> <span id="modal-responsible1"></span></p>
                                 <p><strong>Fecha Seguimiento:</strong> <span id="modal-date"></span></p>
                             </div>
                         </div>
@@ -1216,6 +1220,7 @@
             $('#modal-risk').text(data.riesgo || 'N/A');
             $('#modal-status').text(data.estadoOriginal || 'N/A');
             $('#modal-responsible').text(data.responsable || 'N/A');
+            $('#modal-responsible1').text(data.observacion || 'N/A');
             $('#modal-date').text(data.fechaSeguimiento || 'N/A');
             $('#modal-deficiency').text(data.deficiencia || 'N/A');
             $('#modal-recommendation').text(data.recomendacion || 'N/A');

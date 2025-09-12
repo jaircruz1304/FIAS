@@ -211,9 +211,12 @@
                 storeAuthStateInCookie: false,
             }
         };
-
+// Configuración del archivo Excel
+        const EXCEL_FILE_ID = "u!aHR0cHM6Ly9maWFzZWMtbXkuc2hhcmVwb2ludC5jb20vOng6L3IvcGVyc29uYWwvamNydXpnX2ZpYXNfb3JnX2VjL19sYXlvdXRzLzE1L0RvYy5hc3B4P3NvdXJjZWRvYz17REVERjcwOUUtQTU2NC00Mjg5LUEwM0QtQUU0NENCMEVGNDE5fQ";
+        const EXCEL_SHEET_NAME = "RECOMENDACIONES AUD EXTERNA";
+        
         const msalInstance = new msal.PublicClientApplication(msalConfig);
-        const graphApiEndpoint = "https://graph.microsoft.com/v1.0/sites/fias.sharepoint.com,d1418e69-1c9f-442d-a640-59f772421bb9,420b70d8-4f91-455c-a56b-2f08518903c7/drives/b!aZ4Y0Z8cLUSmQFn3ckIbuZgwcEkR-VxFpWsvmAhRgzfB7XC0n5FrSYsU3M58Kx7I/items/01AZTUUFJQ6B6P2O53BGY2L2752X3V6PXH/workbook/worksheets('RECOMENDACIONES AUD EXTERNA')/usedRange";
+        const graphApiEndpoint = "https://graph.microsoft.com/v1.0/shares/${EXCEL_FILE_ID}/driveItem/content";
         const loginRequest = { scopes: ["User.Read", "Sites.Read.All"] };
 
         // ===================================================================================

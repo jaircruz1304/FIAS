@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Seguimiento de Auditoría - FIAS</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- MSAL -->
+    <script src="https://alcdn.msauth.net/browser/2.14.2/js/msal-browser.min.js"></script>
+
+    <!-- DataTables CSS y JS (con jQuery) -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.tailwindcss.min.css">
+    <script src="https://cdn.datatables.net/2.0.7/js/dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/2.0.7/js/dataTables.tailwindcss.min.js"></script>
+    
+    <!-- Font Awesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Estilos personalizados para complementar Tailwind */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5;
+        }
+        .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter, .dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_paginate {
+            margin-bottom: 1rem;
+            padding: 0 1rem;
+        }
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
+            padding: 0.5rem 1rem;
+        }
+        /* Estilo para el loader */
+        .loader {
+            border-top-color: #3498db;
+            -webkit-animation: spinner 1.5s linear infinite;
+            animation: spinner 1.5s linear infinite;
+        }
+        @-webkit-keyframes spinner {
+            0% { -webkit-transform: rotate(0deg); }
+            100% { -webkit-transform: rotate(360deg); }
+        }
+        @keyframes spinner {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Pantalla de Carga -->
+    <div id="loading" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 transition-opacity duration-300">
+        <div class="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-32 w-32"></div>
+    </div>
+
+    <!-- Pantalla de Login -->
+    <div id="login-screen" class="min-h-screen flex items-center justify-center bg-gray-100">
+        <div class="text-center p-8 bg-white rounded-xl shadow-lg">
+            <img src="https://placehold.co/150x80/2c7d32/FFFFFF?text=FIAS+Logo" alt="Logo FIAS" class="mx-auto mb-6">
+            <h1 class="text-2xl font-bold text-gray-800 mb-2">Dashboard de Seguimiento de Auditoría</h1>
+            <p class="text-gray-600 mb-6">Por favor, inicie sesión para continuar.</p>
+            <button id="signInButton" class="w-full bg-green-700 hover:bg-green-800 text-white font-bold py-3 px-6 rounded-lg transition duration-300 ease-in-out transform hover:scale-105">
+                <i class="fas fa-sign-in-alt mr-2"></i> Iniciar Sesión con Microsoft
+            </button>
+        </div>
+    </div>
+
+    <!-- Contenido Principal del Dashboard (oculto por defecto) -->
+    <div id="dashboard-content" class="hidden">
+        <!-- Encabezado -->
+        <header class="bg-white shadow-md sticky top-0 z-40">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-16">
+                    <div class="flex items-center">
+                        <i class="fas fa-tasks text-green-700 text-2xl mr-3"></i>
+                        <h1 class="text-xl font-semibold text-gray-800">Dashboard de Recomendaciones</h1>
+                    </div>
+                    <div class="flex items-center">
+                        <span id="welcome-message" class="text-gray-600 mr-4 hidden md:block"></span>
+                        <button id="signOutButton" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300">
+                            <i class="fas fa-sign-out-alt mr-2"></i>Cerrar Sesión
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Contenido principal -->
+        <main class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+            <!-- Filtros -->
+            <div class="bg-white p-4 rounded-xl shadow-md mb-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
+                    <div>
+                        <label for="filter-year" class="block text-sm font-medium text-gray-700 mb-1">Año</label>
+                        <select id="filter-year" class="w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                            <option value="">Todos</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="filter-risk" class="block text-sm font-medium text-gray-700 mb-1">Nivel de Riesgo</label>
+                        <select id="filter-risk" class="w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                            <option value="">Todos</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="filter-status" class="block text-sm font-medium text-gray-700 mb-1">Estado</label>
+                        <select id="filter-status" class="w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                            <option value="">Todos</option>
+                        </select>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button id="apply-filters" class="w-full bg-green-700 hover:bg-green-800 text-white font-bold py-2 px-4 rounded-lg transition duration-300"><i class="fas fa-filter mr-2"></i>Aplicar</button>
+                        <button id="reset-filters" class="w-full bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300"><i class="fas fa-undo mr-2"></i>Limpiar</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- KPIs -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                <div class="bg-white p-6 rounded-xl shadow-md flex items-center">
+                    <div class="bg-blue-100 p-4 rounded-full mr-4"><i class="fas fa-list-ol fa-2x text-blue-500"></i></div>
+                    <div>
+                        <p class="text-sm text-gray-500">Total Recomendaciones</p>
+                        <p id="kpi-total" class="text-3xl font-bold text-gray-800">0</p>
+                    </div>
+                </div>
+                 <div class="bg-white p-6 rounded-xl shadow-md flex items-center">
+                    <div class="bg-green-100 p-4 rounded-full mr-4"><i class="fas fa-check-circle fa-2x text-green-500"></i></div>
+                    <div>
+                        <p class="text-sm text-gray-500">Cumplidas</p>
+                        <p id="kpi-completed" class="text-3xl font-bold text-gray-800">0</p>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md flex items-center">
+                    <div class="bg-yellow-100 p-4 rounded-full mr-4"><i class="fas fa-tasks fa-2x text-yellow-500"></i></div>
+                    <div>
+                        <p class="text-sm text-gray-500">En Proceso</p>
+                        <p id="kpi-in-progress" class="text-3xl font-bold text-gray-800">0</p>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md flex items-center">
+                    <div class="bg-red-100 p-4 rounded-full mr-4"><i class="fas fa-exclamation-triangle fa-2x text-red-500"></i></div>
+                    <div>
+                        <p class="text-sm text-gray-500">Pendientes</p>
+                        <p id="kpi-pending" class="text-3xl font-bold text-gray-800">0</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gráficos -->
+            <div class="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-6">
+                <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-md">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Recomendaciones por Estado</h3>
+                    <canvas id="statusChart"></canvas>
+                </div>
+                <div class="lg:col-span-3 bg-white p-6 rounded-xl shadow-md">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Recomendaciones por Nivel de Riesgo</h3>
+                    <canvas id="riskChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Tabla de Datos -->
+            <div class="bg-white p-6 rounded-xl shadow-md">
+                 <h3 class="text-lg font-semibold text-gray-800 mb-4">Detalle de Recomendaciones</h3>
+                <div class="overflow-x-auto">
+                    <table id="recommendationsTable" class="w-full text-sm text-left text-gray-500">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3">Proyecto</th>
+                                <th scope="col" class="px-6 py-3">Año</th>
+                                <th scope="col" class="px-6 py-3">Riesgo</th>
+                                <th scope="col" class="px-6 py-3">Recomendación</th>
+                                <th scope="col" class="px-6 py-3">Estado</th>
+                                <th scope="col" class="px-6 py-3">Responsable</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script type="module">
+        // ===================================================================================
+        // CONFIGURACIÓN MSAL (NO MODIFICAR - IDs ESPECÍFICOS DE AZURE)
+        // ===================================================================================
+        const msalConfig = {
+            auth: {
+                clientId: "f834a42b-653c-4034-ac3a-18e05f0df284",
+                authority: "https://login.microsoftonline.com/fias.org.ec",
+                redirectUri: "https://jaircruz1304.github.io/FIAS/Cerrar.html",
+                postLogoutRedirectUri: "https://jaircruz1304.github.io/FIAS/Cerrar.html",
+                mainWindowRedirectUri: "https://jaircruz1304.github.io/FIAS/Cerrar.html"
+            },
+            cache: {
+                cacheLocation: "sessionStorage",
+                storeAuthStateInCookie: false,
+            }
+        };
+
+        const msalInstance = new msal.PublicClientApplication(msalConfig);
+        const graphApiEndpoint = "https://graph.microsoft.com/v1.0/sites/fias.sharepoint.com,d1418e69-1c9f-442d-a640-59f772421bb9,420b70d8-4f91-455c-a56b-2f08518903c7/drives/b!aZ4Y0Z8cLUSmQFn3ckIbuZgwcEkR-VxFpWsvmAhRgzfB7XC0n5FrSYsU3M58Kx7I/items/01AZTUUFJQ6B6P2O53BGY2L2752X3V6PXH/workbook/worksheets('RECOMENDACIONES AUD EXTERNA')/usedRange";
+        const loginRequest = { scopes: ["User.Read", "Sites.Read.All"] };
+
+        // ===================================================================================
+        // VARIABLES GLOBALES Y REFERENCIAS AL DOM
+        // ===================================================================================
+        let allRecommendations = [];
+        let dataTable;
+        let statusChartInstance, riskChartInstance;
+        
+        const loadingEl = document.getElementById('loading');
+        const loginScreenEl = document.getElementById('login-screen');
+        const dashboardContentEl = document.getElementById('dashboard-content');
+        const signInButton = document.getElementById('signInButton');
+        const signOutButton = document.getElementById('signOutButton');
+        
+        const filterYear = document.getElementById('filter-year');
+        const filterRisk = document.getElementById('filter-risk');
+        const filterStatus = document.getElementById('filter-status');
+        const applyFiltersBtn = document.getElementById('apply-filters');
+        const resetFiltersBtn = document.getElementById('reset-filters');
+
+        // ===================================================================================
+        // LÓGICA DE AUTENTICACIÓN
+        // ===================================================================================
+        async function initializeApp() {
+            try {
+                const accounts = msalInstance.getAllAccounts();
+                if (accounts.length > 0) {
+                    msalInstance.setActiveAccount(accounts[0]);
+                    showDashboard(accounts[0]);
+                } else {
+                    showLogin();
+                }
+            } catch (error) {
+                console.error("Initialization error:", error);
+                showLogin();
+            }
+        }
+
+        async function signIn() {
+            try {
+                const response = await msalInstance.loginPopup(loginRequest);
+                msalInstance.setActiveAccount(response.account);
+                showDashboard(response.account);
+            } catch (error) {
+                console.error("Login failed:", error);
+                showLogin();
+            }
+        }
+
+        function signOut() {
+            const logoutRequest = { account: msalInstance.getActiveAccount() };
+            msalInstance.logoutPopup(logoutRequest);
+        }
+        
+        async function getToken() {
+            let account = msalInstance.getActiveAccount();
+            if (!account) {
+                throw new Error("No active account! Please sign in.");
+            }
+            const request = { ...loginRequest, account };
+            try {
+                const response = await msalInstance.acquireTokenSilent(request);
+                return response.accessToken;
+            } catch (error) {
+                if (error instanceof msal.InteractionRequiredAuthError) {
+                    return msalInstance.acquireTokenPopup(request).then(response => response.accessToken);
+                }
+                throw error;
+            }
+        }
+
+        // ===================================================================================
+        // MANEJO DE LA UI (VISTAS)
+        // ===================================================================================
+        function showLogin() {
+            loadingEl.classList.add('hidden');
+            loginScreenEl.classList.remove('hidden');
+            dashboardContentEl.classList.add('hidden');
+        }
+        
+        async function showDashboard(account) {
+            document.getElementById('welcome-message').innerText = `Bienvenido, ${account.name}`;
+            loginScreenEl.classList.add('hidden');
+            dashboardContentEl.classList.remove('hidden');
+            loadingEl.classList.remove('hidden');
+
+            await loadDataFromExcel();
+
+            loadingEl.classList.add('hidden');
+        }
+
+        // ===================================================================================
+        // LÓGICA DE DATOS Y DASHBOARD
+        // ===================================================================================
+        async function loadDataFromExcel() {
+            try {
+                const token = await getToken();
+                const response = await fetch(graphApiEndpoint, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Error fetching data from Graph API: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                
+                // Procesar los datos del Excel
+                const headers = data.values[0];
+                allRecommendations = data.values.slice(1).map(row => {
+                    const item = {};
+                    headers.forEach((header, index) => {
+                        // Limpiar y normalizar nombres de columnas
+                        const key = header.toLowerCase().trim()
+                            .replace(/ /g, '_')
+                            .normalize("NFD").replace(/[\u0300-\u036f]/g, ""); // quitar tildes
+                        item[key] = row[index];
+                    });
+                    return item;
+                }).filter(item => item.proyecto); // Filtrar filas vacías
+
+                populateFilters();
+                initializeDataTable();
+                updateDashboard(allRecommendations);
+
+            } catch (error) {
+                console.error('Failed to load data:', error);
+                alert("Error al cargar los datos desde SharePoint. Por favor, revise la consola para más detalles.");
+                signOut(); // Forzar logout si hay un error de token o permisos
+            }
+        }
+
+        function populateFilters() {
+            const years = [...new Set(allRecommendations.map(item => item.ano))].sort((a,b) => b-a);
+            const risks = [...new Set(allRecommendations.map(item => item.riesgo))].sort();
+            const statuses = [...new Set(allRecommendations.map(item => item.estado))].sort();
+
+            filterYear.innerHTML = '<option value="">Todos</option>' + years.map(y => `<option value="${y}">${y}</option>`).join('');
+            filterRisk.innerHTML = '<option value="">Todos</option>' + risks.map(r => `<option value="${r}">${r}</option>`).join('');
+            filterStatus.innerHTML = '<option value="">Todos</option>' + statuses.map(s => `<option value="${s}">${s}</option>`).join('');
+        }
+        
+        function applyFilters() {
+            const selectedYear = filterYear.value;
+            const selectedRisk = filterRisk.value;
+            const selectedStatus = filterStatus.value;
+            
+            const filteredData = allRecommendations.filter(item => {
+                const yearMatch = !selectedYear || item.ano == selectedYear;
+                const riskMatch = !selectedRisk || item.riesgo === selectedRisk;
+                const statusMatch = !selectedStatus || item.estado === selectedStatus;
+                return yearMatch && riskMatch && statusMatch;
+            });
+
+            updateDashboard(filteredData);
+        }
+
+        function resetFilters() {
+            filterYear.value = '';
+            filterRisk.value = '';
+            filterStatus.value = '';
+            updateDashboard(allRecommendations);
+        }
+        
+        function initializeDataTable() {
+             if ($.fn.dataTable.isDataTable('#recommendationsTable')) {
+                $('#recommendationsTable').DataTable().destroy();
+            }
+            dataTable = $('#recommendationsTable').DataTable({
+                data: [],
+                columns: [
+                    { data: 'proyecto', title: 'Proyecto' },
+                    { data: 'ano', title: 'Año' },
+                    { 
+                        data: 'riesgo', 
+                        title: 'Riesgo',
+                        render: function(data) {
+                            const riskColor = { 'ALTO': 'red', 'MEDIO': 'yellow', 'BAJO': 'green'}[data.toUpperCase()] || 'gray';
+                            return `<span class="px-2 py-1 font-semibold leading-tight text-${riskColor}-700 bg-${riskColor}-100 rounded-full">${data}</span>`;
+                        }
+                    },
+                    { data: 'recomendacion', title: 'Recomendación' },
+                    { 
+                        data: 'estado', 
+                        title: 'Estado',
+                        render: function(data) {
+                            return `<span class="bg-gray-200 text-gray-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">${data}</span>`;
+                        }
+                    },
+                    { data: 'responsable', title: 'Responsable' }
+                ],
+                responsive: true,
+                language: { url: '//cdn.datatables.net/plug-ins/2.0.7/i18n/es-ES.json' },
+                pagingType: "simple_numbers",
+            });
+        }
+        
+        function updateDashboard(data) {
+            // 1. Actualizar KPIs
+            const total = data.length;
+            const completed = data.filter(r => r.estado && r.estado.toLowerCase().includes('cumplido')).length;
+            const inProgress = data.filter(r => r.estado && r.estado.toLowerCase().includes('proceso')).length;
+            const pending = total - completed - inProgress; // O definir lógica específica si hay más estados
+
+            document.getElementById('kpi-total').innerText = total;
+            document.getElementById('kpi-completed').innerText = completed;
+            document.getElementById('kpi-in-progress').innerText = inProgress;
+            document.getElementById('kpi-pending').innerText = pending;
+
+            // 2. Actualizar Gráficos
+            updateStatusChart(data);
+            updateRiskChart(data);
+            
+            // 3. Actualizar Tabla
+            dataTable.clear();
+            dataTable.rows.add(data);
+            dataTable.draw();
+        }
+
+        function updateStatusChart(data) {
+            const ctx = document.getElementById('statusChart').getContext('2d');
+            const statusCounts = data.reduce((acc, item) => {
+                acc[item.estado] = (acc[item.estado] || 0) + 1;
+                return acc;
+            }, {});
+
+            if (statusChartInstance) {
+                statusChartInstance.destroy();
+            }
+
+            statusChartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(statusCounts),
+                    datasets: [{
+                        data: Object.values(statusCounts),
+                        backgroundColor: ['#22c55e', '#facc15', '#ef4444', '#6b7280', '#3b82f6', '#a855f7'],
+                        borderColor: '#ffffff',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed !== null) {
+                                        label += context.parsed;
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        function updateRiskChart(data) {
+            const ctx = document.getElementById('riskChart').getContext('2d');
+            const riskCounts = data.reduce((acc, item) => {
+                acc[item.riesgo] = (acc[item.riesgo] || 0) + 1;
+                return acc;
+            }, {});
+            
+            // Ordenar por nivel de riesgo (ALTO, MEDIO, BAJO)
+            const sortedRiskLabels = Object.keys(riskCounts).sort((a, b) => {
+                const order = { 'ALTO': 0, 'MEDIO': 1, 'BAJO': 2 };
+                return (order[a.toUpperCase()] ?? 99) - (order[b.toUpperCase()] ?? 99);
+            });
+            const sortedRiskData = sortedRiskLabels.map(label => riskCounts[label]);
+
+
+            if (riskChartInstance) {
+                riskChartInstance.destroy();
+            }
+            
+            riskChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: sortedRiskLabels,
+                    datasets: [{
+                        label: 'Nº de Recomendaciones',
+                        data: sortedRiskData,
+                        backgroundColor: sortedRiskLabels.map(label => {
+                            return { 'ALTO': 'rgba(239, 68, 68, 0.6)', 'MEDIO': 'rgba(250, 204, 21, 0.6)', 'BAJO': 'rgba(34, 197, 94, 0.6)'}[label.toUpperCase()] || 'rgba(107, 114, 128, 0.6)';
+                        }),
+                        borderColor: sortedRiskLabels.map(label => {
+                             return { 'ALTO': 'rgb(239, 68, 68)', 'MEDIO': 'rgb(250, 204, 21)', 'BAJO': 'rgb(34, 197, 94)'}[label.toUpperCase()] || 'rgb(107, 114, 128)';
+                        }),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+
+        // ===================================================================================
+        // EVENT LISTENERS
+        // ===================================================================================
+        signInButton.addEventListener('click', signIn);
+        signOutButton.addEventListener('click', signOut);
+        applyFiltersBtn.addEventListener('click', applyFilters);
+        resetFiltersBtn.addEventListener('click', resetFilters);
+
+        // Inicializar la aplicación
+        initializeApp();
+
+    </script>
+</body>
+</html>

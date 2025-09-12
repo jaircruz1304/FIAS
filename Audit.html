@@ -461,9 +461,9 @@
         function normalizeRisk(risk) {
             if (!risk || typeof risk !== 'string') return 'NO ESPECIFICADO';
             const r = risk.toLowerCase();
-            if (r.includes('alto')) return 'ALTO';
-            if (r.includes('medio')) return 'MEDIO';
-            if (r.includes('bajo')) return 'BAJO';
+            if (r.includes('alto') || r.includes('ALTO')) return 'ALTO';
+            if (r.includes('medio')|| r.includes('MEDIO')) return 'MEDIO';
+            if (r.includes('bajo')|| r.includes('BAJO')) return 'BAJO';
             return 'NO ESPECIFICADO';
         }
 
@@ -485,7 +485,7 @@
                 estadoOriginal: row.Estado || row.ESTADO || 'Sin especificar',
                 estado: normalizeStatus(row.Estado || row.ESTADO),
                 responsable: row.Responsable || row.RESPONSABLE || 'N/A',
-                fechaSeguimiento: row["Fecha de seguimiento"] || row.FechaSeguimiento || 'N/A'
+                fechaSeguimiento: row["Fecha de seguimiento"] || row.FechaSeguimiento || row.FECHA_SEGUIMIENTO || 'N/A'
             }));
         }
         

@@ -458,14 +458,14 @@
          * @param {string} risk - El texto original del riesgo.
          * @returns {string} - El riesgo normalizado ('ALTO', 'MEDIO', 'BAJO', 'NO ESPECIFICADO').
          */
-        function normalizeRisk(risk) {
-            if (!risk || typeof risk !== 'string') return 'NO ESPECIFICADO';
-            const r = risk.toLowerCase();
-            if (r.includes('alto') || r.includes('ALTO')) return 'ALTO';
-            if (r.includes('medio')|| r.includes('MEDIO')) return 'MEDIO';
-            if (r.includes('bajo')|| r.includes('BAJO')) return 'BAJO';
-            return 'NO ESPECIFICADO';
-        }
+        //function normalizeRisk(risk) {
+          //  if (!risk || typeof risk !== 'string') return 'NO ESPECIFICADO';
+            //const r = risk.toLowerCase();
+            //if (r.includes('alto') || r.includes('ALTO')) return 'ALTO';
+            //if (r.includes('medio') || r.includes('MEDIO')) return 'MEDIO';
+            //if (r.includes('bajo') || r.includes('BAJO')) return 'BAJO';
+            //return 'NO ESPECIFICADO';
+        //}
 
         /**
          * Procesa los datos crudos del JSON de Excel para adaptarlos a la estructura de la aplicación.
@@ -478,7 +478,7 @@
             return jsonData.map(row => ({
                 proyecto: row.Proyecto || row.PROYECTO || 'N/A',
                 año: row.Año || row.AÑO || 'N/A',
-                riesgo: normalizeRisk(row.Riesgo || row["Nivel de Riesgo"] || row["NIVEL DE RIESGO"]),
+                riesgo: row.Riesgo || row["Nivel de Riesgo"] || row["NIVEL DE RIESGO"],
                 deficiencia: row.Deficiencia || row.DEFICIENCIA || '',
                 recomendacion: row.Recomendacion || row.RECOMENDACION || row.Recomendación || '',
                 observacion: row.Observacion || row.Observación || row.OBSERVACION || '',

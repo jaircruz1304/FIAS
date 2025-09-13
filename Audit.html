@@ -442,15 +442,15 @@
          * @param {string} status - El texto original del estado.
          * @returns {string} - El estado normalizado.
          */
-        function normalizeStatus(status) {
-            if (!status || typeof status !== 'string') return 'Sin especificar';
-            const s = status.toLowerCase();
-            if (s.includes('cumplido')) return 'Cumplido';
-            if (s.includes('en proceso') || s.includes('proceso')) return 'En Proceso';
-            if (s.includes('no cumplido')) return 'No Cumplido';
-            if (s.includes('pendiente')) return 'Pendiente';
-            if (s.includes('no aplica') || s.includes('implementará')) return 'No Aplica';
-            return 'Sin especificar';
+        //function normalizeStatus(status) {
+        //    if (!status || typeof status !== 'string') return 'Sin especificar';
+        //    const s = status.toLowerCase();
+        //    if (s.includes('cumplido')) return 'Cumplido';
+        //    if (s.includes('en proceso') || s.includes('proceso')) return 'En Proceso';
+        //    if (s.includes('no cumplido')) return 'No Cumplido';
+        //    if (s.includes('pendiente')) return 'Pendiente';
+        //    if (s.includes('no aplica') || s.includes('implementará')) return 'No Aplica';
+        //    return 'Sin especificar';
         }
 
         /**
@@ -483,7 +483,7 @@
                 recomendacion: row.Recomendacion || row.RECOMENDACION || row.Recomendación || '',
                 observacion: row.Observacion || row.Observación || row.OBSERVACION || '',
                 estadoOriginal: row.Estado || row.ESTADO || 'Sin especificar',
-                estado: normalizeStatus(row.Estado || row.ESTADO),
+                estado: (row.Estado || row.ESTADO),
                 responsable: row.Responsable || row.RESPONSABLE || 'N/A',
                 fechaSeguimiento: row["Fecha de seguimiento"] || row.FechaSeguimiento || row.FECHA_SEGUIMIENTO || 'N/A'
             }));

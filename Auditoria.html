@@ -366,9 +366,9 @@
                                             <th>Riesgo</th>
                                             <th>Deficiencia</th>
                                             <th>Recomendación</th>
-                                            <th>Observación</th>
                                             <th>Estado</th>
                                             <th>Responsable</th>
+                                            <th>Observación</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -644,10 +644,7 @@
                         data: 'recomendacion',
                         render: data => data && data.length > 80 ? `<span title="${data}">${data.substr(0, 80)}...</span>` : data
                     },
-                    { 
-                        data: 'observacion',
-                        render: data => data && data.length > 80 ? `<span title="${data}">${data.substr(0, 80)}...</span>` : data
-                    },
+                    
                     { 
                         data: 'estado',
                         render: (data, type, row) => {
@@ -659,7 +656,11 @@
                             return `<span class="status-badge ${classMap[row.estado] || ''}">${data}</span>`;
                         }
                     },
-                    { data: 'responsable' }
+                    { data: 'responsable' },
+                    { 
+                        data: 'observacion',
+                        render: data => data && data.length > 80 ? `<span title="${data}">${data.substr(0, 80)}...</span>` : data
+                    }
                    
                 ],
                 language: { url: '//cdn.datatables.net/plug-ins/1.13.5/i18n/es-ES.json' },

@@ -445,11 +445,11 @@
         function normalizeStatus(status) {
             if (!status || typeof status !== 'string') return 'Sin especificar';
             const s = status.toLowerCase();
-            if (s.includes('cumplido') || s.includes('implementará') || s.includes('implementado')) return 'Cumplido';
+            if (s.includes('cumplido')) return 'Cumplido';
             if (s.includes('en proceso') || s.includes('proceso')) return 'En Proceso';
             if (s.includes('no cumplido')) return 'No Cumplido';
             if (s.includes('pendiente')) return 'Pendiente';
-            if (s.includes('no aplica') || s.includes('aplica')) return 'No Aplica';
+            if (s.includes('no aplica') || s.includes('implementará')) return 'No Aplica';
             return 'Sin especificar';
         }
 
@@ -478,7 +478,7 @@
             return jsonData.map(row => ({
                 proyecto: row.Proyecto || row.PROYECTO || 'N/A',
                 año: row.Año || row.AÑO || 'N/A',
-                riesgo: row.Riesgo || row["Nivel de Riesgo"] || row["NIVEL DE RIESGO"],
+                riesgo: row.RIESGO || row["Nivel de Riesgo"] || row["NIVEL DE RIESGO"],
                 deficiencia: row.Deficiencia || row.DEFICIENCIA || '',
                 recomendacion: row.Recomendacion || row.RECOMENDACION || row.Recomendación || '',
                 observacion: row.Observacion || row.Observación || row.OBSERVACION || '',
@@ -616,8 +616,7 @@
                 columns: [
                     { data: 'proyecto' },
                     { data: 'año' },
-                    { 
-                        data: 'riesgo',
+                    { data: 'riesgo',
                         render: data => {
                             const riskClass = { 'ALTO': 'danger', 'MEDIO': 'warning', 'BAJO': 'success' }[data] || 'secondary';
                             return `<span class="badge bg-${riskClass}">${data}</span>`;

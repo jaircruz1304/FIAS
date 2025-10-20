@@ -725,7 +725,159 @@
             </div>
         </div>
     </div>
+ <!-- Visualizaciones Dinámicas -->
+    <section id="stats" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12 section-title">Estadísticas y Proyecciones</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Gráfico de Fuentes de Ingresos -->
+                <div class="bg-white p-6 rounded-xl shadow-md border">
+                    <h3 class="text-xl font-semibold mb-4">Distribución de Fuentes de Ingresos</h3>
+                    <div class="h-64">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+                
+                <!-- Mapa de Clientes Objetivo -->
+                <div class="bg-white p-6 rounded-xl shadow-md border">
+                    <h3 class="text-xl font-semibold mb-4">Expansión Geográfica</h3>
+                    <div class="h-64 bg-blue-50 rounded-lg flex flex-col items-center justify-center relative overflow-hidden p-4">
+                        <div class="absolute top-4 left-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                            Quito - Fase 1
+                        </div>
+                        <div class="absolute bottom-4 right-4 bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                            Guayaquil - Fase 2
+                        </div>
+                        <div class="text-center z-10">
+                            <i class="fas fa-map-marked-alt text-4xl text-blue-500 mb-2"></i>
+                            <p class="text-gray-600 font-medium">Expansión progresiva en zonas urbanas de Ecuador</p>
+                            <div class="mt-4 grid grid-cols-2 gap-2 text-sm">
+                                <div class="bg-white p-2 rounded shadow-sm">
+                                    <div class="font-semibold">Fase 1</div>
+                                    <div>Quito</div>
+                                </div>
+                                <div class="bg-white p-2 rounded shadow-sm">
+                                    <div class="font-semibold">Fase 2</div>
+                                    <div>Guayaquil</div>
+                                </div>
+                                <div class="bg-white p-2 rounded shadow-sm">
+                                    <div class="font-semibold">Fase 3</div>
+                                    <div>Cuenca</div>
+                                </div>
+                                <div class="bg-white p-2 rounded shadow-sm">
+                                    <div class="font-semibold">Fase 4</div>
+                                    <div>Ambato</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Línea de Tiempo -->
+            <div class="mt-12 bg-white p-6 rounded-xl shadow-md border">
+                <h3 class="text-xl font-semibold mb-6 text-center">Plan de Expansión 2023-2025</h3>
+                <div class="flex flex-col md:flex-row justify-between items-start">
+                    <div class="text-center mb-8 md:mb-0 md:w-1/4">
+                        <div class="w-20 h-20 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold mx-auto mb-4 text-2xl">
+                            F1
+                        </div>
+                        <h4 class="font-semibold text-lg">Fase 1: Lanzamiento</h4>
+                        <p class="text-sm text-gray-600 mb-2">Q4 2023 - Q1 2024</p>
+                        <div class="timeline-phase text-left text-sm text-gray-700 mt-4">
+                            <p class="font-medium">• App básica funcional</p>
+                            <p>• 10 refugios aliados</p>
+                            <p>• 500 usuarios objetivo</p>
+                            <p>• Cobertura en Quito</p>
+                            <p>• Alianzas con 15 veterinarias</p>
+                        </div>
+                    </div>
+                    
+                    <div class="hidden md:flex items-center justify-center w-1/4 h-1 bg-gray-300 mt-10"></div>
+                    
+                    <div class="text-center mb-8 md:mb-0 md:w-1/4">
+                        <div class="w-20 h-20 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold mx-auto mb-4 text-2xl">
+                            F2
+                        </div>
+                        <h4 class="font-semibold text-lg">Fase 2: Expansión</h4>
+                        <p class="text-sm text-gray-600 mb-2">Q2 2024 - Q4 2024</p>
+                        <div class="timeline-phase text-left text-sm text-gray-700 mt-4">
+                            <p class="font-medium">• Funcionalidades premium</p>
+                            <p>• 25+ refugios aliados</p>
+                            <p>• 2,000+ usuarios</p>
+                            <p>• Expansión a Guayaquil</p>
+                            <p>• Integración con Rappi</p>
+                        </div>
+                    </div>
+                    
+                    <div class="hidden md:flex items-center justify-center w-1/4 h-1 bg-gray-300 mt-10"></div>
+                    
+                    <div class="text-center md:w-1/4">
+                        <div class="w-20 h-20 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold mx-auto mb-4 text-2xl">
+                            F3
+                        </div>
+                        <h4 class="font-semibold text-lg">Fase 3: Consolidación</h4>
+                        <p class="text-sm text-gray-600 mb-2">2025</p>
+                        <div class="timeline-phase text-left text-sm text-gray-700 mt-4">
+                            <p class="font-medium">• Plataforma completa</p>
+                            <p>• 50+ refugios aliados</p>
+                            <p>• 10,000+ usuarios</p>
+                            <p>• Cobertura nacional</p>
+                            <p>• Expansión regional</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
+    <!-- Simulación de API -->
+    <section class="py-16 bg-gradient-to-r from-orange-400 to-pink-500 text-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">PetConecta en Tiempo Real</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white bg-opacity-20 p-6 rounded-xl text-center backdrop-blur-sm">
+                    <i class="fas fa-paw text-4xl mb-4"></i>
+                    <h3 class="stats-counter mb-2" id="pets-adoption">128</h3>
+                    <p>Mascotas en adopción</p>
+                </div>
+                
+                <div class="bg-white bg-opacity-20 p-6 rounded-xl text-center backdrop-blur-sm">
+                    <i class="fas fa-users text-4xl mb-4"></i>
+                    <h3 class="stats-counter mb-2" id="active-users">542</h3>
+                    <p>Usuarios activos</p>
+                </div>
+                
+                <div class="bg-white bg-opacity-20 p-6 rounded-xl text-center backdrop-blur-sm">
+                    <i class="fas fa-home text-4xl mb-4"></i>
+                    <h3 class="stats-counter mb-2" id="shelters-partners">16</h3>
+                    <p>Refugios aliados</p>
+                </div>
+            </div>
+            
+            <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white bg-opacity-20 p-4 rounded-xl text-center backdrop-blur-sm">
+                    <i class="fas fa-syringe text-2xl mb-2"></i>
+                    <h4 class="text-xl font-semibold mb-1" id="vaccines">243</h4>
+                    <p class="text-sm">Vacunas aplicadas</p>
+                </div>
+                
+                <div class="bg-white bg-opacity-20 p-4 rounded-xl text-center backdrop-blur-sm">
+                    <i class="fas fa-heart text-2xl mb-2"></i>
+                    <h4 class="text-xl font-semibold mb-1" id="adoptions">87</h4>
+                    <p class="text-sm">Adopciones exitosas</p>
+                </div>
+                
+                <div class="bg-white bg-opacity-20 p-4 rounded-xl text-center backdrop-blur-sm">
+                    <i class="fas fa-shopping-bag text-2xl mb-2"></i>
+                    <h4 class="text-xl font-semibold mb-1" id="orders">156</h4>
+                    <p class="text-sm">Pedidos este mes</p>
+                </div>
+            </div>
+        </div>
+    </section>
     <script>
         // Gráfico de inversión inicial
         document.addEventListener('DOMContentLoaded', function() {

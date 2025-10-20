@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PetConecta - Innovación en el Cuidado de Mascotas</title>
+    <title>PetConecta - Modelo Canvas Completo</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -66,30 +66,9 @@
             cursor: pointer;
             color: #666;
         }
-        .timeline-phase {
-            position: relative;
-            padding-left: 2rem;
-        }
-        .timeline-phase:before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0.5rem;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: #FF9A3D;
-        }
-        .stats-counter {
-            font-size: 2.5rem;
-            font-weight: bold;
-            transition: all 0.5s ease;
-        }
-        .feature-card {
-            transition: all 0.3s ease;
-        }
-        .feature-card:hover {
-            transform: translateY(-5px);
+        .financial-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
         }
     </style>
 </head>
@@ -102,10 +81,8 @@
                 <span class="text-xl font-bold text-gray-800">PetConecta</span>
             </div>
             <nav class="hidden md:flex space-x-6">
+                <a href="#financial" class="text-gray-600 hover:text-orange-500 transition">Plan Financiero</a>
                 <a href="#canvas" class="text-gray-600 hover:text-orange-500 transition">Modelo Canvas</a>
-                <a href="#features" class="text-gray-600 hover:text-orange-500 transition">Funcionalidades</a>
-                <a href="#stats" class="text-gray-600 hover:text-orange-500 transition">Estadísticas</a>
-                <a href="#gallery" class="text-gray-600 hover:text-orange-500 transition">Galería</a>
                 <a href="#testimonials" class="text-gray-600 hover:text-orange-500 transition">Testimonios</a>
             </nav>
             <button class="md:hidden text-gray-600">
@@ -118,14 +95,14 @@
     <section class="hero-bg text-white py-16 md:py-24">
         <div class="container mx-auto px-4 flex flex-col md:flex-row items-center">
             <div class="md:w-1/2 mb-10 md:mb-0">
-                <h1 class="text-4xl md:text-5xl font-bold mb-4">PetConecta – Innovación en el Cuidado de Mascotas</h1>
-                <p class="text-xl mb-8">Transformamos la experiencia de bienestar animal desde una sola app.</p>
+                <h1 class="text-4xl md:text-5xl font-bold mb-4">PetConecta – Modelo Canvas Completo</h1>
+                <p class="text-xl mb-8">Plan de negocio realista con inversión inicial de $23,000 USD</p>
                 <div class="flex flex-col sm:flex-row gap-4">
-                    <a href="#canvas" class="bg-white text-orange-500 font-semibold py-3 px-8 rounded-full shadow-lg hover:bg-gray-100 transition inline-block text-center">
-                        Explora el modelo Canvas
+                    <a href="#financial" class="bg-white text-orange-500 font-semibold py-3 px-8 rounded-full shadow-lg hover:bg-gray-100 transition inline-block text-center">
+                        Ver Plan Financiero
                     </a>
-                    <a href="#features" class="bg-transparent border-2 border-white text-white font-semibold py-3 px-8 rounded-full hover:bg-white hover:text-orange-500 transition inline-block text-center">
-                        Ver Funcionalidades
+                    <a href="#canvas" class="bg-transparent border-2 border-white text-white font-semibold py-3 px-8 rounded-full hover:bg-white hover:text-orange-500 transition inline-block text-center">
+                        Explorar Canvas
                     </a>
                 </div>
             </div>
@@ -133,56 +110,74 @@
                 <div class="relative w-80 h-80 bg-white rounded-3xl shadow-2xl overflow-hidden">
                     <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" 
                          alt="Mascota feliz" class="w-full h-full object-cover">
-                    <div class="absolute inset-0 flex items-center justify-center">
-                        <div class="bg-white bg-opacity-90 rounded-lg p-4 shadow-lg w-3/4">
-                            <div class="flex justify-between items-center mb-2">
-                                <span class="text-sm font-semibold text-gray-700">Conexión activa</span>
-                                <i class="fas fa-wifi text-green-500"></i>
-                            </div>
-                            <div class="text-xs text-gray-600">Monitoreando a Luna</div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Funcionalidades Principales -->
-    <section id="features" class="py-16 bg-white">
+    <!-- Resumen Financiero -->
+    <section id="financial" class="py-16 bg-white">
         <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold text-center mb-12 section-title">Funcionalidades Principales</h2>
+            <h2 class="text-3xl font-bold text-center mb-12 section-title">Plan Financiero Realista</h2>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="feature-card bg-blue-50 p-6 rounded-xl border-l-4 border-blue-500">
-                    <div class="flex items-center mb-4">
-                        <i class="fas fa-calendar-check text-blue-500 text-2xl mr-3"></i>
-                        <h3 class="text-xl font-semibold">Gestión de Citas</h3>
-                    </div>
-                    <p class="text-gray-700">Agenda citas veterinarias, peluquería y otros servicios con proveedores verificados.</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                <div class="financial-card p-6 rounded-xl text-center shadow-lg">
+                    <i class="fas fa-dollar-sign text-4xl mb-4 text-white"></i>
+                    <h3 class="text-2xl font-bold mb-2">$23,000</h3>
+                    <p class="text-white">Inversión Inicial</p>
                 </div>
                 
-                <div class="feature-card bg-green-50 p-6 rounded-xl border-l-4 border-green-500">
-                    <div class="flex items-center mb-4">
-                        <i class="fas fa-shopping-cart text-green-500 text-2xl mr-3"></i>
-                        <h3 class="text-xl font-semibold">E-commerce</h3>
-                    </div>
-                    <p class="text-gray-700">Compra alimentos, juguetes y accesorios con entrega a domicilio.</p>
+                <div class="financial-card p-6 rounded-xl text-center shadow-lg">
+                    <i class="fas fa-chart-line text-4xl mb-4 text-white"></i>
+                    <h3 class="text-2xl font-bold mb-2">$12,000</h3>
+                    <p class="text-white">Utilidad Neta (1er año)</p>
                 </div>
                 
-                <div class="feature-card bg-purple-50 p-6 rounded-xl border-l-4 border-purple-500">
-                    <div class="flex items-center mb-4">
-                        <i class="fas fa-heart text-purple-500 text-2xl mr-3"></i>
-                        <h3 class="text-xl font-semibold">Adopción</h3>
-                    </div>
-                    <p class="text-gray-700">Encuentra tu mascota ideal mediante procesos de adopción responsables.</p>
+                <div class="financial-card p-6 rounded-xl text-center shadow-lg">
+                    <i class="fas fa-balance-scale text-4xl mb-4 text-white"></i>
+                    <h3 class="text-2xl font-bold mb-2">Mes 7</h3>
+                    <p class="text-white">Punto de Equilibrio</p>
                 </div>
-                
-                <div class="feature-card bg-orange-50 p-6 rounded-xl border-l-4 border-orange-500">
-                    <div class="flex items-center mb-4">
-                        <i class="fas fa-stethoscope text-orange-500 text-2xl mr-3"></i>
-                        <h3 class="text-xl font-semibold">Monitoreo</h3>
+            </div>
+
+            <!-- Inversión Inicial -->
+            <div class="bg-gray-50 p-6 rounded-xl shadow-md mb-8">
+                <h3 class="text-2xl font-bold mb-6 text-center">Inversión Inicial - $23,000 USD</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="font-semibold text-lg mb-4 text-blue-600">Distribución de Inversión</h4>
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center">
+                                <span>Desarrollo de la App</span>
+                                <span class="font-semibold">$12,000</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span>Infraestructura tecnológica</span>
+                                <span class="font-semibold">$3,000</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span>Promoción y publicidad</span>
+                                <span class="font-semibold">$2,500</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span>Capital de trabajo</span>
+                                <span class="font-semibold">$4,000</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span>Gastos legales y constitución</span>
+                                <span class="font-semibold">$1,000</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span>Oficina virtual y herramientas</span>
+                                <span class="font-semibold">$500</span>
+                            </div>
+                        </div>
                     </div>
-                    <p class="text-gray-700">Seguimiento de salud, recordatorios de vacunas y consultas virtuales.</p>
+                    <div class="flex justify-center">
+                        <div class="w-64 h-64">
+                            <canvas id="investmentChart"></canvas>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -363,206 +358,6 @@
         </div>
     </section>
 
-    <!-- Visualizaciones Dinámicas -->
-    <section id="stats" class="py-16 bg-white">
-        <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold text-center mb-12 section-title">Estadísticas y Proyecciones</h2>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <!-- Gráfico de Fuentes de Ingresos -->
-                <div class="bg-white p-6 rounded-xl shadow-md border">
-                    <h3 class="text-xl font-semibold mb-4">Distribución de Fuentes de Ingresos</h3>
-                    <div class="h-64">
-                        <canvas id="revenueChart"></canvas>
-                    </div>
-                </div>
-                
-                <!-- Mapa de Clientes Objetivo -->
-                <div class="bg-white p-6 rounded-xl shadow-md border">
-                    <h3 class="text-xl font-semibold mb-4">Expansión Geográfica</h3>
-                    <div class="h-64 bg-blue-50 rounded-lg flex flex-col items-center justify-center relative overflow-hidden p-4">
-                        <div class="absolute top-4 left-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                            Quito - Fase 1
-                        </div>
-                        <div class="absolute bottom-4 right-4 bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                            Guayaquil - Fase 2
-                        </div>
-                        <div class="text-center z-10">
-                            <i class="fas fa-map-marked-alt text-4xl text-blue-500 mb-2"></i>
-                            <p class="text-gray-600 font-medium">Expansión progresiva en zonas urbanas de Ecuador</p>
-                            <div class="mt-4 grid grid-cols-2 gap-2 text-sm">
-                                <div class="bg-white p-2 rounded shadow-sm">
-                                    <div class="font-semibold">Fase 1</div>
-                                    <div>Quito</div>
-                                </div>
-                                <div class="bg-white p-2 rounded shadow-sm">
-                                    <div class="font-semibold">Fase 2</div>
-                                    <div>Guayaquil</div>
-                                </div>
-                                <div class="bg-white p-2 rounded shadow-sm">
-                                    <div class="font-semibold">Fase 3</div>
-                                    <div>Cuenca</div>
-                                </div>
-                                <div class="bg-white p-2 rounded shadow-sm">
-                                    <div class="font-semibold">Fase 4</div>
-                                    <div>Ambato</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Línea de Tiempo -->
-            <div class="mt-12 bg-white p-6 rounded-xl shadow-md border">
-                <h3 class="text-xl font-semibold mb-6 text-center">Plan de Expansión 2023-2025</h3>
-                <div class="flex flex-col md:flex-row justify-between items-start">
-                    <div class="text-center mb-8 md:mb-0 md:w-1/4">
-                        <div class="w-20 h-20 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold mx-auto mb-4 text-2xl">
-                            F1
-                        </div>
-                        <h4 class="font-semibold text-lg">Fase 1: Lanzamiento</h4>
-                        <p class="text-sm text-gray-600 mb-2">Q4 2023 - Q1 2024</p>
-                        <div class="timeline-phase text-left text-sm text-gray-700 mt-4">
-                            <p class="font-medium">• App básica funcional</p>
-                            <p>• 10 refugios aliados</p>
-                            <p>• 500 usuarios objetivo</p>
-                            <p>• Cobertura en Quito</p>
-                            <p>• Alianzas con 15 veterinarias</p>
-                        </div>
-                    </div>
-                    
-                    <div class="hidden md:flex items-center justify-center w-1/4 h-1 bg-gray-300 mt-10"></div>
-                    
-                    <div class="text-center mb-8 md:mb-0 md:w-1/4">
-                        <div class="w-20 h-20 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold mx-auto mb-4 text-2xl">
-                            F2
-                        </div>
-                        <h4 class="font-semibold text-lg">Fase 2: Expansión</h4>
-                        <p class="text-sm text-gray-600 mb-2">Q2 2024 - Q4 2024</p>
-                        <div class="timeline-phase text-left text-sm text-gray-700 mt-4">
-                            <p class="font-medium">• Funcionalidades premium</p>
-                            <p>• 25+ refugios aliados</p>
-                            <p>• 2,000+ usuarios</p>
-                            <p>• Expansión a Guayaquil</p>
-                            <p>• Integración con Rappi</p>
-                        </div>
-                    </div>
-                    
-                    <div class="hidden md:flex items-center justify-center w-1/4 h-1 bg-gray-300 mt-10"></div>
-                    
-                    <div class="text-center md:w-1/4">
-                        <div class="w-20 h-20 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold mx-auto mb-4 text-2xl">
-                            F3
-                        </div>
-                        <h4 class="font-semibold text-lg">Fase 3: Consolidación</h4>
-                        <p class="text-sm text-gray-600 mb-2">2025</p>
-                        <div class="timeline-phase text-left text-sm text-gray-700 mt-4">
-                            <p class="font-medium">• Plataforma completa</p>
-                            <p>• 50+ refugios aliados</p>
-                            <p>• 10,000+ usuarios</p>
-                            <p>• Cobertura nacional</p>
-                            <p>• Expansión regional</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Simulación de API -->
-    <section class="py-16 bg-gradient-to-r from-orange-400 to-pink-500 text-white">
-        <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold text-center mb-12">PetConecta en Tiempo Real</h2>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="bg-white bg-opacity-20 p-6 rounded-xl text-center backdrop-blur-sm">
-                    <i class="fas fa-paw text-4xl mb-4"></i>
-                    <h3 class="stats-counter mb-2" id="pets-adoption">128</h3>
-                    <p>Mascotas en adopción</p>
-                </div>
-                
-                <div class="bg-white bg-opacity-20 p-6 rounded-xl text-center backdrop-blur-sm">
-                    <i class="fas fa-users text-4xl mb-4"></i>
-                    <h3 class="stats-counter mb-2" id="active-users">542</h3>
-                    <p>Usuarios activos</p>
-                </div>
-                
-                <div class="bg-white bg-opacity-20 p-6 rounded-xl text-center backdrop-blur-sm">
-                    <i class="fas fa-home text-4xl mb-4"></i>
-                    <h3 class="stats-counter mb-2" id="shelters-partners">16</h3>
-                    <p>Refugios aliados</p>
-                </div>
-            </div>
-            
-            <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="bg-white bg-opacity-20 p-4 rounded-xl text-center backdrop-blur-sm">
-                    <i class="fas fa-syringe text-2xl mb-2"></i>
-                    <h4 class="text-xl font-semibold mb-1" id="vaccines">243</h4>
-                    <p class="text-sm">Vacunas aplicadas</p>
-                </div>
-                
-                <div class="bg-white bg-opacity-20 p-4 rounded-xl text-center backdrop-blur-sm">
-                    <i class="fas fa-heart text-2xl mb-2"></i>
-                    <h4 class="text-xl font-semibold mb-1" id="adoptions">87</h4>
-                    <p class="text-sm">Adopciones exitosas</p>
-                </div>
-                
-                <div class="bg-white bg-opacity-20 p-4 rounded-xl text-center backdrop-blur-sm">
-                    <i class="fas fa-shopping-bag text-2xl mb-2"></i>
-                    <h4 class="text-xl font-semibold mb-1" id="orders">156</h4>
-                    <p class="text-sm">Pedidos este mes</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Galería de Imágenes -->
-    <section id="gallery" class="py-16 bg-gray-50">
-        <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold text-center mb-12 section-title">Nuestra Comunidad</h2>
-            <p class="text-center text-xl text-gray-600 mb-8 max-w-3xl mx-auto">"Conectamos corazones humanos con patas peludas a través de tecnología que transforma vidas"</p>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-                <div class="overflow-hidden rounded-xl shadow-lg">
-                    <img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" 
-                         alt="Mascotas felices" class="w-full h-64 object-cover transition duration-500 hover:scale-110">
-                </div>
-                <div class="overflow-hidden rounded-xl shadow-lg">
-                    <img src="https://images.unsplash.com/photo-1583337130417-3346a1be7dee?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" 
-                         alt="Voluntarios con mascotas" class="w-full h-64 object-cover transition duration-500 hover:scale-110">
-                </div>
-                <div class="overflow-hidden rounded-xl shadow-lg">
-                    <img src="https://images.unsplash.com/photo-1560743641-3914f2c45636?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" 
-                         alt="Veterinario atendiendo mascota" class="w-full h-64 object-cover transition duration-500 hover:scale-110">
-                </div>
-            </div>
-            
-            <div class="bg-white rounded-xl p-8 shadow-md border">
-                <h3 class="text-2xl font-bold text-center mb-6">Nuestro Impacto Social</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div>
-                        <h4 class="font-semibold text-lg mb-3 text-orange-500">Misión</h4>
-                        <p class="text-gray-700 mb-6">Revolucionar el cuidado animal mediante tecnología accesible que conecta a dueños, proveedores de servicios y refugios en una plataforma integral que promueve el bienestar y la adopción responsable.</p>
-                        
-                        <h4 class="font-semibold text-lg mb-3 text-orange-500">Visión</h4>
-                        <p class="text-gray-700">Ser la plataforma líder en Latinoamérica para el cuidado de mascotas, reconocida por nuestro impacto social positivo y nuestra innovación tecnológica al servicio del bienestar animal.</p>
-                    </div>
-                    <div>
-                        <h4 class="font-semibold text-lg mb-3 text-orange-500">Valores</h4>
-                        <ul class="list-disc pl-5 space-y-2 text-gray-700">
-                            <li><span class="font-medium">Compasión:</span> Poner el bienestar animal en el centro de cada decisión</li>
-                            <li><span class="font-medium">Innovación:</span> Buscar constantemente soluciones tecnológicas creativas</li>
-                            <li><span class="font-medium">Transparencia:</span> Operar con honestidad en todas nuestras relaciones</li>
-                            <li><span class="font-medium">Comunidad:</span> Fomentar conexiones significativas entre amantes de mascotas</li>
-                            <li><span class="font-medium">Sostenibilidad:</span> Crear un modelo de negocio con impacto social positivo</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- Testimonios -->
     <section id="testimonials" class="py-16 bg-white">
         <div class="container mx-auto px-4">
@@ -577,16 +372,9 @@
                         <div>
                             <h4 class="font-semibold">María González</h4>
                             <p class="text-sm text-gray-600">Dueña de Loki (Pastor Alemán)</p>
-                            <div class="flex text-yellow-400 mt-1">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                            </div>
                         </div>
                     </div>
-                    <p class="text-gray-700 italic">"PetConecta ha simplificado completamente el cuidado de mi perro Loki. Desde agendar sus citas veterinarias hasta comprar su alimento favorito, todo está en un solo lugar. La función de recordatorios de vacunas me ha salvado de varios olvidos."</p>
+                    <p class="text-gray-700 italic">"PetConecta ha simplificado completamente el cuidado de mi perro Loki. Desde agendar sus citas veterinarias hasta comprar su alimento favorito, todo está en un solo lugar."</p>
                 </div>
                 
                 <!-- Testimonio 2 -->
@@ -597,16 +385,9 @@
                         <div>
                             <h4 class="font-semibold">Dr. Carlos Mendoza</h4>
                             <p class="text-sm text-gray-600">Veterinario aliado - Clínica Animalia</p>
-                            <div class="flex text-yellow-400 mt-1">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                            </div>
                         </div>
                     </div>
-                    <p class="text-gray-700 italic">"Como veterinario, PetConecta me ha permitido llegar a más pacientes y ofrecer un seguimiento continuo que antes no era posible. La historia clínica digital de cada mascota facilita mis diagnósticos y los dueños aprecian la transparencia."</p>
+                    <p class="text-gray-700 italic">"Como veterinario, PetConecta me ha permitido llegar a más pacientes y ofrecer un seguimiento continuo que antes no era posible."</p>
                 </div>
                 
                 <!-- Testimonio 3 -->
@@ -617,16 +398,9 @@
                         <div>
                             <h4 class="font-semibold">Andrea Torres</h4>
                             <p class="text-sm text-gray-600">Voluntaria en Refugio Patitas</p>
-                            <div class="flex text-yellow-400 mt-1">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                            </div>
                         </div>
                     </div>
-                    <p class="text-gray-700 italic">"Gracias a PetConecta, hemos encontrado hogares para más de 50 mascotas en los últimos 3 meses. La plataforma nos permite mostrar a nuestros animales de manera profesional y conectar con adoptantes responsables de forma eficiente."</p>
+                    <p class="text-gray-700 italic">"Gracias a PetConecta, hemos encontrado hogares para más de 50 mascotas en los últimos 3 meses. La plataforma es increíble."</p>
                 </div>
             </div>
         </div>
@@ -642,30 +416,6 @@
                         <span class="text-xl font-bold">PetConecta</span>
                     </div>
                     <p class="text-gray-400 mb-4">Innovación en el cuidado de mascotas mediante tecnología con propósito.</p>
-                    <div class="flex space-x-3">
-                        <a href="#" class="text-gray-400 hover:text-white transition">
-                            <i class="fab fa-facebook-f text-xl"></i>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-white transition">
-                            <i class="fab fa-instagram text-xl"></i>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-white transition">
-                            <i class="fab fa-tiktok text-xl"></i>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-white transition">
-                            <i class="fab fa-twitter text-xl"></i>
-                        </a>
-                    </div>
-                </div>
-                
-                <div>
-                    <h4 class="font-semibold mb-4">Enlaces Rápidos</h4>
-                    <ul class="space-y-2">
-                        <li><a href="#canvas" class="text-gray-400 hover:text-white transition">Modelo Canvas</a></li>
-                        <li><a href="#features" class="text-gray-400 hover:text-white transition">Funcionalidades</a></li>
-                        <li><a href="#stats" class="text-gray-400 hover:text-white transition">Estadísticas</a></li>
-                        <li><a href="#testimonials" class="text-gray-400 hover:text-white transition">Testimonios</a></li>
-                    </ul>
                 </div>
                 
                 <div>
@@ -679,31 +429,7 @@
                             <i class="fas fa-phone mr-2 text-orange-500"></i>
                             +593 99 123 4567
                         </li>
-                        <li class="flex items-center">
-                            <i class="fas fa-map-marker-alt mr-2 text-orange-500"></i>
-                            Quito, Ecuador
-                        </li>
                     </ul>
-                </div>
-                
-                <div>
-                    <h4 class="font-semibold mb-4">Descarga la App</h4>
-                    <div class="flex space-x-2">
-                        <a href="#" class="bg-black text-white p-2 rounded flex items-center justify-center w-full mb-2 hover:bg-gray-900 transition">
-                            <i class="fab fa-apple mr-2"></i>
-                            <div class="text-left">
-                                <div class="text-xs">Disponible en</div>
-                                <div class="font-semibold">App Store</div>
-                            </div>
-                        </a>
-                        <a href="#" class="bg-black text-white p-2 rounded flex items-center justify-center w-full hover:bg-gray-900 transition">
-                            <i class="fab fa-google-play mr-2"></i>
-                            <div class="text-left">
-                                <div class="text-xs">Disponible en</div>
-                                <div class="font-semibold">Google Play</div>
-                            </div>
-                        </a>
-                    </div>
                 </div>
             </div>
             
@@ -714,7 +440,7 @@
         </div>
     </footer>
 
-    <!-- TODOS LOS MODALES COMPLETOS Y FUNCIONALES -->
+    <!-- TODOS LOS MODALES COMPLETOS CON NUEVA REALIDAD FINANCIERA -->
     <div id="segmentosModal" class="modal">
         <div class="modal-content">
             <span class="close-modal" onclick="closeModal('segmentosModal')">&times;</span>
@@ -722,38 +448,25 @@
             <div class="space-y-6">
                 <div class="bg-blue-50 p-4 rounded-lg">
                     <h4 class="font-semibold text-lg mb-2 text-blue-700">Jóvenes adultos (25-40 años)</h4>
-                    <p class="text-gray-700">Residentes en zonas urbanas de Quito y Guayaquil, con estilo de vida digital, ingresos medios a altos (USD $800+ mensuales) y alta disposición a invertir en el bienestar de sus mascotas. Tecnológicamente adeptos, activos en redes sociales y con alto nivel educativo.</p>
+                    <p class="text-gray-700">Residentes en zonas urbanas de Quito y Guayaquil, con estilo de vida digital, ingresos medios (USD $600-800 mensuales) y disposición a invertir en el bienestar de sus mascotas.</p>
                     <div class="mt-2 flex items-center text-sm text-blue-600">
                         <i class="fas fa-users mr-1"></i>
-                        <span>Población objetivo: 450,000 personas en Quito y Guayaquil</span>
+                        <span>Población objetivo inicial: 15,000 personas en Quito</span>
                     </div>
                 </div>
                 
                 <div class="bg-blue-50 p-4 rounded-lg">
                     <h4 class="font-semibold text-lg mb-2 text-blue-700">Petlovers digitales</h4>
-                    <p class="text-gray-700">Personas que consideran a sus mascotas como miembros de la familia, buscan soluciones tecnológicas para su cuidado y están activos en redes sociales. Realizan compras online regularmente y valoran la conveniencia, personalización y calidad en servicios para mascotas.</p>
+                    <p class="text-gray-700">Personas que consideran a sus mascotas como miembros de la familia, buscan soluciones tecnológicas para su cuidado y están activos en redes sociales.</p>
                     <div class="mt-2 flex items-center text-sm text-blue-600">
                         <i class="fas fa-mobile-alt mr-1"></i>
-                        <span>95% utiliza smartphone diariamente para gestionar actividades</span>
+                        <span>85% utiliza smartphone diariamente para gestiones</span>
                     </div>
                 </div>
                 
                 <div class="bg-blue-50 p-4 rounded-lg">
                     <h4 class="font-semibold text-lg mb-2 text-blue-700">Refugios y veterinarias</h4>
-                    <p class="text-gray-700">Organizaciones que necesitan herramientas digitales para gestionar adopciones, citas y seguimiento de animales bajo su cuidado. Buscan aumentar su alcance, optimizar procesos operativos y mejorar la comunicación con adoptantes y dueños de mascotas.</p>
-                    <div class="mt-2 flex items-center text-sm text-blue-600">
-                        <i class="fas fa-clinic-medical mr-1"></i>
-                        <span>120+ clínicas veterinarias identificadas en Quito y Guayaquil</span>
-                    </div>
-                </div>
-                
-                <div class="bg-blue-50 p-4 rounded-lg">
-                    <h4 class="font-semibold text-lg mb-2 text-blue-700">ONGs y municipios</h4>
-                    <p class="text-gray-700">Entidades interesadas en programas de bienestar animal, control poblacional y adopción responsable. Buscan soluciones tecnológicas para optimizar sus programas, medir impacto y conectar con la comunidad de manera más efectiva.</p>
-                    <div class="mt-2 flex items-center text-sm text-blue-600">
-                        <i class="fas fa-hands-helping mr-1"></i>
-                        <span>25+ organizaciones de bienestar animal en Ecuador</span>
-                    </div>
+                    <p class="text-gray-700">15 refugios iniciales y 25 clínicas veterinarias en Quito que necesitan herramientas digitales para gestionar adopciones y citas.</p>
                 </div>
             </div>
         </div>
@@ -766,35 +479,23 @@
             <div class="space-y-6">
                 <div class="bg-green-50 p-4 rounded-lg">
                     <h4 class="font-semibold text-lg mb-2 text-green-700">Plataforma Integral Todo-en-Uno</h4>
-                    <p class="text-gray-700">Solución completa que centraliza servicios de salud, alimentación, adopción, monitoreo y comunidad para mascotas. Elimina la necesidad de usar múltiples aplicaciones y servicios desconectados, ofreciendo una experiencia unificada y coherente.</p>
+                    <p class="text-gray-700">Solución completa que centraliza servicios de salud, alimentación, adopción y monitoreo para mascotas con inversión accesible.</p>
                     <ul class="list-disc pl-5 mt-2 text-gray-700">
+                        <li>App móvil básica funcional desde el lanzamiento</li>
                         <li>Historial médico digital unificado</li>
-                        <li>Programación inteligente de recordatorios</li>
-                        <li>Perfiles personalizados para cada mascota</li>
-                        <li>Interfaz adaptada a diferentes tipos de usuarios</li>
+                        <li>Programación de recordatorios automáticos</li>
+                        <li>Perfiles personalizados para mascotas</li>
                     </ul>
                 </div>
                 
                 <div class="bg-green-50 p-4 rounded-lg">
-                    <h4 class="font-semibold text-lg mb-2 text-green-700">Seguridad y Trazabilidad Total</h4>
-                    <p class="text-gray-700">Sistema de verificación de proveedores y historial completo de cada mascota para garantizar transparencia y confianza en todos los servicios. Implementación de blockchain para registros médicos inalterables y sistema de reputación para proveedores.</p>
-                    <ul class="list-disc pl-5 mt-2 text-gray-700">
-                        <li>Certificación obligatoria para todos los proveedores</li>
-                        <li>Historial completo de vacunas y tratamientos</li>
-                        <li>Sistema de reseñas y calificaciones verificado</li>
-                        <li>Protección de datos según LOPD</li>
-                    </ul>
+                    <h4 class="font-semibold text-lg mb-2 text-green-700">Seguridad y Confianza</h4>
+                    <p class="text-gray-700">Sistema de verificación de proveedores con certificación básica garantizando servicios confiables.</p>
                 </div>
                 
                 <div class="bg-green-50 p-4 rounded-lg">
-                    <h4 class="font-semibold text-lg mb-2 text-green-700">Innovación Social con Propósito</h4>
-                    <p class="text-gray-700">Fomento de adopción responsable y voluntariado digital para crear comunidad alrededor del bienestar animal. Programa "Adopta Conecta" que incluye seguimiento post-adopción y "Voluntariado Virtual" para personas con movilidad reducida.</p>
-                    <ul class="list-disc pl-5 mt-2 text-gray-700">
-                        <li>Programas educativos sobre tenencia responsable</li>
-                        <li>Campañas de esterilización con partners locales</li>
-                        <li>Eventos comunitarios presenciales y virtuales</li>
-                        <li>Donación del 2% de ingresos a refugios aliados</li>
-                    </ul>
+                    <h4 class="font-semibold text-lg mb-2 text-green-700">Innovación Social Accesible</h4>
+                    <p class="text-gray-700">Programa "Adopta Conecta" con seguimiento post-adopción y voluntariado digital para crear comunidad.</p>
                 </div>
             </div>
         </div>
@@ -807,47 +508,27 @@
             <div class="space-y-6">
                 <div class="bg-purple-50 p-4 rounded-lg">
                     <h4 class="font-semibold text-lg mb-2 text-purple-700">Aplicación Móvil Multiplataforma</h4>
-                    <p class="text-gray-700">Disponible en Google Play y App Store con interfaz intuitiva y funcionalidades adaptadas a dispositivos móviles. Diseño responsive que prioriza las tareas más frecuentes y ofrece experiencia optimizada según el tipo de usuario.</p>
+                    <p class="text-gray-700">Disponible en Google Play y App Store con funcionalidades básicas desde el inicio.</p>
                     <div class="grid grid-cols-2 gap-2 mt-3">
                         <div class="bg-white p-2 rounded text-center">
                             <i class="fab fa-google-play text-purple-500 text-xl mb-1"></i>
                             <div class="text-sm font-medium">Google Play</div>
-                            <div class="text-xs text-gray-600">4.8★ (2.4K reseñas)</div>
                         </div>
                         <div class="bg-white p-2 rounded text-center">
                             <i class="fab fa-app-store-ios text-purple-500 text-xl mb-1"></i>
                             <div class="text-sm font-medium">App Store</div>
-                            <div class="text-xs text-gray-600">4.9★ (1.8K reseñas)</div>
                         </div>
                     </div>
-                </div>
-                
-                <div class="bg-purple-50 p-4 rounded-lg">
-                    <h4 class="font-semibold text-lg mb-2 text-purple-700">Plataforma Web Responsive</h4>
-                    <p class="text-gray-700">Sitio web institucional con blog educativo, acceso completo a servicios y gestión de cuenta desde cualquier dispositivo. Optimizado para SEO con contenido valioso sobre cuidado animal que atrae tráfico orgánico.</p>
-                    <ul class="list-disc pl-5 mt-2 text-gray-700">
-                        <li>Blog con 50+ artículos sobre cuidado animal</li>
-                        <li>Acceso a todas las funcionalidades de la app</li>
-                        <li>Panel de administración para partners</li>
-                        <li>Integración con herramientas de analytics</li>
-                    </ul>
                 </div>
                 
                 <div class="bg-purple-50 p-4 rounded-lg">
                     <h4 class="font-semibold text-lg mb-2 text-purple-700">Presencia en Redes Sociales</h4>
-                    <p class="text-gray-700">Estrategia omnicanal en Instagram, Facebook, TikTok y Twitter para engagement comunitario, marketing de contenidos y soporte al cliente. Contenido viral, historias de éxito y educación en formato accesible.</p>
-                    <div class="grid grid-cols-2 gap-2 mt-3">
-                        <div class="bg-white p-2 rounded text-center">
-                            <i class="fab fa-instagram text-purple-500 text-xl mb-1"></i>
-                            <div class="text-sm font-medium">Instagram</div>
-                            <div class="text-xs text-gray-600">45K seguidores</div>
-                        </div>
-                        <div class="bg-white p-2 rounded text-center">
-                            <i class="fab fa-tiktok text-purple-500 text-xl mb-1"></i>
-                            <div class="text-sm font-medium">TikTok</div>
-                            <div class="text-xs text-gray-600">120K seguidores</div>
-                        </div>
-                    </div>
+                    <p class="text-gray-700">Estrategia focalizada en Instagram y Facebook para engagement comunitario con presupuesto ajustado.</p>
+                </div>
+                
+                <div class="bg-purple-50 p-4 rounded-lg">
+                    <h4 class="font-semibold text-lg mb-2 text-purple-700">Alianzas Estratégicas</h4>
+                    <p class="text-gray-700">Colaboración directa con refugios y veterinarias para promoción cruzada.</p>
                 </div>
             </div>
         </div>
@@ -859,36 +540,18 @@
             <h3 class="text-2xl font-bold mb-4 text-yellow-600">Relación con Clientes</h3>
             <div class="space-y-6">
                 <div class="bg-yellow-50 p-4 rounded-lg">
-                    <h4 class="font-semibold text-lg mb-2 text-yellow-700">Atención Personalizada</h4>
-                    <p class="text-gray-700">Asignación de gestores de cuenta para usuarios premium y partners estratégicos. Programas de fidelización segmentados según tipo de usuario y nivel de engagement con la plataforma.</p>
-                    <ul class="list-disc pl-5 mt-2 text-gray-700">
-                        <li>Asesores especializados por tipo de mascota</li>
-                        <li>Programa de embajadores de marca</li>
-                        <li>Soporte prioritario para usuarios premium</li>
-                        <li>Consultoría personalizada para refugios</li>
-                    </ul>
+                    <h4 class="font-semibold text-lg mb-2 text-yellow-700">Atención Personalizada Eficiente</h4>
+                    <p class="text-gray-700">Soporte básico con chatbot inteligente y atención humana en horarios específicos.</p>
                 </div>
                 
                 <div class="bg-yellow-50 p-4 rounded-lg">
                     <h4 class="font-semibold text-lg mb-2 text-yellow-700">Comunidad Activa</h4>
-                    <p class="text-gray-700">Espacios virtuales y presenciales para conectar a amantes de mascotas. Grupos por intereses específicos, eventos comunitarios y programas de voluntariado digital.</p>
-                    <ul class="list-disc pl-5 mt-2 text-gray-700">
-                        <li>Foros por razas y tipos de mascotas</li>
-                        <li>Eventos mensuales "PetConecta Meetups"</li>
-                        <li>Programa de padrinos para mascotas en adopción</li>
-                        <li>Retos y competencias comunitarias</li>
-                    </ul>
+                    <p class="text-gray-700">Grupos en redes sociales y eventos virtuales mensuales para conectar amantes de mascotas.</p>
                 </div>
                 
                 <div class="bg-yellow-50 p-4 rounded-lg">
                     <h4 class="font-semibold text-lg mb-2 text-yellow-700">Retroalimentación Continua</h4>
-                    <p class="text-gray-700">Sistemas de recolección y análisis de feedback para mejora constante de la plataforma. Encuestas de satisfacción, pruebas de usabilidad y programas de beta testing.</p>
-                    <ul class="list-disc pl-5 mt-2 text-gray-700">
-                        <li>Panel de usuarios para pruebas de nuevas features</li>
-                        <li>Encuestas de satisfacción post-servicio</li>
-                        <li>Sistema de sugerencias con votación comunitaria</li>
-                        <li>Reportes trimestrales de mejoras implementadas</li>
-                    </ul>
+                    <p class="text-gray-700">Sistema de encuestas post-servicio y sugerencias para mejora constante.</p>
                 </div>
             </div>
         </div>
@@ -901,35 +564,27 @@
             <div class="space-y-6">
                 <div class="bg-red-50 p-4 rounded-lg">
                     <h4 class="font-semibold text-lg mb-2 text-red-700">Planes Freemium</h4>
-                    <p class="text-gray-700">Modelo de suscripción escalonado que ofrece funcionalidades básicas gratuitas y características avanzadas mediante suscripción mensual o anual.</p>
+                    <p class="text-gray-700">Modelo de suscripción escalonado con opción gratuita básica.</p>
                     <ul class="list-disc pl-5 mt-2 text-gray-700">
-                        <li><strong>Básico:</strong> Gratuito - Gestión de perfil y recordatorios básicos</li>
-                        <li><strong>Premium:</strong> $4.99/mes - Historial médico completo, alertas avanzadas</li>
-                        <li><strong>Family:</strong> $7.99/mes - Hasta 5 mascotas, consultas virtuales incluidas</li>
-                        <li><strong>Partner:</strong> $19.99/mes - Para veterinarias y refugios</li>
+                        <li><strong>Básico:</strong> Gratuito - Perfil mascota y recordatorios</li>
+                        <li><strong>Premium:</strong> $3.99/mes - Historial médico y alertas</li>
+                        <li><strong>Family:</strong> $6.99/mes - Hasta 3 mascotas</li>
                     </ul>
                 </div>
                 
                 <div class="bg-red-50 p-4 rounded-lg">
                     <h4 class="font-semibold text-lg mb-2 text-red-700">Comisiones por Transacciones</h4>
-                    <p class="text-gray-700">Porcentaje sobre cada transacción realizada a través de la plataforma, tanto de servicios como de productos.</p>
+                    <p class="text-gray-700">Porcentaje sobre servicios contratados a través de la plataforma.</p>
                     <ul class="list-disc pl-5 mt-2 text-gray-700">
-                        <li>15% sobre servicios de veterinarias aliadas</li>
-                        <li>10% sobre servicios de peluquería y cuidado</li>
-                        <li>8% sobre venta de productos en marketplace</li>
-                        <li>5% sobre procesos de adopción exitosos</li>
+                        <li>12% sobre servicios veterinarios</li>
+                        <li>8% sobre servicios de cuidado</li>
+                        <li>5% sobre procesos de adopción</li>
                     </ul>
                 </div>
                 
                 <div class="bg-red-50 p-4 rounded-lg">
                     <h4 class="font-semibold text-lg mb-2 text-red-700">Publicidad Segmentada</h4>
-                    <p class="text-gray-700">Espacios publicitarios premium dentro de la aplicación dirigidos a audiencias específicas según tipo de mascota, ubicación e intereses.</p>
-                    <ul class="list-disc pl-5 mt-2 text-gray-700">
-                        <li>Banners en secciones específicas: $500-2000/mes</li>
-                        <li>Push notifications patrocinadas: $0.05 por clic</li>
-                        <li>Featured listings para proveedores: $100/mes</li>
-                        <li>Content marketing nativo: $2000-5000/campaña</li>
-                    </ul>
+                    <p class="text-gray-700">Espacios publicitarios básicos dentro de la aplicación.</p>
                 </div>
             </div>
         </div>
@@ -942,38 +597,28 @@
             <div class="space-y-6">
                 <div class="bg-indigo-50 p-4 rounded-lg">
                     <h4 class="font-semibold text-lg mb-2 text-indigo-700">Equipo Humano Especializado</h4>
-                    <p class="text-gray-700">Talento multidisciplinario con experiencia en tecnología, bienestar animal y negocios digitales.</p>
+                    <p class="text-gray-700">Talento multidisciplinario con roles flexibles.</p>
                     <ul class="list-disc pl-5 mt-2 text-gray-700">
-                        <li><strong>Desarrolladores Full-Stack:</strong> 4 especialistas</li>
-                        <li><strong>Diseñadores UX/UI:</strong> 2 profesionales</li>
-                        <li><strong>Especialistas en Bienestar Animal:</strong> 3 veterinarios</li>
-                        <li><strong>Gestores de Comunidad:</strong> 2 personas</li>
-                        <li><strong>Equipo de Marketing:</strong> 3 especialistas</li>
+                        <li><strong>Desarrollador Full-Stack:</strong> 1 especialista</li>
+                        <li><strong>Diseñador UX/UI:</strong> 1 profesional</li>
+                        <li><strong>Especialista en Bienestar Animal:</strong> 1 veterinario consultor</li>
+                        <li><strong>Gestor de Comunidad:</strong> 1 persona</li>
                     </ul>
                 </div>
                 
                 <div class="bg-indigo-50 p-4 rounded-lg">
                     <h4 class="font-semibold text-lg mb-2 text-indigo-700">Infraestructura Tecnológica</h4>
-                    <p class="text-gray-700">Plataforma robusta y escalable para soportar el crecimiento de usuarios y funcionalidades.</p>
+                    <p class="text-gray-700">Plataforma básica y escalable para soportar crecimiento inicial.</p>
                     <ul class="list-disc pl-5 mt-2 text-gray-700">
-                        <li>Servidores cloud en AWS con auto-scaling</li>
-                        <li>Base de datos PostgreSQL para transacciones</li>
-                        <li>CDN para distribución global de contenido</li>
-                        <li>APIs RESTful para integraciones con partners</li>
-                        <li>Sistema de backup y recuperación de desastres</li>
+                        <li>Servidores cloud compartidos</li>
+                        <li>Base de datos PostgreSQL</li>
+                        <li>APIs RESTful básicas</li>
                     </ul>
                 </div>
                 
                 <div class="bg-indigo-50 p-4 rounded-lg">
                     <h4 class="font-semibold text-lg mb-2 text-indigo-700">Inversión Inicial</h4>
-                    <p class="text-gray-700">Capital semilla para desarrollo, lanzamiento y operaciones iniciales durante los primeros 18 meses.</p>
-                    <ul class="list-disc pl-5 mt-2 text-gray-700">
-                        <li><strong>Desarrollo de Plataforma:</strong> $45,000</li>
-                        <li><strong>Marketing y Lanzamiento:</strong> $25,000</li>
-                        <li><strong>Operaciones y Staff:</strong> $60,000</li>
-                        <li><strong>Contingencia:</strong> $20,000</li>
-                        <li><strong>Total Inversión Inicial:</strong> $150,000</li>
-                    </ul>
+                    <p class="text-gray-700">Capital semilla de $23,000 USD para 12 meses de operación.</p>
                 </div>
             </div>
         </div>
@@ -985,39 +630,18 @@
             <h3 class="text-2xl font-bold mb-4 text-teal-600">Actividades Clave</h3>
             <div class="space-y-6">
                 <div class="bg-teal-50 p-4 rounded-lg">
-                    <h4 class="font-semibold text-lg mb-2 text-teal-700">Desarrollo y Mantenimiento de Plataforma</h4>
-                    <p class="text-gray-700">Ciclo continuo de desarrollo, testing y mejora de la aplicación móvil y web.</p>
-                    <ul class="list-disc pl-5 mt-2 text-gray-700">
-                        <li>Desarrollo ágil con sprints de 2 semanas</li>
-                        <li>Testing automatizado y manual</li>
-                        <li>Monitoreo continuo de performance</li>
-                        <li>Actualizaciones de seguridad mensuales</li>
-                        <li>Programa de bug bounty</li>
-                    </ul>
+                    <h4 class="font-semibold text-lg mb-2 text-teal-700">Desarrollo y Mantenimiento</h4>
+                    <p class="text-gray-700">Ciclo ágil de desarrollo con mejoras incrementales.</p>
                 </div>
                 
                 <div class="bg-teal-50 p-4 rounded-lg">
-                    <h4 class="font-semibold text-lg mb-2 text-teal-700">Gestión de Proveedores y Calidad</h4>
-                    <p class="text-gray-700">Proceso riguroso de selección, verificación y monitoreo de todos los proveedores de servicios.</p>
-                    <ul class="list-disc pl-5 mt-2 text-gray-700">
-                        <li>Verificación de credenciales profesionales</li>
-                        <li>Evaluación in situ de instalaciones</li>
-                        <li>Programa de certificación continua</li>
-                        <li>Sistema de calificación y reseñas</li>
-                        <li>Auditorías sorpresa trimestrales</li>
-                    </ul>
+                    <h4 class="font-semibold text-lg mb-2 text-teal-700">Gestión de Proveedores</h4>
+                    <p class="text-gray-700">Proceso básico de verificación y certificación de servicios.</p>
                 </div>
                 
                 <div class="bg-teal-50 p-4 rounded-lg">
-                    <h4 class="font-semibold text-lg mb-2 text-teal-700">Campañas Educativas y de Concientización</h4>
-                    <p class="text-gray-700">Programas continuos para educar sobre tenencia responsable y bienestar animal.</p>
-                    <ul class="list-disc pl-5 mt-2 text-gray-700">
-                        <li>Webinars mensuales con expertos</li>
-                        <li>Contenido educativo en redes sociales</li>
-                        <li>Alianzas con colegios y universidades</li>
-                        <li>Campañas de esterilización gratuitas</li>
-                        <li>Programas de voluntariado corporativo</li>
-                    </ul>
+                    <h4 class="font-semibold text-lg mb-2 text-teal-700">Campañas Educativas</h4>
+                    <p class="text-gray-700">Contenido digital sobre tenencia responsable y bienestar animal.</p>
                 </div>
             </div>
         </div>
@@ -1030,35 +654,17 @@
             <div class="space-y-6">
                 <div class="bg-pink-50 p-4 rounded-lg">
                     <h4 class="font-semibold text-lg mb-2 text-pink-700">Refugios de Animales</h4>
-                    <p class="text-gray-700">Alianzas estratégicas con los principales refugios para procesos de adopción digitalizados y programas de bienestar animal.</p>
-                    <ul class="list-disc pl-5 mt-2 text-gray-700">
-                        <li><strong>Refugio Patitas:</strong> 15 años de experiencia, 200+ adopciones anuales</li>
-                        <li><strong>Amigos de los Animales:</strong> Especializado en rescate de animales callejeros</li>
-                        <li><strong>Huellitas de Esperanza:</strong> Enfoque en animales con necesidades especiales</li>
-                        <li><strong>Proyecto Mascota:</strong> Programa comunitario de esterilización</li>
-                    </ul>
+                    <p class="text-gray-700">15 refugios iniciales en Quito para procesos de adopción digitalizados.</p>
                 </div>
                 
                 <div class="bg-pink-50 p-4 rounded-lg">
                     <h4 class="font-semibold text-lg mb-2 text-pink-700">Veterinarias y Pet Shops</h4>
-                    <p class="text-gray-700">Red de proveedores de servicios premium para garantizar calidad y cobertura geográfica.</p>
-                    <ul class="list-disc pl-5 mt-2 text-gray-700">
-                        <li><strong>Clínica Animalia:</strong> 5 sedes en Quito, servicios 24/7</li>
-                        <li><strong>VetCenter:</strong> Especialistas en emergencias</li>
-                        <li><strong>PetShop Ecuador:</strong> Cadena con 12 tiendas a nivel nacional</li>
-                        <li><strong>Mundo Mascota:</strong> Productos premium y alimentos especializados</li>
-                    </ul>
+                    <p class="text-gray-700">25 clínicas veterinarias y 10 pet shops aliados en Quito.</p>
                 </div>
                 
                 <div class="bg-pink-50 p-4 rounded-lg">
                     <h4 class="font-semibold text-lg mb-2 text-pink-700">Plataformas de Delivery</h4>
-                    <p class="text-gray-700">Integraciones con servicios de entrega para ampliar el alcance y mejorar la experiencia de usuario.</p>
-                    <ul class="list-disc pl-5 mt-2 text-gray-700">
-                        <li><strong>Rappi:</strong> Entrega en menos de 45 minutos</li>
-                        <li><strong>PedidosYa:</strong> Cobertura en 15 ciudades</li>
-                        <li><strong>Uber Eats:</strong> Integración con programa de fidelidad</li>
-                        <li><strong>Glovo:</strong> Servicio express las 24 horas</li>
-                    </ul>
+                    <p class="text-gray-700">Integración básica con Rappi para entrega de productos.</p>
                 </div>
             </div>
         </div>
@@ -1070,60 +676,80 @@
             <h3 class="text-2xl font-bold mb-4 text-gray-600">Estructura de Costos</h3>
             <div class="space-y-6">
                 <div class="bg-gray-100 p-4 rounded-lg">
-                    <h4 class="font-semibold text-lg mb-2 text-gray-700">Desarrollo y Mantenimiento Tecnológico</h4>
-                    <p class="text-gray-700">Inversión continua en infraestructura, desarrollo y mejora de la plataforma.</p>
-                    <ul class="list-disc pl-5 mt-2 text-gray-700">
-                        <li><strong>Infraestructura Cloud (AWS):</strong> $2,500/mes</li>
-                        <li><strong>Desarrollo y Mantenimiento:</strong> $8,000/mes</li>
-                        <li><strong>Licencias de Software:</strong> $1,200/mes</li>
-                        <li><strong>Seguridad y Compliance:</strong> $800/mes</li>
-                        <li><strong>Total Tecnología:</strong> $12,500/mes</li>
-                    </ul>
+                    <h4 class="font-semibold text-lg mb-2 text-gray-700">Costos Operativos Anuales - $30,000 USD</h4>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center">
+                            <span>Sueldos y honorarios</span>
+                            <span class="font-semibold">$18,000</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span>Servicios básicos</span>
+                            <span class="font-semibold">$2,400</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span>Marketing y fidelización</span>
+                            <span class="font-semibold">$3,600</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span>Mantenimiento tecnológico</span>
+                            <span class="font-semibold">$4,000</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span>Gastos administrativos</span>
+                            <span class="font-semibold">$2,000</span>
+                        </div>
+                    </div>
                 </div>
                 
                 <div class="bg-gray-100 p-4 rounded-lg">
-                    <h4 class="font-semibold text-lg mb-2 text-gray-700">Marketing y Adquisición de Usuarios</h4>
-                    <p class="text-gray-700">Estrategias multicanal para captación y retención de usuarios.</p>
-                    <ul class="list-disc pl-5 mt-2 text-gray-700">
-                        <li><strong>Marketing Digital (SEM/SEO):</strong> $4,000/mes</li>
-                        <li><strong>Redes Sociales y Content Marketing:</strong> $2,500/mes</li>
-                        <li><strong>Eventos y Activaciones:</strong> $1,500/mes</li>
-                        <li><strong>Programas de Referidos:</strong> $1,000/mes</li>
-                        <li><strong>Total Marketing:</strong> $9,000/mes</li>
-                    </ul>
-                </div>
-                
-                <div class="bg-gray-100 p-4 rounded-lg">
-                    <h4 class="font-semibold text-lg mb-2 text-gray-700">Operaciones y Personal</h4>
-                    <p class="text-gray-700">Costos operativos y de talento humano para el funcionamiento del negocio.</p>
-                    <ul class="list-disc pl-5 mt-2 text-gray-700">
-                        <li><strong>Salarios y Beneficios:</strong> $15,000/mes</li>
-                        <li><strong>Oficina y Utilidades:</strong> $1,200/mes</li>
-                        <li><strong>Soporte al Cliente:</strong> $2,000/mes</li>
-                        <li><strong>Capacitación y Desarrollo:</strong> $800/mes</li>
-                        <li><strong>Total Operaciones:</strong> $19,000/mes</li>
-                    </ul>
+                    <h4 class="font-semibold text-lg mb-2 text-gray-700">Indicadores Financieros</h4>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-white p-3 rounded text-center">
+                            <div class="text-lg font-bold text-gray-700">52%</div>
+                            <div class="text-sm text-gray-600">ROI</div>
+                        </div>
+                        <div class="bg-white p-3 rounded text-center">
+                            <div class="text-lg font-bold text-gray-700">1.9</div>
+                            <div class="text-sm text-gray-600">Payback (años)</div>
+                        </div>
+                        <div class="bg-white p-3 rounded text-center">
+                            <div class="text-lg font-bold text-gray-700">28%</div>
+                            <div class="text-sm text-gray-600">TIR</div>
+                        </div>
+                        <div class="bg-white p-3 rounded text-center">
+                            <div class="text-lg font-bold text-gray-700">$6,500</div>
+                            <div class="text-sm text-gray-600">VAN</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Gráfico de fuentes de ingresos
+        // Gráfico de inversión inicial
         document.addEventListener('DOMContentLoaded', function() {
-            const ctx = document.getElementById('revenueChart').getContext('2d');
-            const revenueChart = new Chart(ctx, {
+            const investmentCtx = document.getElementById('investmentChart').getContext('2d');
+            const investmentChart = new Chart(investmentCtx, {
                 type: 'doughnut',
                 data: {
-                    labels: ['Suscripciones Premium', 'Comisiones por Servicios', 'Publicidad Segmentada', 'Venta de Productos', 'Servicios B2B'],
+                    labels: [
+                        'Desarrollo App',
+                        'Infraestructura',
+                        'Marketing',
+                        'Capital Trabajo',
+                        'Gastos Legales',
+                        'Oficina Virtual'
+                    ],
                     datasets: [{
-                        data: [35, 25, 15, 20, 5],
+                        data: [12000, 3000, 2500, 4000, 1000, 500],
                         backgroundColor: [
-                            '#FF9A3D',
-                            '#4ECDC4',
-                            '#45B7D1',
-                            '#96CEB4',
-                            '#FF6B6B'
+                            '#FF6384',
+                            '#36A2EB',
+                            '#FFCE56',
+                            '#4BC0C0',
+                            '#9966FF',
+                            '#FF9F40'
                         ],
                         borderWidth: 0
                     }]
@@ -1133,7 +759,7 @@
                     maintainAspectRatio: false,
                     plugins: {
                         legend: {
-                            position: 'right',
+                            position: 'bottom',
                             labels: {
                                 boxWidth: 12,
                                 padding: 15
@@ -1142,35 +768,6 @@
                     }
                 }
             });
-
-            // Simulación de API - actualización de datos en tiempo real
-            function updateStats() {
-                // Simular datos dinámicos
-                const petsAdoption = document.getElementById('pets-adoption');
-                const activeUsers = document.getElementById('active-users');
-                const sheltersPartners = document.getElementById('shelters-partners');
-                const vaccines = document.getElementById('vaccines');
-                const adoptions = document.getElementById('adoptions');
-                const orders = document.getElementById('orders');
-                
-                // Incrementar valores ligeramente para simular actualización
-                let petsValue = parseInt(petsAdoption.textContent);
-                let usersValue = parseInt(activeUsers.textContent);
-                let sheltersValue = parseInt(sheltersPartners.textContent);
-                let vaccinesValue = parseInt(vaccines.textContent);
-                let adoptionsValue = parseInt(adoptions.textContent);
-                let ordersValue = parseInt(orders.textContent);
-                
-                petsAdoption.textContent = petsValue + Math.floor(Math.random() * 3);
-                activeUsers.textContent = usersValue + Math.floor(Math.random() * 5);
-                sheltersPartners.textContent = sheltersValue + Math.floor(Math.random() * 2);
-                vaccines.textContent = vaccinesValue + Math.floor(Math.random() * 4);
-                adoptions.textContent = adoptionsValue + Math.floor(Math.random() * 2);
-                orders.textContent = ordersValue + Math.floor(Math.random() * 3);
-            }
-            
-            // Actualizar estadísticas cada 5 segundos
-            setInterval(updateStats, 5000);
         });
 
         // Funciones para modales

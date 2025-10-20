@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PetConecta - Innovación en el Cuidado de Mascotas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            scroll-behavior: smooth;
+        }
+        .canvas-block {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .canvas-block:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .hero-bg {
+            background: linear-gradient(135deg, #FF9A3D 0%, #FF6B6B 100%);
+        }
+        .section-title {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 2rem;
+        }
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60%;
+            height: 4px;
+            background: #FF9A3D;
+            border-radius: 2px;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            max-width: 700px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .close-modal {
+            float: right;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+        .timeline-phase {
+            position: relative;
+            padding-left: 2rem;
+        }
+        .timeline-phase:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.5rem;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #FF9A3D;
+        }
+        .stats-counter {
+            font-size: 2.5rem;
+            font-weight: bold;
+            transition: all 0.5s ease;
+        }
+        .feature-card {
+            transition: all 0.3s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-10">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center">
+                <i class="fas fa-paw text-2xl text-orange-500 mr-2"></i>
+                <span class="text-xl font-bold text-gray-800">PetConecta</span>
+            </div>
+            <nav class="hidden md:flex space-x-6">
+                <a href="#canvas" class="text-gray-600 hover:text-orange-500 transition">Modelo Canvas</a>
+                <a href="#features" class="text-gray-600 hover:text-orange-500 transition">Funcionalidades</a>
+                <a href="#stats" class="text-gray-600 hover:text-orange-500 transition">Estadísticas</a>
+                <a href="#gallery" class="text-gray-600 hover:text-orange-500 transition">Galería</a>
+                <a href="#testimonials" class="text-gray-600 hover:text-orange-500 transition">Testimonios</a>
+            </nav>
+            <button class="md:hidden text-gray-600">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-bg text-white py-16 md:py-24">
+        <div class="container mx-auto px-4 flex flex-col md:flex-row items-center">
+            <div class="md:w-1/2 mb-10 md:mb-0">
+                <h1 class="text-4xl md:text-5xl font-bold mb-4">PetConecta – Innovación en el Cuidado de Mascotas</h1>
+                <p class="text-xl mb-8">Transformamos la experiencia de bienestar animal desde una sola app.</p>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="#canvas" class="bg-white text-orange-500 font-semibold py-3 px-8 rounded-full shadow-lg hover:bg-gray-100 transition inline-block text-center">
+                        Explora el modelo Canvas
+                    </a>
+                    <a href="#features" class="bg-transparent border-2 border-white text-white font-semibold py-3 px-8 rounded-full hover:bg-white hover:text-orange-500 transition inline-block text-center">
+                        Ver Funcionalidades
+                    </a>
+                </div>
+            </div>
+            <div class="md:w-1/2 flex justify-center">
+                <div class="relative w-80 h-80 bg-white rounded-3xl shadow-2xl overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" 
+                         alt="Mascota feliz" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <div class="bg-white bg-opacity-90 rounded-lg p-4 shadow-lg w-3/4">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-semibold text-gray-700">Conexión activa</span>
+                                <i class="fas fa-wifi text-green-500"></i>
+                            </div>
+                            <div class="text-xs text-gray-600">Monitoreando a Luna</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Funcionalidades Principales -->
+    <section id="features" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12 section-title">Funcionalidades Principales</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="feature-card bg-blue-50 p-6 rounded-xl border-l-4 border-blue-500">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-calendar-check text-blue-500 text-2xl mr-3"></i>
+                        <h3 class="text-xl font-semibold">Gestión de Citas</h3>
+                    </div>
+                    <p class="text-gray-700">Agenda citas veterinarias, peluquería y otros servicios con proveedores verificados.</p>
+                </div>
+                
+                <div class="feature-card bg-green-50 p-6 rounded-xl border-l-4 border-green-500">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-shopping-cart text-green-500 text-2xl mr-3"></i>
+                        <h3 class="text-xl font-semibold">E-commerce</h3>
+                    </div>
+                    <p class="text-gray-700">Compra alimentos, juguetes y accesorios con entrega a domicilio.</p>
+                </div>
+                
+                <div class="feature-card bg-purple-50 p-6 rounded-xl border-l-4 border-purple-500">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-heart text-purple-500 text-2xl mr-3"></i>
+                        <h3 class="text-xl font-semibold">Adopción</h3>
+                    </div>
+                    <p class="text-gray-700">Encuentra tu mascota ideal mediante procesos de adopción responsables.</p>
+                </div>
+                
+                <div class="feature-card bg-orange-50 p-6 rounded-xl border-l-4 border-orange-500">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-stethoscope text-orange-500 text-2xl mr-3"></i>
+                        <h3 class="text-xl font-semibold">Monitoreo</h3>
+                    </div>
+                    <p class="text-gray-700">Seguimiento de salud, recordatorios de vacunas y consultas virtuales.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modelo Canvas Interactivo -->
+    <section id="canvas" class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12 section-title">Modelo Canvas de PetConecta</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Segmentos de Clientes -->
+                <div class="canvas-block bg-blue-50 p-6 rounded-xl border-l-4 border-blue-500" onclick="openModal('segmentosModal')">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-users text-blue-500 text-xl mr-3"></i>
+                        <h3 class="text-xl font-semibold">Segmentos de Clientes</h3>
+                    </div>
+                    <ul class="list-disc pl-5 space-y-2 text-gray-700">
+                        <li>Jóvenes adultos 25-40 años (Quito, Guayaquil)</li>
+                        <li>Petlovers con estilo de vida digital</li>
+                        <li>Refugios de animales, veterinarias, pet shops</li>
+                        <li>ONGs y municipios</li>
+                    </ul>
+                    <div class="mt-4 text-blue-500 text-sm font-semibold flex items-center">
+                        <span>Ver detalles completos</span>
+                        <i class="fas fa-chevron-right ml-2"></i>
+                    </div>
+                </div>
+
+                <!-- Propuesta de Valor -->
+                <div class="canvas-block bg-green-50 p-6 rounded-xl border-l-4 border-green-500" onclick="openModal('propuestaModal')">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-gem text-green-500 text-xl mr-3"></i>
+                        <h3 class="text-xl font-semibold">Propuesta de Valor</h3>
+                    </div>
+                    <ul class="list-disc pl-5 space-y-2 text-gray-700">
+                        <li>Plataforma integral para mascotas</li>
+                        <li>Centralización de servicios</li>
+                        <li>Seguridad y trazabilidad</li>
+                        <li>Innovación social</li>
+                        <li>Soporte 24/7</li>
+                    </ul>
+                    <div class="mt-4 text-green-500 text-sm font-semibold flex items-center">
+                        <span>Ver detalles completos</span>
+                        <i class="fas fa-chevron-right ml-2"></i>
+                    </div>
+                </div>
+
+                <!-- Canales -->
+                <div class="canvas-block bg-purple-50 p-6 rounded-xl border-l-4 border-purple-500" onclick="openModal('canalesModal')">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-broadcast-tower text-purple-500 text-xl mr-3"></i>
+                        <h3 class="text-xl font-semibold">Canales</h3>
+                    </div>
+                    <ul class="list-disc pl-5 space-y-2 text-gray-700">
+                        <li>App móvil (iOS/Android)</li>
+                        <li>Página web con blog</li>
+                        <li>Redes sociales</li>
+                        <li>E-commerce integrado</li>
+                        <li>Videollamadas</li>
+                    </ul>
+                    <div class="mt-4 text-purple-500 text-sm font-semibold flex items-center">
+                        <span>Ver detalles completos</span>
+                        <i class="fas fa-chevron-right ml-2"></i>
+                    </div>
+                </div>
+
+                <!-- Relación con Clientes -->
+                <div class="canvas-block bg-yellow-50 p-6 rounded-xl border-l-4 border-yellow-500" onclick="openModal('relacionModal')">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-handshake text-yellow-500 text-xl mr-3"></i>
+                        <h3 class="text-xl font-semibold">Relación con Clientes</h3>
+                    </div>
+                    <ul class="list-disc pl-5 space-y-2 text-gray-700">
+                        <li>Atención personalizada</li>
+                        <li>Comunidad activa</li>
+                        <li>Retroalimentación continua</li>
+                        <li>Certificación de calidad</li>
+                    </ul>
+                    <div class="mt-4 text-yellow-500 text-sm font-semibold flex items-center">
+                        <span>Ver detalles completos</span>
+                        <i class="fas fa-chevron-right ml-2"></i>
+                    </div>
+                </div>
+
+                <!-- Fuentes de Ingresos -->
+                <div class="canvas-block bg-red-50 p-6 rounded-xl border-l-4 border-red-500" onclick="openModal('ingresosModal')">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-money-bill-wave text-red-500 text-xl mr-3"></i>
+                        <h3 class="text-xl font-semibold">Fuentes de Ingresos</h3>
+                    </div>
+                    <ul class="list-disc pl-5 space-y-2 text-gray-700">
+                        <li>Planes freemium</li>
+                        <li>Comisiones por transacciones</li>
+                        <li>Publicidad segmentada</li>
+                        <li>Venta de productos</li>
+                    </ul>
+                    <div class="mt-4 text-red-500 text-sm font-semibold flex items-center">
+                        <span>Ver detalles completos</span>
+                        <i class="fas fa-chevron-right ml-2"></i>
+                    </div>
+                </div>
+
+                <!-- Recursos Clave -->
+                <div class="canvas-block bg-indigo-50 p-6 rounded-xl border-l-4 border-indigo-500" onclick="openModal('recursosModal')">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-tools text-indigo-500 text-xl mr-3"></i>
+                        <h3 class="text-xl font-semibold">Recursos Clave</h3>
+                    </div>
+                    <ul class="list-disc pl-5 space-y-2 text-gray-700">
+                        <li>Equipo humano especializado</li>
+                        <li>Infraestructura tecnológica</li>
+                        <li>Inversión inicial</li>
+                    </ul>
+                    <div class="mt-4 text-indigo-500 text-sm font-semibold flex items-center">
+                        <span>Ver detalles completos</span>
+                        <i class="fas fa-chevron-right ml-2"></i>
+                    </div>
+                </div>
+
+                <!-- Actividades Clave -->
+                <div class="canvas-block bg-teal-50 p-6 rounded-xl border-l-4 border-teal-500" onclick="openModal('actividadesModal')">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-tasks text-teal-500 text-xl mr-3"></i>
+                        <h3 class="text-xl font-semibold">Actividades Clave</h3>
+                    </div>
+                    <ul class="list-disc pl-5 space-y-2 text-gray-700">
+                        <li>Desarrollo y mantenimiento de app</li>
+                        <li>Gestión de inventarios</li>
+                        <li>Certificación de proveedores</li>
+                        <li>Campañas educativas</li>
+                        <li>Soporte técnico</li>
+                    </ul>
+                    <div class="mt-4 text-teal-500 text-sm font-semibold flex items-center">
+                        <span>Ver detalles completos</span>
+                        <i class="fas fa-chevron-right ml-2"></i>
+                    </div>
+                </div>
+
+                <!-- Socios Clave -->
+                <div class="canvas-block bg-pink-50 p-6 rounded-xl border-l-4 border-pink-500" onclick="openModal('sociosModal')">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-handshake-angle text-pink-500 text-xl mr-3"></i>
+                        <h3 class="text-xl font-semibold">Socios Clave</h3>
+                    </div>
+                    <ul class="list-disc pl-5 space-y-2 text-gray-700">
+                        <li>Refugios de animales</li>
+                        <li>Veterinarias y pet shops</li>
+                        <li>ONGs y municipios</li>
+                        <li>Plataformas de delivery</li>
+                        <li>Influencers petlovers</li>
+                    </ul>
+                    <div class="mt-4 text-pink-500 text-sm font-semibold flex items-center">
+                        <span>Ver detalles completos</span>
+                        <i class="fas fa-chevron-right ml-2"></i>
+                    </div>
+                </div>
+
+                <!-- Estructura de Costos -->
+                <div class="canvas-block bg-gray-100 p-6 rounded-xl border-l-4 border-gray-500" onclick="openModal('costosModal')">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-chart-line text-gray-500 text-xl mr-3"></i>
+                        <h3 class="text-xl font-semibold">Estructura de Costos</h3>
+                    </div>
+                    <ul class="list-disc pl-5 space-y-2 text-gray-700">
+                        <li>Desarrollo y mantenimiento tecnológico</li>
+                        <li>Marketing digital</li>
+                        <li>Integración con proveedores</li>
+                        <li>Capacitación y soporte</li>
+                        <li>Infraestructura para videollamadas</li>
+                    </ul>
+                    <div class="mt-4 text-gray-500 text-sm font-semibold flex items-center">
+                        <span>Ver detalles completos</span>
+                        <i class="fas fa-chevron-right ml-2"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Visualizaciones Dinámicas -->
+    <section id="stats" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12 section-title">Estadísticas y Proyecciones</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Gráfico de Fuentes de Ingresos -->
+                <div class="bg-white p-6 rounded-xl shadow-md border">
+                    <h3 class="text-xl font-semibold mb-4">Distribución de Fuentes de Ingresos</h3>
+                    <div class="h-64">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+                
+                <!-- Mapa de Clientes Objetivo -->
+                <div class="bg-white p-6 rounded-xl shadow-md border">
+                    <h3 class="text-xl font-semibold mb-4">Expansión Geográfica</h3>
+                    <div class="h-64 bg-blue-50 rounded-lg flex flex-col items-center justify-center relative overflow-hidden p-4">
+                        <div class="absolute top-4 left-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                            Quito - Fase 1
+                        </div>
+                        <div class="absolute bottom-4 right-4 bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                            Guayaquil - Fase 2
+                        </div>
+                        <div class="text-center z-10">
+                            <i class="fas fa-map-marked-alt text-4xl text-blue-500 mb-2"></i>
+                            <p class="text-gray-600 font-medium">Expansión progresiva en zonas urbanas de Ecuador</p>
+                            <div class="mt-4 grid grid-cols-2 gap-2 text-sm">
+                                <div class="bg-white p-2 rounded shadow-sm">
+                                    <div class="font-semibold">Fase 1</div>
+                                    <div>Quito</div>
+                                </div>
+                                <div class="bg-white p-2 rounded shadow-sm">
+                                    <div class="font-semibold">Fase 2</div>
+                                    <div>Guayaquil</div>
+                                </div>
+                                <div class="bg-white p-2 rounded shadow-sm">
+                                    <div class="font-semibold">Fase 3</div>
+                                    <div>Cuenca</div>
+                                </div>
+                                <div class="bg-white p-2 rounded shadow-sm">
+                                    <div class="font-semibold">Fase 4</div>
+                                    <div>Ambato</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Línea de Tiempo -->
+            <div class="mt-12 bg-white p-6 rounded-xl shadow-md border">
+                <h3 class="text-xl font-semibold mb-6 text-center">Plan de Expansión 2023-2025</h3>
+                <div class="flex flex-col md:flex-row justify-between items-start">
+                    <div class="text-center mb-8 md:mb-0 md:w-1/4">
+                        <div class="w-20 h-20 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold mx-auto mb-4 text-2xl">
+                            F1
+                        </div>
+                        <h4 class="font-semibold text-lg">Fase 1: Lanzamiento</h4>
+                        <p class="text-sm text-gray-600 mb-2">Q4 2023 - Q1 2024</p>
+                        <div class="timeline-phase text-left text-sm text-gray-700 mt-4">
+                            <p class="font-medium">• App básica funcional</p>
+                            <p>• 10 refugios aliados</p>
+                            <p>• 500 usuarios objetivo</p>
+                            <p>• Cobertura en Quito</p>
+                            <p>• Alianzas con 15 veterinarias</p>
+                        </div>
+                    </div>
+                    
+                    <div class="hidden md:flex items-center justify-center w-1/4 h-1 bg-gray-300 mt-10"></div>
+                    
+                    <div class="text-center mb-8 md:mb-0 md:w-1/4">
+                        <div class="w-20 h-20 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold mx-auto mb-4 text-2xl">
+                            F2
+                        </div>
+                        <h4 class="font-semibold text-lg">Fase 2: Expansión</h4>
+                        <p class="text-sm text-gray-600 mb-2">Q2 2024 - Q4 2024</p>
+                        <div class="timeline-phase text-left text-sm text-gray-700 mt-4">
+                            <p class="font-medium">• Funcionalidades premium</p>
+                            <p>• 25+ refugios aliados</p>
+                            <p>• 2,000+ usuarios</p>
+                            <p>• Expansión a Guayaquil</p>
+                            <p>• Integración con Rappi</p>
+                        </div>
+                    </div>
+                    
+                    <div class="hidden md:flex items-center justify-center w-1/4 h-1 bg-gray-300 mt-10"></div>
+                    
+                    <div class="text-center md:w-1/4">
+                        <div class="w-20 h-20 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold mx-auto mb-4 text-2xl">
+                            F3
+                        </div>
+                        <h4 class="font-semibold text-lg">Fase 3: Consolidación</h4>
+                        <p class="text-sm text-gray-600 mb-2">2025</p>
+                        <div class="timeline-phase text-left text-sm text-gray-700 mt-4">
+                            <p class="font-medium">• Plataforma completa</p>
+                            <p>• 50+ refugios aliados</p>
+                            <p>• 10,000+ usuarios</p>
+                            <p>• Cobertura nacional</p>
+                            <p>• Expansión regional</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Simulación de API -->
+    <section class="py-16 bg-gradient-to-r from-orange-400 to-pink-500 text-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">PetConecta en Tiempo Real</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white bg-opacity-20 p-6 rounded-xl text-center backdrop-blur-sm">
+                    <i class="fas fa-paw text-4xl mb-4"></i>
+                    <h3 class="stats-counter mb-2" id="pets-adoption">128</h3>
+                    <p>Mascotas en adopción</p>
+                </div>
+                
+                <div class="bg-white bg-opacity-20 p-6 rounded-xl text-center backdrop-blur-sm">
+                    <i class="fas fa-users text-4xl mb-4"></i>
+                    <h3 class="stats-counter mb-2" id="active-users">542</h3>
+                    <p>Usuarios activos</p>
+                </div>
+                
+                <div class="bg-white bg-opacity-20 p-6 rounded-xl text-center backdrop-blur-sm">
+                    <i class="fas fa-home text-4xl mb-4"></i>
+                    <h3 class="stats-counter mb-2" id="shelters-partners">16</h3>
+                    <p>Refugios aliados</p>
+                </div>
+            </div>
+            
+            <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white bg-opacity-20 p-4 rounded-xl text-center backdrop-blur-sm">
+                    <i class="fas fa-syringe text-2xl mb-2"></i>
+                    <h4 class="text-xl font-semibold mb-1" id="vaccines">243</h4>
+                    <p class="text-sm">Vacunas aplicadas</p>
+                </div>
+                
+                <div class="bg-white bg-opacity-20 p-4 rounded-xl text-center backdrop-blur-sm">
+                    <i class="fas fa-heart text-2xl mb-2"></i>
+                    <h4 class="text-xl font-semibold mb-1" id="adoptions">87</h4>
+                    <p class="text-sm">Adopciones exitosas</p>
+                </div>
+                
+                <div class="bg-white bg-opacity-20 p-4 rounded-xl text-center backdrop-blur-sm">
+                    <i class="fas fa-shopping-bag text-2xl mb-2"></i>
+                    <h4 class="text-xl font-semibold mb-1" id="orders">156</h4>
+                    <p class="text-sm">Pedidos este mes</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Galería de Imágenes -->
+    <section id="gallery" class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12 section-title">Nuestra Comunidad</h2>
+            <p class="text-center text-xl text-gray-600 mb-8 max-w-3xl mx-auto">"Conectamos corazones humanos con patas peludas a través de tecnología que transforma vidas"</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                <div class="overflow-hidden rounded-xl shadow-lg">
+                    <img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" 
+                         alt="Mascotas felices" class="w-full h-64 object-cover transition duration-500 hover:scale-110">
+                </div>
+                <div class="overflow-hidden rounded-xl shadow-lg">
+                    <img src="https://images.unsplash.com/photo-1583337130417-3346a1be7dee?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" 
+                         alt="Voluntarios con mascotas" class="w-full h-64 object-cover transition duration-500 hover:scale-110">
+                </div>
+                <div class="overflow-hidden rounded-xl shadow-lg">
+                    <img src="https://images.unsplash.com/photo-1560743641-3914f2c45636?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" 
+                         alt="Veterinario atendiendo mascota" class="w-full h-64 object-cover transition duration-500 hover:scale-110">
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl p-8 shadow-md border">
+                <h3 class="text-2xl font-bold text-center mb-6">Nuestro Impacto Social</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <h4 class="font-semibold text-lg mb-3 text-orange-500">Misión</h4>
+                        <p class="text-gray-700 mb-6">Revolucionar el cuidado animal mediante tecnología accesible que conecta a dueños, proveedores de servicios y refugios en una plataforma integral que promueve el bienestar y la adopción responsable.</p>
+                        
+                        <h4 class="font-semibold text-lg mb-3 text-orange-500">Visión</h4>
+                        <p class="text-gray-700">Ser la plataforma líder en Latinoamérica para el cuidado de mascotas, reconocida por nuestro impacto social positivo y nuestra innovación tecnológica al servicio del bienestar animal.</p>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-lg mb-3 text-orange-500">Valores</h4>
+                        <ul class="list-disc pl-5 space-y-2 text-gray-700">
+                            <li><span class="font-medium">Compasión:</span> Poner el bienestar animal en el centro de cada decisión</li>
+                            <li><span class="font-medium">Innovación:</span> Buscar constantemente soluciones tecnológicas creativas</li>
+                            <li><span class="font-medium">Transparencia:</span> Operar con honestidad en todas nuestras relaciones</li>
+                            <li><span class="font-medium">Comunidad:</span> Fomentar conexiones significativas entre amantes de mascotas</li>
+                            <li><span class="font-medium">Sostenibilidad:</span> Crear un modelo de negocio con impacto social positivo</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonios -->
+    <section id="testimonials" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12 section-title">Lo que dicen nuestros usuarios</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Testimonio 1 -->
+                <div class="bg-white p-6 rounded-xl shadow-md border">
+                    <div class="flex items-center mb-4">
+                        <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80" 
+                             alt="Usuario" class="w-16 h-16 rounded-full object-cover mr-4">
+                        <div>
+                            <h4 class="font-semibold">María González</h4>
+                            <p class="text-sm text-gray-600">Dueña de Loki (Pastor Alemán)</p>
+                            <div class="flex text-yellow-400 mt-1">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-700 italic">"PetConecta ha simplificado completamente el cuidado de mi perro Loki. Desde agendar sus citas veterinarias hasta comprar su alimento favorito, todo está en un solo lugar. La función de recordatorios de vacunas me ha salvado de varios olvidos."</p>
+                </div>
+                
+                <!-- Testimonio 2 -->
+                <div class="bg-white p-6 rounded-xl shadow-md border">
+                    <div class="flex items-center mb-4">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80" 
+                             alt="Veterinario" class="w-16 h-16 rounded-full object-cover mr-4">
+                        <div>
+                            <h4 class="font-semibold">Dr. Carlos Mendoza</h4>
+                            <p class="text-sm text-gray-600">Veterinario aliado - Clínica Animalia</p>
+                            <div class="flex text-yellow-400 mt-1">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-700 italic">"Como veterinario, PetConecta me ha permitido llegar a más pacientes y ofrecer un seguimiento continuo que antes no era posible. La historia clínica digital de cada mascota facilita mis diagnósticos y los dueños aprecian la transparencia."</p>
+                </div>
+                
+                <!-- Testimonio 3 -->
+                <div class="bg-white p-6 rounded-xl shadow-md border">
+                    <div class="flex items-center mb-4">
+                        <img src="https://images.unsplash.com/photo-1534751516642-a1af1ef26a56?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80" 
+                             alt="Voluntario" class="w-16 h-16 rounded-full object-cover mr-4">
+                        <div>
+                            <h4 class="font-semibold">Andrea Torres</h4>
+                            <p class="text-sm text-gray-600">Voluntaria en Refugio Patitas</p>
+                            <div class="flex text-yellow-400 mt-1">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-700 italic">"Gracias a PetConecta, hemos encontrado hogares para más de 50 mascotas en los últimos 3 meses. La plataforma nos permite mostrar a nuestros animales de manera profesional y conectar con adoptantes responsables de forma eficiente."</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-paw text-2xl text-orange-500 mr-2"></i>
+                        <span class="text-xl font-bold">PetConecta</span>
+                    </div>
+                    <p class="text-gray-400 mb-4">Innovación en el cuidado de mascotas mediante tecnología con propósito.</p>
+                    <div class="flex space-x-3">
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="fab fa-facebook-f text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="fab fa-instagram text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="fab fa-tiktok text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="fab fa-twitter text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">Enlaces Rápidos</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#canvas" class="text-gray-400 hover:text-white transition">Modelo Canvas</a></li>
+                        <li><a href="#features" class="text-gray-400 hover:text-white transition">Funcionalidades</a></li>
+                        <li><a href="#stats" class="text-gray-400 hover:text-white transition">Estadísticas</a></li>
+                        <li><a href="#testimonials" class="text-gray-400 hover:text-white transition">Testimonios</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">Contacto</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li class="flex items-center">
+                            <i class="fas fa-envelope mr-2 text-orange-500"></i>
+                            info@petconecta.com
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-phone mr-2 text-orange-500"></i>
+                            +593 99 123 4567
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-map-marker-alt mr-2 text-orange-500"></i>
+                            Quito, Ecuador
+                        </li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">Descarga la App</h4>
+                    <div class="flex space-x-2">
+                        <a href="#" class="bg-black text-white p-2 rounded flex items-center justify-center w-full mb-2 hover:bg-gray-900 transition">
+                            <i class="fab fa-apple mr-2"></i>
+                            <div class="text-left">
+                                <div class="text-xs">Disponible en</div>
+                                <div class="font-semibold">App Store</div>
+                            </div>
+                        </a>
+                        <a href="#" class="bg-black text-white p-2 rounded flex items-center justify-center w-full hover:bg-gray-900 transition">
+                            <i class="fab fa-google-play mr-2"></i>
+                            <div class="text-left">
+                                <div class="text-xs">Disponible en</div>
+                                <div class="font-semibold">Google Play</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>© 2023 PetConecta. Todos los derechos reservados.</p>
+                <p class="mt-2">Desarrollado por Jair Alexander Cruz Gallegos – Instituto Tecnológico TecnoEcuatoriano</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modales para cada bloque del Canvas -->
+    <div id="segmentosModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('segmentosModal')">&times;</span>
+            <h3 class="text-2xl font-bold mb-4 text-blue-600">Segmentos de Clientes</h3>
+            <div class="space-y-6">
+                <div class="bg-blue-50 p-4 rounded-lg">
+                    <h4 class="font-semibold text-lg mb-2 text-blue-700">Jóvenes adultos (25-40 años)</h4>
+                    <p class="text-gray-700">Residentes en zonas urbanas de Quito y Guayaquil, con estilo de vida digital, ingresos medios a altos (USD $800+ mensuales) y alta disposición a invertir en el bienestar de sus mascotas. Tecnológicamente adeptos, activos en redes sociales y con alto nivel educativo.</p>
+                    <div class="mt-2 flex items-center text-sm text-blue-600">
+                        <i class="fas fa-users mr-1"></i>
+                        <span>Población objetivo: 450,000 personas en Quito y Guayaquil</span>
+                    </div>
+                </div>
+                
+                <div class="bg-blue-50 p-4 rounded-lg">
+                    <h4 class="font-semibold text-lg mb-2 text-blue-700">Petlovers digitales</h4>
+                    <p class="text-gray-700">Personas que consideran a sus mascotas como miembros de la familia, buscan soluciones tecnológicas para su cuidado y están activos en redes sociales. Realizan compras online regularmente y valoran la conveniencia, personalización y calidad en servicios para mascotas.</p>
+                    <div class="mt-2 flex items-center text-sm text-blue-600">
+                        <i class="fas fa-mobile-alt mr-1"></i>
+                        <span>95% utiliza smartphone diariamente para gestionar actividades</span>
+                    </div>
+                </div>
+                
+                <div class="bg-blue-50 p-4 rounded-lg">
+                    <h4 class="font-semibold text-lg mb-2 text-blue-700">Refugios y veterinarias</h4>
+                    <p class="text-gray-700">Organizaciones que necesitan herramientas digitales para gestionar adopciones, citas y seguimiento de animales bajo su cuidado. Buscan aumentar su alcance, optimizar procesos operativos y mejorar la comunicación con adoptantes y dueños de mascotas.</p>
+                    <div class="mt-2 flex items-center text-sm text-blue-600">
+                        <i class="fas fa-clinic-medical mr-1"></i>
+                        <span>120+ clínicas veterinarias identificadas en Quito y Guayaquil</span>
+                    </div>
+                </div>
+                
+                <div class="bg-blue-50 p-4 rounded-lg">
+                    <h4 class="font-semibold text-lg mb-2 text-blue-700">ONGs y municipios</h4>
+                    <p class="text-gray-700">Entidades interesadas en programas de bienestar animal, control poblacional y adopción responsable. Buscan soluciones tecnológicas para optimizar sus programas, medir impacto y conectar con la comunidad de manera más efectiva.</p>
+                    <div class="mt-2 flex items-center text-sm text-blue-600">
+                        <i class="fas fa-hands-helping mr-1"></i>
+                        <span>25+ organizaciones de bienestar animal en Ecuador</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="propuestaModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('propuestaModal')">&times;</span>
+            <h3 class="text-2xl font-bold mb-4 text-green-600">Propuesta de Valor</h3>
+            <div class="space-y-6">
+                <div class="bg-green-50 p-4 rounded-lg">
+                    <h4 class="font-semibold text-lg mb-2 text-green-700">Plataforma Integral Todo-en-Uno</h4>
+                    <p class="text-gray-700">Solución completa que centraliza servicios de salud, alimentación, adopción, monitoreo y comunidad para mascotas. Elimina la necesidad de usar múltiples aplicaciones y servicios desconectados, ofreciendo una experiencia unificada y coherente.</p>
+                    <ul class="list-disc pl-5 mt-2 text-gray-700">
+                        <li>Historial médico digital unificado</li>
+                        <li>Programación inteligente de recordatorios</li>
+                        <li>Perfiles personalizados para cada mascota</li>
+                        <li>Interfaz adaptada a diferentes tipos de usuarios</li>
+                    </ul>
+                </div>
+                
+                <div class="bg-green-50 p-4 rounded-lg">
+                    <h4 class="font-semibold text-lg mb-2 text-green-700">Seguridad y Trazabilidad Total</h4>
+                    <p class="text-gray-700">Sistema de verificación de proveedores y historial completo de cada mascota para garantizar transparencia y confianza en todos los servicios. Implementación de blockchain para registros médicos inalterables y sistema de reputación para proveedores.</p>
+                    <ul class="list-disc pl-5 mt-2 text-gray-700">
+                        <li>Certificación obligatoria para todos los proveedores</li>
+                        <li>Historial completo de vacunas y tratamientos</li>
+                        <li>Sistema de reseñas y calificaciones verificado</li>
+                        <li>Protección de datos según LOPD</li>
+                    </ul>
+                </div>
+                
+                <div class="bg-green-50 p-4 rounded-lg">
+                    <h4 class="font-semibold text-lg mb-2 text-green-700">Innovación Social con Propósito</h4>
+                    <p class="text-gray-700">Fomento de adopción responsable y voluntariado digital para crear comunidad alrededor del bienestar animal. Programa "Adopta Conecta" que incluye seguimiento post-adopción y "Voluntariado Virtual" para personas con movilidad reducida.</p>
+                    <ul class="list-disc pl-5 mt-2 text-gray-700">
+                        <li>Programas educativos sobre tenencia responsable</li>
+                        <li>Campañas de esterilización con partners locales</li>
+                        <li>Eventos comunitarios presenciales y virtuales</li>
+                        <li>Donación del 2% de ingresos a refugios aliados</li>
+                    </ul>
+                </div>
+                
+                <div class="bg-green-50 p-4 rounded-lg">
+                    <h4 class="font-semibold text-lg mb-2 text-green-700">Experiencia Emocionalmente Conectada</h4>
+                    <p class="text-gray-700">Interfaz emocionalmente diseñada que genera vínculos entre usuarios, mascotas y proveedores de servicios. Elementos de gamificación, comunidad de apoyo y contenido educativo que fomentan el engagement y la lealtad.</p>
+                    <ul class="list-disc pl-5 mt-2 text-gray-700">
+                        <li>Celebración de hitos de las mascotas</li>
+                        <li>Comunidades por razas y intereses específicos</li>
+                        <li>Contenido educativo creado por expertos</li>
+                        <li>Sistema de recompensas por participación</li>
+                    </ul>
+                </div>
+                
+                <div class="bg-green-50 p-4 rounded-lg">
+                    <h4 class="font-semibold text-lg mb-2 text-green-700">Soporte 24/7 y Monitoreo Proactivo</h4>
+                    <p class="text-gray-700">Asistencia técnica permanente y monitoreo en tiempo real para emergencias veterinarias. Integración con wearables para mascotas y sistema de alertas para dueños y veterinarios en caso de anomalías detectadas.</p>
+                    <ul class="list-disc pl-5 mt-2 text-gray-700">
+                        <li>Chatbot inteligente para consultas básicas 24/7</li>
+                        <li>Soporte humano en horario extendido</li>
+                        <li>Integración con dispositivos IoT para mascotas</li>
+                        <li>Alertas automáticas para recordatorios importantes</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="canalesModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('canalesModal')">&times;</span>
+            <h3 class="text-2xl font-bold mb-4 text-purple-600">Canales</h3>
+            <div class="space-y-6">
+                <div class="bg-purple-50 p-4 rounded-lg">
+                    <h4 class="font-semibold text-lg mb-2 text-purple-700">Aplicación Móvil Multiplataforma</h4>
+                    <p class="text-gray-700">Disponible en Google Play y App Store con interfaz intuitiva y funcionalidades adaptadas a dispositivos móviles. Diseño responsive que prioriza las tareas más frecuentes y ofrece experiencia optimizada según el tipo de usuario (dueño, veterinario, refugio).</p>
+                    <div class="grid grid-cols-2 gap-2 mt-3">
+                        <div class="bg-white p-2 rounded text-center">
+                            <i class="fab fa-google-play text-purple-500 text-xl mb-1"></i>
+                            <div class="text-sm font-medium">Google Play</div>
+                            <div class="text-xs text-gray-600">4.8★ (2.4K reseñas)</div>
+                        </div>
+                        <div class="bg-white p-2 rounded text-center">
+                            <i class="fab fa-app-store-ios text-purple-500 text-xl mb-1"></i>
+                            <div class="text-sm font-medium">App Store</div>
+                            <div class="text-xs text-gray-600">4.9★ (1.8K reseñas)</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-purple-50 p-4 rounded-lg">
+                    <h4 class="font-semibold text-lg mb-2 text-purple-700">Plataforma Web Responsive</h4>
+                    <p class="text-gray-700">Sitio web institucional con blog educativo, acceso completo a servicios y gestión de cuenta desde cualquier dispositivo. Optimizado para SEO con contenido valioso sobre cuidado animal que atrae tráfico orgánico y establece autoridad en el sector.</p>
+                    <ul class="list-disc pl-5 mt-2 text-gray-700">
+                        <li>Blog con 50+ artículos sobre cuidado animal</li>
+                        <li>Acceso a todas las funcionalidades de la app</li>
+                        <li>Panel de administración para partners</li>
+                        <li>Integración con herramientas de analytics</li>
+                    </ul>
+                </div>
+                
+                <div class="bg-purple-50 p-4 rounded-lg">
+                    <h4 class="font-semibold text-lg mb-2 text-purple-700">Presencia en Redes Sociales</h4>
+                    <p class="text-gray-700">Estrategia omnicanal en Instagram, Facebook, TikTok y Twitter para engagement comunitario, marketing de contenidos y soporte al cliente. Contenido viral, historias de éxito y educación en formato accesible.</p>
+                    <div class="grid grid-cols-2 gap-2 mt-3">
+                        <div class="bg-white p-2 rounded text-center">
+                            <i class="fab fa-instagram text-purple-500 text-xl mb-1"></i>
+                            <div class="text-sm font-medium">Instagram</div>
+                            <div class="text-xs text-gray-600">45K seguidores</div>
+                        </div>
+                        <div class="bg-white p-2 rounded text-center">
+                            <i class="fab fa-tiktok text-purple-500 text-xl mb-1"></i>
+                            <div class="text-sm font-medium">TikTok</div>
+                            <div class="text-xs text-gray-600">120K seguidores</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-purple-50 p-4 rounded-lg">
+                    <h4 class="font-semibold text-lg mb-2 text-purple-700">E-commerce Integrado</h4>
+                    <p class="text-gray-700">Tienda online dentro de la plataforma para venta directa de productos y servicios con múltiples opciones de pago, envío a domicilio y recogida en puntos aliados. Catálogo curado con productos premium y opciones económicas.</p>
+                    <ul class="list-disc pl-5 mt-2 text-gray-700">
+                        <li>+500 productos en catálogo</li>
+                        <li>5 métodos de pago diferentes</li>
+                        <li>Entrega en 24-48 horas en áreas urbanas</li>
+                        <li>Programa de fidelización integrado</li>
+                    </ul>
+                </div>
+                
+                <div class="bg-purple-50 p-4 rounded-lg">
+                    <h4 class="font-semibold text-lg mb-2 text-purple-700">Comunicación por Videollamadas</h4>
+                    <p class="text-gray-700">Sistema integrado para consultas virtuales, procesos de adopción y reuniones comunitarias. Tecnología WebRTC que no requiere descargas adicionales y funciona en navegadores modernos y app nativa.</p>
+                    <ul class="list-disc pl-5 mt-2 text-gray-700">
+                        <li>Consultas veterinarias virtuales</li>
+                        <li>Entrevistas de adopción remotas</li>
+                        <li>Webinars educativos en vivo</li>
+                        <li>Soporte técnico visual</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Los demás modales seguirían la misma estructura detallada -->
+
+    <script>
+        // Gráfico de fuentes de ingresos
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('revenueChart').getContext('2d');
+            const revenueChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Suscripciones Premium', 'Comisiones por Servicios', 'Publicidad Segmentada', 'Venta de Productos', 'Servicios B2B'],
+                    datasets: [{
+                        data: [35, 25, 15, 20, 5],
+                        backgroundColor: [
+                            '#FF9A3D',
+                            '#4ECDC4',
+                            '#45B7D1',
+                            '#96CEB4',
+                            '#FF6B6B'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                boxWidth: 12,
+                                padding: 15
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Simulación de API - actualización de datos en tiempo real
+            function updateStats() {
+                // Simular datos dinámicos
+                const petsAdoption = document.getElementById('pets-adoption');
+                const activeUsers = document.getElementById('active-users');
+                const sheltersPartners = document.getElementById('shelters-partners');
+                const vaccines = document.getElementById('vaccines');
+                const adoptions = document.getElementById('adoptions');
+                const orders = document.getElementById('orders');
+                
+                // Incrementar valores ligeramente para simular actualización
+                let petsValue = parseInt(petsAdoption.textContent);
+                let usersValue = parseInt(activeUsers.textContent);
+                let sheltersValue = parseInt(sheltersPartners.textContent);
+                let vaccinesValue = parseInt(vaccines.textContent);
+                let adoptionsValue = parseInt(adoptions.textContent);
+                let ordersValue = parseInt(orders.textContent);
+                
+                petsAdoption.textContent = petsValue + Math.floor(Math.random() * 3);
+                activeUsers.textContent = usersValue + Math.floor(Math.random() * 5);
+                sheltersPartners.textContent = sheltersValue + Math.floor(Math.random() * 2);
+                vaccines.textContent = vaccinesValue + Math.floor(Math.random() * 4);
+                adoptions.textContent = adoptionsValue + Math.floor(Math.random() * 2);
+                orders.textContent = ordersValue + Math.floor(Math.random() * 3);
+            }
+            
+            // Actualizar estadísticas cada 5 segundos
+            setInterval(updateStats, 5000);
+        });
+
+        // Funciones para modales
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'flex';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Cerrar modal al hacer clic fuera del contenido
+        window.onclick = function(event) {
+            const modals = document.getElementsByClassName('modal');
+            for (let modal of modals) {
+                if (event.target == modal) {
+                    modal.style.display = 'none';
+                }
+            }
+        }
+    </script>
+</body>
+</html>

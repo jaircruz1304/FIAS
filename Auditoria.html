@@ -479,6 +479,45 @@
         // --- INICIO DE LÓGICA MEJORADA ---
 
         /**
+         * --- NUEVA FUNCIÓN AÑADIDA ---
+         * Convierte un valor de fecha de Excel (serial o Date) a un string formateado.
+         * @param {*} excelDate - El valor de la celda de Excel.
+         * @returns {string} - La fecha formateada 'dd/mm/yyyy' o 'N/A'.
+         */
+        function convertExcelDate(excelDate) {
+            if (!excelDate) return 'N/A';
+
+            let date;
+            if (typeof excelDate === 'number') {
+                // Es un número serial de Excel
+                // 25569 es la diferencia de días entre el 01/01/1970 (Unix) y el 01/01/1900 (Excel),
+                // ajustado por un error de año bisiesto de Excel.
+                date = new Date((excelDate - 25569) * 86400 * 1000);
+                
+                // Ajustar por la zona horaria (la conversión pura puede dar un día de desfase)
+                date = new Date(date.getTime() + (date.getTimezoneOffset() * 60000));
+                
+            } else if (excelDate instanceof Date) {
+                // Ya es un objeto Date (gracias a cellDates: true)
+                date = excelDate;
+            } else {
+                // Es un string, intentar parsearlo
+                date = new Date(excelDate);
+                if (isNaN(date.getTime())) return excelDate; // Devolver el string original si no es válido
+            }
+            
+            if (isNaN(date.getTime())) return 'N/A'; // Comprobación final de validez
+            
+            // Formatear a 'dd/mm/yyyy' (puedes usar 'es-ES' o 'es-EC')
+            return date.toLocaleDateString('es-ES', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            });
+        }
+
+        /**
+         * --- FUNCIÓN MODIFICADA ---
          * Procesa los datos crudos del JSON de Excel para adaptarlos a la estructura de la aplicación.
          * @param {Array} jsonData - Los datos directamente de la librería XLSX.
          * @returns {Array} - Un array de objetos de recomendación procesados.
@@ -486,17 +525,23 @@
         function processExcelData(jsonData) {
             if (!jsonData) return [];
             
-            return jsonData.map(row => ({
-                proyecto: row.Proyecto || row.PROYECTO || 'N/A',
-                año: row.Año || row.AÑO || 'N/A',
-                riesgo: row.RIESGO || row["Nivel de Riesgo"] || row["NIVEL DE RIESGO"],
-                deficiencia: row.Deficiencia || row.DEFICIENCIA || '',
-                recomendacion: row.Recomendacion || row.RECOMENDACION || row.Recomendación || '',
-                observacion: row.Observacion || row.Observación || row.OBSERVACION || '',
-                estado: row.Estado || row.ESTADO || '',
-                responsable: row.Responsable || row.RESPONSABLE || 'N/A',
-                fechaSeguimiento: row["Fecha de seguimiento"] || row.FechaSeguimiento || row.FECHA_SEGUIMIENTO || 'N/A'
-            }));
+            return jsonData.map(row => {
+                // Obtenemos el valor crudo de la fecha primero
+                const rawDate = row["Fecha de seguimiento"] || row.FechaSeguimiento || row.FECHA_SEGUIMIENTO;
+
+                return {
+                    proyecto: row.Proyecto || row.PROYECTO || 'N/A',
+                    año: row.Año || row.AÑO || 'N/A',
+                    riesgo: row.RIESGO || row["Nivel de Riesgo"] || row["NIVEL DE RIESGO"],
+                    deficiencia: row.Deficiencia || row.DEFICIENCIA || '',
+                    recomendacion: row.Recomendacion || row.RECOMENDACION || row.Recomendación || '',
+                    observacion: row.Observacion || row.Observación || row.OBSERVACION || '',
+                    estado: row.Estado || row.ESTADO || '',
+                    responsable: row.Responsable || row.RESPONSABLE || 'N/A',
+                    // Aplicamos nuestra función de conversión
+                    fechaSeguimiento: convertExcelDate(rawDate) 
+                };
+            });
         }
         
         /**
@@ -751,7 +796,8 @@
                 const workbook = XLSX.read(data, { type: "array" });
                 const sheet = workbook.Sheets[workbook.SheetNames[0]];
                 
-                allRecommendationsData = processExcelData(XLSX.utils.sheet_to_json(sheet));
+                // --- MODIFICACIÓN: Añadido { cellDates: true } ---
+                allRecommendationsData = processExcelData(XLSX.utils.sheet_to_json(sheet, { cellDates: true }));
                 
                 if (allRecommendationsData.length === 0) {
                     throw new Error("No se encontraron datos válidos en el archivo Excel.");
@@ -793,7 +839,7 @@
             $('#modal-risk').text(data.riesgo || 'N/A');
             $('#modal-status').text(data.estado || 'N/A');
             $('#modal-responsible').text(data.responsable || 'N/A');
-            $('#modal-date').text(data.fechaSeguimiento || 'N/A');
+            $('#modal-date').text(data.fechaSeguimiento || 'N/A'); // Esto ahora usará la fecha formateada
             $('#modal-deficiency').text(data.deficiencia || 'N/A');
             $('#modal-recommendation').text(data.recomendacion || 'N/A');
             $('#modal-observation').text(data.observacion || 'N/A');

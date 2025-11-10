@@ -483,8 +483,6 @@
             if (normalizedEstado.includes('deficiente')) return 'status-Deficiente';
             return 'status-N-A';
         }
-
-        // ... (updateDashboardCards y updateRiskHeatmap funciones permanecen sin cambios)
         
         function updateDashboardCards(data) {
             const total = data.length;
@@ -604,7 +602,7 @@
         }
 
         // ====================================================================
-        // 🚀 FUNCIÓN DE GRÁFICOS CORREGIDA Y MEJORADA
+        // 🚀 FUNCIÓN DE GRÁFICOS CORREGIDA Y MEJORADA (Encapsulamiento y Barras Horizontales)
         // ====================================================================
         
         /**
@@ -675,7 +673,7 @@
                 options: {
                     indexAxis: 'y', // Hace las barras horizontales
                     responsive: true, 
-                    maintainAspectRatio: false, 
+                    maintainAspectRatio: false, // <-- CLAVE para evitar expansión
                     plugins: { 
                         legend: { display: false },
                         title: { display: false }
@@ -684,7 +682,7 @@
                         x: { beginAtZero: true },
                         y: { stacked: true }
                     },
-                    animation: { duration: 0 }, // Evita la expansión
+                    animation: { duration: 0 }, // <-- CLAVE para evitar el "lag" y expansión
                     hover: { animationDuration: 0 }
                 }
             });
@@ -699,7 +697,7 @@
                 options: { 
                     indexAxis: 'y', // Hace las barras horizontales
                     responsive: true, 
-                    maintainAspectRatio: false, 
+                    maintainAspectRatio: false, // <-- CLAVE para evitar expansión
                     plugins: { 
                         title: { display: false },
                         legend: { position: 'bottom' }
@@ -708,14 +706,12 @@
                         x: { stacked: true, beginAtZero: true },
                         y: { stacked: true }
                     },
-                    animation: { duration: 0 }, // Evita la expansión
+                    animation: { duration: 0 }, // <-- CLAVE para evitar el "lag" y expansión
                     hover: { animationDuration: 0 }
                 }
             });
         }
         
-        // ... (initializeTable, showRiskDetails, updateVisualizations, updateFilters, applyFilters permanecen sin cambios)
-
         /**
          * Inicializa la tabla DataTable.
          */

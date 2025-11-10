@@ -62,11 +62,10 @@
         .risk-N-A { background-color: #6c757d; color: white; }
         
         /* Contenedores de Gráfico con altura forzada */
-        .chart-container-50 {
-            flex: 1; /* Ocupa el 50% del espacio en el flex-column */
-            max-height: 50%;
+        .chart-container-full {
+            flex: 1; 
+            max-height: 100%; /* Ocupa el 100% del espacio en el flex-column */
             min-height: 0;
-            padding-bottom: 0.5rem;
         }
         
         /* Asegura que el canvas se ajuste al contenedor */
@@ -170,6 +169,38 @@
             <div class="row mb-4" id="dashboardCards">
                 </div>
 
+            <div class="card dashboard-card mb-4">
+                <div class="card-header-fias">
+                    <h5 class="mb-0"><i class="fas fa-filter me-2"></i> Filtros de Análisis Rápido</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 mb-2">
+                            <label for="projectFilter" class="form-label small">Filtrar por Proyecto</label>
+                            <select class="form-select form-select-sm" id="projectFilter"></select>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <label for="localidadFilter" class="form-label small">Filtrar por Localidad</label>
+                            <select class="form-select form-select-sm" id="localidadFilter"></select>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <label for="factorFilter" class="form-label small">Filtrar por Factor</label>
+                            <select class="form-select form-select-sm" id="factorFilter"></select>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <label for="riskFilter" class="form-label small">Filtrar por Riesgo Residual</label>
+                            <select class="form-select form-select-sm" id="riskFilter">
+                                <option value="">Todos los niveles</option>
+                                <option value="Alto">Alto</option>
+                                <option value="Medio">Medio</option>
+                                <option value="Bajo">Bajo</option>
+                                <option value="Muy Bajo">Muy Bajo</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
             <div class="row mb-4">
                 
                 <div class="col-md-6 mb-3">
@@ -186,16 +217,8 @@
                 </div>
                 
                 <div class="col-md-6 mb-3 d-flex flex-column" style="height: auto; min-height: 400px;">
-                    
-                    <div class="card dashboard-card chart-container-50">
-                        <div class="card-header-fias"><h5 class="mb-0">Distribución del Riesgo Inherente</h5></div>
-                        <div class="card-body p-3">
-                            <canvas id="inherentRiskChart" class="chart-canvas"></canvas>
-                        </div>
-                    </div>
-                    
-                    <div class="card dashboard-card chart-container-50">
-                        <div class="card-header-fias"><h5 class="mb-0">Distribución del Riesgo Residual</h5></div>
+                    <div class="card dashboard-card chart-container-full">
+                        <div class="card-header-fias"><h5 class="mb-0">Distribución del Riesgo Residual (Riesgos Activos)</h5></div>
                         <div class="card-body p-3">
                             <canvas id="residualRiskChart" class="chart-canvas"></canvas>
                         </div>
@@ -206,32 +229,12 @@
                 <div class="col-12">
                     <div class="card dashboard-card">
                         <div class="card-header-fias d-flex justify-content-between align-items-center">
-                            <h5 class="mb-0">Detalle Completo de la Matriz</h5>
+                            <h5 class="mb-0">Detalle Completo de la Matriz (Datos Filtrados)</h5>
                             <button class="btn btn-sm btn-outline-light" id="exportBtn">
                                 <i class="fas fa-download me-1"></i> Exportar Datos Visibles
                             </button>
                         </div>
                         <div class="card-body">
-                            <div class="row mb-3">
-                                <div class="col-md-4">
-                                    <label for="projectFilter" class="form-label small">Filtrar por Proyecto</label>
-                                    <select class="form-select form-select-sm" id="projectFilter"></select>
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="riskFilter" class="form-label small">Filtrar por Riesgo Residual</label>
-                                    <select class="form-select form-select-sm" id="riskFilter">
-                                        <option value="">Todos los niveles</option>
-                                        <option value="Alto">Alto</option>
-                                        <option value="Medio">Medio</option>
-                                        <option value="Bajo">Bajo</option>
-                                        <option value="Muy Bajo">Muy Bajo</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="factorFilter" class="form-label small">Filtrar por Factor</label>
-                                    <select class="form-select form-select-sm" id="factorFilter"></select>
-                                </div>
-                            </div>
                             <div class="table-responsive" id="tableContainer">
                                 <table id="risksTable" class="table table-hover table-striped w-100">
                                     <thead>
@@ -327,7 +330,7 @@
         // Variables globales
         let allRisksData = [];
         let table;
-        let inherentRiskChart, residualRiskChart; 
+        let residualRiskChart; // Solo mantenemos el gráfico residual
         
         /**
          * Normaliza el texto de las cabeceras complejas para mapeo.
@@ -362,7 +365,6 @@
 
         /**
          * Mapea y limpia los datos de Excel (CRUCIAL para la estabilidad de los filtros).
-         * **NOTA:** Se eliminan referencias a la Efectividad del Control.
          */
         function processExcelData(jsonData) {
             if (!jsonData || jsonData.length === 0) return [];
@@ -383,7 +385,6 @@
                 'Descripción del Control': 'planAccion',
                 'Responsable': 'responsable',
                 'Fecha de seguimiento (Columna de Auditoría Interna)': 'fechaSeguimiento',
-                // 'Evaluación de la efectividad del control. (Columna de Auditoría Interna)': 'efectividadControl' <--- ELIMINADO
             };
 
             const foundMapping = {};
@@ -408,7 +409,16 @@
                 
                 // Limpieza de datos y manejo de nulos (CRUCIAL para los filtros)
                 data.proyecto = (data.proyecto || 'N/A').trim();
-                data.localidad = (data.localidadCompleta || 'N/A').trim(); 
+                
+                // Separar Proyecto y Localidad si vienen juntos
+                let [project, ...localidadParts] = (data.localidadCompleta || 'N/A').split('/').map(s => s.trim());
+                if (localidadParts.length > 0) {
+                     data.localidad = localidadParts.join('/');
+                     // Si el campo PROYECTO estaba vacío, usar el primer segmento
+                     if (data.proyecto === 'N/A') data.proyecto = project;
+                } else {
+                     data.localidad = (data.localidadCompleta || 'N/A').trim();
+                }
                 
                 // Limpieza de saltos de línea y espacios en valores clave
                 data.riesgoResidual = (data.riesgoResidual || 'N/A').replace(/\n/g, ' ').trim();
@@ -475,7 +485,7 @@
                     <div class="card dashboard-card" style="border-left: 5px solid #ffc107;">
                         <div class="card-body">
                             <i class="fas fa-arrow-up fa-2x text-warning float-end"></i>
-                            <h5 class="card-title text-muted text-uppercase small">Riesgo Inherente Alto</h5>
+                            <h5 class="card-title text-muted text-uppercase small">Riesgo Inherente Alto (Ref.)</h5>
                             <h2 class="card-text">${inherenteAlto}</h2>
                         </div>
                     </div>
@@ -495,7 +505,7 @@
         }
         
         /**
-         * Reemplaza el Mapa de Calor con Tarjetas de Resumen por Factor.
+         * Actualiza las Tarjetas de Resumen por Factor (Riesgo Residual).
          */
         function updateSummaryCards(data) {
             const factors = [...new Set(data.map(item => item.factorRiesgo))].filter(Boolean).sort();
@@ -512,7 +522,7 @@
                 const altoMedioPercent = total > 0 ? Math.round((altoMedio / total) * 100) : 0;
 
                 const cardHtml = `
-                    <div class="col-md-6 col-lg-4 col-xl-4 mb-3">
+                    <div class="col-md-6 col-lg-6 col-xl-6 mb-3">
                         <div class="summary-card bg-white">
                             <div class="summary-card-title">${factor}</div>
                             <div class="summary-card-content text-primary">${total} <span class="small text-muted">riesgos</span></div>
@@ -525,36 +535,22 @@
                 `;
                 container.innerHTML += cardHtml;
             });
-
-            // Si hay muchos factores, ajusta el diseño de las columnas para que se vean bien
-            // La clase col-md-6 col-lg-4 ya proporciona una buena adaptabilidad
         }
 
 
         // ====================================================================
-        // 🚀 FUNCIÓN DE GRÁFICOS ACTUALIZADA
+        // 🚀 FUNCIÓN DE GRÁFICOS (Solo Residual)
         // ====================================================================
         
         /**
-         * Dibuja y actualiza los gráficos (Riesgo Inherente y Residual).
+         * Dibuja y actualiza el gráfico de Riesgo Residual.
          */
         function updateCharts(data) {
             
             const riskLevels = ['Muy Bajo', 'Bajo', 'Medio', 'Alto'];
             const riskColors = { 'Alto': '#dc3545', 'Medio': '#ffc107', 'Bajo': '#28a745', 'Muy Bajo': '#0dcaf0' };
 
-            // --- 1. DATOS para RIESGO INHERENTE ---
-            const inherentRiskCounts = data.reduce((acc, item) => {
-                const level = item.riesgoInherenteNivel;
-                acc[level] = (acc[level] || 0) + 1;
-                return acc;
-            }, { 'Alto': 0, 'Medio': 0, 'Bajo': 0, 'Muy Bajo': 0 });
-            
-            const inherentLabels = riskLevels;
-            const inherentValues = riskLevels.map(k => inherentRiskCounts[k]);
-            const inherentColors = inherentLabels.map(level => riskColors[level] || '#6c757d');
-            
-            // --- 2. DATOS para RIESGO RESIDUAL ---
+            // --- DATOS para RIESGO RESIDUAL ---
             const residualRiskCounts = data.reduce((acc, item) => {
                 const level = item.riesgoResidual;
                 acc[level] = (acc[level] || 0) + 1;
@@ -565,40 +561,10 @@
             const residualValues = riskLevels.map(k => residualRiskCounts[k]);
             const residualColors = residualLabels.map(level => riskColors[level] || '#6c757d');
             
-            // --- DESTRUIR Y RECREAR GRÁFICOS ---
-            if (inherentRiskChart) inherentRiskChart.destroy();
+            // --- DESTRUIR Y RECREAR GRÁFICO ---
             if (residualRiskChart) residualRiskChart.destroy();
             
-            // 1. Gráfico de Riesgo Inherente (Barra Horizontal)
-            inherentRiskChart = new Chart(document.getElementById('inherentRiskChart').getContext('2d'), {
-                type: 'bar',
-                data: {
-                    labels: inherentLabels,
-                    datasets: [{
-                        label: 'Cantidad de Riesgos',
-                        data: inherentValues,
-                        backgroundColor: inherentColors,
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    indexAxis: 'y', 
-                    responsive: true, 
-                    maintainAspectRatio: false, 
-                    plugins: { 
-                        legend: { display: false },
-                        title: { display: false }
-                    },
-                    scales: { 
-                        x: { beginAtZero: true },
-                        y: { stacked: true }
-                    },
-                    animation: { duration: 0 }, 
-                    hover: { animationDuration: 0 }
-                }
-            });
-
-            // 2. Gráfico de Riesgo Residual (Barra Horizontal)
+            // Gráfico de Riesgo Residual (Barra Horizontal)
             residualRiskChart = new Chart(document.getElementById('residualRiskChart').getContext('2d'), {
                 type: 'bar',
                 data: {
@@ -619,7 +585,7 @@
                         title: { display: false }
                     },
                     scales: { 
-                        x: { beginAtZero: true },
+                        x: { beginAtZero: true, title: { display: true, text: 'Cantidad de Riesgos' } },
                         y: { stacked: true }
                     },
                     animation: { duration: 0 }, 
@@ -630,7 +596,6 @@
         
         /**
          * Inicializa la tabla DataTable.
-         * **NOTA:** Columna de Efectividad del Control eliminada. Riesgo Inherente es Nivel (textual).
          */
         function initializeTable() {
             if (table) {
@@ -654,7 +619,7 @@
                         }
                     },
                     { 
-                        data: 'riesgoInherenteNivel', title: 'Riesgo Inherente (Nivel)', // <-- Nivel textual
+                        data: 'riesgoInherenteNivel', title: 'Riesgo Inherente (Nivel)', 
                         render: function(data, type) {
                             if (type === 'display') {
                                 return `<span class="risk-badge ${getRiskBadgeClass(data)}">${data}</span>`;
@@ -674,7 +639,7 @@
                     }
                 ],
                 columnDefs: [
-                    { targets: 4, className: 'text-center' } 
+                    { targets: [3, 4], className: 'text-center' } 
                 ],
                 language: { url: '//cdn.datatables.net/plug-ins/1.13.5/i18n/es-ES.json' },
                 pageLength: 10,
@@ -694,7 +659,7 @@
             document.getElementById('modal-factor').textContent = risk.factorRiesgo;
             document.getElementById('modal-responsible').textContent = risk.responsable;
             document.getElementById('modal-risk').innerHTML = `<span class="risk-badge ${getRiskBadgeClass(risk.riesgoResidual)}">${risk.riesgoResidual}</span>`;
-            document.getElementById('modal-inherent-risk').innerHTML = `<span class="risk-badge ${getRiskBadgeClass(risk.riesgoInherenteNivel)}">${risk.riesgoInherenteNivel}</span>`; // <-- Nivel textual
+            document.getElementById('modal-inherent-risk').innerHTML = `<span class="risk-badge ${getRiskBadgeClass(risk.riesgoInherenteNivel)}">${risk.riesgoInherenteNivel}</span>`; 
             
             document.getElementById('modal-date').textContent = risk.fechaSeguimiento;
             document.getElementById('modal-event').textContent = risk.eventoRiesgo;
@@ -708,12 +673,16 @@
 
         function updateVisualizations(data) {
             updateDashboardCards(data);
-            updateSummaryCards(data); // <-- Tarjetas de Resumen
+            updateSummaryCards(data); 
             updateCharts(data);
         }
 
+        /**
+         * Llena los selectores con opciones únicas.
+         */
         function updateFilters() {
             const proyectos = [...new Set(allRisksData.map(item => item.proyecto))].filter(Boolean);
+            const localidades = [...new Set(allRisksData.map(item => item.localidad))].filter(Boolean);
             const factores = [...new Set(allRisksData.map(item => item.factorRiesgo))].filter(Boolean);
 
             const fillSelect = (selectId, options, label) => {
@@ -726,20 +695,29 @@
             };
 
             fillSelect('projectFilter', proyectos, 'proyectos');
+            fillSelect('localidadFilter', localidades, 'localidades');
             fillSelect('factorFilter', factores, 'factores');
         }
 
+        /**
+         * Aplica los filtros a la tabla y actualiza las visualizaciones.
+         */
         function applyFilters() {
             const projectFilter = document.getElementById('projectFilter').value;
+            const localidadFilter = document.getElementById('localidadFilter').value;
             const riskFilter = document.getElementById('riskFilter').value;
             const factorFilter = document.getElementById('factorFilter').value;
             
-            // NOTA: La columna 4 ahora es Riesgo Inherente Nivel
-            table.column(0).search(projectFilter, true, false).draw(); 
-            table.column(2).search(factorFilter, true, false).draw(); 
-            table.column(3).search(riskFilter, true, false).draw(); 
+            // Aplicar filtros a las columnas de DataTable
+            table.column(0).search(projectFilter, true, false); // Columna Proyecto
+            table.column(1).search(localidadFilter, true, false); // Columna Localidad
+            table.column(2).search(factorFilter, true, false); // Columna Factor
+            table.column(3).search(riskFilter, true, false).draw(); // Columna Riesgo Residual (y redibuja)
             
+            // Obtener los datos filtrados actualmente en la tabla
             const filteredData = table.rows({ search: 'applied' }).data().toArray();
+            
+            // Actualizar las visualizaciones con los datos filtrados
             updateVisualizations(filteredData);
         }
 
@@ -780,8 +758,13 @@
                 allRisksData = processExcelData(finalJson);
                 
                 updateFilters();
-                updateVisualizations(allRisksData);
-                initializeTable();
+                
+                // Primero inicializa la tabla con todos los datos
+                initializeTable(); 
+
+                // Luego aplica los filtros (si ya tienen valores seleccionados) y actualiza las visualizaciones
+                applyFilters();
+
                 
                 document.getElementById('tableContainer').style.display = 'block';
                 document.getElementById('mainContent').style.display = 'block';
@@ -850,11 +833,14 @@
             document.getElementById('logoutBtn').addEventListener('click', handleLogout);
             document.getElementById('refreshData').addEventListener('click', loadExcelData);
             
+            // Event listeners para los filtros dinámicos (TODOS llaman a applyFilters)
             document.getElementById('projectFilter').addEventListener('change', applyFilters);
+            document.getElementById('localidadFilter').addEventListener('change', applyFilters);
             document.getElementById('riskFilter').addEventListener('change', applyFilters);
             document.getElementById('factorFilter').addEventListener('change', applyFilters);
             
             document.getElementById('exportBtn').addEventListener('click', function() {
+                // Mapear solo los datos actualmente visibles/filtrados
                 const exportData = table.rows({ search: 'applied' }).data().toArray().map(item => ({
                     'Proyecto': item.proyecto,
                     'Localidad': item.localidad,
@@ -871,7 +857,7 @@
                 const ws = XLSX.utils.json_to_sheet(exportData);
                 const wb = XLSX.utils.book_new();
                 XLSX.utils.book_append_sheet(wb, ws, "Matriz_Riesgos_Residuales_FIAS");
-                XLSX.writeFile(wb, "Matriz_Riesgos_Residuales_FIAS.xlsx");
+                XLSX.writeFile(wb, "Matriz_Riesgos_Residuales_FIAS_Filtrado.xlsx");
             });
         });
     </script>

@@ -95,7 +95,7 @@
         
         .heatmap-cell:hover {
             transform: scale(1.05);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
         }
 
         .heatmap-count {
@@ -128,6 +128,13 @@
             justify-content: center;
             align-items: center;
             flex-direction: column;
+        }
+        
+        /* CORRECCIÓN: Evita que el Canvas del gráfico se escale fuera de su contenedor al hacer hover */
+        #inherentRiskChart, #complianceChart {
+            max-width: 100%;
+            max-height: 100%;
+            /* Es una buena práctica asegurar que no haya un ancho/alto fijo que cause desbordamiento */
         }
     </style>
 </head>
@@ -262,7 +269,8 @@
                                             <th>Factor</th>
                                             <th>Riesgo Residual</th>
                                             <th>Efectividad Control</th>
-                                            <th>Riesgo Inherente (Escala)</th> <th>Responsable</th>
+                                            <th>Riesgo Inherente (Escala)</th>
+                                            <th>Responsable</th>
                                             <th>Evento de Riesgo</th>
                                             <th>Acciones</th>
                                         </tr>
@@ -345,7 +353,7 @@
         // Variables globales
         let allRisksData = [];
         let table;
-        let inherentRiskChart, complianceChart; // complianceChart se mantiene, inherentRiskChart es nuevo
+        let inherentRiskChart, complianceChart; 
         
         /**
          * Normaliza el texto de las cabeceras complejas para mapeo.
@@ -353,8 +361,39 @@
         const normalizeHeader = (header) => (header || '').replace(/\s+/g, ' ').trim().toLowerCase();
 
         /**
-         * Mapea las cabeceras del Excel a propiedades de JS y SEPARA PROYECTO/LOCALIDAD.
-         * Se añade el Riesgo Inherente numérico.
+         * Convierte el valor de fecha de Excel (formato ISO o número) a DD/MM/YYYY.
+         * @param {string|number|Date} dateValue - El valor de fecha.
+         * @returns {string} Fecha en formato DD/MM/YYYY o 'N/A'.
+         */
+        const convertToDateString = (dateValue) => {
+            if (!dateValue) return 'N/A';
+
+            let date;
+            if (dateValue instanceof Date) {
+                date = dateValue;
+            } else if (typeof dateValue === 'string') {
+                // Intenta analizar cadenas ISO (ej. 2025-10-06T00:00:00.000Z)
+                date = new Date(dateValue);
+            } else if (typeof dateValue === 'number') {
+                 // Si es un número (formato de fecha de Excel), requiere lógica de conversión
+                 // Asumiendo que XLSX.read se usa con cellDates: true, esto debería dar un objeto Date.
+                 // Si aun así se recibe un número de serie de Excel, se necesitaría un ajuste más complejo,
+                 // pero con 'cellDates: true', lo manejamos como objeto Date.
+                 date = new Date(dateValue); 
+            }
+            
+            if (date && !isNaN(date.getTime())) {
+                const day = String(date.getDate()).padStart(2, '0');
+                const month = String(date.getMonth() + 1).padStart(2, '0'); // Meses son 0-indexados
+                const year = date.getFullYear();
+                return `${day}/${month}/${year}`;
+            }
+
+            return 'N/A';
+        };
+
+        /**
+         * Mapea y limpia los datos de Excel.
          */
         function processExcelData(jsonData) {
             if (!jsonData || jsonData.length === 0) return [];
@@ -368,8 +407,8 @@
                 'Causa': 'causa',
                 'Efercto ': 'efecto', 
                 'Factor de Riesgo': 'factorRiesgo',
-                'Nivel de Riesgo inherente': 'riesgoInherenteNivel', // Nivel textual (Alto, Medio, etc.)
-                'Riesgo inherente': 'riesgoInherenteEscala', // Escala numérica (1 a 4)
+                'Nivel de Riesgo inherente': 'riesgoInherenteNivel', 
+                'Riesgo inherente': 'riesgoInherenteEscala', 
                 'Nivel de Riesgo residual': 'riesgoResidual',
                 'Descripción del Control': 'planAccion',
                 'Responsable': 'responsable',
@@ -386,14 +425,7 @@
                     foundMapping[foundKey] = targetKey;
                 }
             }
-
-            const convertToDateString = (dateValue) => {
-                if (dateValue instanceof Date) {
-                    return dateValue.toISOString().split('T')[0];
-                }
-                return dateValue || 'N/A';
-            };
-
+            
             return jsonData.map((row, index) => {
                 const data = { id: index };
                 
@@ -406,13 +438,17 @@
                 
                 // Lógica de separación de PROYECTO y LOCALIDAD
                 data.proyecto = (data.proyecto || 'N/A').trim();
-                data.localidad = (data.localidadCompleta || 'N/A').trim();
+                // Usar el campo completo si no se puede separar o si es más conveniente
+                data.localidad = (data.localidadCompleta || 'N/A').trim(); 
                 
                 // Conversión y limpieza de datos
                 data.riesgoResidual = (data.riesgoResidual || 'N/A').replace(/\n/g, ' ').trim();
                 data.efectividadControl = (data.efectividadControl || 'N/A').replace(/\n/g, ' ').trim();
-                data.riesgoInherenteEscala = parseInt(data.riesgoInherenteEscala) || 0; // Se fuerza a número o 0
+                data.riesgoInherenteEscala = parseInt(data.riesgoInherenteEscala) || 0; 
                 data.riesgoInherenteNivel = (data.riesgoInherenteNivel || 'N/A').trim();
+
+                // Formato de Fecha: AQUI SE APLICA EL DD/MM/YYYY
+                data.fechaSeguimiento = convertToDateString(data.fechaSeguimiento);
 
                 // Limpieza de otras columnas
                 data.eventoRiesgo = data.eventoRiesgo || 'N/A';
@@ -420,7 +456,7 @@
                 data.efecto = data.efecto || 'N/A';
                 data.factorRiesgo = data.factorRiesgo || 'N/A';
                 data.responsable = data.responsable || 'N/A';
-                data.fechaSeguimiento = convertToDateString(data.fechaSeguimiento);
+                data.planAccion = data.planAccion || 'N/A';
                 
                 delete data.localidadCompleta;
 
@@ -453,15 +489,17 @@
         }
 
         /**
-         * Actualiza las tarjetas de KPI. (Ligeramente modificada para usar la escala de Riesgo Inherente)
+         * Actualiza las tarjetas de KPI. (El dashboard de cuadros es totalmente automático)
          */
         function updateDashboardCards(data) {
+            // Esta función maneja el aumento de datos de forma automática, 
+            // ya que siempre opera sobre el array 'data' que es el conjunto de riesgos.
             const total = data.length;
-            const alto = data.filter(item => item.riesgoResidual.includes("Alto")).length;
-            const inherenteAlto = data.filter(item => item.riesgoInherenteEscala === 4).length; // Usando el valor numérico
+            const alto = data.filter(item => (item.riesgoResidual || '').includes("Alto")).length;
+            const inherenteAlto = data.filter(item => item.riesgoInherenteEscala === 4).length; 
             
-            const apropiado = data.filter(item => item.efectividadControl.includes("Apropiado")).length;
-            const aceptable = data.filter(item => item.efectividadControl.includes("Aceptable")).length;
+            const apropiado = data.filter(item => (item.efectividadControl || '').includes("Apropiado")).length;
+            const aceptable = data.filter(item => (item.efectividadControl || '').includes("Aceptable")).length;
             const mitigacionTotal = apropiado + aceptable;
             
             const mitigacionPercent = total > 0 ? Math.round((mitigacionTotal / total) * 100) : 0;
@@ -509,7 +547,7 @@
         }
         
         /**
-         * Actualiza el Mapa de Calor de Riesgo Residual por Factor.
+         * Actualiza el Mapa de Calor de Riesgo Residual por Factor. (Sin cambios funcionales mayores)
          */
         function updateRiskHeatmap(data) {
             const factors = [...new Set(data.map(item => item.factorRiesgo))].filter(Boolean).sort();
@@ -535,7 +573,6 @@
             factors.forEach(factor => {
                 const counts = heatmapData[factor];
                 
-                // Determinar el nivel de riesgo predominante para el color del fondo
                 let maxCount = 0;
                 let maxLevel = '';
                 levels.forEach(level => {
@@ -549,7 +586,6 @@
                 cell.className = `heatmap-cell heat-${maxLevel.replace(/\s/g, '-')}`;
                 cell.setAttribute('data-factor', factor);
                 
-                // Contenido de la celda
                 let content = `
                     <div class="small text-muted">${factor}</div>
                     <p class="heatmap-count">${maxCount}</p>
@@ -559,18 +595,14 @@
                 cell.innerHTML = content;
                 container.appendChild(cell);
 
-                // Añadir funcionalidad de click para filtrar la tabla
                 cell.addEventListener('click', function() {
                     const factorName = this.getAttribute('data-factor');
                     
-                    // Resaltar la celda seleccionada (simple border)
                     $('.heatmap-cell').css('box-shadow', 'none');
                     $(this).css('box-shadow', '0 0 10px rgba(0, 0, 0, 0.5)');
 
-                    // Aplicar filtro de factor
                     document.getElementById('factorFilter').value = factorName;
                     
-                    // Limpiar otros filtros para solo ver los del cuadrante
                     document.getElementById('projectFilter').value = '';
                     document.getElementById('riskFilter').value = '';
                     document.getElementById('statusFilter').value = '';
@@ -579,7 +611,6 @@
                 });
             });
             
-            // Si hay datos, actualizar la cabecera de la grid para que se adapte
             container.style.gridTemplateColumns = `repeat(${Math.min(factors.length, 4)}, 1fr)`;
         }
 
@@ -617,11 +648,11 @@
                             return data;
                         }
                     },
-                    { data: 'riesgoInherenteEscala', title: 'Riesgo Inherente (Escala)', width: "80px" }, // Nueva columna numérica
+                    { data: 'riesgoInherenteEscala', title: 'Riesgo Inherente (Escala)', width: "80px" }, 
                     { data: 'responsable', title: 'Responsable' },
                     { 
                         data: 'eventoRiesgo', title: 'Evento de Riesgo',
-                        render: function(data, type) { return type === 'display' && data.length > 80 ? data.substring(0, 80) + '...' : data; }
+                        render: function(data, type) { return type === 'display' && (data || '').length > 80 ? data.substring(0, 80) + '...' : data; }
                     },
                     {
                         data: 'id', title: 'Acciones',
@@ -630,15 +661,14 @@
                     }
                 ],
                 columnDefs: [
-                    { targets: 5, className: 'text-center' } // Centrar la escala numérica
+                    { targets: 5, className: 'text-center' } 
                 ],
                 language: { url: '//cdn.datatables.net/plug-ins/1.13.5/i18n/es-ES.json' },
                 pageLength: 10,
                 responsive: true,
-                order: [[3, 'desc']], // Ordenar por Riesgo Residual
+                order: [[3, 'desc']], 
             });
 
-            // Evento para mostrar detalles
             $('#risksTable tbody').on('click', '.view-btn', function() {
                 const riskId = parseInt($(this).data('id'));
                 const data = allRisksData.find(item => item.id === riskId);
@@ -655,7 +685,7 @@
             document.getElementById('modal-responsible').textContent = risk.responsable;
             document.getElementById('modal-risk').innerHTML = `<span class="risk-badge ${getRiskBadgeClass(risk.riesgoResidual)}">${risk.riesgoResidual}</span>`;
             document.getElementById('modal-status').innerHTML = `<span class="status-badge ${getStatusBadgeClass(risk.efectividadControl)}">${risk.efectividadControl}</span>`;
-            document.getElementById('modal-date').textContent = risk.fechaSeguimiento;
+            document.getElementById('modal-date').textContent = risk.fechaSeguimiento; // Formato DD/MM/YYYY
             document.getElementById('modal-event').textContent = risk.eventoRiesgo;
             document.getElementById('modal-cause').textContent = risk.causa;
             document.getElementById('modal-effect').textContent = risk.efecto;
@@ -675,25 +705,39 @@
         }
 
         function updateCharts(data) {
-            // Recalcular conteos para el Riesgo Inherente (Nuevo Gráfico)
             const inherentRiskCounts = data.reduce((acc, item) => {
                 const level = item.riesgoInherenteNivel;
                 acc[level] = (acc[level] || 0) + 1;
                 return acc;
             }, { 'Alto': 0, 'Medio': 0, 'Bajo': 0, 'Muy Bajo': 0 });
 
-            // Recalcular conteos para la Efectividad del Control
             const complianceCounts = data.reduce((acc, item) => {
                 const status = item.efectividadControl;
                 acc[status] = (acc[status] || 0) + 1;
                 return acc;
             }, { 'Apropiado': 0, 'Aceptable': 0, 'Mejorable': 0, 'Deficiente': 0, 'N/A': 0 });
 
-            // **CORRECCIÓN DE REDIBUJADO:** Destruir gráficos existentes antes de crear uno nuevo
             if (inherentRiskChart) inherentRiskChart.destroy();
             if (complianceChart) complianceChart.destroy();
             
-            // Gráfico de Riesgo Inherente por Nivel (Dona)
+            // Opciones de configuración para evitar el zoom no deseado en hover
+            const chartOptions = {
+                responsive: true, 
+                maintainAspectRatio: false, 
+                plugins: { 
+                    legend: { position: 'bottom' },
+                    tooltip: {
+                         // Evita el redibujado de elementos interactivos si no es necesario
+                         mode: 'index', 
+                         intersect: false
+                    }
+                },
+                hover: {
+                    mode: null // Deshabilita el modo hover que causa redibujado/escalado
+                }
+            };
+
+            // Gráfico de Riesgo Inherente (Dona)
             inherentRiskChart = new Chart(document.getElementById('inherentRiskChart').getContext('2d'), {
                 type: 'doughnut',
                 data: {
@@ -703,11 +747,7 @@
                         backgroundColor: ['#dc3545', '#ffc107', '#28a745', '#0dcaf0'],
                     }]
                 },
-                options: { 
-                    responsive: true, 
-                    maintainAspectRatio: false, 
-                    plugins: { legend: { position: 'bottom' } } 
-                }
+                options: chartOptions // Aplica opciones corregidas
             });
 
             // Gráfico de cumplimiento (Efectividad del Control - barras)
@@ -727,7 +767,10 @@
                     responsive: true, 
                     maintainAspectRatio: false, 
                     scales: { y: { beginAtZero: true } },
-                    plugins: { legend: { display: false } }
+                    plugins: { legend: { display: false } },
+                    hover: {
+                        mode: null // Deshabilita el modo hover que causa redibujado/escalado
+                    }
                 }
             });
         }
@@ -751,28 +794,24 @@
         }
 
         function applyFilters() {
-            // Lógica de filtrado manual para la tabla
             const projectFilter = document.getElementById('projectFilter').value;
             const riskFilter = document.getElementById('riskFilter').value;
             const statusFilter = document.getElementById('statusFilter').value;
             const factorFilter = document.getElementById('factorFilter').value;
             
-            // Limpiar resaltado del Mapa de Calor
             $('.heatmap-cell').css('box-shadow', 'none');
 
-            // Aplicar filtros de texto simple
-            table.column(0).search(projectFilter, true, false).draw(); // Columna Proyecto (0)
-            table.column(2).search(factorFilter, true, false).draw(); // Columna Factor de Riesgo (2)
-            table.column(3).search(riskFilter, true, false).draw(); // Columna Riesgo Residual (3)
-            table.column(4).search(statusFilter, true, false).draw(); // Columna Efectividad Control (4)
+            table.column(0).search(projectFilter, true, false).draw(); 
+            table.column(2).search(factorFilter, true, false).draw(); 
+            table.column(3).search(riskFilter, true, false).draw(); 
+            table.column(4).search(statusFilter, true, false).draw(); 
 
-            // Actualizar visualizaciones con los datos filtrados
             const filteredData = table.rows({ search: 'applied' }).data().toArray();
             updateVisualizations(filteredData);
         }
 
         async function loadExcelData() {
-            // ... (Lógica de carga de datos desde Excel, sin cambios funcionales)
+            // ... (Lógica de carga de datos)
             try {
                 updateLoadingText('Conectando con Excel Online...');
                 
@@ -788,6 +827,7 @@
 
                 const arrayBuffer = await response.arrayBuffer();
                 const data = new Uint8Array(arrayBuffer);
+                // IMPORTANTE: raw: false y cellDates: true, aseguran que las fechas se interpreten como objetos Date.
                 const workbook = XLSX.read(data, { type: 'array', cellDates: true, raw: false });
                 
                 const firstSheetName = workbook.SheetNames[0]; 
@@ -795,24 +835,22 @@
                 
                 const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
                 
-                // Buscar cabeceras PROYECTO para determinar la fila
                 const headerRowIndex = jsonData.findIndex(row => row.some(cell => typeof cell === 'string' && cell.includes('PROYECTO')));
                 if (headerRowIndex === -1) throw new Error('No se pudo encontrar la fila de cabeceras en el archivo Excel.');
 
                 const headers = jsonData[headerRowIndex];
                 
-                const finalJson = XLSX.utils.sheet_to_json(worksheet, { header: headers, range: headerRowIndex + 1, raw: false, dateNF: 'yyyy-mm-dd' });
+                const finalJson = XLSX.utils.sheet_to_json(worksheet, { header: headers, range: headerRowIndex + 1, raw: false, dateNF: 'dd/mm/yyyy' });
                 
                 allRisksData = processExcelData(finalJson);
                 
-                // Inicializar y actualizar la interfaz
                 updateFilters();
                 updateVisualizations(allRisksData);
                 initializeTable();
                 
                 document.getElementById('tableContainer').style.display = 'block';
                 document.getElementById('mainContent').style.display = 'block';
-                document.getElementById('lastUpdate').textContent = new Date().toLocaleString('es-EC');
+                document.getElementById('lastUpdate').textContent = new Date().toLocaleString('es-EC', { dateStyle: 'short', timeStyle: 'short' });
                 
                 setTimeout(() => { document.getElementById('loadingOverlay').style.display = 'none'; }, 500);
                 
@@ -829,7 +867,6 @@
         function updateLoadingText(text) { document.getElementById('loadingText').textContent = text; }
 
         // --- Funciones de Autenticación (handleAuth, handleLogin, handleLogout) ---
-        // (Sin cambios, mantener la autenticación con MSAL)
         async function handleAuth() {
             try {
                 const accounts = msalInstance.getAllAccounts();
@@ -872,21 +909,17 @@
         
         // Inicialización
         document.addEventListener('DOMContentLoaded', function() {
-            // Manejar la autenticación al cargar
             msalInstance.initialize().then(() => { handleAuth(); });
 
-            // Event listeners
             document.getElementById('loginBtn').addEventListener('click', handleLogin);
             document.getElementById('logoutBtn').addEventListener('click', handleLogout);
             document.getElementById('refreshData').addEventListener('click', loadExcelData);
             
-            // Event listeners para filtros (Ahora aplican el filtro a la DataTables)
             document.getElementById('projectFilter').addEventListener('change', applyFilters);
             document.getElementById('riskFilter').addEventListener('change', applyFilters);
             document.getElementById('statusFilter').addEventListener('change', applyFilters);
             document.getElementById('factorFilter').addEventListener('change', applyFilters);
             
-            // Event listener para exportar datos
             document.getElementById('exportBtn').addEventListener('click', function() {
                 const exportData = table.rows({ search: 'applied' }).data().toArray().map(item => ({
                     'Proyecto': item.proyecto,

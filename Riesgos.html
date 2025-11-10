@@ -210,11 +210,11 @@
                 </div>
                 <div class="col-md-6 mb-3">
                     <div class="card dashboard-card h-50 mb-3">
-                        <div class="card-header-fias"><h5 class="mb-0">Nivel de Riesgo Inherente (Nivel de calificación)</h5></div>
+                        <div class="card-header-fias"><h5 class="mb-0">Nivel de Riesgo Inherente</h5></div>
                         <div class="card-body"><canvas id="inherentRiskChart" height="130"></canvas></div>
                     </div>
                     <div class="card dashboard-card h-50">
-                        <div class="card-header-fias"><h5 class="mb-0">Evaluación de la Efectividad del Control</h5></div>
+                        <div class="card-header-fias"><h5 class="mb-0">Efectividad del Control por Factor</h5></div>
                         <div class="card-body"><canvas id="complianceChart" height="130"></canvas></div>
                     </div>
                 </div>
@@ -330,7 +330,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     
     <script>
-        // Configuración de MSAL (Sin cambios)
+        // Configuración de MSAL
         const msalConfig = {
             auth: {
                 clientId: "3cff952f-40db-4fcc-83aa-6ea6d5931047",
@@ -347,10 +347,9 @@
         let accessToken = null;
 
         // ====================================================================
-        // ⚠️ ¡CRUCIAL! Si el error 404 persiste, DEBE reemplazar la siguiente línea 
-        // con el nuevo ID de compartir (Base64 codificado y con prefijo "u!")
+        // ⚠️ ID DEL ARCHIVO DE EXCEL (ACTUALIZADO CON EL VALOR FUNCIONAL)
         // ====================================================================
-        const EXCEL_FILE_ID = "u!aHR0cHM6Ly9maWFzZWMuc2hhcmVwb2ludC5jb20vOng6L3MvRk9ORE9ERUlOVkVSU0lPTkFNQklFTlRBTFNPU1RFTklCTEUvRVJ0X0xmQjkxaVpPZ1Z0QjNLSHBkN2NCLVk0S2w2eV9POHlmTFllaDBscVZzZw==";
+        const EXCEL_FILE_ID = "u!aHR0cHM6Ly9maWFzZWMuc2hhcmVwb2ludC5jb20vOng6L3MvRk9ORE9ERUlOVkVSU0lPTkFNQklFTlRBTFNPU1RFTklCTEUvRVJ0X0xmQjkxaVpPZ1Z0QjNLSHBkN2NCLVk0S2w2eV9POHlmTFllbDBscVZzZw==";
         // ====================================================================
         
         // Variables globales
@@ -365,8 +364,6 @@
 
         /**
          * Convierte el valor de fecha de Excel (formato ISO o número) a DD/MM/YYYY.
-         * @param {string|number|Date} dateValue - El valor de fecha.
-         * @returns {string} Fecha en formato DD/MM/YYYY o 'N/A'.
          */
         const convertToDateString = (dateValue) => {
             if (!dateValue) return 'N/A';
@@ -375,10 +372,9 @@
             if (dateValue instanceof Date) {
                 date = dateValue;
             } else if (typeof dateValue === 'string') {
-                // Intenta analizar cadenas ISO (ej. 2025-10-06T00:00:00.000Z)
                 date = new Date(dateValue);
             } else if (typeof dateValue === 'number') {
-                 // Asume que es un número de días desde 1900, ajuste común de Excel para fechas sin procesar
+                 // Asume que es un número de días desde 1900
                  date = new Date(0, 0, dateValue - 1, 0, 0, 0); // 1900-01-01
             }
             
@@ -393,20 +389,20 @@
         };
 
         /**
-         * Mapea y limpia los datos de Excel (Alineado con Riesgos3.html).
+         * Mapea y limpia los datos de Excel (CRUCIAL para la estabilidad de los filtros).
          */
         function processExcelData(jsonData) {
             if (!jsonData || jsonData.length === 0) return [];
             
             const keys = Object.keys(jsonData[0]);
             
-            // Mapeo flexible de cabeceras, crucial para manejar variaciones de formato/espacios
+            // Mapeo flexible de cabeceras
             const mapHeaders = {
                 'PROYECTO': 'proyecto', 
-                'PROYECTO- LOCALIDAD': 'localidadCompleta', // Se usa para extraer la localidad
+                'PROYECTO- LOCALIDAD': 'localidadCompleta',
                 'Descripción del evento de Riesgo': 'eventoRiesgo',
                 'Causa': 'causa',
-                'Efercto ': 'efecto', // 'Efercto ' es un error de tipeo común en el archivo
+                'Efercto ': 'efecto', // Incluye posible error tipográfico
                 'Factor de Riesgo': 'factorRiesgo',
                 'Nivel de Riesgo inherente': 'riesgoInherenteNivel', 
                 'Riesgo inherente': 'riesgoInherenteEscala', 
@@ -421,7 +417,6 @@
             for (const excelHeader in mapHeaders) {
                 const targetKey = mapHeaders[excelHeader];
                 const normalizedTarget = normalizeHeader(excelHeader);
-                // Busca la clave que contenga el texto normalizado
                 const foundKey = keys.find(key => normalizeHeader(key).includes(normalizedTarget) || normalizeHeader(key) === normalizedTarget);
                 if (foundKey) {
                     foundMapping[foundKey] = targetKey;
@@ -455,7 +450,7 @@
                 data.eventoRiesgo = data.eventoRiesgo || 'N/A';
                 data.causa = data.causa || 'N/A';
                 data.efecto = data.efecto || 'N/A';
-                data.factorRiesgo = data.factorRiesgo || 'N/A';
+                data.factorRiesgo = (data.factorRiesgo || 'N/A').trim(); // Limpieza del Factor
                 data.responsable = data.responsable || 'N/A';
                 data.planAccion = data.planAccion || 'N/A';
                 
@@ -489,9 +484,8 @@
             return 'status-N-A';
         }
 
-        /**
-         * Actualiza las tarjetas de KPI.
-         */
+        // ... (updateDashboardCards y updateRiskHeatmap funciones permanecen sin cambios)
+        
         function updateDashboardCards(data) {
             const total = data.length;
             const alto = data.filter(item => (item.riesgoResidual || '').includes("Alto")).length;
@@ -545,9 +539,6 @@
                 </div>`;
         }
         
-        /**
-         * Actualiza el Mapa de Calor de Riesgo Residual por Factor.
-         */
         function updateRiskHeatmap(data) {
             const factors = [...new Set(data.map(item => item.factorRiesgo))].filter(Boolean).sort();
             const levels = ['Muy Bajo', 'Bajo', 'Medio', 'Alto'];
@@ -568,7 +559,6 @@
             const container = document.getElementById('riskHeatmap');
             container.innerHTML = '';
             
-            // Crear celda para cada Factor
             factors.forEach(factor => {
                 const counts = heatmapData[factor];
                 
@@ -610,10 +600,121 @@
                 });
             });
             
-            // Ajuste dinámico del layout
             container.style.gridTemplateColumns = `repeat(${Math.min(factors.length, 4)}, 1fr)`;
         }
 
+        // ====================================================================
+        // 🚀 FUNCIÓN DE GRÁFICOS CORREGIDA Y MEJORADA
+        // ====================================================================
+        
+        /**
+         * Dibuja y actualiza los gráficos (NUEVA VERSIÓN: Barras Horizontales).
+         */
+        function updateCharts(data) {
+            // --- 1. DATOS PARA RIESGO INHERENTE (Barra Horizontal Simple) ---
+            const inherentRiskLevels = ['Muy Bajo', 'Bajo', 'Medio', 'Alto'];
+            const inherentRiskCounts = data.reduce((acc, item) => {
+                const level = item.riesgoInherenteNivel;
+                acc[level] = (acc[level] || 0) + 1;
+                return acc;
+            }, { 'Alto': 0, 'Medio': 0, 'Bajo': 0, 'Muy Bajo': 0 });
+            
+            const inherentLabels = inherentRiskLevels.filter(k => inherentRiskCounts[k] > 0);
+            const inherentValues = inherentLabels.map(k => inherentRiskCounts[k]);
+            const inherentColors = inherentLabels.map(level => {
+                if (level === 'Alto') return '#dc3545';
+                if (level === 'Medio') return '#ffc107';
+                if (level === 'Bajo') return '#28a745';
+                if (level === 'Muy Bajo') return '#0dcaf0';
+                return '#6c757d';
+            });
+            
+            // --- 2. DATOS PARA EFECTIVIDAD DEL CONTROL (Barra Horizontal APILADA por Factor) ---
+            const factors = [...new Set(data.map(item => item.factorRiesgo))].filter(Boolean).sort();
+            const controlStatuses = ['Deficiente', 'Mejorable', 'Aceptable', 'Apropiado', 'N/A'];
+            const controlColors = {
+                'Deficiente': '#dc3545', 
+                'Mejorable': '#fd7e14', 
+                'Aceptable': '#8bc34a', 
+                'Apropiado': '#2c7d32',
+                'N/A': '#6c757d'
+            };
+
+            // Estructura de conteo por factor y estado
+            const complianceData = factors.map(factor => {
+                const factorData = data.filter(item => item.factorRiesgo === factor);
+                return controlStatuses.map(status => factorData.filter(item => item.efectividadControl === status).length);
+            });
+
+            // Reestructuración para Chart.js: 1 dataset por estado de control
+            const complianceDatasets = controlStatuses.map((status, statusIndex) => ({
+                label: status,
+                data: factors.map((_, factorIndex) => complianceData[factorIndex][statusIndex]),
+                backgroundColor: controlColors[status],
+                borderColor: '#fff',
+                borderWidth: 1,
+            })).filter(dataset => dataset.data.some(count => count > 0)); 
+            
+            // --- DESTRUIR Y RECREAR GRÁFICOS ---
+            if (inherentRiskChart) inherentRiskChart.destroy();
+            if (complianceChart) complianceChart.destroy();
+            
+            // 1. Gráfico de Riesgo Inherente (Barra Horizontal)
+            inherentRiskChart = new Chart(document.getElementById('inherentRiskChart').getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: inherentLabels,
+                    datasets: [{
+                        label: 'Cantidad de Riesgos',
+                        data: inherentValues,
+                        backgroundColor: inherentColors,
+                        borderColor: inherentColors,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    indexAxis: 'y', // Hace las barras horizontales
+                    responsive: true, 
+                    maintainAspectRatio: false, 
+                    plugins: { 
+                        legend: { display: false },
+                        title: { display: false }
+                    },
+                    scales: { 
+                        x: { beginAtZero: true },
+                        y: { stacked: true }
+                    },
+                    animation: { duration: 0 }, // Evita la expansión
+                    hover: { animationDuration: 0 }
+                }
+            });
+
+            // 2. Gráfico de Efectividad del Control (Barra Horizontal APILADA por Factor)
+            complianceChart = new Chart(document.getElementById('complianceChart').getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: factors, // Factores de Riesgo en el eje Y
+                    datasets: complianceDatasets
+                },
+                options: { 
+                    indexAxis: 'y', // Hace las barras horizontales
+                    responsive: true, 
+                    maintainAspectRatio: false, 
+                    plugins: { 
+                        title: { display: false },
+                        legend: { position: 'bottom' }
+                    },
+                    scales: { 
+                        x: { stacked: true, beginAtZero: true },
+                        y: { stacked: true }
+                    },
+                    animation: { duration: 0 }, // Evita la expansión
+                    hover: { animationDuration: 0 }
+                }
+            });
+        }
+        
+        // ... (initializeTable, showRiskDetails, updateVisualizations, updateFilters, applyFilters permanecen sin cambios)
 
         /**
          * Inicializa la tabla DataTable.
@@ -676,16 +777,13 @@
             });
         }
 
-        /**
-         * Muestra el modal con los detalles del riesgo. 
-         */
         function showRiskDetails(risk) {
             document.getElementById('modal-project').textContent = `${risk.proyecto} - ${risk.localidad}`;
             document.getElementById('modal-factor').textContent = risk.factorRiesgo;
             document.getElementById('modal-responsible').textContent = risk.responsable;
             document.getElementById('modal-risk').innerHTML = `<span class="risk-badge ${getRiskBadgeClass(risk.riesgoResidual)}">${risk.riesgoResidual}</span>`;
             document.getElementById('modal-status').innerHTML = `<span class="status-badge ${getStatusBadgeClass(risk.efectividadControl)}">${risk.efectividadControl}</span>`;
-            document.getElementById('modal-date').textContent = risk.fechaSeguimiento; // Formato DD/MM/YYYY
+            document.getElementById('modal-date').textContent = risk.fechaSeguimiento;
             document.getElementById('modal-event').textContent = risk.eventoRiesgo;
             document.getElementById('modal-cause').textContent = risk.causa;
             document.getElementById('modal-effect').textContent = risk.efecto;
@@ -695,92 +793,13 @@
             modal.show();
         }
 
-        /**
-         * Actualiza las visualizaciones (KPIs, Gráficos y Mapa de Calor).
-         */
         function updateVisualizations(data) {
             updateDashboardCards(data);
             updateRiskHeatmap(data);
             updateCharts(data);
         }
 
-        /**
-         * Dibuja y actualiza los gráficos (Corregido: deshabilitando animaciones).
-         */
-        function updateCharts(data) {
-            const inherentRiskCounts = data.reduce((acc, item) => {
-                const level = item.riesgoInherenteNivel;
-                acc[level] = (acc[level] || 0) + 1;
-                return acc;
-            }, { 'Alto': 0, 'Medio': 0, 'Bajo': 0, 'Muy Bajo': 0 });
-
-            const complianceCounts = data.reduce((acc, item) => {
-                const status = item.efectividadControl;
-                acc[status] = (acc[status] || 0) + 1;
-                return acc;
-            }, { 'Apropiado': 0, 'Aceptable': 0, 'Mejorable': 0, 'Deficiente': 0, 'N/A': 0 });
-
-            if (inherentRiskChart) inherentRiskChart.destroy();
-            if (complianceChart) complianceChart.destroy();
-            
-            // Gráfico de Riesgo Inherente (Dona)
-            inherentRiskChart = new Chart(document.getElementById('inherentRiskChart').getContext('2d'), {
-                type: 'doughnut',
-                data: {
-                    labels: Object.keys(inherentRiskCounts).filter(k => inherentRiskCounts[k] > 0),
-                    datasets: [{
-                        data: Object.values(inherentRiskCounts).filter(v => v > 0),
-                        backgroundColor: ['#dc3545', '#ffc107', '#28a745', '#0dcaf0'].filter((_, i) => Object.values(inherentRiskCounts)[i] > 0),
-                    }]
-                },
-                options: {
-                    responsive: true, 
-                    maintainAspectRatio: false, 
-                    plugins: { 
-                        legend: { position: 'bottom' },
-                        tooltip: { mode: 'nearest', intersect: true }
-                    },
-                    // FIX CRÍTICO: Deshabilita toda animación de actualización
-                    animation: { duration: 0 }, 
-                    hover: {
-                        animationDuration: 0, 
-                        mode: 'nearest',
-                        intersect: true
-                    }
-                }
-            });
-
-            // Gráfico de cumplimiento (Efectividad del Control - barras)
-            complianceChart = new Chart(document.getElementById('complianceChart').getContext('2d'), {
-                type: 'bar',
-                data: {
-                    labels: Object.keys(complianceCounts).filter(k => complianceCounts[k] > 0),
-                    datasets: [{
-                        label: 'Cantidad de Riesgos',
-                        data: Object.values(complianceCounts).filter(v => v > 0),
-                        backgroundColor: ['#2c7d32', '#8bc34a', '#fd7e14', '#dc3545', '#6c757d'].filter((_, i) => Object.values(complianceCounts)[i] > 0), 
-                        borderColor: 'rgba(0, 0, 0, 0.1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: { 
-                    responsive: true, 
-                    maintainAspectRatio: false, 
-                    scales: { y: { beginAtZero: true } },
-                    plugins: { legend: { display: false } },
-                    // FIX CRÍTICO: Deshabilita toda animación de actualización
-                    animation: { duration: 0 }, 
-                    hover: {
-                        animationDuration: 0, 
-                        mode: 'index', 
-                        intersect: false
-                    }
-                }
-            });
-        }
-
         function updateFilters() {
-            // Filtros basados en datos
             const proyectos = [...new Set(allRisksData.map(item => item.proyecto))].filter(Boolean);
             const factores = [...new Set(allRisksData.map(item => item.factorRiesgo))].filter(Boolean);
 
@@ -805,13 +824,11 @@
             
             $('.heatmap-cell').css('box-shadow', 'none');
 
-            // Uso de DataTables search() para filtrar
             table.column(0).search(projectFilter, true, false).draw(); 
             table.column(2).search(factorFilter, true, false).draw(); 
             table.column(3).search(riskFilter, true, false).draw(); 
             table.column(4).search(statusFilter, true, false).draw(); 
 
-            // Se toma la data visible (filtrada) para actualizar los gráficos
             const filteredData = table.rows({ search: 'applied' }).data().toArray();
             updateVisualizations(filteredData);
         }
@@ -825,38 +842,31 @@
 
                 updateLoadingText('Descargando y procesando datos...');
                 
-                // Llamada a la API de Microsoft Graph
                 const response = await fetch(`https://graph.microsoft.com/v1.0/shares/${EXCEL_FILE_ID}/driveItem/content`, {
                     headers: { 'Authorization': `Bearer ${accessToken}` }
                 });
 
                 if (!response.ok) {
-                    // Mensaje de error más detallado en caso de 404
-                    const errorDetails = response.status === 404 ? ' (El ID del archivo es inválido o el archivo ha sido movido/renombrado. Revisar EXCEL_FILE_ID.)' : '';
+                    const errorDetails = response.status === 404 ? ' (El ID del archivo es inválido. Por favor, genere un nuevo ID de recurso compartido.)' : '';
                     throw new Error(`Error al obtener el archivo: ${response.status} ${response.statusText}${errorDetails}`);
                 }
 
                 const arrayBuffer = await response.arrayBuffer();
                 const data = new Uint8Array(arrayBuffer);
                 
-                // Lee el libro de trabajo (workbook)
                 const workbook = XLSX.read(data, { type: 'array', cellDates: true, raw: false });
                 
                 const firstSheetName = workbook.SheetNames[0]; 
                 const worksheet = workbook.Sheets[firstSheetName];
                 
-                // Lógica para encontrar las cabeceras
                 const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-                // Busca la fila que contenga la cabecera 'PROYECTO'
                 const headerRowIndex = jsonData.findIndex(row => row.some(cell => typeof cell === 'string' && cell.toUpperCase().includes('PROYECTO')));
-                if (headerRowIndex === -1) throw new Error('No se pudo encontrar la fila de cabeceras en el archivo Excel. Verifique el nombre de la columna "PROYECTO".');
+                if (headerRowIndex === -1) throw new Error('No se pudo encontrar la fila de cabeceras en el archivo Excel.');
 
                 const headers = jsonData[headerRowIndex];
                 
-                // Convierte la hoja a JSON, usando la fila de cabecera correcta
                 const finalJson = XLSX.utils.sheet_to_json(worksheet, { header: headers, range: headerRowIndex + 1, raw: false, dateNF: 'dd/mm/yyyy' });
                 
-                // Procesa y limpia los datos
                 allRisksData = processExcelData(finalJson);
                 
                 updateFilters();
@@ -874,14 +884,14 @@
                 updateLoadingText(`Error: ${error.message}`);
                 setTimeout(() => {
                     document.getElementById('loadingOverlay').style.display = 'none';
-                    alert(`Error al cargar los datos. Verifique su conexión, permisos y, crucialmente, el ID del archivo.\nMensaje: ${error.message}`);
+                    alert(`Error al cargar los datos. Verifique su conexión, permisos y el ID del archivo.\nMensaje: ${error.message}`);
                 }, 2000);
             }
         }
 
         function updateLoadingText(text) { document.getElementById('loadingText').textContent = text; }
 
-        // --- Funciones de Autenticación (handleAuth, handleLogin, handleLogout) ---
+        // --- Funciones de Autenticación ---
         async function handleAuth() {
             try {
                 const accounts = msalInstance.getAllAccounts();

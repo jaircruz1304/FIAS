@@ -130,10 +130,18 @@
             flex-direction: column;
         }
         
-        /* Evita el desbordamiento de canvas en contenedores pequeños */
-        #inherentRiskChart, #complianceChart {
-            max-width: 100%;
-            max-height: 100%;
+        /* Contenedores de Gráfico con altura forzada */
+        .chart-container-50 {
+            flex: 1; /* Ocupa el 50% del espacio en el flex-column */
+            max-height: 50%;
+            min-height: 0;
+            padding-bottom: 0.5rem;
+        }
+        
+        /* Asegura que el canvas se ajuste al contenedor */
+        .chart-canvas {
+            width: 100% !important;
+            height: 100% !important;
         }
     </style>
 </head>
@@ -195,30 +203,37 @@
 
             <div class="row mb-4">
                 <div class="col-md-6 mb-3">
-                    <div class="card dashboard-card p-0">
+                    <div class="card dashboard-card p-0 h-100">
                         <div class="card-header-fias">
                             <h5 class="mb-0">📊 Riesgo Residual por Nivel y Factor (Mapa de Calor)</h5>
                         </div>
                         <div class="card-body p-3">
                             <div class="row mb-2">
-                                <div class="col text-center small text-muted">Haz clic para filtrar.</div>
+                                <div class="col text-center small text-muted">Haz clic para filtrar por el Factor con mayor Riesgo Residual.</div>
                             </div>
                             <div id="riskHeatmap" class="heatmap-container">
                                 </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6 mb-3">
-                    <div class="card dashboard-card h-50 mb-3">
-                        <div class="card-header-fias"><h5 class="mb-0">Nivel de Riesgo Inherente</h5></div>
-                        <div class="card-body"><canvas id="inherentRiskChart" height="130"></canvas></div>
+                
+                <div class="col-md-6 mb-3 d-flex flex-column" style="height: auto; min-height: 400px;">
+                    
+                    <div class="card dashboard-card chart-container-50">
+                        <div class="card-header-fias"><h5 class="mb-0">Distribución del Riesgo Inherente</h5></div>
+                        <div class="card-body p-3">
+                            <canvas id="inherentRiskChart" class="chart-canvas"></canvas>
+                        </div>
                     </div>
-                    <div class="card dashboard-card h-50">
+                    
+                    <div class="card dashboard-card chart-container-50">
                         <div class="card-header-fias"><h5 class="mb-0">Efectividad del Control por Factor</h5></div>
-                        <div class="card-body"><canvas id="complianceChart" height="130"></canvas></div>
+                        <div class="card-body p-3">
+                            <canvas id="complianceChart" class="chart-canvas"></canvas>
+                        </div>
                     </div>
                 </div>
-            </div>
+                </div>
             <div class="row mb-4">
                 <div class="col-12">
                     <div class="card dashboard-card">
@@ -562,12 +577,24 @@
                 
                 let maxCount = 0;
                 let maxLevel = '';
-                levels.forEach(level => {
-                    if (counts[level] > maxCount) {
-                        maxCount = counts[level];
-                        maxLevel = level;
-                    }
-                });
+                
+                // Priorizar niveles de riesgo Alto/Medio para el color predominante
+                if (counts['Alto'] > 0) { maxCount = counts['Alto']; maxLevel = 'Alto'; }
+                else if (counts['Medio'] > 0) { maxCount = counts['Medio']; maxLevel = 'Medio'; }
+                else {
+                    levels.forEach(level => {
+                        if (counts[level] > maxCount) {
+                            maxCount = counts[level];
+                            maxLevel = level;
+                        }
+                    });
+                }
+                
+                // Si maxCount es 0 (no hay riesgos con nivel definido)
+                if (maxCount === 0) {
+                    maxCount = data.filter(item => item.factorRiesgo === factor).length;
+                    maxLevel = 'N-A'; 
+                }
 
                 const cell = document.createElement('div');
                 cell.className = `heatmap-cell heat-${maxLevel.replace(/\s/g, '-')}`;
@@ -576,7 +603,7 @@
                 let content = `
                     <div class="small text-muted">${factor}</div>
                     <p class="heatmap-count">${maxCount}</p>
-                    <div class="small">${maxLevel} Predominante</div>
+                    <div class="small">${maxLevel === 'N-A' ? 'Sin Nivel' : maxLevel + ' Predominante'}</div>
                 `;
                 
                 cell.innerHTML = content;
@@ -602,11 +629,11 @@
         }
 
         // ====================================================================
-        // 🚀 FUNCIÓN DE GRÁFICOS CORREGIDA Y MEJORADA (Encapsulamiento y Barras Horizontales)
+        // 🚀 FUNCIÓN DE GRÁFICOS MEJORADA Y REORGANIZADA
         // ====================================================================
         
         /**
-         * Dibuja y actualiza los gráficos (NUEVA VERSIÓN: Barras Horizontales).
+         * Dibuja y actualiza los gráficos (Barras Horizontales con encapsulamiento).
          */
         function updateCharts(data) {
             // --- 1. DATOS PARA RIESGO INHERENTE (Barra Horizontal Simple) ---
@@ -617,8 +644,8 @@
                 return acc;
             }, { 'Alto': 0, 'Medio': 0, 'Bajo': 0, 'Muy Bajo': 0 });
             
-            const inherentLabels = inherentRiskLevels.filter(k => inherentRiskCounts[k] > 0);
-            const inherentValues = inherentLabels.map(k => inherentRiskCounts[k]);
+            const inherentLabels = inherentRiskLevels;
+            const inherentValues = inherentRiskLevels.map(k => inherentRiskCounts[k]);
             const inherentColors = inherentLabels.map(level => {
                 if (level === 'Alto') return '#dc3545';
                 if (level === 'Medio') return '#ffc107';
@@ -639,15 +666,11 @@
             };
 
             // Estructura de conteo por factor y estado
-            const complianceData = factors.map(factor => {
-                const factorData = data.filter(item => item.factorRiesgo === factor);
-                return controlStatuses.map(status => factorData.filter(item => item.efectividadControl === status).length);
-            });
-
-            // Reestructuración para Chart.js: 1 dataset por estado de control
-            const complianceDatasets = controlStatuses.map((status, statusIndex) => ({
+            const complianceDatasets = controlStatuses.map((status) => ({
                 label: status,
-                data: factors.map((_, factorIndex) => complianceData[factorIndex][statusIndex]),
+                data: factors.map(factor => 
+                    data.filter(item => item.factorRiesgo === factor && item.efectividadControl === status).length
+                ),
                 backgroundColor: controlColors[status],
                 borderColor: '#fff',
                 borderWidth: 1,
@@ -673,7 +696,7 @@
                 options: {
                     indexAxis: 'y', // Hace las barras horizontales
                     responsive: true, 
-                    maintainAspectRatio: false, // <-- CLAVE para evitar expansión
+                    maintainAspectRatio: false, // <-- CLAVE para encapsular
                     plugins: { 
                         legend: { display: false },
                         title: { display: false }
@@ -682,7 +705,7 @@
                         x: { beginAtZero: true },
                         y: { stacked: true }
                     },
-                    animation: { duration: 0 }, // <-- CLAVE para evitar el "lag" y expansión
+                    animation: { duration: 0 }, // <-- CLAVE para estabilidad
                     hover: { animationDuration: 0 }
                 }
             });
@@ -697,7 +720,7 @@
                 options: { 
                     indexAxis: 'y', // Hace las barras horizontales
                     responsive: true, 
-                    maintainAspectRatio: false, // <-- CLAVE para evitar expansión
+                    maintainAspectRatio: false, // <-- CLAVE para encapsular
                     plugins: { 
                         title: { display: false },
                         legend: { position: 'bottom' }
@@ -706,10 +729,13 @@
                         x: { stacked: true, beginAtZero: true },
                         y: { stacked: true }
                     },
-                    animation: { duration: 0 }, // <-- CLAVE para evitar el "lag" y expansión
+                    animation: { duration: 0 }, // <-- CLAVE para estabilidad
                     hover: { animationDuration: 0 }
                 }
             });
+            // ⚡ NOTA IMPORTANTE: Para que maintainAspectRatio: false funcione en Charts.js, 
+            // es fundamental que el contenedor padre (en este caso, chart-container-50) 
+            // tenga una altura definida (lo cual se logra con flex: 1 y min-height: 400px en el col-md-6).
         }
         
         /**

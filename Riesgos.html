@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard de Riesgos Residuales y Efectividad de Control - FIAS</title>
+    <title>Dashboard de Riesgos - FIAS (Versión Simplificada)</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/dataTables.bootstrap5.min.css">
@@ -30,7 +30,6 @@
             border-radius: 12px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
             height: 100%;
-            border-left: 5px solid var(--fias-primary);
         }
         
         .dashboard-card:hover {
@@ -46,8 +45,8 @@
             font-weight: 600;
         }
 
-        /* Estilos de Badges */
-        .risk-badge, .status-badge {
+        /* Estilos de Badges para Nivel de Riesgo */
+        .risk-badge {
             padding: 0.5em 1em;
             border-radius: 20px;
             font-weight: 700;
@@ -55,65 +54,26 @@
             white-space: nowrap;
         }
         
-        /* Riesgo Residual */
+        /* Riesgo */
         .risk-Alto { background-color: #dc3545; color: white; }
         .risk-Medio { background-color: #ffc107; color: #343a40; }
         .risk-Bajo { background-color: #28a745; color: white; }
         .risk-Muy-Bajo { background-color: #0dcaf0; color: white; }
         .risk-N-A { background-color: #6c757d; color: white; }
-
-        /* Efectividad del Control */
-        .status-Apropiado { background-color: #2c7d32; color: white; }
-        .status-Aceptable { background-color: #8bc34a; color: white; }
-        .status-Mejorable { background-color: #fd7e14; color: white; }
-        .status-Deficiente { background-color: #dc3545; color: white; }
-        .status-N-A { background-color: #6c757d; color: white; }
         
-        /* MAPA DE CALOR (Heatmap) */
-        .heatmap-container {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 5px;
-            padding: 10px;
+        /* Contenedores de Gráfico con altura forzada */
+        .chart-container-50 {
+            flex: 1; /* Ocupa el 50% del espacio en el flex-column */
+            max-height: 50%;
+            min-height: 0;
+            padding-bottom: 0.5rem;
         }
         
-        .heatmap-cell {
-            background-color: #f8f9fa;
-            border: 1px solid #ddd;
-            padding: 10px;
-            text-align: center;
-            font-weight: 600;
-            color: #343a40;
-            border-radius: 5px;
-            transition: background-color 0.3s, transform 0.3s;
-            cursor: pointer;
-            min-height: 80px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+        /* Asegura que el canvas se ajuste al contenedor */
+        .chart-canvas {
+            width: 100% !important;
+            height: 100% !important;
         }
-        
-        .heatmap-cell:hover {
-            transform: scale(1.05);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-        }
-
-        .heatmap-count {
-            font-size: 1.5rem;
-            line-height: 1;
-            margin-bottom: 5px;
-        }
-
-        /* Colores del Mapa de Calor */
-        .heat-Alto { background-color: #ffdddd !important; border-left: 5px solid #dc3545; }
-        .heat-Medio { background-color: #fff3cd !important; border-left: 5px solid #ffc107; }
-        .heat-Bajo { background-color: #d1e7dd !important; border-left: 5px solid #28a745; }
-        .heat-Muy-Bajo { background-color: #cff4fc !important; border-left: 5px solid #0dcaf0; }
-        
-        .heat-Alto .heatmap-count { color: #dc3545; }
-        .heat-Medio .heatmap-count { color: #ffc107; }
-        .heat-Bajo .heatmap-count { color: #28a745; }
-        .heat-Muy-Bajo .heatmap-count { color: #0dcaf0; }
 
         /* Estilo del overlay de carga */
         .loading-overlay {
@@ -129,20 +89,29 @@
             align-items: center;
             flex-direction: column;
         }
-        
-        /* Contenedores de Gráfico con altura forzada */
-        .chart-container-50 {
-            flex: 1; /* Ocupa el 50% del espacio en el flex-column */
-            max-height: 50%;
-            min-height: 0;
-            padding-bottom: 0.5rem;
+
+        /* Tarjetas de Resumen por Factor (Reemplazo del Heatmap) */
+        .summary-card {
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 10px;
+            border-left: 5px solid var(--fias-primary);
+        }
+        .summary-card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--fias-primary);
+        }
+        .summary-card-content {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+        .summary-card-subtitle {
+            font-size: 0.9rem;
+            color: #6c757d;
         }
         
-        /* Asegura que el canvas se ajuste al contenedor */
-        .chart-canvas {
-            width: 100% !important;
-            height: 100% !important;
-        }
     </style>
 </head>
 <body>
@@ -176,7 +145,7 @@
         <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
             <div class="container-fluid">
                 <img src="https://fias.org.ec/wp-content/uploads/2021/11/Logo_FIAS_web.png" height="40" alt="Logo de FIAS" class="me-3">
-                <a class="navbar-brand" href="#">Dashboard de Riesgos Residuales</a>
+                <a class="navbar-brand" href="#">Dashboard de Riesgos (Resumen)</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -202,17 +171,16 @@
                 </div>
 
             <div class="row mb-4">
+                
                 <div class="col-md-6 mb-3">
                     <div class="card dashboard-card p-0 h-100">
                         <div class="card-header-fias">
-                            <h5 class="mb-0">📊 Riesgo Residual por Nivel y Factor (Mapa de Calor)</h5>
+                            <h5 class="mb-0">📈 Riesgo Residual por Factor (Tarjetas de Resumen)</h5>
                         </div>
                         <div class="card-body p-3">
-                            <div class="row mb-2">
-                                <div class="col text-center small text-muted">Haz clic para filtrar por el Factor con mayor Riesgo Residual.</div>
-                            </div>
-                            <div id="riskHeatmap" class="heatmap-container">
+                            <div class="row" id="summaryCardsContainer">
                                 </div>
+                            <div class="text-center small text-muted mt-3">Muestra la cantidad de riesgos residuales por factor. La barra roja indica el porcentaje de riesgos Alto/Medio.</div>
                         </div>
                     </div>
                 </div>
@@ -227,9 +195,9 @@
                     </div>
                     
                     <div class="card dashboard-card chart-container-50">
-                        <div class="card-header-fias"><h5 class="mb-0">Efectividad del Control por Factor</h5></div>
+                        <div class="card-header-fias"><h5 class="mb-0">Distribución del Riesgo Residual</h5></div>
                         <div class="card-body p-3">
-                            <canvas id="complianceChart" class="chart-canvas"></canvas>
+                            <canvas id="residualRiskChart" class="chart-canvas"></canvas>
                         </div>
                     </div>
                 </div>
@@ -245,11 +213,11 @@
                         </div>
                         <div class="card-body">
                             <div class="row mb-3">
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <label for="projectFilter" class="form-label small">Filtrar por Proyecto</label>
                                     <select class="form-select form-select-sm" id="projectFilter"></select>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <label for="riskFilter" class="form-label small">Filtrar por Riesgo Residual</label>
                                     <select class="form-select form-select-sm" id="riskFilter">
                                         <option value="">Todos los niveles</option>
@@ -259,17 +227,7 @@
                                         <option value="Muy Bajo">Muy Bajo</option>
                                     </select>
                                 </div>
-                                <div class="col-md-3">
-                                    <label for="statusFilter" class="form-label small">Filtrar por Efectividad</label>
-                                    <select class="form-select form-select-sm" id="statusFilter">
-                                        <option value="">Todas las evaluaciones</option>
-                                        <option value="Apropiado">Apropiado</option>
-                                        <option value="Aceptable">Aceptable</option>
-                                        <option value="Mejorable">Mejorable</option>
-                                        <option value="Deficiente">Deficiente</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <label for="factorFilter" class="form-label small">Filtrar por Factor</label>
                                     <select class="form-select form-select-sm" id="factorFilter"></select>
                                 </div>
@@ -282,8 +240,7 @@
                                             <th>Localidad</th>
                                             <th>Factor</th>
                                             <th>Riesgo Residual</th>
-                                            <th>Efectividad Control</th>
-                                            <th>Riesgo Inherente (Escala)</th>
+                                            <th>Riesgo Inherente (Nivel)</th>
                                             <th>Responsable</th>
                                             <th>Evento de Riesgo</th>
                                             <th>Acciones</th>
@@ -311,7 +268,7 @@
                             <div class="col-md-4"><strong>Factor de Riesgo:</strong> <span id="modal-factor"></span></div>
                             <div class="col-md-4"><strong>Responsable:</strong> <span id="modal-responsible"></span></div>
                             <div class="col-md-6"><strong>Nivel de Riesgo Residual:</strong> <span id="modal-risk"></span></div>
-                            <div class="col-md-6"><strong>Efectividad del Control:</strong> <span id="modal-status"></span></div>
+                            <div class="col-md-6"><strong>Nivel de Riesgo Inherente:</strong> <span id="modal-inherent-risk"></span></div>
                         </div>
                         <hr>
                         <h6><i class="fas fa-exclamation-triangle me-2 text-danger"></i> Evento y Origen</h6>
@@ -370,7 +327,7 @@
         // Variables globales
         let allRisksData = [];
         let table;
-        let inherentRiskChart, complianceChart; 
+        let inherentRiskChart, residualRiskChart; 
         
         /**
          * Normaliza el texto de las cabeceras complejas para mapeo.
@@ -405,6 +362,7 @@
 
         /**
          * Mapea y limpia los datos de Excel (CRUCIAL para la estabilidad de los filtros).
+         * **NOTA:** Se eliminan referencias a la Efectividad del Control.
          */
         function processExcelData(jsonData) {
             if (!jsonData || jsonData.length === 0) return [];
@@ -420,12 +378,12 @@
                 'Efercto ': 'efecto', // Incluye posible error tipográfico
                 'Factor de Riesgo': 'factorRiesgo',
                 'Nivel de Riesgo inherente': 'riesgoInherenteNivel', 
-                'Riesgo inherente': 'riesgoInherenteEscala', 
+                'Riesgo inherente': 'riesgoInherenteEscala', // Se mantiene por si se necesita
                 'Nivel de Riesgo residual': 'riesgoResidual',
                 'Descripción del Control': 'planAccion',
                 'Responsable': 'responsable',
                 'Fecha de seguimiento (Columna de Auditoría Interna)': 'fechaSeguimiento',
-                'Evaluación de la efectividad del control. (Columna de Auditoría Interna)': 'efectividadControl'
+                // 'Evaluación de la efectividad del control. (Columna de Auditoría Interna)': 'efectividadControl' <--- ELIMINADO
             };
 
             const foundMapping = {};
@@ -454,12 +412,11 @@
                 
                 // Limpieza de saltos de línea y espacios en valores clave
                 data.riesgoResidual = (data.riesgoResidual || 'N/A').replace(/\n/g, ' ').trim();
-                data.efectividadControl = (data.efectividadControl || 'N/A').replace(/\n/g, ' ').trim();
                 
                 data.riesgoInherenteEscala = parseInt(data.riesgoInherenteEscala) || 0; 
-                data.riesgoInherenteNivel = (data.riesgoInherenteNivel || 'N/A').trim();
+                data.riesgoInherenteNivel = (data.riesgoInherenteNivel || 'N/A').replace(/\n/g, ' ').trim(); // <-- Importante: Nivel textual
 
-                // Formato de Fecha: AQUI SE APLICA EL DD/MM/YYYY
+                // Formato de Fecha
                 data.fechaSeguimiento = convertToDateString(data.fechaSeguimiento);
 
                 data.eventoRiesgo = data.eventoRiesgo || 'N/A';
@@ -476,7 +433,7 @@
         }
         
         /**
-         * Obtiene la clase CSS para el badge de nivel de riesgo residual.
+         * Obtiene la clase CSS para el badge de nivel de riesgo (Residual o Inherente).
          */
         function getRiskBadgeClass(nivel) {
             const normalizedNivel = (nivel || '').toLowerCase().replace(/\s/g, '-').replace(/[^a-z0-9\-]/g, '');
@@ -487,198 +444,130 @@
             return 'risk-N-A';
         }
 
-        /**
-         * Obtiene la clase CSS para el badge de efectividad del control.
-         */
-        function getStatusBadgeClass(estado) {
-            const normalizedEstado = (estado || '').toLowerCase().replace(/\s/g, '-').replace(/[^a-z0-9\-]/g, '');
-            if (normalizedEstado.includes('apropiado')) return 'status-Apropiado';
-            if (normalizedEstado.includes('aceptable')) return 'status-Aceptable';
-            if (normalizedEstado.includes('mejorable')) return 'status-Mejorable';
-            if (normalizedEstado.includes('deficiente')) return 'status-Deficiente';
-            return 'status-N-A';
-        }
-        
         function updateDashboardCards(data) {
             const total = data.length;
             const alto = data.filter(item => (item.riesgoResidual || '').includes("Alto")).length;
-            const inherenteAlto = data.filter(item => item.riesgoInherenteEscala === 4).length; 
+            const medioAlto = data.filter(item => (item.riesgoResidual || '').includes("Alto") || (item.riesgoResidual || '').includes("Medio")).length;
+            const inherenteAlto = data.filter(item => (item.riesgoInherenteNivel || '').includes("Alto")).length; 
             
-            const apropiado = data.filter(item => (item.efectividadControl || '').includes("Apropiado")).length;
-            const aceptable = data.filter(item => (item.efectividadControl || '').includes("Aceptable")).length;
-            const mitigacionTotal = apropiado + aceptable;
-            
-            const mitigacionPercent = total > 0 ? Math.round((mitigacionTotal / total) * 100) : 0;
+            const altoPercent = total > 0 ? Math.round((medioAlto / total) * 100) : 0;
             
             document.getElementById('dashboardCards').innerHTML = `
                 <div class="col-xl-3 col-md-6 mb-3">
-                    <div class="card dashboard-card">
+                    <div class="card dashboard-card" style="border-left: 5px solid var(--fias-primary);">
                         <div class="card-body">
                             <i class="fas fa-layer-group fa-2x text-primary float-end"></i>
-                            <h5 class="card-title text-muted text-uppercase small">Total Riesgos</h5>
+                            <h5 class="card-title text-muted text-uppercase small">Total Riesgos Identificados</h5>
                             <h2 class="card-text">${total}</h2>
                         </div>
                     </div>
                 </div>
                 <div class="col-xl-3 col-md-6 mb-3">
-                    <div class="card dashboard-card" style="border-left-color: #dc3545;">
+                    <div class="card dashboard-card" style="border-left: 5px solid #dc3545;">
                         <div class="card-body">
-                            <i class="fas fa-arrow-up fa-2x text-danger float-end"></i>
+                            <i class="fas fa-exclamation-circle fa-2x text-danger float-end"></i>
                             <h5 class="card-title text-muted text-uppercase small">Riesgo Residual Alto</h5>
                             <h2 class="card-text">${alto}</h2>
                         </div>
                     </div>
                 </div>
                 <div class="col-xl-3 col-md-6 mb-3">
-                    <div class="card dashboard-card" style="border-left-color: #ffc107;">
+                    <div class="card dashboard-card" style="border-left: 5px solid #ffc107;">
                         <div class="card-body">
-                            <i class="fas fa-exclamation-triangle fa-2x text-warning float-end"></i>
-                            <h5 class="card-title text-muted text-uppercase small">Riesgo Inherente Alto (Escala 4)</h5>
+                            <i class="fas fa-arrow-up fa-2x text-warning float-end"></i>
+                            <h5 class="card-title text-muted text-uppercase small">Riesgo Inherente Alto</h5>
                             <h2 class="card-text">${inherenteAlto}</h2>
                         </div>
                     </div>
                 </div>
                 <div class="col-xl-3 col-md-6 mb-3">
-                    <div class="card dashboard-card" style="border-left-color: #28a745;">
+                    <div class="card dashboard-card" style="border-left: 5px solid #fd7e14;">
                         <div class="card-body">
-                            <i class="fas fa-percent fa-2x text-success float-end"></i>
-                            <h5 class="card-title text-muted text-uppercase small">Controles Apropiados/Aceptables</h5>
-                            <h2 class="card-text">${mitigacionPercent}%</h2>
+                            <i class="fas fa-percent fa-2x text-warning float-end"></i>
+                            <h5 class="card-title text-muted text-uppercase small">% Riesgo Residual Medio/Alto</h5>
+                            <h2 class="card-text">${altoPercent}%</h2>
                             <div class="progress mt-2" style="height: 10px;">
-                                <div class="progress-bar bg-success" role="progressbar" style="width: ${mitigacionPercent}%"></div>
+                                <div class="progress-bar bg-danger" role="progressbar" style="width: ${altoPercent}%"></div>
                             </div>
                         </div>
                     </div>
                 </div>`;
         }
         
-        function updateRiskHeatmap(data) {
+        /**
+         * Reemplaza el Mapa de Calor con Tarjetas de Resumen por Factor.
+         */
+        function updateSummaryCards(data) {
             const factors = [...new Set(data.map(item => item.factorRiesgo))].filter(Boolean).sort();
-            const levels = ['Muy Bajo', 'Bajo', 'Medio', 'Alto'];
-
-            const heatmapData = {};
-            factors.forEach(factor => {
-                heatmapData[factor] = { 'Muy Bajo': 0, 'Bajo': 0, 'Medio': 0, 'Alto': 0 };
-            });
-
-            data.forEach(item => {
-                const factor = item.factorRiesgo;
-                const residual = item.riesgoResidual;
-                if (heatmapData[factor] && levels.includes(residual)) {
-                    heatmapData[factor][residual]++;
-                }
-            });
-
-            const container = document.getElementById('riskHeatmap');
+            const container = document.getElementById('summaryCardsContainer');
             container.innerHTML = '';
             
             factors.forEach(factor => {
-                const counts = heatmapData[factor];
+                const risksByFactor = data.filter(item => item.factorRiesgo === factor);
+                const total = risksByFactor.length;
+                const altoMedio = risksByFactor.filter(item => 
+                    (item.riesgoResidual || '').includes("Alto") || (item.riesgoResidual || '').includes("Medio")
+                ).length;
                 
-                let maxCount = 0;
-                let maxLevel = '';
-                
-                // Priorizar niveles de riesgo Alto/Medio para el color predominante
-                if (counts['Alto'] > 0) { maxCount = counts['Alto']; maxLevel = 'Alto'; }
-                else if (counts['Medio'] > 0) { maxCount = counts['Medio']; maxLevel = 'Medio'; }
-                else {
-                    levels.forEach(level => {
-                        if (counts[level] > maxCount) {
-                            maxCount = counts[level];
-                            maxLevel = level;
-                        }
-                    });
-                }
-                
-                // Si maxCount es 0 (no hay riesgos con nivel definido)
-                if (maxCount === 0) {
-                    maxCount = data.filter(item => item.factorRiesgo === factor).length;
-                    maxLevel = 'N-A'; 
-                }
+                const altoMedioPercent = total > 0 ? Math.round((altoMedio / total) * 100) : 0;
 
-                const cell = document.createElement('div');
-                cell.className = `heatmap-cell heat-${maxLevel.replace(/\s/g, '-')}`;
-                cell.setAttribute('data-factor', factor);
-                
-                let content = `
-                    <div class="small text-muted">${factor}</div>
-                    <p class="heatmap-count">${maxCount}</p>
-                    <div class="small">${maxLevel === 'N-A' ? 'Sin Nivel' : maxLevel + ' Predominante'}</div>
+                const cardHtml = `
+                    <div class="col-md-6 col-lg-4 col-xl-4 mb-3">
+                        <div class="summary-card bg-white">
+                            <div class="summary-card-title">${factor}</div>
+                            <div class="summary-card-content text-primary">${total} <span class="small text-muted">riesgos</span></div>
+                            <div class="summary-card-subtitle">${altoMedio} Alto/Medio (${altoMedioPercent}%)</div>
+                            <div class="progress mt-2" style="height: 5px;">
+                                <div class="progress-bar bg-danger" role="progressbar" style="width: ${altoMedioPercent}%"></div>
+                            </div>
+                        </div>
+                    </div>
                 `;
-                
-                cell.innerHTML = content;
-                container.appendChild(cell);
-
-                cell.addEventListener('click', function() {
-                    const factorName = this.getAttribute('data-factor');
-                    
-                    $('.heatmap-cell').css('box-shadow', 'none');
-                    $(this).css('box-shadow', '0 0 10px rgba(0, 0, 0, 0.5)');
-
-                    document.getElementById('factorFilter').value = factorName;
-                    
-                    document.getElementById('projectFilter').value = '';
-                    document.getElementById('riskFilter').value = '';
-                    document.getElementById('statusFilter').value = '';
-                    
-                    applyFilters(); 
-                });
+                container.innerHTML += cardHtml;
             });
-            
-            container.style.gridTemplateColumns = `repeat(${Math.min(factors.length, 4)}, 1fr)`;
+
+            // Si hay muchos factores, ajusta el diseño de las columnas para que se vean bien
+            // La clase col-md-6 col-lg-4 ya proporciona una buena adaptabilidad
         }
 
+
         // ====================================================================
-        // 🚀 FUNCIÓN DE GRÁFICOS MEJORADA Y REORGANIZADA
+        // 🚀 FUNCIÓN DE GRÁFICOS ACTUALIZADA
         // ====================================================================
         
         /**
-         * Dibuja y actualiza los gráficos (Barras Horizontales con encapsulamiento).
+         * Dibuja y actualiza los gráficos (Riesgo Inherente y Residual).
          */
         function updateCharts(data) {
-            // --- 1. DATOS PARA RIESGO INHERENTE (Barra Horizontal Simple) ---
-            const inherentRiskLevels = ['Muy Bajo', 'Bajo', 'Medio', 'Alto'];
+            
+            const riskLevels = ['Muy Bajo', 'Bajo', 'Medio', 'Alto'];
+            const riskColors = { 'Alto': '#dc3545', 'Medio': '#ffc107', 'Bajo': '#28a745', 'Muy Bajo': '#0dcaf0' };
+
+            // --- 1. DATOS para RIESGO INHERENTE ---
             const inherentRiskCounts = data.reduce((acc, item) => {
                 const level = item.riesgoInherenteNivel;
                 acc[level] = (acc[level] || 0) + 1;
                 return acc;
             }, { 'Alto': 0, 'Medio': 0, 'Bajo': 0, 'Muy Bajo': 0 });
             
-            const inherentLabels = inherentRiskLevels;
-            const inherentValues = inherentRiskLevels.map(k => inherentRiskCounts[k]);
-            const inherentColors = inherentLabels.map(level => {
-                if (level === 'Alto') return '#dc3545';
-                if (level === 'Medio') return '#ffc107';
-                if (level === 'Bajo') return '#28a745';
-                if (level === 'Muy Bajo') return '#0dcaf0';
-                return '#6c757d';
-            });
+            const inherentLabels = riskLevels;
+            const inherentValues = riskLevels.map(k => inherentRiskCounts[k]);
+            const inherentColors = inherentLabels.map(level => riskColors[level] || '#6c757d');
             
-            // --- 2. DATOS PARA EFECTIVIDAD DEL CONTROL (Barra Horizontal APILADA por Factor) ---
-            const factors = [...new Set(data.map(item => item.factorRiesgo))].filter(Boolean).sort();
-            const controlStatuses = ['Deficiente', 'Mejorable', 'Aceptable', 'Apropiado', 'N/A'];
-            const controlColors = {
-                'Deficiente': '#dc3545', 
-                'Mejorable': '#fd7e14', 
-                'Aceptable': '#8bc34a', 
-                'Apropiado': '#2c7d32',
-                'N/A': '#6c757d'
-            };
-
-            // Estructura de conteo por factor y estado
-            const complianceDatasets = controlStatuses.map((status) => ({
-                label: status,
-                data: factors.map(factor => 
-                    data.filter(item => item.factorRiesgo === factor && item.efectividadControl === status).length
-                ),
-                backgroundColor: controlColors[status],
-                borderColor: '#fff',
-                borderWidth: 1,
-            })).filter(dataset => dataset.data.some(count => count > 0)); 
+            // --- 2. DATOS para RIESGO RESIDUAL ---
+            const residualRiskCounts = data.reduce((acc, item) => {
+                const level = item.riesgoResidual;
+                acc[level] = (acc[level] || 0) + 1;
+                return acc;
+            }, { 'Alto': 0, 'Medio': 0, 'Bajo': 0, 'Muy Bajo': 0 });
+            
+            const residualLabels = riskLevels;
+            const residualValues = riskLevels.map(k => residualRiskCounts[k]);
+            const residualColors = residualLabels.map(level => riskColors[level] || '#6c757d');
             
             // --- DESTRUIR Y RECREAR GRÁFICOS ---
             if (inherentRiskChart) inherentRiskChart.destroy();
-            if (complianceChart) complianceChart.destroy();
+            if (residualRiskChart) residualRiskChart.destroy();
             
             // 1. Gráfico de Riesgo Inherente (Barra Horizontal)
             inherentRiskChart = new Chart(document.getElementById('inherentRiskChart').getContext('2d'), {
@@ -689,14 +578,13 @@
                         label: 'Cantidad de Riesgos',
                         data: inherentValues,
                         backgroundColor: inherentColors,
-                        borderColor: inherentColors,
                         borderWidth: 1
                     }]
                 },
                 options: {
-                    indexAxis: 'y', // Hace las barras horizontales
+                    indexAxis: 'y', 
                     responsive: true, 
-                    maintainAspectRatio: false, // <-- CLAVE para encapsular
+                    maintainAspectRatio: false, 
                     plugins: { 
                         legend: { display: false },
                         title: { display: false }
@@ -705,41 +593,44 @@
                         x: { beginAtZero: true },
                         y: { stacked: true }
                     },
-                    animation: { duration: 0 }, // <-- CLAVE para estabilidad
+                    animation: { duration: 0 }, 
                     hover: { animationDuration: 0 }
                 }
             });
 
-            // 2. Gráfico de Efectividad del Control (Barra Horizontal APILADA por Factor)
-            complianceChart = new Chart(document.getElementById('complianceChart').getContext('2d'), {
+            // 2. Gráfico de Riesgo Residual (Barra Horizontal)
+            residualRiskChart = new Chart(document.getElementById('residualRiskChart').getContext('2d'), {
                 type: 'bar',
                 data: {
-                    labels: factors, // Factores de Riesgo en el eje Y
-                    datasets: complianceDatasets
+                    labels: residualLabels, 
+                    datasets: [{
+                        label: 'Cantidad de Riesgos',
+                        data: residualValues,
+                        backgroundColor: residualColors,
+                        borderWidth: 1
+                    }]
                 },
                 options: { 
-                    indexAxis: 'y', // Hace las barras horizontales
+                    indexAxis: 'y', 
                     responsive: true, 
-                    maintainAspectRatio: false, // <-- CLAVE para encapsular
+                    maintainAspectRatio: false, 
                     plugins: { 
-                        title: { display: false },
-                        legend: { position: 'bottom' }
+                        legend: { display: false },
+                        title: { display: false }
                     },
                     scales: { 
-                        x: { stacked: true, beginAtZero: true },
+                        x: { beginAtZero: true },
                         y: { stacked: true }
                     },
-                    animation: { duration: 0 }, // <-- CLAVE para estabilidad
+                    animation: { duration: 0 }, 
                     hover: { animationDuration: 0 }
                 }
             });
-            // ⚡ NOTA IMPORTANTE: Para que maintainAspectRatio: false funcione en Charts.js, 
-            // es fundamental que el contenedor padre (en este caso, chart-container-50) 
-            // tenga una altura definida (lo cual se logra con flex: 1 y min-height: 400px en el col-md-6).
         }
         
         /**
          * Inicializa la tabla DataTable.
+         * **NOTA:** Columna de Efectividad del Control eliminada. Riesgo Inherente es Nivel (textual).
          */
         function initializeTable() {
             if (table) {
@@ -763,15 +654,14 @@
                         }
                     },
                     { 
-                        data: 'efectividadControl', title: 'Efectividad Control',
+                        data: 'riesgoInherenteNivel', title: 'Riesgo Inherente (Nivel)', // <-- Nivel textual
                         render: function(data, type) {
                             if (type === 'display') {
-                                return `<span class="status-badge ${getStatusBadgeClass(data)}">${data}</span>`;
+                                return `<span class="risk-badge ${getRiskBadgeClass(data)}">${data}</span>`;
                             }
                             return data;
                         }
-                    },
-                    { data: 'riesgoInherenteEscala', title: 'Riesgo Inherente (Escala)', width: "80px" }, 
+                    }, 
                     { data: 'responsable', title: 'Responsable' },
                     { 
                         data: 'eventoRiesgo', title: 'Evento de Riesgo',
@@ -784,7 +674,7 @@
                     }
                 ],
                 columnDefs: [
-                    { targets: 5, className: 'text-center' } 
+                    { targets: 4, className: 'text-center' } 
                 ],
                 language: { url: '//cdn.datatables.net/plug-ins/1.13.5/i18n/es-ES.json' },
                 pageLength: 10,
@@ -804,7 +694,8 @@
             document.getElementById('modal-factor').textContent = risk.factorRiesgo;
             document.getElementById('modal-responsible').textContent = risk.responsable;
             document.getElementById('modal-risk').innerHTML = `<span class="risk-badge ${getRiskBadgeClass(risk.riesgoResidual)}">${risk.riesgoResidual}</span>`;
-            document.getElementById('modal-status').innerHTML = `<span class="status-badge ${getStatusBadgeClass(risk.efectividadControl)}">${risk.efectividadControl}</span>`;
+            document.getElementById('modal-inherent-risk').innerHTML = `<span class="risk-badge ${getRiskBadgeClass(risk.riesgoInherenteNivel)}">${risk.riesgoInherenteNivel}</span>`; // <-- Nivel textual
+            
             document.getElementById('modal-date').textContent = risk.fechaSeguimiento;
             document.getElementById('modal-event').textContent = risk.eventoRiesgo;
             document.getElementById('modal-cause').textContent = risk.causa;
@@ -817,7 +708,7 @@
 
         function updateVisualizations(data) {
             updateDashboardCards(data);
-            updateRiskHeatmap(data);
+            updateSummaryCards(data); // <-- Tarjetas de Resumen
             updateCharts(data);
         }
 
@@ -841,16 +732,13 @@
         function applyFilters() {
             const projectFilter = document.getElementById('projectFilter').value;
             const riskFilter = document.getElementById('riskFilter').value;
-            const statusFilter = document.getElementById('statusFilter').value;
             const factorFilter = document.getElementById('factorFilter').value;
             
-            $('.heatmap-cell').css('box-shadow', 'none');
-
+            // NOTA: La columna 4 ahora es Riesgo Inherente Nivel
             table.column(0).search(projectFilter, true, false).draw(); 
             table.column(2).search(factorFilter, true, false).draw(); 
             table.column(3).search(riskFilter, true, false).draw(); 
-            table.column(4).search(statusFilter, true, false).draw(); 
-
+            
             const filteredData = table.rows({ search: 'applied' }).data().toArray();
             updateVisualizations(filteredData);
         }
@@ -964,7 +852,6 @@
             
             document.getElementById('projectFilter').addEventListener('change', applyFilters);
             document.getElementById('riskFilter').addEventListener('change', applyFilters);
-            document.getElementById('statusFilter').addEventListener('change', applyFilters);
             document.getElementById('factorFilter').addEventListener('change', applyFilters);
             
             document.getElementById('exportBtn').addEventListener('click', function() {
@@ -972,10 +859,8 @@
                     'Proyecto': item.proyecto,
                     'Localidad': item.localidad,
                     'Factor de Riesgo': item.factorRiesgo,
-                    'Nivel de Riesgo Inherente (Escala)': item.riesgoInherenteEscala,
-                    'Nivel de Riesgo Inherente (Nivel)': item.riesgoInherenteNivel,
+                    'Nivel de Riesgo Inherente': item.riesgoInherenteNivel,
                     'Nivel de Riesgo Residual': item.riesgoResidual,
-                    'Efectividad del Control': item.efectividadControl,
                     'Evento de Riesgo': item.eventoRiesgo,
                     'Causa': item.causa,
                     'Efecto': item.efecto,

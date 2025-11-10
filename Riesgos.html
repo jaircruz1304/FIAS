@@ -131,7 +131,6 @@
         }
         
         /* CORRECCIÓN: Evita el desbordamiento asegurando que el canvas no rompa su contenedor */
-        /* La corrección principal es la configuración de Chart.js, pero mantenemos esta regla CSS */
         #inherentRiskChart, #complianceChart {
             max-width: 100%;
             max-height: 100%;
@@ -347,7 +346,7 @@
         const msalInstance = new msal.PublicClientApplication(msalConfig);
         let accessToken = null;
 
-        // ID del archivo Excel de la matriz de riesgos (Mantenido del código anterior)
+        // ID del archivo Excel de la matriz de riesgos (Actualizado con el ID proporcionado por el usuario)
         const EXCEL_FILE_ID = "u!aHR0cHM6Ly9maWFzZWMuc2hhcmVwb2ludC5jb20vOng6L3MvRk9ORE9ERUlOVkVSU0lPTkFNQklFTlRBTFNPU1RFTklCTEUvRVJ0X0xmQjkxaVpPZ1Z0QjNLSHBkN2NCLVk0S2w2eV9POHlmTFllbDBscVZzZw==";
         
         // Variables globales
@@ -737,9 +736,11 @@
                         legend: { position: 'bottom' },
                         tooltip: { mode: 'nearest', intersect: true }
                     },
-                    animation: { duration: 0 }, // CRÍTICO: Deshabilita toda animación de actualización
+                    // FIX CRÍTICO: Deshabilita toda animación de actualización
+                    animation: { duration: 0 }, 
                     hover: {
-                        animationDuration: 0, // CRÍTICO: Elimina animación de hover/escalado
+                        // FIX CRÍTICO: Elimina animación de hover/escalado
+                        animationDuration: 0, 
                         mode: 'nearest',
                         intersect: true
                     }
@@ -764,9 +765,11 @@
                     maintainAspectRatio: false, 
                     scales: { y: { beginAtZero: true } },
                     plugins: { legend: { display: false } },
-                    animation: { duration: 0 }, // CRÍTICO: Deshabilita toda animación de actualización
+                    // FIX CRÍTICO: Deshabilita toda animación de actualización
+                    animation: { duration: 0 }, 
                     hover: {
-                        animationDuration: 0, // CRÍTICO: Elimina animación de hover/escalado
+                        // FIX CRÍTICO: Elimina animación de hover/escalado
+                        animationDuration: 0, 
                         mode: 'index', 
                         intersect: false
                     }
@@ -811,7 +814,6 @@
         }
 
         async function loadExcelData() {
-            // ... (Lógica de carga de datos)
             try {
                 document.getElementById('loadingOverlay').style.display = 'flex';
                 updateLoadingText('Conectando con Excel Online...');

@@ -130,11 +130,11 @@
             flex-direction: column;
         }
         
-        /* CORRECCIÓN: Evita que el Canvas del gráfico se escale fuera de su contenedor al hacer hover */
+        /* CORRECCIÓN: Evita el desbordamiento asegurando que el canvas no rompa su contenedor */
+        /* La corrección principal es la configuración de Chart.js, pero mantenemos esta regla CSS */
         #inherentRiskChart, #complianceChart {
             max-width: 100%;
             max-height: 100%;
-            /* Es una buena práctica asegurar que no haya un ancho/alto fijo que cause desbordamiento */
         }
     </style>
 </head>
@@ -348,7 +348,7 @@
         let accessToken = null;
 
         // ID del archivo Excel de la matriz de riesgos (Mantenido del código anterior)
-        const EXCEL_FILE_ID = "u!aHR0cHM6Ly9maWFzZWMuc2hhcmVwb2ludC5jb20vOng6L3MvRk9ORE9ERUlOVkVSU0lPTkFNQklFTlRBTFNPU1RFTklCTEUvRVJ0X0xmQjkxaVpPZ1Z0QjNLSHBkN2NCLVk0S2w2eV9POHlmTFllaDBscVZzZw==";
+        const EXCEL_FILE_ID = "u!aHR0cHM6Ly9maWFzZWMuc2hhcmVwb2ludC5jb20vOng6L3MvRk9ORE9ERUlOVkVSU0lPTkFNQklFTlRBTFNPU1RFTklCTEUvRVJ0X0xmQjkxaVpPZ1Z0QjNLSHBkN2NCLVk0S2w2eV9POHlmTFllbDBscVZzZw==";
         
         // Variables globales
         let allRisksData = [];
@@ -375,17 +375,17 @@
                 // Intenta analizar cadenas ISO (ej. 2025-10-06T00:00:00.000Z)
                 date = new Date(dateValue);
             } else if (typeof dateValue === 'number') {
-                 // Si es un número (formato de fecha de Excel), requiere lógica de conversión
-                 // Asumiendo que XLSX.read se usa con cellDates: true, esto debería dar un objeto Date.
-                 // Si aun así se recibe un número de serie de Excel, se necesitaría un ajuste más complejo,
-                 // pero con 'cellDates: true', lo manejamos como objeto Date.
                  date = new Date(dateValue); 
             }
             
             if (date && !isNaN(date.getTime())) {
-                const day = String(date.getDate()).padStart(2, '0');
-                const month = String(date.getMonth() + 1).padStart(2, '0'); // Meses son 0-indexados
-                const year = date.getFullYear();
+                // Se ajusta para GMT y se asegura la extracción correcta de los componentes.
+                const offset = date.getTimezoneOffset() * 60000;
+                const localDate = new Date(date.getTime() - offset);
+                
+                const day = String(localDate.getDate()).padStart(2, '0');
+                const month = String(localDate.getMonth() + 1).padStart(2, '0'); // Meses son 0-indexados
+                const year = localDate.getFullYear();
                 return `${day}/${month}/${year}`;
             }
 
@@ -720,45 +720,41 @@
             if (inherentRiskChart) inherentRiskChart.destroy();
             if (complianceChart) complianceChart.destroy();
             
-            // Opciones de configuración para evitar el zoom no deseado en hover
-            const chartOptions = {
-                responsive: true, 
-                maintainAspectRatio: false, 
-                plugins: { 
-                    legend: { position: 'bottom' },
-                    tooltip: {
-                         // Evita el redibujado de elementos interactivos si no es necesario
-                         mode: 'index', 
-                         intersect: false
-                    }
-                },
-                hover: {
-                    mode: null // Deshabilita el modo hover que causa redibujado/escalado
-                }
-            };
-
             // Gráfico de Riesgo Inherente (Dona)
             inherentRiskChart = new Chart(document.getElementById('inherentRiskChart').getContext('2d'), {
                 type: 'doughnut',
                 data: {
-                    labels: Object.keys(inherentRiskCounts),
+                    labels: Object.keys(inherentRiskCounts).filter(k => inherentRiskCounts[k] > 0),
                     datasets: [{
-                        data: Object.values(inherentRiskCounts),
-                        backgroundColor: ['#dc3545', '#ffc107', '#28a745', '#0dcaf0'],
+                        data: Object.values(inherentRiskCounts).filter(v => v > 0),
+                        backgroundColor: ['#dc3545', '#ffc107', '#28a745', '#0dcaf0'].filter((_, i) => Object.values(inherentRiskCounts)[i] > 0),
                     }]
                 },
-                options: chartOptions // Aplica opciones corregidas
+                options: {
+                    responsive: true, 
+                    maintainAspectRatio: false, 
+                    plugins: { 
+                        legend: { position: 'bottom' },
+                        tooltip: { mode: 'nearest', intersect: true }
+                    },
+                    animation: { duration: 0 }, // CRÍTICO: Deshabilita toda animación de actualización
+                    hover: {
+                        animationDuration: 0, // CRÍTICO: Elimina animación de hover/escalado
+                        mode: 'nearest',
+                        intersect: true
+                    }
+                }
             });
 
             // Gráfico de cumplimiento (Efectividad del Control - barras)
             complianceChart = new Chart(document.getElementById('complianceChart').getContext('2d'), {
                 type: 'bar',
                 data: {
-                    labels: Object.keys(complianceCounts),
+                    labels: Object.keys(complianceCounts).filter(k => complianceCounts[k] > 0),
                     datasets: [{
                         label: 'Cantidad de Riesgos',
-                        data: Object.values(complianceCounts),
-                        backgroundColor: ['#2c7d32', '#8bc34a', '#fd7e14', '#dc3545', '#6c757d'], 
+                        data: Object.values(complianceCounts).filter(v => v > 0),
+                        backgroundColor: ['#2c7d32', '#8bc34a', '#fd7e14', '#dc3545', '#6c757d'].filter((_, i) => Object.values(complianceCounts)[i] > 0), 
                         borderColor: 'rgba(0, 0, 0, 0.1)',
                         borderWidth: 1
                     }]
@@ -768,8 +764,11 @@
                     maintainAspectRatio: false, 
                     scales: { y: { beginAtZero: true } },
                     plugins: { legend: { display: false } },
+                    animation: { duration: 0 }, // CRÍTICO: Deshabilita toda animación de actualización
                     hover: {
-                        mode: null // Deshabilita el modo hover que causa redibujado/escalado
+                        animationDuration: 0, // CRÍTICO: Elimina animación de hover/escalado
+                        mode: 'index', 
+                        intersect: false
                     }
                 }
             });
@@ -806,6 +805,7 @@
             table.column(3).search(riskFilter, true, false).draw(); 
             table.column(4).search(statusFilter, true, false).draw(); 
 
+            // Se toma la data visible (filtrada) para actualizar los gráficos
             const filteredData = table.rows({ search: 'applied' }).data().toArray();
             updateVisualizations(filteredData);
         }
@@ -813,6 +813,7 @@
         async function loadExcelData() {
             // ... (Lógica de carga de datos)
             try {
+                document.getElementById('loadingOverlay').style.display = 'flex';
                 updateLoadingText('Conectando con Excel Online...');
                 
                 if (!accessToken) throw new Error('No hay token de acceso disponible. Intente iniciar sesión.');

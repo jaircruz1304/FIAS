@@ -523,7 +523,7 @@
         let accessToken = null;
 
         // ID del archivo Excel de la matriz de riesgos
-        const EXCEL_FILE_ID = "u!aHR0cHM6Ly9maWFzZWMuc2hhcmVwb2ludC5jb20vOng6L3MvRk9ORE9ERUlOVkVSU0lPTkFNQklFTlRBTFNPU1RFTklCTEUvRVJ0X0xmQjkxaVpPZ1Z0QjNLSHBkN2NCLVk0S2w2eV9POHlmTFllaDBscVZzZw==";
+        const EXCEL_FILE_ID = "u!aHR0cHM6Ly9maWFzZWMuc2hhcmVwb2ludC5jb20vOng6L3MvRk9ORE9ERUlOVkVSU0lPTkFNQklFTlRBTFNPU1RFTklCTEUvRVJ0X0xmQjkxaVpPZ1Z0QjNLSHBkN2NCLVk0S2w2eV9POHlmTFllYTBscVZzZw==";
         
         // Variables globales
         let allRisksData = [];
@@ -532,24 +532,43 @@
         
         /**
          * Procesa los datos crudos del JSON de Excel para adaptarlos a la estructura de la aplicación.
+         *
          * @param {Array} jsonData - Los datos directamente de la librería XLSX.
          * @returns {Array} - Un array de objetos de riesgo procesados.
          */
         function processExcelData(jsonData) {
             if (!jsonData) return [];
             
+            // Función auxiliar para normalizar los nombres de las columnas de Excel.
+            // Esto es crucial para manejar celdas con saltos de línea o espacios extra.
+            const getCellValue = (row, potentialHeaders) => {
+                for (const header of potentialHeaders) {
+                    if (row.hasOwnProperty(header)) {
+                        return row[header] || '';
+                    }
+                    // Intentar con encabezados normalizados (sin saltos de línea)
+                    const normalizedHeader = header.replace(/\s+/g, ' ').trim();
+                    const normalizedKey = Object.keys(row).find(k => k.replace(/\s+/g, ' ').trim() === normalizedHeader);
+                    if (normalizedKey) {
+                        return row[normalizedKey] || '';
+                    }
+                }
+                return '';
+            };
+
             return jsonData.map(row => ({
-                proyecto: row.PROYECTO || row["PROYECTO- LOCALIDAD"] || 'N/A',
-                eventoRiesgo: row["¿Qué podría suceder?"] || row["Descripción del evento de Riesgo"] || '',
-                causa: row["¿Porqué podría suceder?"] || row.Causa || '',
-                efecto: row.Consecuencia || row.Efecto || '',
-                factorRiesgo: row["Factor de Riesgo"] || '',
-                nivelRiesgo: row["Nivel de Riesgo inherente"] || '',
-                planAccion: row["Descripción del Control"] || row["Plan de acción"] || '',
-                responsable: row.Responsable || row["Responsable del Control"] || 'N/A',
-                estado: row["Evaluación de la efectividad del control."] || row.Estado || '',
-                fechaSeguimiento: row["Fecha de seguimiento (Columna de Auditoría Interna)"] || row["Fecha de seguimiento"] || 'N/A',
-                observacion: row["Observación (Puede colocar el responsable o AI)"] || row.Observación || ''
+                // CORRECCIÓN DE HEADERS: Mapeo exacto basado en el archivo
+                proyecto: getCellValue(row, ["PROYECTO- LOCALIDAD", "PROYECTO"]) || 'N/A',
+                eventoRiesgo: getCellValue(row, ["Descripción del evento de Riesgo\n¿Qué podría suceder?", "Descripción del evento de Riesgo", "¿Qué podría suceder?"]),
+                causa: getCellValue(row, ["Causa\n¿Porqué podría suceder?", "Causa", "¿Porqué podría suceder?"]),
+                efecto: getCellValue(row, ["Efercto \nConsecuencia", "Efercto", "Consecuencia", "Efecto"]),
+                factorRiesgo: getCellValue(row, ["Factor de Riesgo"]),
+                nivelRiesgo: getCellValue(row, ["Nivel de Riesgo inherente"]),
+                planAccion: getCellValue(row, ["Descripción del Control", "Plan de acción"]),
+                responsable: getCellValue(row, ["Responsable", "Responsable del Control"]), // 'Responsable' parece ser el más común
+                estado: getCellValue(row, ["Evaluación de la efectividad del control. (Columna de Auditoría Interna)", "Evaluación de la efectividad del control.", "Estado"]),
+                fechaSeguimiento: getCellValue(row, ["Fecha de seguimiento (Columna de Auditoría Interna)", "Fecha de seguimiento"]) || 'N/A',
+                observacion: getCellValue(row, ["Observación (Puede colocar el responsable o AI)", "Observación"]) || ''
             }));
         }
         
@@ -571,12 +590,8 @@
             const alto = data.filter(item => item.nivelRiesgo === "Alto").length;
             const medio = data.filter(item => item.nivelRiesgo === "Medio").length;
             const bajo = data.filter(item => item.nivelRiesgo === "Bajo").length;
-            const muyBajo = data.filter(item => item.nivelRiesgo === "Muy Bajo").length;
             
             const cumplido = data.filter(item => item.estado === "Cumplido").length;
-            const parcial = data.filter(item => item.estado === "Parcialmente cumplido").length;
-            const noCumplido = data.filter(item => item.estado === "No cumplido").length;
-            const na = data.filter(item => item.estado === "NA" || !item.estado).length;
             
             const cumplimientoPercent = total > 0 ? Math.round((cumplido / total) * 100) : 0;
             
@@ -633,7 +648,7 @@
                     <div class="card dashboard-card text-center">
                         <div class="card-body d-flex flex-column justify-content-center">
                             <h5 class="card-title">Pendientes</h5>
-                            <h2 class="card-text text-warning">${parcial + noCumplido}</h2>
+                            <h2 class="card-text text-warning">${data.length - cumplido}</h2>
                             <p class="text-muted mt-2">Acciones en proceso</p>
                         </div>
                     </div>
@@ -668,7 +683,11 @@
                 if (!acc[item.proyecto]) {
                     acc[item.proyecto] = { 'Alto': 0, 'Medio': 0, 'Bajo': 0, 'Muy Bajo': 0 };
                 }
-                acc[item.proyecto][item.nivelRiesgo]++;
+                // Usar el operador de acceso opcional para manejar posibles valores undefined
+                const nivel = item.nivelRiesgo;
+                if (nivel && acc[item.proyecto].hasOwnProperty(nivel)) {
+                    acc[item.proyecto][nivel]++;
+                }
                 return acc;
             }, {});
 
@@ -846,6 +865,12 @@
          * Inicializa la tabla DataTable.
          */
         function initializeTable() {
+            // Asegurarse de destruir cualquier tabla anterior para evitar errores de DataTables
+            if ($.fn.DataTable.isDataTable('#risksTable')) {
+                $('#risksTable').DataTable().destroy();
+                $('#risksTable tbody').empty();
+            }
+
             table = $('#risksTable').DataTable({
                 data: allRisksData,
                 columns: [
@@ -966,39 +991,47 @@
 
                 updateLoadingText('Descargando datos...');
                 
-                // --- INICIO DE CORRECCIÓN 1 ---
-                // Realizar la solicitud para obtener el archivo Excel usando el endpoint de "shares"
-                const graphUrl = `https://graph.microsoft.com/v1.0/shares/${EXCEL_FILE_ID}/driveItem/content`;
-                const response = await fetch(graphUrl, {
+                // CORRECCIÓN CLAVE: Usar /shares/ para el ShareID (u!)
+                const response = await fetch(`https://graph.microsoft.com/v1.0/shares/${EXCEL_FILE_ID}/driveItem/content`, {
                     headers: {
                         'Authorization': `Bearer ${accessToken}`
                     }
                 });
-                // --- FIN DE CORRECCIÓN 1 ---
 
                 if (!response.ok) {
-                    throw new Error(`Error al obtener el archivo: ${response.status} ${response.statusText}`);
+                    // Si el error es 404/403, puede ser el token o el ID del archivo
+                    throw new Error(`Error al obtener el archivo: ${response.status} ${response.statusText}. Por favor, verifique el EXCEL_FILE_ID.`);
                 }
 
                 updateLoadingText('Procesando datos...');
                 
                 const arrayBuffer = await response.arrayBuffer();
                 const data = new Uint8Array(arrayBuffer);
-                const workbook = XLSX.read(data, { type: 'array' });
+                // Se lee con la opción 'cellDates: true' para intentar manejar las fechas correctamente
+                const workbook = XLSX.read(data, { type: 'array', cellDates: true });
                 
                 // Obtener la primera hoja
                 const firstSheetName = workbook.SheetNames[0];
                 const worksheet = workbook.Sheets[firstSheetName];
                 
-                // --- INICIO DE CORRECCIÓN 2 ---
-                // Convertir a JSON, añadiendo { cellDates: true } para procesar fechas
-                const jsonData = XLSX.utils.sheet_to_json(worksheet, { cellDates: true });
-                // --- FIN DE CORRECCIÓN 2 ---
+                // Convertir a JSON
+                const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 }); // Leer la cabecera como la fila 1 (índice 0)
+                const headers = jsonData[0];
+                const dataRows = jsonData.slice(1);
+
+                // Re-mapear para usar objetos clave-valor basados en los encabezados reales
+                const jsonWithKeys = dataRows.map(row => {
+                    const obj = {};
+                    headers.forEach((header, i) => {
+                        obj[header] = row[i];
+                    });
+                    return obj;
+                });
                 
                 updateLoadingText('Procesando datos...');
                 
-                // Procesar los datos para adaptarlos a nuestra estructura
-                allRisksData = processExcelData(jsonData);
+                // Procesar los datos con las cabeceras corregidas
+                allRisksData = processExcelData(jsonWithKeys);
                 
                 // Actualizar la interfaz
                 updateFilters();
@@ -1019,12 +1052,12 @@
                 
             } catch (error) {
                 console.error('Error al cargar datos:', error);
-                updateLoadingText(`Error: ${error.message}`);
+                updateLoadingText(`Error: ${error.message}. Asegúrese de tener el token y la URL de Graph API correctos para el archivo compartido.`);
                 
                 // Mostrar un mensaje de error más específico
-                setTimeout(()(() => {
+                setTimeout(() => {
                     document.getElementById('loadingOverlay').style.display = 'none';
-                    alert('Error al cargar los datos. Verifique su conexión y permisos.');
+                    alert(`Error al cargar los datos. Verifique su conexión y permisos. Mensaje: ${error.message}`);
                 }, 2000);
             }
         }
@@ -1045,7 +1078,6 @@
                 // Verificar si ya hay una sesión activa
                 const accounts = msalInstance.getAllAccounts();
                 if (accounts.length > 0) {
-                    // Intentar obtener un token silenciosamente
                     const silentRequest = {
                         scopes: ["Files.Read", "Files.Read.All", "Sites.Read.All"],
                         account: accounts[0]
@@ -1058,12 +1090,10 @@
                         document.getElementById('mainContent').style.display = 'block';
                         loadExcelData();
                     } catch (silentError) {
-                        // Si falla el token silencioso, mostrar el botón de login
                         document.getElementById('authContainer').style.display = 'block';
                         document.getElementById('loadingOverlay').style.display = 'none';
                     }
                 } else {
-                    // No hay sesión activa, mostrar el botón de login
                     document.getElementById('authContainer').style.display = 'block';
                     document.getElementById('loadingOverlay').style.display = 'none';
                 }
@@ -1108,10 +1138,15 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Verificar si estamos en un entorno con problemas de CORS
             if (window.location.origin === 'https://jaircruz1304.github.io' || 
-                window.location.origin === 'http://localhost:8000') {
+                window.location.origin === 'http://localhost:8000' ||
+                window.location.protocol === 'file:') { // Permite probar localmente
                 // Entornos configurados correctamente
                 msalInstance.initialize().then(() => {
                     handleAuth();
+                }).catch(error => {
+                    console.error("MSAL initialization failed:", error);
+                    document.getElementById('loadingOverlay').style.display = 'none';
+                    alert("Falló la inicialización de MSAL. Revise la consola.");
                 });
             } else {
                 // Mostrar mensaje de configuración
@@ -1133,10 +1168,22 @@
             // Event listener para exportar datos
             document.getElementById('exportBtn').addEventListener('click', function() {
                 // Crear un libro de Excel con los datos actuales
-                const ws = XLSX.utils.json_to_sheet(allRisksData);
+                const exportData = table.rows({ search: 'applied' }).data().toArray().map(item => ({
+                    'Proyecto': item.proyecto, 
+                    'Evento de Riesgo': item.eventoRiesgo,
+                    'Causa': item.causa,
+                    'Efecto': item.efecto,
+                    'Factor de Riesgo': item.factorRiesgo,
+                    'Nivel de Riesgo': item.nivelRiesgo,
+                    'Plan de Acción': item.planAccion,
+                    'Responsable': item.responsable,
+                    'Estado': item.estado,
+                    'Fecha Seguimiento': item.fechaSeguimiento
+                }));
+                const ws = XLSX.utils.json_to_sheet(exportData);
                 const wb = XLSX.utils.book_new();
                 XLSX.utils.book_append_sheet(wb, ws, "Matriz de Riesgos");
-                XLSX.writeFile(wb, "matriz_riesgos_fias.xlsx");
+                XLSX.writeFile(wb, "matriz_riesgos_fias_filtrada.xlsx");
             });
         });
     </script>

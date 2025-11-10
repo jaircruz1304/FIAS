@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matriz de Riesgos Residuales - FIAS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/dataTables.bootstrap5.min.css">
+    <style>
+        :root {
+            --fias-primary: #2c7d32;
+            --fias-secondary: #8bc34a;
+            --fias-accent: #ffc107;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .navbar {
+            background-color: var(--fias-primary);
+        }
+        
+        .card-header {
+            background-color: var(--fias-primary);
+            color: white;
+        }
+        
+        /* Estilos de Badges para Nivel de Riesgo Residual */
+        .risk-badge {
+            padding: 0.5em 1em;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.75rem;
+            white-space: nowrap;
+        }
+        
+        .risk-high {
+            background-color: #f8d7da; /* Rojo claro */
+            color: #721c24;
+        }
+        
+        .risk-medium {
+            background-color: #fff3cd; /* Amarillo */
+            color: #856404;
+        }
+        
+        .risk-low {
+            background-color: #d4edda; /* Verde claro */
+            color: #155724;
+        }
+        
+        .risk-very-low {
+            background-color: #cce5ff; /* Azul claro */
+            color: #004085;
+        }
+        
+        /* Estilos de Badges para Efectividad del Control (Estado) */
+        .status-badge {
+            padding: 0.5em 1em;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.75rem;
+            white-space: nowrap;
+        }
+        
+        .status-apropiado { /* Cumplido/Apropiado */
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .status-aceptable { /* Parcial/Aceptable */
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-mejorable { /* Mejorable */
+            background-color: #ffc8a8; /* Naranja más suave */
+            color: #8a3301;
+        }
+        
+        .status-deficiente { /* No Cumplido/Deficiente */
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .status-na {
+            background-color: #e2e3e5;
+            color: #383d41;
+        }
+        
+        .dashboard-card {
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            height: 100%;
+        }
+        
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 250px;
+        }
+        
+        .filter-section {
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.07);
+            border: 1px solid #e9ecef;
+        }
+        
+        .filter-title {
+            font-weight: 700;
+            color: var(--fias-primary);
+            margin-bottom: 1.5rem;
+            text-align: left;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .modal-body strong {
+            color: var(--fias-primary);
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="text-center">
+            <div class="spinner-border text-success" role="status">
+                <span class="visually-hidden">Cargando...</span>
+            </div>
+            <p class="mt-3" id="loadingText">Conectando con Excel Online...</p>
+        </div>
+    </div>
+
+    <div id="configContainer" class="auth-container" style="display: none;">
+        </div>
+    <div id="authContainer" class="auth-container" style="display: none;">
+        <div class="text-center mb-4">
+            <img src="https://fias.org.ec/wp-content/uploads/2021/11/Logo_FIAS_web.png" height="50" width="170" alt="Logo de FIAS" loading="lazy">
+            <h3 class="mt-2">Autenticación requerida</h3>
+            <p>Para acceder a los datos, necesita autenticarse con su cuenta de Office 365.</p>
+        </div>
+        <button id="loginBtn" class="btn btn-success w-100">
+            <i class="fas fa-sign-in-alt me-2"></i> Iniciar sesión con Microsoft
+        </button>
+        <div class="mt-3 text-center">
+            <small class="text-muted">Utilice su cuenta corporativa de FIAS</small>
+            <p><small class="text-muted">Desarrollado por:
+                <a href="https://www.linkedin.com/in/jair-cruz-gallegos-65998776/" target="_blank">Jair Cruz Gallegos</a>
+            </small></p>
+            <p><small class="text-muted">Especialista Administrativo</small></p>
+        </div>
+    </div>
+    <div id="mainContent" style="display: none;">
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <div class="container">
+                <div class="logo-container">
+                    <img src="https://fias.org.ec/wp-content/uploads/2021/11/Logo_FIAS_web.png" height="50" width="170" alt="Logo de FIAS" loading="lazy">
+                    <a class="navbar-brand" href="#">FIAS - Matriz de Riesgos Residuales</a>
+                </div>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#"><i class="fas fa-home me-1"></i> Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <button class="btn btn-outline-light btn-sm mt-1" id="refreshData">
+                                <i class="fas fa-sync-alt me-1"></i> Actualizar
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="btn btn-outline-light btn-sm mt-1 ms-2" id="logoutBtn">
+                                <i class="fas fa-sign-out-alt me-1"></i> Cerrar sesión
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container mt-4">
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="filter-section">
+                        <h5 class="filter-title">Filtros de Búsqueda</h5>
+                        <div class="row">
+                            <div class="col-md-3 mb-2">
+                                <label for="projectFilter" class="form-label">Proyecto</label>
+                                <select class="form-select" id="projectFilter">
+                                    <option value="">Todos los proyectos</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <label for="riskFilter" class="form-label">Riesgo Residual</label>
+                                <select class="form-select" id="riskFilter">
+                                    <option value="">Todos los niveles</option>
+                                    <option value="Alto">Alto</option>
+                                    <option value="Medio">Medio</option>
+                                    <option value="Bajo">Bajo</option>
+                                    <option value="Muy Bajo">Muy Bajo</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <label for="statusFilter" class="form-label">Efectividad Control</label>
+                                <select class="form-select" id="statusFilter">
+                                    <option value="">Todas las evaluaciones</option>
+                                    <option value="Apropiado">Apropiado</option>
+                                    <option value="Aceptable">Aceptable</option>
+                                    <option value="Mejorable">Mejorable</option>
+                                    <option value="Deficiente">Deficiente</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <label for="factorFilter" class="form-label">Factor de Riesgo</label>
+                                <select class="form-select" id="factorFilter">
+                                    <option value="">Todos los factores</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-4" id="dashboardCards">
+                <div class="col-12">
+                    <div class="no-data-message">
+                        <i class="fas fa-database fa-3x mb-3"></i>
+                        <h4>Esperando datos de Excel</h4>
+                        <p>Los datos se cargarán automáticamente después de la autenticación.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-md-6 mb-3">
+                    <div class="card dashboard-card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Riesgo Residual por Nivel</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="riskLevelChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="card dashboard-card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Evaluación de la Efectividad del Control</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="complianceChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-md-6 mb-3">
+                    <div class="card dashboard-card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Riesgos por Factor</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="riskFactorChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="card dashboard-card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Riesgos Residuales por Proyecto</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="projectRiskChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card dashboard-card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">Detalle de la Matriz de Riesgos Residuales</h5>
+                            <div>
+                                <button class="btn btn-sm btn-outline-light" id="exportBtn">
+                                    <i class="fas fa-download me-1"></i> Exportar
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="no-data-message">
+                                <i class="fas fa-table fa-3x mb-3"></i>
+                                <h4>Tabla de riesgos</h4>
+                                <p>Los datos se mostrarán aquí después de cargarse desde Excel.</p>
+                            </div>
+                            <div class="table-responsive" id="tableContainer" style="display: none;">
+                                <table id="risksTable" class="table table-hover table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Proyecto/Localidad</th>
+                                            <th>Evento de Riesgo</th>
+                                            <th>Factor</th>
+                                            <th>**Riesgo Residual**</th>
+                                            <th>Responsable</th>
+                                            <th>**Efectividad Control**</th>
+                                            <th>Fecha Seguimiento (AI)</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="detailModal" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Detalle del Riesgo</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Proyecto:</strong> <span id="modal-project"></span></p>
+                                <p><strong>Factor de Riesgo:</strong> <span id="modal-factor"></span></p>
+                                <p><strong>Riesgo Residual:</strong> <span id="modal-risk"></span></p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Efectividad Control:</strong> <span id="modal-status"></span></p>
+                                <p><strong>Responsable:</strong> <span id="modal-responsible"></span></p>
+                                <p><strong>Fecha Seguimiento:</strong> <span id="modal-date"></span></p>
+                            </div>
+                        </div>
+                        <hr>
+                        <p><strong>Evento de Riesgo:</strong></p>
+                        <p id="modal-event" class="bg-light p-3 rounded"></p>
+                        <p><strong>Causa:</strong></p>
+                        <p id="modal-cause" class="bg-light p-3 rounded"></p>
+                        <p><strong>Efecto:</strong></p>
+                        <p id="modal-effect" class="bg-light p-3 rounded"></p>
+                        <p><strong>Plan de Acción/Control:</strong></p>
+                        <p id="modal-action" class="bg-light p-3 rounded"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer class="bg-dark text-white mt-5 py-4">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>FIAS - Fondo de Inversión Ambiental Sostenible</h5>
+                        <p>Auditoría Interna - Desarrollado por Jair Cruz</p>
+                        <p>Contacto: jcruzg@fias.org.ec</p>
+                        <p class="small">Última actualización: <span id="lastUpdate"></span></p>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <p>&copy; 2025 FIAS. Todos los derechos reservados.</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://alcdn.msauth.net/browser/2.32.0/js/msal-browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    
+    <script>
+        // Configuración de MSAL
+        const msalConfig = {
+            auth: {
+                clientId: "3cff952f-40db-4fcc-83aa-6ea6d5931047",
+                authority: "https://login.microsoftonline.com/5e23e4af-237d-4d97-bf6e-dca808015787",
+                redirectUri: window.location.origin
+            },
+            cache: {
+                cacheLocation: "sessionStorage",
+                storeAuthStateInCookie: false
+            }
+        };
+
+        const msalInstance = new msal.PublicClientApplication(msalConfig);
+        let accessToken = null;
+
+        // ID del archivo Excel de la matriz de riesgos (el mismo que funciona en Auditoria.html)
+        const EXCEL_FILE_ID = "u!aHR0cHM6Ly9maWFzZWMuc2hhcmVwb2ludC5jb20vOng6L3MvRk9ORE9ERUlOVkVSU0lPTkFNQklFTlRBTFNPU1RFTklCTEUvRWZDR0VScHdWRGRIa25tWmR6Rjlqa29CWFVobTU4d1R3ODRfbVk5ZVFheXFGdz9lPUtISlIwRw==";
+        
+        // Variables globales
+        let allRisksData = [];
+        let table;
+        let riskLevelChart, riskFactorChart, complianceChart, projectRiskChart;
+        
+        /**
+         * Procesa los datos crudos del JSON de Excel para adaptarlos a la estructura de la aplicación.
+         */
+        function processExcelData(jsonData) {
+            if (!jsonData) return [];
+            
+            // Función para convertir valor de fecha a string YYYY-MM-DD
+            const convertToDateString = (dateValue) => {
+                if (dateValue instanceof Date) {
+                    return dateValue.toISOString().split('T')[0];
+                }
+                return dateValue || 'N/A';
+            };
+
+            // Definiciones de cabeceras complejas del Excel
+            const PROYECTO_LOCALIDAD_HEADER = "PROYECTO- LOCALIDAD";
+            const EVENTO_RIESGO_HEADER = "Descripción del evento de Riesgo\n¿Qué podría suceder?";
+            const CAUSA_HEADER = "Causa\n¿Porqué podría suceder?";
+            const EFECTO_HEADER = "Efercto \nConsecuencia";
+            // Usaremos el Nivel de Riesgo Residual como el principal indicador de riesgo
+            const NIVEL_RIESGO_RESIDUAL_HEADER = "Nivel de Riesgo residual"; 
+            // Usaremos la Evaluación de la Efectividad del Control como el "Estado"
+            const EVALUACION_CONTROL_HEADER = "Evaluación de la efectividad del control. (Columna de Auditoría Interna)";
+            const FECHA_SEGUIMIENTO_HEADER = "Fecha de seguimiento (Columna de Auditoría Interna)";
+
+            return jsonData.map((row, index) => ({
+                id: index, // Añadir ID de fila para el botón de detalle
+                proyecto: row[PROYECTO_LOCALIDAD_HEADER] || row["PROYECTO- LOCALIDAD"] || 'N/A',
+                eventoRiesgo: row[EVENTO_RIESGO_HEADER] || row["Descripción del evento de Riesgo"] || row["¿Qué podría suceder?"] || '',
+                causa: row[CAUSA_HEADER] || row.Causa || row["¿Porqué podría suceder?"] || '',
+                efecto: row[EFECTO_HEADER] || row.Consecuencia || row.Efecto || '',
+                factorRiesgo: row["Factor de Riesgo"] || '',
+                // USAMOS EL NIVEL DE RIESGO RESIDUAL
+                nivelRiesgo: row[NIVEL_RIESGO_RESIDUAL_HEADER] || row["Nivel de Riesgo residual"] || 'N/A',
+                planAccion: row["Descripción del Control"] || row["Plan de acción"] || '',
+                responsable: row.Responsable || row["Responsable del Control"] || 'N/A',
+                // USAMOS LA EVALUACIÓN DEL CONTROL COMO ESTADO
+                estado: row[EVALUACION_CONTROL_HEADER] || row.Estado || 'NA',
+                fechaSeguimiento: convertToDateString(row[FECHA_SEGUIMIENTO_HEADER] || row["Fecha de seguimiento"]),
+            }));
+        }
+        
+        /**
+         * Obtiene la clase CSS para el badge de nivel de riesgo residual.
+         */
+        function getRiskBadgeClass(nivel) {
+            const normalizedNivel = (nivel || '').toLowerCase().trim();
+            if (normalizedNivel.includes('alto')) return 'risk-high';
+            if (normalizedNivel.includes('medio')) return 'risk-medium';
+            if (normalizedNivel.includes('bajo')) return 'risk-low';
+            if (normalizedNivel.includes('muy bajo')) return 'risk-very-low';
+            return 'risk-very-low';
+        }
+
+        /**
+         * Obtiene la clase CSS para el badge de efectividad del control.
+         */
+        function getStatusBadgeClass(estado) {
+            const normalizedEstado = (estado || '').toLowerCase().trim();
+            if (normalizedEstado.includes('apropiado')) return 'status-apropiado';
+            if (normalizedEstado.includes('aceptable')) return 'status-aceptable';
+            if (normalizedEstado.includes('mejorable')) return 'status-mejorable';
+            if (normalizedEstado.includes('deficiente')) return 'status-deficiente';
+            return 'status-na';
+        }
+
+
+        /**
+         * Actualiza las tarjetas de KPI.
+         */
+        function updateDashboardCards(data) {
+            const total = data.length;
+            const alto = data.filter(item => item.nivelRiesgo === "Alto").length;
+            const medio = data.filter(item => item.nivelRiesgo === "Medio").length;
+            const bajo = data.filter(item => item.nivelRiesgo === "Bajo").length;
+            
+            const apropiado = data.filter(item => item.estado.includes("Apropiado")).length;
+            const aceptable = data.filter(item => item.estado.includes("Aceptable")).length;
+            const mitigacionTotal = apropiado + aceptable;
+            
+            const mitigacionPercent = total > 0 ? Math.round((mitigacionTotal / total) * 100) : 0;
+            
+            document.getElementById('dashboardCards').innerHTML = `
+                <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
+                    <div class="card dashboard-card text-center">
+                        <div class="card-body d-flex flex-column justify-content-center">
+                            <h5 class="card-title">Total Riesgos</h5>
+                            <h2 class="card-text text-primary">${total}</h2>
+                            <p class="text-muted mt-2">Riesgos Residuales</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
+                    <div class="card dashboard-card text-center">
+                        <div class="card-body d-flex flex-column justify-content-center">
+                            <h5 class="card-title">Riesgo Alto</h5>
+                            <h2 class="card-text text-danger">${alto}</h2>
+                            <p class="text-muted mt-2">Residual</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
+                    <div class="card dashboard-card text-center">
+                        <div class="card-body d-flex flex-column justify-content-center">
+                            <h5 class="card-title">Riesgo Medio</h5>
+                            <h2 class="card-text text-warning">${medio}</h2>
+                            <p class="text-muted mt-2">Residual</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
+                    <div class="card dashboard-card text-center">
+                        <div class="card-body d-flex flex-column justify-content-center">
+                            <h5 class="card-title">Riesgo Bajo</h5>
+                            <h2 class="card-text text-success">${bajo}</h2>
+                            <p class="text-muted mt-2">Residual</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
+                    <div class="card dashboard-card text-center">
+                        <div class="card-body d-flex flex-column justify-content-center">
+                            <h5 class="card-title">Controles Mitigan</h5>
+                            <h2 class="card-text text-success">${mitigacionTotal}</h2>
+                            <p class="text-muted mt-2">Apropiado + Aceptable</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
+                    <div class="card dashboard-card text-center">
+                        <div class="card-body d-flex flex-column justify-content-center">
+                            <h5 class="card-title">Nivel de Mitigación</h5>
+                            <h2 class="card-text text-primary">${mitigacionPercent}%</h2>
+                            <div class="progress mt-2">
+                                <div class="progress-bar bg-primary" style="width: ${mitigacionPercent}%"></div>
+                            </div>
+                            <p class="text-muted mt-2">Efectividad Total</p>
+                        </div>
+                    </div>
+                </div>`;
+        }
+
+
+        /**
+         * Inicializa la tabla DataTable.
+         */
+        function initializeTable() {
+            if (table) {
+                table.destroy(); // Destruir instancia anterior si existe
+                $('#risksTable tbody').off('click', '.view-btn'); // Quitar listener anterior
+            }
+
+            table = $('#risksTable').DataTable({
+                data: allRisksData,
+                columns: [
+                    { data: 'proyecto' },
+                    { 
+                        data: 'eventoRiesgo',
+                        render: function(data, type) {
+                            return type === 'display' && data.length > 50 ? data.substring(0, 50) + '...' : data;
+                        }
+                    },
+                    { data: 'factorRiesgo' },
+                    { 
+                        data: 'nivelRiesgo',
+                        render: function(data, type) {
+                            if (type === 'display') {
+                                return `<span class="risk-badge ${getRiskBadgeClass(data)}">${data}</span>`;
+                            }
+                            return data;
+                        }
+                    },
+                    { data: 'responsable' },
+                    { 
+                        data: 'estado',
+                        render: function(data, type) {
+                            if (type === 'display') {
+                                return `<span class="status-badge ${getStatusBadgeClass(data)}">${data}</span>`;
+                            }
+                            return data;
+                        }
+                    },
+                    { data: 'fechaSeguimiento' },
+                    {
+                        data: 'id',
+                        render: function(data, type, row) {
+                            return `<button class="btn btn-sm btn-info view-btn" data-id="${data}"><i class="fas fa-eye"></i> Ver Detalle</button>`;
+                        },
+                        orderable: false
+                    }
+                ],
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.13.5/i18n/es-ES.json'
+                },
+                pageLength: 10,
+                responsive: true,
+                order: [[3, 'desc']], // Ordenar por Riesgo Residual
+            });
+
+            // Evento para mostrar detalles al hacer clic en el botón 'Ver Detalle'
+            $('#risksTable tbody').on('click', '.view-btn', function() {
+                const riskId = parseInt($(this).data('id'));
+                const data = allRisksData.find(item => item.id === riskId);
+                if (data) showRiskDetails(data);
+            });
+        }
+
+        /**
+         * Muestra el modal con los detalles del riesgo.
+         */
+        function showRiskDetails(risk) {
+            document.getElementById('modal-project').textContent = risk.proyecto;
+            document.getElementById('modal-factor').textContent = risk.factorRiesgo;
+            document.getElementById('modal-risk').innerHTML = `<span class="risk-badge ${getRiskBadgeClass(risk.nivelRiesgo)}">${risk.nivelRiesgo}</span>`;
+            document.getElementById('modal-status').innerHTML = `<span class="status-badge ${getStatusBadgeClass(risk.estado)}">${risk.estado}</span>`;
+            document.getElementById('modal-responsible').textContent = risk.responsable;
+            document.getElementById('modal-date').textContent = risk.fechaSeguimiento;
+            document.getElementById('modal-event').textContent = risk.eventoRiesgo;
+            document.getElementById('modal-cause').textContent = risk.causa;
+            document.getElementById('modal-effect').textContent = risk.efecto;
+            document.getElementById('modal-action').textContent = risk.planAccion;
+
+            const modal = new bootstrap.Modal(document.getElementById('detailModal'));
+            modal.show();
+        }
+
+        /**
+         * Actualiza las tarjetas de KPI y los gráficos con los datos proporcionados.
+         * @param {Array} data - El conjunto de datos (filtrado o completo) para visualizar.
+         */
+        function updateVisualizations(data) {
+            updateDashboardCards(data);
+            updateCharts(data);
+        }
+
+        // --- Funciones de Gráficos (updateCharts), Filtros (updateFilters, applyFilters) y Autenticación (handleAuth, handleLogin, handleLogout) ---
+        // Se mantienen las funciones de gráficos, filtros y autenticación de la versión anterior, asegurando que usen los nuevos campos 'nivelRiesgo' (residual) y 'estado' (efectividad).
+
+        function updateCharts(data) {
+            // Gráfico de niveles de riesgo (Residual)
+            const riskLevelCounts = data.reduce((acc, item) => {
+                acc[item.nivelRiesgo] = (acc[item.nivelRiesgo] || 0) + 1;
+                return acc;
+            }, { 'Alto': 0, 'Medio': 0, 'Bajo': 0, 'Muy Bajo': 0 });
+
+            // Gráfico de factores de riesgo
+            const riskFactorCounts = data.reduce((acc, item) => {
+                acc[item.factorRiesgo] = (acc[item.factorRiesgo] || 0) + 1;
+                return acc;
+            }, {});
+
+            // Gráfico de cumplimiento (Efectividad del Control)
+            const complianceCounts = data.reduce((acc, item) => {
+                acc[item.estado] = (acc[item.estado] || 0) + 1;
+                return acc;
+            }, { 'Apropiado': 0, 'Aceptable': 0, 'Mejorable': 0, 'Deficiente': 0, 'NA': 0 });
+
+            // Gráfico de riesgos por proyecto
+            const projectRiskCounts = data.reduce((acc, item) => {
+                if (!acc[item.proyecto]) {
+                    acc[item.proyecto] = { 'Alto': 0, 'Medio': 0, 'Bajo': 0, 'Muy Bajo': 0 };
+                }
+                acc[item.proyecto][item.nivelRiesgo]++;
+                return acc;
+            }, {});
+
+            // Destruir gráficos existentes
+            if (riskLevelChart) riskLevelChart.destroy();
+            if (riskFactorChart) riskFactorChart.destroy();
+            if (complianceChart) complianceChart.destroy();
+            if (projectRiskChart) projectRiskChart.destroy();
+
+            // Gráfico de niveles de riesgo (dona)
+            riskLevelChart = new Chart(document.getElementById('riskLevelChart').getContext('2d'), {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(riskLevelCounts),
+                    datasets: [{
+                        data: Object.values(riskLevelCounts),
+                        backgroundColor: ['#dc3545', '#ffc107', '#28a745', '#0dcaf0'],
+                    }]
+                },
+                options: { 
+                    responsive: true, 
+                    maintainAspectRatio: false, 
+                    plugins: { 
+                        legend: { position: 'bottom' },
+                        title: { display: true, text: 'Distribución por Nivel de Riesgo Residual' }
+                    } 
+                }
+            });
+
+            // Gráfico de factores de riesgo (barras horizontales)
+            riskFactorChart = new Chart(document.getElementById('riskFactorChart').getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(riskFactorCounts),
+                    datasets: [{
+                        label: 'Cantidad de Riesgos',
+                        data: Object.values(riskFactorCounts),
+                        backgroundColor: '#2c7d32',
+                    }]
+                },
+                options: { 
+                    responsive: true, 
+                    maintainAspectRatio: false, 
+                    indexAxis: 'y',
+                    scales: { 
+                        x: { beginAtZero: true } 
+                    },
+                    plugins: {
+                        title: { display: true, text: 'Riesgos por Factor' }
+                    }
+                }
+            });
+
+            // Gráfico de cumplimiento (Efectividad del Control - dona)
+            complianceChart = new Chart(document.getElementById('complianceChart').getContext('2d'), {
+                type: 'pie',
+                data: {
+                    labels: Object.keys(complianceCounts),
+                    datasets: [{
+                        data: Object.values(complianceCounts),
+                        backgroundColor: ['#28a745', '#ffc107', '#ff7f50', '#dc3545', '#6c757d'], // Apropiado, Aceptable, Mejorable, Deficiente, NA
+                    }]
+                },
+                options: { 
+                    responsive: true, 
+                    maintainAspectRatio: false, 
+                    plugins: { 
+                        legend: { position: 'bottom' },
+                        title: { display: true, text: 'Evaluación de la Efectividad del Control' }
+                    } 
+                }
+            });
+
+            // Gráfico de riesgos por proyecto (barras agrupadas)
+            const projectLabels = Object.keys(projectRiskCounts);
+            const projectData = {
+                labels: projectLabels,
+                datasets: [
+                    {
+                        label: 'Alto',
+                        data: projectLabels.map(project => projectRiskCounts[project]['Alto'] || 0),
+                        backgroundColor: '#dc3545'
+                    },
+                    {
+                        label: 'Medio',
+                        data: projectLabels.map(project => projectRiskCounts[project]['Medio'] || 0),
+                        backgroundColor: '#ffc107'
+                    },
+                    {
+                        label: 'Bajo',
+                        data: projectLabels.map(project => projectRiskCounts[project]['Bajo'] || 0),
+                        backgroundColor: '#28a745'
+                    },
+                    {
+                        label: 'Muy Bajo',
+                        data: projectLabels.map(project => projectRiskCounts[project]['Muy Bajo'] || 0),
+                        backgroundColor: '#0dcaf0'
+                    }
+                ]
+            };
+
+            projectRiskChart = new Chart(document.getElementById('projectRiskChart').getContext('2d'), {
+                type: 'bar',
+                data: projectData,
+                options: { 
+                    responsive: true, 
+                    maintainAspectRatio: false,
+                    scales: { 
+                        x: { stacked: false },
+                        y: { beginAtZero: true, stacked: false }
+                    },
+                    plugins: {
+                        title: { display: true, text: 'Riesgos Residuales por Proyecto y Nivel' }
+                    }
+                }
+            });
+        }
+
+        function updateFilters() {
+            const proyectos = [...new Set(allRisksData.map(item => item.proyecto))].filter(Boolean);
+            const factores = [...new Set(allRisksData.map(item => item.factorRiesgo))].filter(Boolean);
+            const estados = [...new Set(allRisksData.map(item => item.estado))].filter(Boolean);
+
+            const fillSelect = (selectId, options, label) => {
+                const select = document.getElementById(selectId);
+                const currentValue = select.value;
+                select.innerHTML = `<option value="">Todos los ${label}</option>`;
+                options.sort().forEach(opt => {
+                    select.innerHTML += `<option value="${opt}" ${opt === currentValue ? 'selected' : ''}>${opt}</option>`;
+                });
+            };
+
+            fillSelect('projectFilter', proyectos, 'proyectos');
+            fillSelect('factorFilter', factores, 'factores');
+            // Nota: El filtro de estado usa opciones fijas para coincidir con las categorías de control (Apropiado, Aceptable, etc.)
+        }
+
+        function applyFilters() {
+            const projectFilter = document.getElementById('projectFilter').value;
+            const riskFilter = document.getElementById('riskFilter').value;
+            const statusFilter = document.getElementById('statusFilter').value;
+            const factorFilter = document.getElementById('factorFilter').value;
+
+            let filteredData = allRisksData;
+
+            if (projectFilter) {
+                filteredData = filteredData.filter(item => item.proyecto === projectFilter);
+            }
+
+            if (riskFilter) {
+                filteredData = filteredData.filter(item => item.nivelRiesgo === riskFilter);
+            }
+
+            if (statusFilter) {
+                // Filtrar por el texto del estado (Apropiado, Deficiente, etc.)
+                filteredData = filteredData.filter(item => item.estado.includes(statusFilter));
+            }
+
+            if (factorFilter) {
+                filteredData = filteredData.filter(item => item.factorRiesgo === factorFilter);
+            }
+
+            updateVisualizations(filteredData);
+            
+            if (table) {
+                table.clear().rows.add(filteredData).draw();
+            }
+        }
+
+        async function loadExcelData() {
+            try {
+                updateLoadingText('Conectando con Excel Online...');
+                
+                if (!accessToken) {
+                    throw new Error('No hay token de acceso disponible');
+                }
+
+                updateLoadingText('Descargando datos...');
+                
+                const response = await fetch(`https://graph.microsoft.com/v1.0/shares/${EXCEL_FILE_ID}/driveItem/content`, {
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Error al obtener el archivo: ${response.status} ${response.statusText}`);
+                }
+
+                updateLoadingText('Procesando datos...');
+                
+                const arrayBuffer = await response.arrayBuffer();
+                const data = new Uint8Array(arrayBuffer);
+                
+                const workbook = XLSX.read(data, { type: 'array', cellDates: true });
+                
+                // Asumimos que la primera hoja es la "Matriz de Riesgos LA-FT"
+                const firstSheetName = workbook.SheetNames[0]; 
+                const worksheet = workbook.Sheets[firstSheetName];
+                
+                const jsonData = XLSX.utils.sheet_to_json(worksheet);
+                
+                updateLoadingText('Mapeando cabeceras de Excel...');
+                
+                allRisksData = processExcelData(jsonData);
+                
+                // Actualizar la interfaz
+                updateFilters();
+                updateVisualizations(allRisksData);
+                initializeTable();
+                
+                document.getElementById('tableContainer').style.display = 'block';
+                document.querySelector('.no-data-message').style.display = 'none';
+                
+                document.getElementById('lastUpdate').textContent = new Date().toLocaleString('es-EC');
+                
+                updateLoadingText('Datos cargados correctamente');
+                setTimeout(() => {
+                    document.getElementById('loadingOverlay').style.display = 'none';
+                }, 500);
+                
+            } catch (error) {
+                console.error('Error al cargar datos:', error);
+                updateLoadingText(`Error: ${error.message}. Verifique el ID, permisos y la estructura de las cabeceras del Excel.`);
+                
+                setTimeout(() => {
+                    document.getElementById('loadingOverlay').style.display = 'none';
+                    alert(`Error al cargar los datos. Verifique su conexión y permisos.\nMensaje: ${error.message}`);
+                }, 2000);
+            }
+        }
+
+        function updateLoadingText(text) {
+            document.getElementById('loadingText').textContent = text;
+        }
+
+        async function handleAuth() {
+            try {
+                const accounts = msalInstance.getAllAccounts();
+                if (accounts.length > 0) {
+                    const silentRequest = {
+                        scopes: ["Files.Read", "Files.Read.All", "Sites.Read.All"],
+                        account: accounts[0]
+                    };
+                    
+                    try {
+                        const response = await msalInstance.acquireTokenSilent(silentRequest);
+                        accessToken = response.accessToken;
+                        document.getElementById('authContainer').style.display = 'none';
+                        document.getElementById('mainContent').style.display = 'block';
+                        loadExcelData();
+                    } catch (silentError) {
+                        document.getElementById('authContainer').style.display = 'block';
+                        document.getElementById('loadingOverlay').style.display = 'none';
+                    }
+                } else {
+                    document.getElementById('authContainer').style.display = 'block';
+                    document.getElementById('loadingOverlay').style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Error en autenticación:', error);
+                document.getElementById('authContainer').style.display = 'block';
+                document.getElementById('loadingOverlay').style.display = 'none';
+            }
+        }
+
+        async function handleLogin() {
+            try {
+                const loginRequest = {
+                    scopes: ["Files.Read", "Files.Read.All", "Sites.Read.All"]
+                };
+                
+                const response = await msalInstance.loginPopup(loginRequest);
+                accessToken = response.accessToken;
+                document.getElementById('authContainer').style.display = 'none';
+                document.getElementById('mainContent').style.display = 'block';
+                loadExcelData();
+            } catch (error) {
+                console.error('Error en login:', error);
+                alert('Error al iniciar sesión: ' + error.message);
+            }
+        }
+
+        function handleLogout() {
+            msalInstance.logoutPopup({
+                postLogoutRedirectUri: window.location.origin,
+                mainWindowRedirectUri: window.location.origin
+            });
+        }
+        
+        // Inicialización cuando se carga la página
+        document.addEventListener('DOMContentLoaded', function() {
+            // Verificar si estamos en un entorno con problemas de CORS (configContainer no se muestra aquí)
+            msalInstance.initialize().then(() => {
+                handleAuth();
+            }).catch(error => {
+                // Si la inicialización falla, muestra el contenedor de configuración o un mensaje de error
+                console.error("MSAL Initialization Failed:", error);
+                document.getElementById('loadingOverlay').style.display = 'none';
+                document.getElementById('configContainer').style.display = 'block'; 
+            });
+
+
+            // Event listeners
+            document.getElementById('loginBtn').addEventListener('click', handleLogin);
+            document.getElementById('logoutBtn').addEventListener('click', handleLogout);
+            document.getElementById('refreshData').addEventListener('click', loadExcelData);
+            
+            // Event listeners para filtros
+            document.getElementById('projectFilter').addEventListener('change', applyFilters);
+            document.getElementById('riskFilter').addEventListener('change', applyFilters);
+            document.getElementById('statusFilter').addEventListener('change', applyFilters);
+            document.getElementById('factorFilter').addEventListener('change', applyFilters);
+            
+            // Event listener para exportar datos
+            document.getElementById('exportBtn').addEventListener('click', function() {
+                const exportData = table.rows({ search: 'applied' }).data().toArray().map(item => ({
+                    'Proyecto': item.proyecto,
+                    'Evento de Riesgo': item.eventoRiesgo,
+                    'Causa': item.causa,
+                    'Efecto': item.efecto,
+                    'Factor de Riesgo': item.factorRiesgo,
+                    'Nivel de Riesgo Residual': item.nivelRiesgo,
+                    'Plan de Acción': item.planAccion,
+                    'Responsable': item.responsable,
+                    'Efectividad Control': item.estado,
+                    'Fecha de Seguimiento': item.fechaSeguimiento
+                }));
+                const ws = XLSX.utils.json_to_sheet(exportData);
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, "Matriz de Riesgos Filtrada");
+                XLSX.writeFile(wb, "matriz_riesgos_residuales_fias.xlsx");
+            });
+        });
+    </script>
+</body>
+</html>

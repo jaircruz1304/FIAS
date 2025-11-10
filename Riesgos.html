@@ -346,8 +346,12 @@
         const msalInstance = new msal.PublicClientApplication(msalConfig);
         let accessToken = null;
 
-        // ID del archivo Excel de la matriz de riesgos (Actualizado con el ID proporcionado por el usuario)
+        // ====================================================================
+        // ¡ATENCIÓN! Si el error 404 persiste, DEBE reemplazar la siguiente línea 
+        // con el nuevo ID de compartir (Base64 codificado y con prefijo "u!")
+        // ====================================================================
         const EXCEL_FILE_ID = "u!aHR0cHM6Ly9maWFzZWMuc2hhcmVwb2ludC5jb20vOng6L3MvRk9ORE9ERUlOVkVSU0lPTkFNQklFTlRBTFNPU1RFTklCTEUvRVJ0X0xmQjkxaVpPZ1Z0QjNLSHBkN2NCLVk0S2w2eV9POHlmTFllbDBscVZzZw==";
+        // ====================================================================
         
         // Variables globales
         let allRisksData = [];
@@ -826,7 +830,11 @@
                     headers: { 'Authorization': `Bearer ${accessToken}` }
                 });
 
-                if (!response.ok) throw new Error(`Error al obtener el archivo: ${response.status} ${response.statusText}`);
+                if (!response.ok) {
+                    // Mensaje de error más detallado en caso de 404
+                    const errorDetails = response.status === 404 ? ' (El ID del archivo es inválido o el archivo ha sido movido/renombrado).' : '';
+                    throw new Error(`Error al obtener el archivo: ${response.status} ${response.statusText}${errorDetails}`);
+                }
 
                 const arrayBuffer = await response.arrayBuffer();
                 const data = new Uint8Array(arrayBuffer);
@@ -859,10 +867,10 @@
                 
             } catch (error) {
                 console.error('Error al cargar datos:', error);
-                updateLoadingText(`Error: ${error.message}. Verifique el ID o la estructura del Excel.`);
+                updateLoadingText(`Error: ${error.message}`);
                 setTimeout(() => {
                     document.getElementById('loadingOverlay').style.display = 'none';
-                    alert(`Error al cargar los datos. Verifique su conexión y permisos.\nMensaje: ${error.message}`);
+                    alert(`Error al cargar los datos. Verifique su conexión, permisos y, crucialmente, el ID del archivo.\nMensaje: ${error.message}`);
                 }, 2000);
             }
         }

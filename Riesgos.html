@@ -46,7 +46,7 @@
             font-weight: 600;
         }
 
-        /* Estilos de Badges */
+        /* Estilos de Badges (Se mantienen) */
         .risk-badge, .status-badge {
             padding: 0.5em 1em;
             border-radius: 20px;
@@ -69,72 +69,66 @@
         .status-Deficiente { background-color: #dc3545; color: white; }
         .status-N-A { background-color: #6c757d; color: white; }
         
-        /* CUADRANTE DE ENFOQUE DE CONTROLES (Risk Radar) */
-        #riskRadarContainer {
-            position: relative;
-            width: 100%;
-            padding-top: 100%; /* Para hacerlo cuadrado */
+        /* MAPA DE CALOR (Heatmap) - Nuevo Componente de Enfoque */
+        .heatmap-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 5px;
+            padding: 10px;
+        }
+        
+        .heatmap-cell {
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+            font-weight: 600;
+            color: #343a40;
+            border-radius: 5px;
+            transition: background-color 0.3s, transform 0.3s;
+            cursor: pointer;
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .heatmap-cell:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        #riskRadar {
-            position: absolute;
+        .heatmap-count {
+            font-size: 1.5rem;
+            line-height: 1;
+            margin-bottom: 5px;
+        }
+
+        /* Colores del Mapa de Calor (Basado en el Nivel de Riesgo) */
+        .heat-Alto { background-color: #ffdddd !important; border-left: 5px solid #dc3545; }
+        .heat-Medio { background-color: #fff3cd !important; border-left: 5px solid #ffc107; }
+        .heat-Bajo { background-color: #d1e7dd !important; border-left: 5px solid #28a745; }
+        .heat-Muy-Bajo { background-color: #cff4fc !important; border-left: 5px solid #0dcaf0; }
+        
+        .heat-Alto .heatmap-count { color: #dc3545; }
+        .heat-Medio .heatmap-count { color: #ffc107; }
+        .heat-Bajo .heatmap-count { color: #28a745; }
+        .heat-Muy-Bajo .heatmap-count { color: #0dcaf0; }
+
+        /* Estilo del overlay de carga */
+        .loading-overlay {
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            grid-template-rows: 1fr 1fr;
-            border: 2px solid #ccc;
-        }
-        
-        .quadrant {
+            background: rgba(255, 255, 255, 0.9);
+            z-index: 1000;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 15px;
-            font-weight: 700;
-            color: white;
-            opacity: 0.9;
-            transition: opacity 0.3s, transform 0.3s;
-            cursor: pointer;
-            text-align: center;
+            flex-direction: column;
         }
-
-        .quadrant:hover {
-            opacity: 1;
-            transform: scale(1.02);
-            z-index: 10;
-        }
-
-        .quadrant-title {
-            font-size: 1rem;
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-
-        .quadrant-count {
-            font-size: 2.5rem;
-            line-height: 1;
-            margin: 0;
-        }
-
-        .quadrant-label {
-            font-size: 0.75rem;
-            margin-top: 5px;
-            font-weight: 400;
-        }
-
-        /* Colores del Cuadrante (Risk Radar) */
-        /* Arriba Izquierda: ALTO Riesgo Residual / Deficiente-Mejorable Control -> Zona CRÍTICA (Roja) */
-        #q-critico { background-color: #dc3545; border-right: 1px solid #fff; border-bottom: 1px solid #fff; } 
-        /* Arriba Derecha: ALTO Riesgo Residual / Aceptable-Apropiado Control -> Zona de Monitoreo (Naranja) */
-        #q-monitoreo { background-color: #ffc107; color: #343a40; border-bottom: 1px solid #fff; }
-        /* Abajo Izquierda: BAJO Riesgo Residual / Deficiente-Mejorable Control -> Zona de Observación (Azul) */
-        #q-observacion { background-color: #0dcaf0; border-right: 1px solid #fff; }
-        /* Abajo Derecha: BAJO Riesgo Residual / Aceptable-Apropiado Control -> Zona Controlada (Verde FIAS) */
-        #q-controlado { background-color: var(--fias-primary); } 
     </style>
 </head>
 <body>
@@ -197,41 +191,21 @@
                 <div class="col-md-6 mb-3">
                     <div class="card dashboard-card p-0">
                         <div class="card-header-fias">
-                            <h5 class="mb-0">🔥 Cuadrante de Enfoque de Controles (Risk Radar)</h5>
+                            <h5 class="mb-0">📊 Riesgo Residual por Nivel y Factor (Mapa de Calor)</h5>
                         </div>
                         <div class="card-body p-3">
-                            <div id="riskRadarContainer">
-                                <div id="riskRadar">
-                                    <div class="quadrant" id="q-critico" data-risk="Alto" data-status="Deficiente,Mejorable">
-                                        <p class="quadrant-count" id="count-critico">0</p>
-                                        <div class="quadrant-title"><i class="fas fa-skull-crossbones me-1"></i> CRÍTICO</div>
-                                        <div class="quadrant-label">Alto Riesgo Residual | Control Deficiente o Mejorable</div>
-                                    </div>
-                                    <div class="quadrant" id="q-monitoreo" data-risk="Alto" data-status="Aceptable,Apropiado">
-                                        <p class="quadrant-count" id="count-monitoreo">0</p>
-                                        <div class="quadrant-title"><i class="fas fa-bell me-1"></i> MONITOREO CONSTANTE</div>
-                                        <div class="quadrant-label">Alto Riesgo Residual | Control Aceptable o Apropiado</div>
-                                    </div>
-                                    <div class="quadrant" id="q-observacion" data-risk="Medio,Bajo,Muy Bajo" data-status="Deficiente,Mejorable">
-                                        <p class="quadrant-count" id="count-observacion">0</p>
-                                        <div class="quadrant-title"><i class="fas fa-search me-1"></i> OBSERVACIÓN</div>
-                                        <div class="quadrant-label">Bajo Riesgo Residual | Control Deficiente o Mejorable</div>
-                                    </div>
-                                    <div class="quadrant" id="q-controlado" data-risk="Medio,Bajo,Muy Bajo" data-status="Aceptable,Apropiado">
-                                        <p class="quadrant-count" id="count-controlado">0</p>
-                                        <div class="quadrant-title"><i class="fas fa-check-double me-1"></i> CONTROLADO</div>
-                                        <div class="quadrant-label">Bajo Riesgo Residual | Control Aceptable o Apropiado</div>
-                                    </div>
-                                </div>
+                            <div class="row mb-2">
+                                <div class="col text-center small text-muted">Haz clic para filtrar.</div>
                             </div>
-                            <p class="text-center mt-2 text-muted small">Haz clic en un cuadrante para filtrar la tabla de riesgos.</p>
+                            <div id="riskHeatmap" class="heatmap-container">
+                                </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-6 mb-3">
                     <div class="card dashboard-card h-50 mb-3">
-                        <div class="card-header-fias"><h5 class="mb-0">Riesgo Residual por Nivel</h5></div>
-                        <div class="card-body"><canvas id="riskLevelChart" height="130"></canvas></div>
+                        <div class="card-header-fias"><h5 class="mb-0">Nivel de Riesgo Inherente (Escala 1 a 4)</h5></div>
+                        <div class="card-body"><canvas id="inherentRiskChart" height="130"></canvas></div>
                     </div>
                     <div class="card dashboard-card h-50">
                         <div class="card-header-fias"><h5 class="mb-0">Evaluación de la Efectividad del Control</h5></div>
@@ -239,7 +213,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="row mb-4">
                 <div class="col-12">
                     <div class="card dashboard-card">
@@ -289,7 +262,7 @@
                                             <th>Factor</th>
                                             <th>Riesgo Residual</th>
                                             <th>Efectividad Control</th>
-                                            <th>Responsable</th>
+                                            <th>Riesgo Inherente (Escala)</th> <th>Responsable</th>
                                             <th>Evento de Riesgo</th>
                                             <th>Acciones</th>
                                         </tr>
@@ -366,13 +339,13 @@
         const msalInstance = new msal.PublicClientApplication(msalConfig);
         let accessToken = null;
 
-        // ID del archivo Excel de la matriz de riesgos (ACTUALIZADO CON EL NUEVO ID PROVISTO)
+        // ID del archivo Excel de la matriz de riesgos (Mantenido del código anterior)
         const EXCEL_FILE_ID = "u!aHR0cHM6Ly9maWFzZWMuc2hhcmVwb2ludC5jb20vOng6L3MvRk9ORE9ERUlOVkVSU0lPTkFNQklFTlRBTFNPU1RFTklCTEUvRVJ0X0xmQjkxaVpPZ1Z0QjNLSHBkN2NCLVk0S2w2eV9POHlmTFllaDBscVZzZw==";
         
         // Variables globales
         let allRisksData = [];
         let table;
-        let riskLevelChart, complianceChart; 
+        let inherentRiskChart, complianceChart; // complianceChart se mantiene, inherentRiskChart es nuevo
         
         /**
          * Normaliza el texto de las cabeceras complejas para mapeo.
@@ -381,6 +354,7 @@
 
         /**
          * Mapea las cabeceras del Excel a propiedades de JS y SEPARA PROYECTO/LOCALIDAD.
+         * Se añade el Riesgo Inherente numérico.
          */
         function processExcelData(jsonData) {
             if (!jsonData || jsonData.length === 0) return [];
@@ -388,14 +362,14 @@
             const keys = Object.keys(jsonData[0]);
             
             const mapHeaders = {
-                // 'PROYECTO- LOCALIDAD' ya no se usa, se mapean PROYECTO y PROYECTO- LOCALIDAD por separado.
-                'PROYECTO': 'proyecto', // Nueva columna de proyecto base
-                'PROYECTO- LOCALIDAD': 'localidadCompleta', // Se usa temporalmente
+                'PROYECTO': 'proyecto', 
+                'PROYECTO- LOCALIDAD': 'localidadCompleta',
                 'Descripción del evento de Riesgo': 'eventoRiesgo',
                 'Causa': 'causa',
                 'Efercto ': 'efecto', 
                 'Factor de Riesgo': 'factorRiesgo',
-                'Nivel de Riesgo inherente': 'riesgoInherente',
+                'Nivel de Riesgo inherente': 'riesgoInherenteNivel', // Nivel textual (Alto, Medio, etc.)
+                'Riesgo inherente': 'riesgoInherenteEscala', // Escala numérica (1 a 4)
                 'Nivel de Riesgo residual': 'riesgoResidual',
                 'Descripción del Control': 'planAccion',
                 'Responsable': 'responsable',
@@ -432,21 +406,22 @@
                 
                 // Lógica de separación de PROYECTO y LOCALIDAD
                 data.proyecto = (data.proyecto || 'N/A').trim();
-                
-                // Si tienes la columna PROYECTO- LOCALIDAD, la usarás como localidad
                 data.localidad = (data.localidadCompleta || 'N/A').trim();
                 
-                // Limpieza y normalización de otras columnas
+                // Conversión y limpieza de datos
+                data.riesgoResidual = (data.riesgoResidual || 'N/A').replace(/\n/g, ' ').trim();
+                data.efectividadControl = (data.efectividadControl || 'N/A').replace(/\n/g, ' ').trim();
+                data.riesgoInherenteEscala = parseInt(data.riesgoInherenteEscala) || 0; // Se fuerza a número o 0
+                data.riesgoInherenteNivel = (data.riesgoInherenteNivel || 'N/A').trim();
+
+                // Limpieza de otras columnas
                 data.eventoRiesgo = data.eventoRiesgo || 'N/A';
                 data.causa = data.causa || 'N/A';
                 data.efecto = data.efecto || 'N/A';
                 data.factorRiesgo = data.factorRiesgo || 'N/A';
-                data.riesgoResidual = (data.riesgoResidual || 'N/A').replace(/\n/g, ' ').trim();
                 data.responsable = data.responsable || 'N/A';
-                data.efectividadControl = (data.efectividadControl || 'N/A').replace(/\n/g, ' ').trim();
                 data.fechaSeguimiento = convertToDateString(data.fechaSeguimiento);
                 
-                // Eliminar la columna temporal
                 delete data.localidadCompleta;
 
                 return data;
@@ -478,13 +453,12 @@
         }
 
         /**
-         * Actualiza las tarjetas de KPI. (Sin cambios relevantes)
+         * Actualiza las tarjetas de KPI. (Ligeramente modificada para usar la escala de Riesgo Inherente)
          */
         function updateDashboardCards(data) {
             const total = data.length;
             const alto = data.filter(item => item.riesgoResidual.includes("Alto")).length;
-            const medio = data.filter(item => item.riesgoResidual.includes("Medio")).length;
-            const bajo = data.filter(item => item.riesgoResidual.includes("Bajo")).length;
+            const inherenteAlto = data.filter(item => item.riesgoInherenteEscala === 4).length; // Usando el valor numérico
             
             const apropiado = data.filter(item => item.efectividadControl.includes("Apropiado")).length;
             const aceptable = data.filter(item => item.efectividadControl.includes("Aceptable")).length;
@@ -514,9 +488,9 @@
                 <div class="col-xl-3 col-md-6 mb-3">
                     <div class="card dashboard-card" style="border-left-color: #ffc107;">
                         <div class="card-body">
-                            <i class="fas fa-check-circle fa-2x text-success float-end"></i>
-                            <h5 class="card-title text-muted text-uppercase small">Controles Efectivos (Apropiado)</h5>
-                            <h2 class="card-text">${apropiado}</h2>
+                            <i class="fas fa-exclamation-triangle fa-2x text-warning float-end"></i>
+                            <h5 class="card-title text-muted text-uppercase small">Riesgo Inherente Alto (Escala 4)</h5>
+                            <h2 class="card-text">${inherenteAlto}</h2>
                         </div>
                     </div>
                 </div>
@@ -524,7 +498,7 @@
                     <div class="card dashboard-card" style="border-left-color: #28a745;">
                         <div class="card-body">
                             <i class="fas fa-percent fa-2x text-success float-end"></i>
-                            <h5 class="card-title text-muted text-uppercase small">Efectividad General</h5>
+                            <h5 class="card-title text-muted text-uppercase small">Controles Apropiados/Aceptables</h5>
                             <h2 class="card-text">${mitigacionPercent}%</h2>
                             <div class="progress mt-2" style="height: 10px;">
                                 <div class="progress-bar bg-success" role="progressbar" style="width: ${mitigacionPercent}%"></div>
@@ -535,53 +509,78 @@
         }
         
         /**
-         * Actualiza el Cuadrante de Enfoque de Controles (Risk Radar).
+         * Actualiza el Mapa de Calor de Riesgo Residual por Factor.
          */
-        function updateRiskRadar(data) {
-            let critico = 0; // Alto Riesgo Residual & Control Deficiente/Mejorable
-            let monitoreo = 0; // Alto Riesgo Residual & Control Aceptable/Apropiado
-            let observacion = 0; // Bajo/Medio/Muy Bajo Riesgo Residual & Control Deficiente/Mejorable
-            let controlado = 0; // Bajo/Medio/Muy Bajo Riesgo Residual & Control Aceptable/Apropiado
+        function updateRiskHeatmap(data) {
+            const factors = [...new Set(data.map(item => item.factorRiesgo))].filter(Boolean).sort();
+            const levels = ['Muy Bajo', 'Bajo', 'Medio', 'Alto'];
+
+            const heatmapData = {};
+            factors.forEach(factor => {
+                heatmapData[factor] = { 'Muy Bajo': 0, 'Bajo': 0, 'Medio': 0, 'Alto': 0 };
+            });
 
             data.forEach(item => {
-                const isHighRisk = item.riesgoResidual.includes("Alto");
-                const isLowRisk = !isHighRisk; // Incluye Medio, Bajo, Muy Bajo
-
-                const isIneffectiveControl = item.efectividadControl.includes("Deficiente") || item.efectividadControl.includes("Mejorable");
-                const isEffectiveControl = item.efectividadControl.includes("Aceptable") || item.efectividadControl.includes("Apropiado");
-
-                if (isHighRisk && isIneffectiveControl) {
-                    critico++;
-                } else if (isHighRisk && isEffectiveControl) {
-                    monitoreo++;
-                } else if (isLowRisk && isIneffectiveControl) {
-                    observacion++;
-                } else if (isLowRisk && isEffectiveControl) {
-                    controlado++;
+                const factor = item.factorRiesgo;
+                const residual = item.riesgoResidual;
+                if (heatmapData[factor] && levels.includes(residual)) {
+                    heatmapData[factor][residual]++;
                 }
             });
 
-            // Actualizar el HTML
-            document.getElementById('count-critico').textContent = critico;
-            document.getElementById('count-monitoreo').textContent = monitoreo;
-            document.getElementById('count-observacion').textContent = observacion;
-            document.getElementById('count-controlado').textContent = controlado;
-
-            // Añadir funcionalidad de click para filtrar la tabla al seleccionar un cuadrante
-            $('.quadrant').off('click').on('click', function() {
-                $('.quadrant').css('border', 'none');
-                $(this).css('border', '3px solid white');
+            const container = document.getElementById('riskHeatmap');
+            container.innerHTML = '';
+            
+            // Crear celda para cada Factor
+            factors.forEach(factor => {
+                const counts = heatmapData[factor];
                 
-                const risk = $(this).data('risk');
-                const status = $(this).data('status');
-                
-                document.getElementById('riskFilter').value = risk.split(',').length === 1 ? risk : ''; // Si hay varios, limpiar el filtro simple
-                document.getElementById('statusFilter').value = status.split(',').length === 1 ? status : '';
+                // Determinar el nivel de riesgo predominante para el color del fondo
+                let maxCount = 0;
+                let maxLevel = '';
+                levels.forEach(level => {
+                    if (counts[level] > maxCount) {
+                        maxCount = counts[level];
+                        maxLevel = level;
+                    }
+                });
 
-                // Usar DataTables API para el filtrado complejo
-                table.column(3).search(risk.split(',').join('|'), true, false).draw(); // Filtro RegEx para Riesgo Residual (columna 3)
-                table.column(4).search(status.split(',').join('|'), true, false).draw(); // Filtro RegEx para Efectividad Control (columna 4)
+                const cell = document.createElement('div');
+                cell.className = `heatmap-cell heat-${maxLevel.replace(/\s/g, '-')}`;
+                cell.setAttribute('data-factor', factor);
+                
+                // Contenido de la celda
+                let content = `
+                    <div class="small text-muted">${factor}</div>
+                    <p class="heatmap-count">${maxCount}</p>
+                    <div class="small">${maxLevel} Predominante</div>
+                `;
+                
+                cell.innerHTML = content;
+                container.appendChild(cell);
+
+                // Añadir funcionalidad de click para filtrar la tabla
+                cell.addEventListener('click', function() {
+                    const factorName = this.getAttribute('data-factor');
+                    
+                    // Resaltar la celda seleccionada (simple border)
+                    $('.heatmap-cell').css('box-shadow', 'none');
+                    $(this).css('box-shadow', '0 0 10px rgba(0, 0, 0, 0.5)');
+
+                    // Aplicar filtro de factor
+                    document.getElementById('factorFilter').value = factorName;
+                    
+                    // Limpiar otros filtros para solo ver los del cuadrante
+                    document.getElementById('projectFilter').value = '';
+                    document.getElementById('riskFilter').value = '';
+                    document.getElementById('statusFilter').value = '';
+                    
+                    applyFilters(); 
+                });
             });
+            
+            // Si hay datos, actualizar la cabecera de la grid para que se adapte
+            container.style.gridTemplateColumns = `repeat(${Math.min(factors.length, 4)}, 1fr)`;
         }
 
 
@@ -597,8 +596,8 @@
             table = $('#risksTable').DataTable({
                 data: allRisksData,
                 columns: [
-                    { data: 'proyecto', title: 'Proyecto' }, // Columna separada
-                    { data: 'localidad', title: 'Localidad' }, // Columna separada
+                    { data: 'proyecto', title: 'Proyecto' }, 
+                    { data: 'localidad', title: 'Localidad' }, 
                     { data: 'factorRiesgo', title: 'Factor' },
                     { 
                         data: 'riesgoResidual', title: 'Riesgo Residual',
@@ -618,6 +617,7 @@
                             return data;
                         }
                     },
+                    { data: 'riesgoInherenteEscala', title: 'Riesgo Inherente (Escala)', width: "80px" }, // Nueva columna numérica
                     { data: 'responsable', title: 'Responsable' },
                     { 
                         data: 'eventoRiesgo', title: 'Evento de Riesgo',
@@ -629,10 +629,13 @@
                         orderable: false
                     }
                 ],
+                columnDefs: [
+                    { targets: 5, className: 'text-center' } // Centrar la escala numérica
+                ],
                 language: { url: '//cdn.datatables.net/plug-ins/1.13.5/i18n/es-ES.json' },
                 pageLength: 10,
                 responsive: true,
-                order: [[3, 'desc']], 
+                order: [[3, 'desc']], // Ordenar por Riesgo Residual
             });
 
             // Evento para mostrar detalles
@@ -644,7 +647,7 @@
         }
 
         /**
-         * Muestra el modal con los detalles del riesgo. (Actualizado para mostrar Localidad separada)
+         * Muestra el modal con los detalles del riesgo. 
          */
         function showRiskDetails(risk) {
             document.getElementById('modal-project').textContent = `${risk.proyecto} - ${risk.localidad}`;
@@ -663,39 +666,41 @@
         }
 
         /**
-         * Actualiza las visualizaciones (KPIs, Gráficos y Risk Radar).
+         * Actualiza las visualizaciones (KPIs, Gráficos y Mapa de Calor).
          */
         function updateVisualizations(data) {
             updateDashboardCards(data);
-            updateRiskRadar(data);
+            updateRiskHeatmap(data);
             updateCharts(data);
         }
 
         function updateCharts(data) {
-            // ... (Lógica de gráficos sin cambios)
-            const riskLevelCounts = data.reduce((acc, item) => {
-                const level = item.riesgoResidual;
+            // Recalcular conteos para el Riesgo Inherente (Nuevo Gráfico)
+            const inherentRiskCounts = data.reduce((acc, item) => {
+                const level = item.riesgoInherenteNivel;
                 acc[level] = (acc[level] || 0) + 1;
                 return acc;
             }, { 'Alto': 0, 'Medio': 0, 'Bajo': 0, 'Muy Bajo': 0 });
 
+            // Recalcular conteos para la Efectividad del Control
             const complianceCounts = data.reduce((acc, item) => {
                 const status = item.efectividadControl;
                 acc[status] = (acc[status] || 0) + 1;
                 return acc;
             }, { 'Apropiado': 0, 'Aceptable': 0, 'Mejorable': 0, 'Deficiente': 0, 'N/A': 0 });
 
-            if (riskLevelChart) riskLevelChart.destroy();
+            // **CORRECCIÓN DE REDIBUJADO:** Destruir gráficos existentes antes de crear uno nuevo
+            if (inherentRiskChart) inherentRiskChart.destroy();
             if (complianceChart) complianceChart.destroy();
-
-            // Gráfico de niveles de riesgo (dona)
-            riskLevelChart = new Chart(document.getElementById('riskLevelChart').getContext('2d'), {
+            
+            // Gráfico de Riesgo Inherente por Nivel (Dona)
+            inherentRiskChart = new Chart(document.getElementById('inherentRiskChart').getContext('2d'), {
                 type: 'doughnut',
                 data: {
-                    labels: Object.keys(riskLevelCounts),
+                    labels: Object.keys(inherentRiskCounts),
                     datasets: [{
-                        data: Object.values(riskLevelCounts),
-                        backgroundColor: ['#dc3545', '#ffc107', '#28a745', '#0dcaf0', '#6c757d'],
+                        data: Object.values(inherentRiskCounts),
+                        backgroundColor: ['#dc3545', '#ffc107', '#28a745', '#0dcaf0'],
                     }]
                 },
                 options: { 
@@ -728,7 +733,7 @@
         }
 
         function updateFilters() {
-            // Los filtros ahora usan la columna 'proyecto' y 'localidad' separadas.
+            // Filtros basados en datos
             const proyectos = [...new Set(allRisksData.map(item => item.proyecto))].filter(Boolean);
             const factores = [...new Set(allRisksData.map(item => item.factorRiesgo))].filter(Boolean);
 
@@ -752,8 +757,8 @@
             const statusFilter = document.getElementById('statusFilter').value;
             const factorFilter = document.getElementById('factorFilter').value;
             
-            // Limpiar selección del Risk Radar
-            $('.quadrant').css('border', 'none');
+            // Limpiar resaltado del Mapa de Calor
+            $('.heatmap-cell').css('box-shadow', 'none');
 
             // Aplicar filtros de texto simple
             table.column(0).search(projectFilter, true, false).draw(); // Columna Proyecto (0)
@@ -790,6 +795,7 @@
                 
                 const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
                 
+                // Buscar cabeceras PROYECTO para determinar la fila
                 const headerRowIndex = jsonData.findIndex(row => row.some(cell => typeof cell === 'string' && cell.includes('PROYECTO')));
                 if (headerRowIndex === -1) throw new Error('No se pudo encontrar la fila de cabeceras en el archivo Excel.');
 
@@ -823,7 +829,7 @@
         function updateLoadingText(text) { document.getElementById('loadingText').textContent = text; }
 
         // --- Funciones de Autenticación (handleAuth, handleLogin, handleLogout) ---
-        // (Sin cambios)
+        // (Sin cambios, mantener la autenticación con MSAL)
         async function handleAuth() {
             try {
                 const accounts = msalInstance.getAllAccounts();
@@ -866,6 +872,7 @@
         
         // Inicialización
         document.addEventListener('DOMContentLoaded', function() {
+            // Manejar la autenticación al cargar
             msalInstance.initialize().then(() => { handleAuth(); });
 
             // Event listeners
@@ -885,6 +892,8 @@
                     'Proyecto': item.proyecto,
                     'Localidad': item.localidad,
                     'Factor de Riesgo': item.factorRiesgo,
+                    'Nivel de Riesgo Inherente (Escala)': item.riesgoInherenteEscala,
+                    'Nivel de Riesgo Inherente (Nivel)': item.riesgoInherenteNivel,
                     'Nivel de Riesgo Residual': item.riesgoResidual,
                     'Efectividad del Control': item.efectividadControl,
                     'Evento de Riesgo': item.eventoRiesgo,
@@ -896,7 +905,7 @@
                 }));
                 const ws = XLSX.utils.json_to_sheet(exportData);
                 const wb = XLSX.utils.book_new();
-                XLSX.utils.book_append_sheet(wb, ws, "Riesgos Residuales Filtrados");
+                XLSX.utils.book_append_sheet(wb, ws, "Matriz_Riesgos_Residuales_FIAS");
                 XLSX.writeFile(wb, "Matriz_Riesgos_Residuales_FIAS.xlsx");
             });
         });

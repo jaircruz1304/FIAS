@@ -120,7 +120,7 @@
         .feig-color { color: var(--feig-color); }
         .fias-color { color: var(--fias-color); }
         .pasf-color { color: var(--pasf-color); }
-        .bioeconomia-color { color: var(--bioeconomia-color); }
+        .bioeconomía-color { color: var(--bioeconomia-color); }
         .conserva-aves-color { color: var(--conserva-aves-color); }
 
         /* Estilos para el input de búsqueda */
@@ -216,8 +216,6 @@
             const DEFAULT_IMAGE = "default.jpg";
 
             // **MAPEO DE NOMBRES DE ÁREA A NOMBRE DE ARCHIVO URL-ENCODED**
-            // Se utiliza el nombre del área o el subtipo (para administrativas) para buscar el nombre del archivo.
-            // Los nombres deben coincidir con los que están en la columna "Nombre de Imagen" del CSV (o su versión codificada).
             const areaImageMap = {
                 "Parque Nacional Yasuní": "Parque%20Nacional%20Yasun%C3%AD.png",
                 "Reserva Ecológica Cotacachi-Cayapas": "Reserva%20Ecol%C3%B3gica%20Cotacachi-Cayapas.png",
@@ -411,7 +409,7 @@
             });
             areasAdministrativas.forEach(area => {
                 area.esAdministrativa = true;
-                area.tieneBienesFIAS = true; // Asumimos que las administrativas siempre tienen bienes
+                area.tieneBienesFIAS = true; 
                 area.imageUrl = getImageUrl(area.nombre, true, area.subtipo);
             });
 
@@ -438,7 +436,7 @@
                         case 'FEIG': iconClass = 'fas fa-graduation-cap'; colorClass = 'feig-color'; break;
                         case 'FIAS': iconClass = 'fas fa-gem'; colorClass = 'fias-color'; break;
                         case 'PASF': iconClass = 'fas fa-paw'; colorClass = 'pasf-color'; break;
-                        case 'Bioeconomía': iconClass = 'fas fa-leaf'; colorClass = 'bioeconomia-color'; break;
+                        case 'Bioeconomía': iconClass = 'fas fa-leaf'; colorClass = 'bioeconomía-color'; break;
                         case 'Conserva Aves': iconClass = 'fas fa-dove'; colorClass = 'conserva-aves-color'; break;
                         default: iconClass = 'fas fa-building'; colorClass = 'default-color';
                     }
@@ -467,12 +465,18 @@
                 areaData = todasLasAreas.map(area => {
                     const config = getAreaConfig(area);
                     const isAdministrative = !!area.esAdministrativa;
+                    
+                    // Inicializar iconHtml con el ícono base
+                    let iconHtml = `<i class="fas ${config.icon}" style="color: var(--primary-color); font-size: 1.5rem;"></i>`;
 
-                    let iconHtml = `<i class="fas ${config.icon}" style="color: ${isAdministrative ? 'var(--admin-color)' : 'var(--primary-color)'}; font-size: 1.5rem;"></i>`;
+                    // Lógica para Áreas Administrativas (usan colores específicos)
+                    if (isAdministrative) {
+                        iconHtml = `<i class="fas ${config.icon}" style="color: var(--${area.subtipo.toLowerCase().replace(/\s/g, '-')}-color); font-size: 1.5rem;"></i>`;
+                    }
+                    
+                    // Lógica para Áreas Protegidas con bienes FIAS (añade la gema)
                     if (area.tieneBienesFIAS && !isAdministrative) {
                          iconHtml = `<div style="position: relative; width: 30px; height: 30px;"><i class="fas ${config.icon}" style="color: var(--primary-color); font-size: 1.5rem; position: absolute; left: 0;"></i><i class="fas fa-gem" style="color: var(--fias-color); font-size: 0.8rem; position: absolute; top: 0; right: 0;"></i></div>`;
-                    } else if (isAdministrative) {
-                        iconHtml = `<i class="fas ${config.icon}" style="color: var(--${area.subtipo.toLowerCase().replace(/\s/g, '-')}-color); font-size: 1.5rem;"></i>`;
                     }
                     
                     const customIcon = L.divIcon({
@@ -523,9 +527,10 @@
             }
 
             function createFilterOptions() {
-                const uniqueTypes = [...new Set(areasProtegidas.map(a => a.tipo))].sort();
-                const uniqueRegions = [...new Set(areasProtegidas.map(a => a.region))].sort();
-                const uniqueAdminTypes = [...new Set(areasAdministrativas.map(a => a.subtipo))].sort();
+                // Mejora: Asegurar la organización alfabética de los filtros
+                const uniqueTypes = [...new Set(areasProtegidas.map(a => a.tipo))].sort((a, b) => a.localeCompare(b));
+                const uniqueRegions = [...new Set(areasProtegidas.map(a => a.region))].sort((a, b) => a.localeCompare(b));
+                const uniqueAdminTypes = [...new Set(areasAdministrativas.map(a => a.subtipo))].sort((a, b) => a.localeCompare(b));
 
                 const typeContainer = document.getElementById('area-type-filters');
                 const regionContainer = document.getElementById('region-filters');
@@ -613,7 +618,6 @@
                     markersLayer.addLayer(area.marker);
                     const card = document.createElement('div');
 
-                    // MEJORA: Clase de tarjeta para el borde de color
                     let cardClass = area.esAdministrativa ? 'admin-card' : (areaToCardClass[area.tipo] || areaToCardClass.default);
 
                     card.className = `area-card ${cardClass}`;
@@ -626,7 +630,7 @@
 
                     const fiasBadge = area.tieneBienesFIAS ? '<span class="badge fias-badge ms-2"><i class="fas fa-gem me-1"></i>FIAS</span>' : '';
 
-                    // MEJORA: SECCIÓN DE IMAGEN
+                    // SECCIÓN DE IMAGEN
                     const imageSection = area.imageUrl ?
                         `<div class="area-card-image">
                             <img src="${area.imageUrl}" alt="Imagen de ${area.nombre}" onerror="this.onerror=null;this.src='${IMAGE_BASE_URL + DEFAULT_IMAGE}';">

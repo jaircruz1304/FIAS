@@ -289,13 +289,26 @@
                         <h6><i class="fas fa-shield-alt me-2 text-success"></i> Control y Seguimiento</h6>
                         <p><strong>Descripción del Control:</strong> <span id="modal-action" class="d-block p-2 bg-light rounded border"></span></p>
                         <p><strong>Fecha de Seguimiento (AI):</strong> <span id="modal-date" class="d-block p-2 bg-light rounded border"></span></p>
-                    </div>
+                        
+                        <hr>
+                        <h6><i class="fas fa-clipboard-check me-2 text-primary"></i> Auditoría y Evidencias</h6>
+                        <p><strong>Evidencia del cumplimiento:</strong> <span id="modal-evidencia" class="d-block p-2 bg-light rounded border text-break"></span></p>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Efectividad del Control:</strong> <span id="modal-efectividad" class="d-block p-2 bg-light rounded border"></span></p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Observación:</strong> <span id="modal-observacion" class="d-block p-2 bg-light rounded border"></span></p>
+                            </div>
+                        </div>
+                        </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                     </div>
                 </div>
             </div>
         </div>
+        
         <footer class="bg-dark text-white mt-5 py-4">
             <div class="container">
                 <p class="mb-0 text-center small">FIAS - Dashboard de Cumplimiento y Riesgos | Última actualización: <span id="lastUpdate"></span></p>
@@ -388,10 +401,14 @@
                 'Factor de Riesgo': 'factorRiesgo',
                 'Nivel de Riesgo inherente': 'riesgoInherenteNivel', 
                 'Riesgo inherente': 'riesgoInherenteEscala', 
-                'Nivel de Riesgo residual': 'riesgoResidual', // Mantener para filtros/gráficos
+                'Nivel de Riesgo residual': 'riesgoResidual', 
                 'Descripción del Control': 'planAccion',
                 'Responsable': 'responsable',
                 'Fecha de seguimiento (Columna de Auditoría Interna)': 'fechaSeguimiento',
+                // NUEVOS CAMPOS AÑADIDOS
+                'Evidencia del cumplimiento': 'evidencia',
+                'Evaluación de la efectividad del control': 'efectividad',
+                'Observación': 'observacion'
             };
 
             const foundMapping = {};
@@ -442,6 +459,11 @@
                 data.factorRiesgo = (data.factorRiesgo || 'N/A').trim(); 
                 data.responsable = data.responsable || 'N/A';
                 data.planAccion = data.planAccion || 'N/A';
+                
+                // SANITIZACIÓN DE NUEVOS CAMPOS
+                data.evidencia = data.evidencia || 'N/A';
+                data.efectividad = data.efectividad || 'N/A';
+                data.observacion = data.observacion || 'N/A';
                 
                 delete data.localidadCompleta;
 
@@ -682,6 +704,11 @@
             document.getElementById('modal-effect').textContent = risk.efecto;
             document.getElementById('modal-action').textContent = risk.planAccion;
 
+            // ASIGNACIÓN DE NUEVOS CAMPOS
+            document.getElementById('modal-evidencia').textContent = risk.evidencia;
+            document.getElementById('modal-efectividad').textContent = risk.efectividad;
+            document.getElementById('modal-observacion').textContent = risk.observacion;
+
             const modal = new bootstrap.Modal(document.getElementById('detailModal'));
             modal.show();
         }
@@ -868,7 +895,11 @@
                     'Efecto': item.efecto,
                     'Descripción del Control': item.planAccion,
                     'Responsable': item.responsable,
-                    'Fecha de Seguimiento (AI)': item.fechaSeguimiento
+                    'Fecha de Seguimiento (AI)': item.fechaSeguimiento,
+                    // AGREGAR LOS NUEVOS CAMPOS AL EXPORTAR TAMBIÉN
+                    'Evidencia del cumplimiento': item.evidencia,
+                    'Evaluación de la efectividad': item.efectividad,
+                    'Observación': item.observacion
                 }));
                 const ws = XLSX.utils.json_to_sheet(exportData);
                 const wb = XLSX.utils.book_new();

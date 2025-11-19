@@ -473,7 +473,7 @@
                     // Procesar a partir de la fila de encabezados
                     const dataWithHeaders = XLSX.utils.sheet_to_json(worksheet, { 
                         range: headerRowIndex, 
-                        raw: false // Asegura que las fechas y números se manejen correctamente (aunque la limpieza posterior es necesaria)
+                        raw: false 
                     });
 
                     // Limpiar y mapear los datos
@@ -562,8 +562,8 @@
                     'Localidad': item.localidad,
                     'Factor de Riesgo': item.factorRiesgo,
                     'Nivel de Riesgo Inherente': item.riesgoInherenteNivel,
-                    'Nivel de Riesgo Residual': item.riesgoResidualNivel, // Usar Nivel Residual
-                    'Riesgo Residual Valor': item.riesgoResidual, // Usar valor Residual
+                    'Nivel de Riesgo Residual': item.riesgoResidualNivel, 
+                    'Riesgo Residual Valor': item.riesgoResidual, 
                     'Evento de Riesgo': item.eventoRiesgo,
                     'Causa': item.causa,
                     'Efecto': item.efecto,

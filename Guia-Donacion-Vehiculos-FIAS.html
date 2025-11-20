@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual Interactivo: Donación Vehicular FIAS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --fias-primary: #2c7d32;      /* Verde Institucional */
+            --fias-secondary: #8bc34a;    /* Verde Claro */
+            --fias-light: #e8f5e9;        /* Fondo suave */
+            --fias-dark: #1b5e20;         /* Verde Oscuro */
+            --fias-accent: #ffc107;       /* Amarillo Alerta */
+            --text-main: #343a40;
+            --sidebar-width: 280px;
+        }
+
+        body {
+            background-color: #f4f6f9;
+            font-family: 'Inter', sans-serif;
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        /* --- SIDEBAR NAVIGATION --- */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+            padding: 0;
+            box-shadow: 4px 0 15px rgba(0,0,0,0.05);
+            width: var(--sidebar-width);
+            background: white;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .sidebar-header {
+            background: white; /* Fondo blanco para el logo */
+            padding: 1.5rem;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+
+        .logo-img {
+            max-width: 100%;
+            height: auto;
+            max-height: 80px;
+        }
+
+        .nav-link {
+            color: #555;
+            padding: 12px 20px;
+            font-weight: 500;
+            border-left: 4px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background-color: var(--fias-light);
+            color: var(--fias-dark);
+            border-left-color: var(--fias-secondary);
+        }
+
+        .nav-link i { width: 25px; text-align: center; margin-right: 8px; }
+
+        /* Sidebar Footer (Credits) */
+        .sidebar-footer {
+            margin-top: auto;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-top: 1px solid #eee;
+            font-size: 0.75rem;
+            color: #6c757d;
+        }
+
+        .sidebar-footer a {
+            color: var(--fias-primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .sidebar-footer a:hover { text-decoration: underline; }
+
+        /* --- MAIN CONTENT --- */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 2rem 3rem;
+            width: calc(100% - var(--sidebar-width));
+        }
+
+        @media (max-width: 992px) {
+            .sidebar { transform: translateX(-100%); }
+            .main-content { margin-left: 0; width: 100%; padding: 1rem; }
+            .sidebar.show { transform: translateX(0); }
+        }
+
+        /* --- CARDS & SECTIONS --- */
+        .section-card {
+            background: white;
+            border-radius: 12px;
+            border: none;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .section-header {
+            padding: 1.2rem 1.5rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .header-phase-0 { border-left: 6px solid #6c757d; }
+        .header-phase-1 { border-left: 6px solid var(--fias-secondary); }
+        .header-phase-2 { border-left: 6px solid var(--fias-primary); }
+        .header-phase-3 { border-left: 6px solid var(--fias-dark); }
+
+        /* --- TIMELINE VERTICAL --- */
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+            margin-top: 20px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 10px;
+            bottom: 0;
+            width: 3px;
+            background: #e9ecef;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2.5rem;
+        }
+
+        .timeline-marker {
+            position: absolute;
+            left: -39px;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: white;
+            border: 4px solid var(--fias-primary);
+            z-index: 10;
+        }
+
+        .timeline-content h5 { font-weight: 700; color: var(--fias-dark); margin-bottom: 5px; }
+        
+        /* --- ROLE BADGES --- */
+        .badge-role {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+        .role-admin { background: #e3f2fd; color: #0d47a1; }
+        .role-legal { background: #f3e5f5; color: #4a148c; }
+        .role-finance { background: #e8f5e9; color: #1b5e20; }
+        .role-bene { background: #fff3cd; color: #856404; }
+
+        /* --- ALERTS & BOXES --- */
+        .doc-box {
+            background-color: #fafafa;
+            border: 1px dashed #ccc;
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+        .doc-box strong { color: #555; display: block; margin-bottom: 5px; }
+
+        .alert-highlight {
+            border-left: 4px solid var(--fias-accent);
+            background: #fffdeb;
+            color: #5a4a05;
+        }
+        
+        /* Toggle Switch Style */
+        .switch-container {
+            background: #f1f3f5;
+            padding: 5px;
+            border-radius: 30px;
+            display: inline-flex;
+            position: relative;
+            margin-bottom: 20px;
+        }
+        .switch-btn {
+            padding: 8px 20px;
+            border-radius: 25px;
+            border: none;
+            background: transparent;
+            color: #666;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .switch-btn.active {
+            background: white;
+            color: var(--fias-primary);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        /* Animation */
+        .animate-fade {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+    </style>
+</head>
+<body data-bs-spy="scroll" data-bs-target="#sidebar-nav" data-bs-offset="100">
+
+    <div class="d-lg-none p-3 bg-white shadow-sm sticky-top d-flex justify-content-between align-items-center">
+        <img src="https://raw.githubusercontent.com/jaircruz1304/FIAS/main/Logo_FIAS.png" alt="Logo FIAS" height="40">
+        <button class="btn btn-outline-success btn-sm" onclick="document.querySelector('.sidebar').classList.toggle('show')">
+            <i class="fas fa-bars"></i> Menú
+        </button>
+    </div>
+
+    <div class="wrapper d-flex">
+        
+        <nav class="sidebar" id="sidebar-nav">
+            <div class="sidebar-header">
+                <img src="https://raw.githubusercontent.com/jaircruz1304/FIAS/main/Logo_FIAS.png" alt="Logo FIAS" class="logo-img">
+            </div>
+            
+            <div class="nav flex-column py-3">
+                <a class="nav-link active" href="#intro"><i class="fas fa-home"></i> Inicio</a>
+                <a class="nav-link" href="#phase0"><i class="fas fa-clipboard-check"></i> 0. Preparación</a>
+                <a class="nav-link" href="#phase1"><i class="fas fa-file-signature"></i> 1. Legalización</a>
+                <a class="nav-link" href="#phase2"><i class="fas fa-car"></i> 2. Operativa (SRI/ANT)</a>
+                <a class="nav-link" href="#phase3"><i class="fas fa-flag-checkered"></i> 3. Cierre</a>
+                <div class="mt-4 px-4">
+                    <div class="alert alert-info small">
+                        <i class="fas fa-info-circle"></i> <strong>Soporte:</strong><br>
+                        Dudas contactar a Jair Cruz (jcruzg@fias.org.ec)
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-footer">
+                <p class="fw-bold mb-1 text-dark">FIAS - Fondo de Inversión Ambiental Sostenible</p>
+                <p class="mb-2">Versión 2.0 - 2025</p>
+                <p class="mb-0">Desarrollado por:<br> 
+                    <a href="https://www.linkedin.com/in/jair-cruz-gallegos-65998776/" target="_blank">
+                        <i class="fab fa-linkedin me-1"></i> Jair Cruz Gallegos
+                    </a>
+                </p>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            
+            <section id="intro" class="mb-5">
+                <h1 class="fw-bold text-dark">Procedimiento de Transferencia de Vehículos</h1>
+                <p class="text-muted lead">Guía paso a paso para la donación de vehículos desde FIAS hacia entidades públicas.</p>
+                <div class="d-flex gap-2 mt-3">
+                    <span class="badge bg-success">Vigente 2025</span>
+                    <span class="badge bg-secondary">Todos los Programas</span>
+                </div>
+            </section>
+
+            <section id="phase0" class="section-card">
+                <div class="section-header header-phase-0">
+                    <h3 class="h5 mb-0 fw-bold text-secondary"><i class="fas fa-list-ol me-2"></i> FASE 0: Preparación y Aprobación</h3>
+                    <span class="badge bg-secondary">Interna</span>
+                </div>
+                <div class="card-body p-4">
+                    <p class="text-muted mb-4">Esta fase es indispensable para formalizar la voluntad de las partes antes de cualquier trámite notarial.</p>
+
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-marker"></div>
+                            <div class="timeline-content">
+                                <span class="badge-role role-admin">Admin. Proyecto / Resp. Bienes</span>
+                                <h5>1. Identificación y Revisión de MOP</h5>
+                                <p>Se seleccionan los vehículos para donación basándose en el <strong>Manual Operativo (MOP)</strong> del proyecto y/o los convenios vigentes.</p>
+                                <div class="doc-box">
+                                    <strong><i class="fas fa-folder-open"></i> Entregables al Área Legal/DE mediante oficio/memorando del PyP:</strong>
+                                    <ul class="mb-0 ps-3 small">
+                                        <li>Matriz de bienes a donar (Marca, Modelo, Placa, Avalúo).</li>
+                                        <li>Borrador del Acta de Entrega-Recepción.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-marker"></div>
+                            <div class="timeline-content">
+                                <span class="badge-role role-admin">Dirección Ejecutiva (DE)</span>
+                                <h5>2. Insinuación de Donación</h5>
+                                <p>La DE envía un oficio formal ("Insinuación de donación") al potencial beneficiario a recibir la donación, adjuntando los borradores.</p>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-marker"></div>
+                            <div class="timeline-content">
+                                <span class="badge-role role-bene">Institución Beneficiaria</span>
+                                <h5>3. Aceptación y Validación</h5>
+                                <p>El Beneficiario debe responder oficialmente al oficio de Insinuación.</p>
+                                <div class="alert alert-highlight p-3 rounded">
+                                    <strong>⚠️ Requisito Crítico:</strong> La respuesta debe incluir:
+                                    <ul class="mb-0 mt-1">
+                                        <li>Carta de Aceptación expresa de la donación.</li>
+                                        <li>Copia de Cédula y Nombramiento del Representante Legal.</li>
+<li>Delegación a tercero por parte del Representante legal para recibir donaciones(Si aplica).</li>
+                                        <li>RUC activo de la institución pública.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-marker"></div>
+                            <div class="timeline-content">
+                                <span class="badge-role role-legal">Área Legal FIAS</span>
+                                <h5>4. Firma de Acta y Minuta</h5>
+                                <p>Se suscribe el Acta de Donación (privada) y Legal prepara la minuta para la notaría.</p>
+<div class="alert alert-highlight p-3 rounded">
+                                    <strong>Firmantes:</strong>
+                                    <ul class="mb-0 mt-1">
+                                        <li>Director ejecutivo FIAS</li>
+                                        <li>Gerente/coordinador de programa o proyecto FIAS</li>
+<li>Represenante legal de la institución beneficiaria o su delegado</li>
+                                        <li>(Otros: Director adminsitrativo financiero/responsable de bienes /bodega/servicios generales de la entidad beneficiaria</li>
+                                    </ul>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="phase1" class="section-card">
+                <div class="section-header header-phase-1">
+                    <h3 class="h5 mb-0 fw-bold" style="color: var(--fias-secondary);"><i class="fas fa-gavel me-2"></i> FASE 1: Legalización</h3>
+                    <span class="badge bg-success">Notarial</span>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row">
+                        <div class="col-md-7">
+                            <div class="timeline">
+                                <div class="timeline-item">
+                                    <div class="timeline-marker" style="border-color: var(--fias-secondary);"></div>
+                                    <div class="timeline-content">
+                                        <h5>Protocolización de la Escritura</h5>
+                                        <p>Con la minuta de la asesoria Juridica, conjuntamente con todo los documentos de la donación, se eleva a Escritura Pública. <br><small class="text-muted">*Generalmente cubierto por el Proyecto/Programa.</small></p>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker" style="border-color: var(--fias-secondary);"></div>
+                                    <div class="timeline-content">
+                                        <h5>Entrega Física del Bien</h5>
+                                        <p>Entrega de llaves, vehículo y matrícula original al beneficiario.</p>
+                                        <span class="badge bg-danger">Punto de No Retorno</span> <small>Desde aquí, multas son del beneficiario.</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="card bg-danger text-white shadow-sm">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="fas fa-exclamation-circle"></i> ¡AVISO!</h5>
+                                    <p class="card-text small">
+                                        Si la donación incluye varios vehículos, es <strong>OBLIGATORIO</strong> solicitar en Notaría:
+                                    </p>
+                                    <div class="bg-white text-danger p-2 rounded text-center fw-bold mb-2">
+                                        COPIAS CERTIFICADAS INDIVIDUALES
+                                    </div>
+                                    <p class="card-text small">
+                                        El SRI y la ANT procesan trámites <em>por placa</em>. Una sola escritura global bloqueará el trámite administrativo.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="phase2" class="section-card">
+                <div class="section-header header-phase-2">
+                    <h3 class="h5 mb-0 fw-bold" style="color: var(--fias-primary);"><i class="fas fa-exchange-alt me-2"></i> FASE 2: Trámite Operativo (Beneficiario)</h3>
+                    <span class="badge bg-primary">SRI & ANT</span>
+                </div>
+                <div class="card-body p-4">
+                    
+                    <div class="text-center mb-4">
+                        <p class="mb-2 text-muted">Seleccione su ubicación para ver el flujo correspondiente:</p>
+                        <div class="switch-container shadow-sm">
+                            <button class="switch-btn active" onclick="switchView('central')" id="btn-central">
+                                <i class="fas fa-building"></i> Planta Central (Quito)
+                            </button>
+                            <button class="switch-btn" onclick="switchView('zonal')" id="btn-zonal">
+                                <i class="fas fa-map-marked-alt"></i> Desconcentrado
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="view-central" class="animate-fade">
+                        <h5 class="text-success border-bottom pb-2 mb-3">Flujo Planta Central</h5>
+                        
+                        <div class="d-flex mb-4">
+                            <div class="me-3 text-center" style="min-width: 60px;">
+                                <div class="bg-light rounded p-2 fw-bold text-secondary">Paso 1</div>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h6 class="fw-bold"><span class="badge-role role-admin">Área de Servicios Institucionales</span> Solicita Trámite</h6>
+                                <p class="small mb-1">Elabora solicitud de Registro de Propietario y envía a la Dirección Financiera.</p>
+                                <div class="doc-box py-1 px-2 d-inline-block"><small>Adjunta: Escritura Protocolizada + Datos Vehículo</small></div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex mb-4">
+                            <div class="me-3 text-center" style="min-width: 60px;">
+                                <div class="bg-light rounded p-2 fw-bold text-secondary">Paso 2</div>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h6 class="fw-bold"><span class="badge-role role-finance">Dirección Financiera</span> Gestión SRI</h6>
+                                <p class="small mb-1">Realiza el registro de transferencia (Formulario 106/109) ante el SRI.</p>
+                                <div class="text-success fw-bold small"><i class="fas fa-check"></i> Output: Certificado de Transferencia de Dominio (Validez 30 días).</div>
+                            </div>
+                        </div>
+
+                         <div class="d-flex mb-4">
+                            <div class="me-3 text-center" style="min-width: 60px;">
+                                <div class="bg-light rounded p-2 fw-bold text-secondary">Paso 3</div>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h6 class="fw-bold"><span class="badge-role role-admin">Área de Servicios</span> Gestión ANT/AMT</h6>
+                                <p class="small mb-1">Ejecuta el traspaso final.</p>
+                                <ul class="small text-muted mt-2">
+                                    <li><i class="fas fa-caret-right text-success"></i> Verificar RTV y Multas.</li>
+                                    <li><i class="fas fa-caret-right text-success"></i> Agendar turno para <strong>Improntas</strong> (Motor/Chasis).</li>
+                                    <li><i class="fas fa-caret-right text-success"></i> Ingresar carpeta en AMT.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="view-zonal" class="d-none animate-fade">
+                        <h5 class="text-info border-bottom pb-2 mb-3">Flujo Desconcentrado / En Territorio</h5>
+                        <div class="alert alert-light border-info">
+                            <i class="fas fa-info-circle text-info"></i> El <strong>Administrador/responsable de Bienes</strong> coordina directamente con el <strong>Contador/Financiero</strong> de la entidad benficiaria.
+                        </div>
+
+                        <div class="timeline">
+                            <div class="timeline-item">
+                                <div class="timeline-marker bg-info border-0"></div>
+                                <div class="timeline-content">
+                                    <span class="badge-role role-admin">Resp. Bienes</span>
+                                    <strong>Inicia el proceso:</strong> Envía copias certificadas del acta y documentos legales a su Dirección Contable asignada.
+                                </div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-marker bg-info border-0"></div>
+                                <div class="timeline-content">
+                                    <span class="badge-role role-finance">Dir. Contable / Financiera</span>
+                                    <strong>Trámite SRI:</strong> Gestiona (vía Quipux, Web o Ventanilla Zonal) el cambio de nombre tributario.
+                                    <br><em>Entrega: Certificado de Transferencia SRI.</em>
+                                </div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-marker bg-info border-0"></div>
+                                <div class="timeline-content">
+                                    <span class="badge-role role-admin">Resp. Bienes</span>
+                                    <strong>Trámite GAD/ANT:</strong> Con el papel del SRI, acude al GAD o Agencia de Tránsito local para:
+                                    <ol class="small mt-2">
+                                        <li>Obtener CUV (Certificado Único Vehicular).</li>
+                                        <li>Validar rodaje provincial.</li>
+                                        <li>Tomar improntas y recibir nueva matrícula.</li>
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <section id="phase3" class="section-card">
+                <div class="section-header header-phase-3">
+                    <h3 class="h5 mb-0 fw-bold text-dark"><i class="fas fa-check-double me-2"></i> FASE 3: Cierre y Archivo</h3>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="p-3 bg-light rounded border h-100">
+                                <h6 class="fw-bold text-dark"><i class="fas fa-tags text-warning"></i> 1. Placas Estatales</h6>
+                                <p class="small text-muted">Si el vehículo pasa de uso privado a público, el Beneficiario debe entregar las placas viejas(en la ANT) y recibir las placas color naranja/oro.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="p-3 bg-light rounded border h-100">
+                                <h6 class="fw-bold text-dark"><i class="fas fa-file-contract text-success"></i> 2. Baja Contable</h6>
+                                <p class="small text-muted">El Beneficiario envía escaneada la <strong>Nueva Matrícula</strong> a nombre de la institución benficiaria. Con esto, FIAS procede a la baja del activo fijo.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-5">
+                        <button class="btn btn-dark btn-lg" onclick="window.print()">
+                            <i class="fas fa-print me-2"></i> Imprimir Guía Operativa
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        function switchView(view) {
+            const centralDiv = document.getElementById('view-central');
+            const zonalDiv = document.getElementById('view-zonal');
+            const btnCentral = document.getElementById('btn-central');
+            const btnZonal = document.getElementById('btn-zonal');
+
+            if (view === 'central') {
+                centralDiv.classList.remove('d-none');
+                zonalDiv.classList.add('d-none');
+                btnCentral.classList.add('active');
+                btnZonal.classList.remove('active');
+            } else {
+                centralDiv.classList.add('d-none');
+                zonalDiv.classList.remove('d-none');
+                btnCentral.classList.remove('active');
+                btnZonal.classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>

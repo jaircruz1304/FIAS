@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía Operativa: Donación de Bienes de FIAS (Privado) a MAE (Público)</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --fias-primary: #2c7d32;      /* Verde Institucional */
+            --fias-secondary: #8bc34a;    /* Verde Claro */
+            --fias-light: #e8f5e9;        /* Fondo suave */
+            --fias-dark: #1b5e20;         /* Verde Oscuro */
+            --fias-accent: #ffc107;       /* Amarillo Alerta */
+            --text-main: #343a40;
+            --sidebar-width: 280px;
+            --legal-color: #007bff; /* Azul para Notaría/Legal */
+        }
+
+        body {
+            background-color: #f4f6f9;
+            font-family: 'Inter', sans-serif;
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        /* --- SIDEBAR NAVIGATION --- */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+            padding: 0;
+            box-shadow: 4px 0 15px rgba(0,0,0,0.05);
+            width: var(--sidebar-width);
+            background: white;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .sidebar-header {
+            background: white;
+            padding: 1.5rem;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+        
+        /* Logo style based on the uploaded file */
+        .logo-img {
+            max-width: 100%;
+            height: auto;
+            max-height: 80px;
+        }
+
+        .nav-link {
+            color: #555;
+            padding: 12px 20px;
+            font-weight: 500;
+            border-left: 4px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background-color: var(--fias-light);
+            color: var(--fias-dark);
+            border-left-color: var(--fias-secondary);
+        }
+
+        .nav-link i { width: 25px; text-align: center; margin-right: 8px; }
+
+        /* Sidebar Footer (Credits) */
+        .sidebar-footer {
+            margin-top: auto;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-top: 1px solid #eee;
+            font-size: 0.75rem;
+            color: #6c757d;
+        }
+
+        .sidebar-footer a {
+            color: var(--fias-primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .sidebar-footer a:hover { text-decoration: underline; }
+
+        /* --- MAIN CONTENT --- */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 2rem 3rem;
+            width: calc(100% - var(--sidebar-width));
+        }
+
+        @media (max-width: 992px) {
+            .sidebar { transform: translateX(-100%); }
+            .main-content { margin-left: 0; width: 100%; padding: 1rem; }
+            .sidebar.show { transform: translateX(0); }
+        }
+
+        /* --- CARDS & SECTIONS --- */
+        .section-card {
+            background: white;
+            border-radius: 12px;
+            border: none;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .section-header {
+            padding: 1.2rem 1.5rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .header-phase-0 { border-left: 6px solid #6c757d; }
+        .header-phase-1 { border-left: 6px solid var(--legal-color); } /* Nuevo color para Legal/Notaría */
+        .header-phase-2 { border-left: 6px solid var(--fias-primary); }
+        .header-phase-3 { border-left: 6px solid var(--fias-dark); }
+
+        /* --- TIMELINE VERTICAL --- */
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+            margin-top: 20px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 10px;
+            bottom: 0;
+            width: 3px;
+            background: #e9ecef;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2.5rem;
+        }
+
+        .timeline-marker {
+            position: absolute;
+            left: -39px;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: white;
+            border: 4px solid var(--legal-color); /* Color central Notaría */
+            z-index: 10;
+        }
+
+        .timeline-content h5 {
+            font-weight: 700;
+            color: var(--fias-dark);
+            margin-bottom: 5px;
+        }
+
+        /* --- ROLE BADGES --- */
+        .badge-role {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .role-admin { background: #e3f2fd; color: #0d47a1; }
+        .role-legal { background: #e0f7fa; color: #00838f; } /* Color para Legal/Notaría */
+        .role-finance { background: #e8f5e9; color: #1b5e20; }
+        .role-bene { background: #fff3cd; color: #856404; }
+        .role-notary { background: #e1f5fe; color: var(--legal-color); } /* Específico para Notario */
+
+        /* --- ALERTS & BOXES --- */
+        .alert-highlight {
+            background-color: #f7f7f7;
+            border-left: 4px solid var(--fias-accent);
+        }
+        
+        /* New Styles for Internal Process */
+        .badge-internal-focus {
+            background: var(--fias-secondary);
+            color: white;
+        }
+
+        .doc-box {
+            background-color: #fafafa;
+            border: 1px dashed #ccc;
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+        .doc-box strong { color: #555; display: block; margin-bottom: 5px; }
+
+    </style>
+</head>
+<body>
+    <div class="d-flex" id="wrapper">
+        <div class="sidebar" id="sidebar-wrapper">
+            <div class="sidebar-header">
+                <img src="https://raw.githubusercontent.com/jaircruz1304/FIAS/main/Logo_FIAS.png" alt="Logo FIAS" class="logo-img">
+                <h6 class="fw-bold mt-2" style="color: var(--fias-primary);">FIAS <i class="fas fa-arrow-right"></i> MAE</h6>
+                <small class="text-muted">Transferencia de Dominio</small>
+            </div>
+            <div class="list-group list-group-flush flex-grow-1">
+                <a href="#intro" class="list-group-item list-group-item-action py-3 active">
+                    <i class="fas fa-info-circle"></i> Introducción
+                </a>
+                <a href="#phase0" class="list-group-item list-group-item-action py-3">
+                    <i class="fas fa-hand-holding-usd"></i> Fase 0: Preparación y Aprobación
+                </a>
+                <a href="#phase1" class="list-group-item list-group-item-action py-3">
+                    <i class="fas fa-university"></i> Fase 1: Formalización Notarial
+                </a>
+                <a href="#phase2" class="list-group-item list-group-item-action py-3">
+                    <i class="fas fa-book"></i> Fase 2: Registro Contable y Baja
+                </a>
+                <a href="#phase3" class="list-group-item list-group-item-action py-3">
+                    <i class="fas fa-clipboard-check"></i> Fase 3: Asignación de Custodia
+                </a>
+            </div>
+            <div class="sidebar-footer">
+                <p class="mb-0">Guía Operativa Institucional. <br>Versión Donación (FIAS Privado) 25-11-2025.</p>
+            </div>
+        </div>
+        <main id="page-content-wrapper" class="main-content">
+            
+            <section id="intro" class="section-card p-4 p-md-5">
+                <h1 class="fw-bold text-dark">Guía Operativa: Donación de Bienes y Transferencia de Dominio</h1>
+                <p class="text-muted lead">Procedimiento legal y administrativo para la <strong>Donación de Bienes (Activos Fijos NO Vehiculares)</strong> de FIAS (Privado) al Ministerio del Ambiente (MAE).</p>
+                <div class="d-flex gap-2 mt-3">
+                    <span class="badge badge-internal-focus"><i class="fas fa-balance-scale me-1"></i> REQUIERE ESCRITURA PÚBLICA / PROTOCOLIZACIÓN</span>
+                    <span class="badge bg-danger">TRANSFERENCIA DE DOMINIO DE PRIVADO A PÚBLICO</span>
+                </div>
+                <div class="alert alert-info mt-4 small">
+                    <h6 class="fw-bold mb-1">Principio Legal Clave:</h6>
+                    La transferencia de dominio requiere la formalidad de un <strong>Instrumento Público</strong> (Escritura Pública o Protocolización) para constituir legalmente la transferencia, de acuerdo con el Código Civil y la normativa de bienes. La simple firma de un acta no es suficiente para este tipo de transferencia.
+                </div>
+                <div class="alert alert-warning mt-4 small">
+                    <h6 class="fw-bold mb-1">EXCEPCIÓN - BIENES VEHICULARES:</h6>
+                    Este procedimiento aplica para bienes muebles (equipos, mobiliario, etc.) y <strong>NO INCLUYE VEHÍCULOS</strong>. Los vehículos poseen un procedimiento de Donación con requisitos notariales específicos ante la ANT (Escritura Pública) que deben tramitarse por separado y bajo su normativa especial.
+                    <a href="https://jaircruz1304.github.io/FIAS/Guia-Donacion-Vehiculos-FIAS.html" target="_blank" class="btn btn-sm btn-warning mt-2 fw-bold">
+                        <i class="fas fa-car me-1"></i> Ver Guía de Donación Vehicular
+                    </a>
+                </div>
+            </section>
+
+            <section id="phase0" class="section-card">
+                <div class="section-header header-phase-0">
+                    <h3 class="h5 mb-0 fw-bold text-secondary"><i class="fas fa-hand-holding-usd me-2"></i> FASE 0: Preparación y Aprobación Interna</h3>
+                    <span class="badge bg-secondary">Pre-legal</span>
+                </div>
+                <div class="card-body p-4">
+                    <p class="text-muted mb-4">Esta fase es indispensable para formalizar la voluntad de las partes antes de la protocolización notarial.</p>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-marker" style="border-color: var(--fias-dark);"></div>
+                            <div class="timeline-content">
+                                <span class="badge-role role-admin">Admin. Proyecto / Resp. Bienes</span>
+                                <h5>1. Identificación y Revisión de MOP</h5>
+                                <p>Se seleccionan los bienes no vehiculares para donación basándose en el <strong>Manual Operativo (MOP)</strong> del proyecto. Se prepara la documentación de respaldo para el Área Legal/DE:</p>
+                                <div class="doc-box">
+                                    <strong><i class="fas fa-folder-open"></i> Entregables al Área Legal/DE mediante oficio/memorando del PyP:</strong>
+                                    <ul class="mb-0 ps-3 small">
+                                        <li>Matriz de bienes a donar (Descripción, Nro. Serie/Inventario, Valor, Estado).</li>
+                                        <li>Borrador del Acta de Entrega-Recepción.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-marker" style="border-color: var(--fias-dark);"></div>
+                            <div class="timeline-content">
+                                <span class="badge-role role-legal">Dirección Ejecutiva (DE)</span>
+                                <h5>2. Insinuación de Donación</h5>
+                                <p>La DE envía un oficio formal ("Insinuación de donación") al MAE, adjuntando el borrador de los documentos y la matriz de bienes.</p>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-marker" style="border-color: var(--fias-dark);"></div>
+                            <div class="timeline-content">
+                                <span class="badge-role role-bene">Institución Beneficiaria (MAE)</span>
+                                <h5>3. Aceptación y Validación Oficial</h5>
+                                <p>El MAE debe responder oficialmente al oficio de Insinuación.</p>
+                                <div class="alert alert-highlight p-3 rounded">
+                                    <strong>⚠️ Requisito Crítico:</strong> La respuesta debe incluir:
+                                    <ul class="mb-0 mt-1">
+                                        <li><strong>Carta de Aceptación expresa de la donación</strong>.</li>
+                                        <li>Copia de Cédula y Nombramiento del Representante Legal.</li>
+                                        <li>Delegación a tercero por parte del Representante legal para recibir donaciones (Si aplica).</li>
+                                        <li>RUC activo de la institución pública.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-marker" style="border-color: var(--fias-dark);"></div>
+                            <div class="timeline-content">
+                                <span class="badge-role role-legal">Área Legal FIAS</span>
+                                <h5>4. Firma de Acta y Minuta para Notaría</h5>
+                                <p>Se suscribe el <strong>Acta de Entrega-Recepción</strong> por las partes. El Área Legal de FIAS prepara la <strong>Minuta de Donación</strong> basada en esta Acta, la cual será elevada a instrumento público.</p>
+                                <div class="alert alert-highlight p-3 rounded small mt-2">
+                                    <strong>Firmantes Típicos:</strong>
+                                    <ul class="mb-0 mt-1">
+                                        <li>Director ejecutivo FIAS</li>
+                                        <li>Gerente/coordinador de programa o proyecto FIAS</li>
+                                        <li>Representante legal de la institución beneficiaria o su delegado</li>
+                                        <li>(Otros: Director administrativo financiero/responsable de bienes)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="phase1" class="section-card">
+                <div class="section-header header-phase-1">
+                    <h3 class="h5 mb-0 fw-bold" style="color: var(--legal-color);"><i class="fas fa-university me-2"></i> FASE 1: Formalización Legal y Notarial</h3>
+                    <span class="badge bg-primary">Transferencia de Dominio</span>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="timeline">
+                                <div class="timeline-item">
+                                    <div class="timeline-marker"></div>
+                                    <div class="timeline-content">
+                                        <span class="badge-role role-notary">Notaría Pública</span>
+                                        <h5>1. Protocolización Notarial (Escritura Pública)</h5>
+                                        <p>Los Representantes Legales comparecen ante la <strong>Notaría Pública</strong> para solicitar la protocolización de la Minuta. Este acto formaliza la <strong>Escritura Pública o Instrumento Protocolizado</strong> requerida para la transferencia de dominio.</p>
+                                        <div class="alert alert-danger p-3 rounded small mt-2">
+                                            <i class="fas fa-exclamation-triangle me-1"></i> <strong>PASO CRÍTICO:</strong> Sin esta formalidad, el MAE no tiene el título legal de dominio requerido para registrar formalmente los bienes como activos públicos.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="timeline-item">
+                                    <div class="timeline-marker" style="border-color: var(--fias-secondary);"></div>
+                                    <div class="timeline-content">
+                                        <span class="badge-role role-admin">Logística MAE y FIAS</span>
+                                        <h5>2. Entrega Física Definitiva</h5>
+                                        <p>Se realiza la entrega material del bien. El título legal de soporte es la **Escritura Pública o el Acuerdo Protocolizado**. El Acta de Entrega-Recepción (Paso 4, Fase 0) documenta la recepción física.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="phase2" class="section-card">
+                <div class="section-header header-phase-2">
+                    <h3 class="h5 mb-0 fw-bold" style="color: var(--fias-primary);"><i class="fas fa-book me-2"></i> FASE 2: Registro Contable (Baja y Alta)</h3>
+                    <span class="badge bg-primary">Financiero</span>
+                </div>
+                <div class="card-body p-4">
+                    <p class="text-muted mb-4">El proceso contable se realiza utilizando la Escritura Pública/Acuerdo Protocolizado como documento de respaldo.</p>
+                    <div class="d-flex mb-4">
+                        <div class="me-3 text-center" style="min-width: 60px;">
+                            <div class="bg-light rounded p-2 fw-bold text-secondary">Paso 1</div>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h6 class="fw-bold"><span class="badge-role role-finance">FIAS (Contabilidad)</span> Baja Contable del Donante</h6>
+                            <p class="small mb-1">FIAS registra la <strong>baja definitiva</strong> de los activos en sus libros (egreso patrimonial), respaldada por el Acuerdo Protocolizado.</p>
+                            <div class="text-success fw-bold small"><i class="fas fa-check"></i> Output FIAS: Comprobante Contable de Egreso por Donación.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex mb-4">
+                        <div class="me-3 text-center" style="min-width: 60px;">
+                            <div class="bg-light rounded p-2 fw-bold text-secondary">Paso 2</div>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h6 class="fw-bold"><span class="badge-role role-finance">MAE (Contabilidad / Bienes)</span> Alta Contable del Donatario</h6>
+                            <p class="small mb-1">El MAE registra el <strong>alta</strong> de los bienes en su Catálogo General de Cuentas, utilizando el valor que conste en la Escritura/Acuerdo de Donación.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="phase3" class="section-card">
+                <div class="section-header header-phase-3">
+                    <h3 class="h5 mb-0 fw-bold" style="color: var(--fias-dark);"><i class="fas fa-clipboard-check me-2"></i> FASE 3: Asignación de Custodia y Registros</h3>
+                    <span class="badge bg-dark">Logística y Custodia</span>
+                </div>
+                <div class="card-body p-4">
+                    <p class="text-muted mb-4">Pasos finales para el registro patrimonial de los bienes muebles (no vehiculares).</p>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4 class="fw-bold mb-3 text-dark">Bienes Muebles de Alto Valor (Equipos, Mobiliario)</h4>
+                            <div class="p-3 bg-light rounded border h-100">
+                                <ul class="list-unstyled small">
+                                    <li><i class="fas fa-couch text-success me-2"></i> <strong>Trámite de Custodia:</strong> Se procede con la <strong>Asignación de Custodia</strong> a un funcionario del MAE, utilizando la Escritura Pública/Acuerdo Protocolizado como respaldo del título de propiedad.</li>
+                                    <li><i class="fas fa-clipboard-check text-success me-2"></i> <strong>Etiquetado:</strong> Se debe identificar físicamente el bien con el nuevo código de inventario del MAE.</li>
+                                    <li><i class="fas fa-eraser text-success me-2"></i> <strong>Distintivos:</strong> Se debe verificar que se hayan borrado los logotipos o insignias de FIAS antes de su uso.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-5">
+                        <button class="btn btn-dark btn-lg" onclick="window.print()">
+                            <i class="fas fa-print me-2"></i> Imprimir Guía Operativa
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Scripts para interactividad si fueran necesarios
+    </script>
+</body>
+
+</html>

@@ -132,8 +132,6 @@
             cursor: pointer;
         }
         
-        .header-phase-0 { border-left: 6px solid #6c757d; }
-        /* Nuevos colores para fases 1 */
         .header-phase-1 { border-left: 6px solid var(--legal-public); }
         .header-phase-1-public { background-color: #e6f0ff; border-left: 4px solid var(--legal-public); }
         .header-phase-1-private { background-color: #fff9e6; border-left: 4px solid var(--legal-private); }
@@ -331,6 +329,26 @@
             background-color: var(--fias-dark);
         }
         
+        /* Text emphasis */
+        .text-emphasis {
+            font-weight: 600;
+            color: var(--fias-dark);
+        }
+        
+        /* Phase number styling */
+        .phase-number {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background-color: var(--fias-primary);
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        
         /* Print Styles */
         @media print {
             .sidebar, .fab, .nav-buttons, .progress-container {
@@ -369,17 +387,14 @@
                 <a href="#intro" class="list-group-item list-group-item-action py-3 active">
                     <i class="fas fa-info-circle"></i> Introducción
                 </a>
-                <a href="#phase0" class="list-group-item list-group-item-action py-3">
-                    <i class="fas fa-hand-holding-usd"></i> Fase 0: Preparación
-                </a>
                 <a href="#phase1" class="list-group-item list-group-item-action py-3">
-                    <i class="fas fa-university"></i> Fase 1: Formalización Legal (Rutas)
+                    <span class="phase-number">1</span> Fase 1: Preparación y Aprobación
                 </a>
                 <a href="#phase2" class="list-group-item list-group-item-action py-3">
-                    <i class="fas fa-book"></i> Fase 2: Registro Contable
+                    <span class="phase-number">2</span> Fase 2: Formalización Legal
                 </a>
                 <a href="#phase3" class="list-group-item list-group-item-action py-3">
-                    <i class="fas fa-clipboard-check"></i> Fase 3: Asignación de Custodia
+                    <span class="phase-number">3</span> Fase 3: Registro Contable
                 </a>
             </div>
             <div class="sidebar-footer">
@@ -390,7 +405,7 @@
             
             <section id="intro" class="section-card p-4 p-md-5" data-aos="fade-up">
                 <h1 class="fw-bold text-dark">Guía Operativa: Donación de Bienes y Transferencia de Dominio</h1>
-                <p class="text-muted lead">Procedimiento legal y administrativo para la **Donación de Bienes (Activos Fijos NO Vehiculares)** de FIAS (Privado) a una **Entidad Pública** o **Privada**.</p>
+                <p class="text-muted lead">Procedimiento legal y administrativo para la <span class="text-emphasis">Donación de Bienes (Activos Fijos NO Vehiculares)</span> de FIAS (Privado) a una <span class="text-emphasis">Entidad Pública</span> o <span class="text-emphasis">Privada</span>.</p>
                 <div class="d-flex gap-2 mt-3 flex-wrap">
                     <span class="badge badge-internal-focus"><i class="fas fa-balance-scale me-1"></i> GESTIÓN DE DONACIÓN</span>
                     <span class="badge bg-danger">TRANSFERENCIA DE DOMINIO DE PRIVADO A TERCEROS</span>
@@ -405,7 +420,7 @@
                         </h2>
                         <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#introAccordion">
                             <div class="accordion-body">
-                                La transferencia de dominio requiere un instrumento formal. Su naturaleza (**Público** o **Privado**) dependerá de la institución beneficiaria y el valor de los bienes, siendo más estricta para **Entidades Públicas** (Ministerios, GADs, etc.).
+                                La transferencia de dominio requiere un instrumento formal. Su naturaleza (<span class="text-emphasis">Público</span> o <span class="text-emphasis">Privado</span>) dependerá de la institución beneficiaria y el valor de los bienes, siendo más estricta para <span class="text-emphasis">Entidades Públicas</span> (Ministerios, GADs, etc.).
                             </div>
                         </div>
                     </div>
@@ -417,7 +432,7 @@
                         </h2>
                         <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#introAccordion">
                             <div class="accordion-body">
-                                Este procedimiento aplica para bienes muebles (equipos, mobiliario, etc.) y **NO INCLUYE VEHÍCULOS**. Los vehículos poseen un procedimiento de Donación con requisitos notariales específicos ante la ANT (Escritura Pública) que deben tramitarse por separado y bajo su normativa especial.
+                                Este procedimiento aplica para bienes muebles (equipos, mobiliario, etc.) y <span class="text-emphasis">NO INCLUYE VEHÍCULOS</span>. Los vehículos poseen un procedimiento de Donación con requisitos notariales específicos ante la ANT (Escritura Pública) que deben tramitarse por separado y bajo su normativa especial.
                                 <a href="https://jaircruz1304.github.io/FIAS/Guia-Donacion-Vehiculos-FIAS.html" target="_blank" class="btn btn-sm btn-warning mt-2 fw-bold">
                                     <i class="fas fa-car me-1"></i> Ver Guía de Donación Vehicular
                                 </a>
@@ -428,19 +443,21 @@
                 
                 <div class="nav-buttons">
                     <div></div> <!-- Empty div for spacing -->
-                    <a href="#phase0" class="btn btn-primary">
-                        Siguiente: Fase 0 <i class="fas fa-arrow-right ms-1"></i>
+                    <a href="#phase1" class="btn btn-primary">
+                        Siguiente: Fase 1 <i class="fas fa-arrow-right ms-1"></i>
                     </a>
                 </div>
             </section>
 
-            <section id="phase0" class="section-card" data-aos="fade-up">
-                <div class="section-header header-phase-0" data-bs-toggle="collapse" data-bs-target="#phase0Content">
-                    <h3 class="h5 mb-0 fw-bold text-secondary"><i class="fas fa-hand-holding-usd me-2"></i> FASE 0: Preparación y Aprobación Interna (Ruta Común)</h3>
-                    <span class="badge bg-secondary">Pre-legal</span>
+            <section id="phase1" class="section-card" data-aos="fade-up">
+                <div class="section-header header-phase-1" data-bs-toggle="collapse" data-bs-target="#phase1Content">
+                    <h3 class="h5 mb-0 fw-bold text-primary">
+                        <span class="phase-number">1</span> FASE 1: Preparación y Aprobación Interna (Ruta Común)
+                    </h3>
+                    <span class="badge bg-primary">Pre-legal</span>
                 </div>
-                <div class="card-body p-4 collapse show" id="phase0Content">
-                    <p class="text-muted mb-4">Esta fase es indispensable para formalizar la voluntad de las partes **antes** de la transferencia legal, independientemente de la naturaleza del beneficiario (Público o Privado).</p>
+                <div class="card-body p-4 collapse show" id="phase1Content">
+                    <p class="text-muted mb-4">Esta fase es indispensable para formalizar la voluntad de las partes <span class="text-emphasis">antes</span> de la transferencia legal, independientemente de la naturaleza del beneficiario (Público o Privado).</p>
                     <div class="timeline">
                         <div class="timeline-item">
                             <div class="timeline-marker" style="border-color: var(--fias-dark);"></div>
@@ -463,7 +480,7 @@
                             <div class="timeline-content">
                                 <span class="badge-role role-legal">Dirección Ejecutiva (DE)</span>
                                 <h5>2. Insinuación de Donación</h5>
-                                <p>La DE envía un oficio formal ("Insinuación de donación") al **Donatario** (Público o Privado), adjuntando el borrador de los documentos y la matriz de bienes.</p>
+                                <p>La DE envía un oficio formal ("Insinuación de donación") al <span class="text-emphasis">Donatario</span> (Público o Privado), adjuntando el borrador de los documentos y la matriz de bienes.</p>
                             </div>
                         </div>
 
@@ -472,9 +489,9 @@
                             <div class="timeline-content">
                                 <span class="badge-role role-bene-public">Donatario (Público/Privado)</span>
                                 <h5>3. Aceptación Oficial</h5>
-                                <p>El Donatario debe responder oficialmente al oficio de Insinuación con la **Carta de Aceptación expresa de la donación**.</p>
+                                <p>El Donatario debe responder oficialmente al oficio de Insinuación con la <span class="text-emphasis">Carta de Aceptación expresa de la donación</span>.</p>
                                 <div class="alert alert-highlight p-3 rounded">
-                                    **Diferencia de Requisitos:** Los requisitos legales anexos (Cédula, Nombramiento, RUC) varían en rigurosidad, siendo más exigentes para la **Entidad Pública**.
+                                    <span class="text-emphasis">Diferencia de Requisitos:</span> Los requisitos legales anexos (Cédula, Nombramiento, RUC) varían en rigurosidad, siendo más exigentes para la <span class="text-emphasis">Entidad Pública</span>.
                                 </div>
                             </div>
                         </div>
@@ -484,7 +501,7 @@
                             <div class="timeline-content">
                                 <span class="badge-role role-legal-fias">Área Legal FIAS</span>
                                 <h5>4. Firma de Acta y Definición de Ruta Legal</h5>
-                                <p>Se suscribe el **Acta de Entrega-Recepción** por las partes y se define si se requiere **Protocolización Notarial (Público)** o si basta con el **Acta (Privado)**.</p>
+                                <p>Se suscribe el <span class="text-emphasis">Acta de Entrega-Recepción</span> por las partes y se define si se requiere <span class="text-emphasis">Protocolización Notarial (Público)</span> o si basta con el <span class="text-emphasis">Acta (Privado)</span>.</p>
                             </div>
                         </div>
                     </div>
@@ -493,19 +510,21 @@
                         <a href="#intro" class="btn btn-outline-primary">
                             <i class="fas fa-arrow-left me-1"></i> Anterior: Introducción
                         </a>
-                        <a href="#phase1" class="btn btn-primary">
-                            Siguiente: Fase 1 <i class="fas fa-arrow-right ms-1"></i>
+                        <a href="#phase2" class="btn btn-primary">
+                            Siguiente: Fase 2 <i class="fas fa-arrow-right ms-1"></i>
                         </a>
                     </div>
                 </div>
             </section>
 
-            <section id="phase1" class="section-card" data-aos="fade-up">
-                <div class="section-header header-phase-1" data-bs-toggle="collapse" data-bs-target="#phase1Content">
-                    <h3 class="h5 mb-0 fw-bold" style="color: var(--legal-public);"><i class="fas fa-university me-2"></i> FASE 1: Formalización Legal y Notarial</h3>
+            <section id="phase2" class="section-card" data-aos="fade-up">
+                <div class="section-header header-phase-2" data-bs-toggle="collapse" data-bs-target="#phase2Content">
+                    <h3 class="h5 mb-0 fw-bold" style="color: var(--legal-public);">
+                        <span class="phase-number">2</span> FASE 2: Formalización Legal y Notarial
+                    </h3>
                     <span class="badge bg-primary">Transferencia de Dominio (Diferenciada)</span>
                 </div>
-                <div class="card-body p-4 collapse show" id="phase1Content">
+                <div class="card-body p-4 collapse show" id="phase2Content">
                     <h4 class="fw-bold mb-4 text-center">Seleccione la Ruta de Formalización según el Beneficiario</h4>
                     <div class="row">
                         
@@ -518,9 +537,9 @@
                                         <div class="timeline-content">
                                             <span class="badge-role role-notary">Notaría Pública</span>
                                             <h5>1. Protocolización Notarial (Escritura Pública)</h5>
-                                            <p>El Área Legal prepara la **Minuta de Donación**. Los Representantes comparecen ante **Notaría Pública** para solicitar la protocolización (Instrumento Público). Este es el **título legal**.</p>
+                                            <p>El Área Legal prepara la <span class="text-emphasis">Minuta de Donación</span>. Los Representantes comparecen ante <span class="text-emphasis">Notaría Pública</span> para solicitar la protocolización (Instrumento Público). Este es el <span class="text-emphasis">título legal</span>.</p>
                                             <div class="alert alert-danger p-2 rounded small mt-2">
-                                                <i class="fas fa-exclamation-triangle me-1"></i> **OBLIGATORIO** para que la entidad pública registre formalmente los bienes en su sistema de control patrimonial.
+                                                <i class="fas fa-exclamation-triangle me-1"></i> <span class="text-emphasis">OBLIGATORIO</span> para que la entidad pública registre formalmente los bienes en su sistema de control patrimonial.
                                             </div>
                                         </div>
                                     </div>
@@ -529,7 +548,7 @@
                                         <div class="timeline-content">
                                             <span class="badge-role role-admin">Logística Donatario Público y FIAS</span>
                                             <h5>2. Entrega Física Definitiva</h5>
-                                            <p>Entrega material del bien. Título de soporte: **Escritura Pública/Acuerdo Protocolizado**.</p>
+                                            <p>Entrega material del bien. Título de soporte: <span class="text-emphasis">Escritura Pública/Acuerdo Protocolizado</span>.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -545,9 +564,9 @@
                                         <div class="timeline-content">
                                             <span class="badge-role role-legal-fias">Área Legal FIAS</span>
                                             <h5>1. Legalización por Instrumento Privado</h5>
-                                            <p>La transferencia de dominio se formaliza con el **Acta de Entrega-Recepción Definitiva** o un **Convenio de Donación** (Instrumento Privado) firmado por los representantes legales.</p>
+                                            <p>La transferencia de dominio se formaliza con el <span class="text-emphasis">Acta de Entrega-Recepción Definitiva</span> o un <span class="text-emphasis">Convenio de Donación</span> (Instrumento Privado) firmado por los representantes legales.</p>
                                             <div class="alert alert-warning p-2 rounded small mt-2">
-                                                <i class="fas fa-info-circle me-1"></i> La Protocolización **NO ES REQUERIDA**; el Acta es el soporte del título legal para la contabilidad de ambas partes.
+                                                <i class="fas fa-info-circle me-1"></i> La Protocolización <span class="text-emphasis">NO ES REQUERIDA</span>; el Acta es el soporte del título legal para la contabilidad de ambas partes.
                                             </div>
                                         </div>
                                     </div>
@@ -556,50 +575,11 @@
                                         <div class="timeline-content">
                                             <span class="badge-role role-admin">Logística Donatario y FIAS</span>
                                             <h5>2. Entrega Física Definitiva</h5>
-                                            <p>Entrega material del bien. Título de soporte: **Acta de Entrega-Recepción/Convenio Simple**.</p>
+                                            <p>Entrega material del bien. Título de soporte: <span class="text-emphasis">Acta de Entrega-Recepción/Convenio Simple</span>.</p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    
-                    <div class="nav-buttons">
-                        <a href="#phase0" class="btn btn-outline-primary">
-                            <i class="fas fa-arrow-left me-1"></i> Anterior: Fase 0
-                        </a>
-                        <a href="#phase2" class="btn btn-primary">
-                            Siguiente: Fase 2 <i class="fas fa-arrow-right ms-1"></i>
-                        </a>
-                    </div>
-                </div>
-            </section>
-
-            <section id="phase2" class="section-card" data-aos="fade-up">
-                <div class="section-header header-phase-2" data-bs-toggle="collapse" data-bs-target="#phase2Content">
-                    <h3 class="h5 mb-0 fw-bold" style="color: var(--fias-primary);"><i class="fas fa-book me-2"></i> FASE 2: Registro Contable (Baja y Alta)</h3>
-                    <span class="badge bg-primary">Financiero (Ruta Común)</span>
-                </div>
-                <div class="card-body p-4 collapse show" id="phase2Content">
-                    <p class="text-muted mb-4">El proceso contable se realiza utilizando el instrumento legal definido en la Fase 1 como documento de respaldo.</p>
-                    <div class="d-flex mb-4">
-                        <div class="me-3 text-center" style="min-width: 60px;">
-                            <div class="bg-light rounded p-2 fw-bold text-secondary">Paso 1</div>
-                        </div>
-                        <div class="flex-grow-1">
-                            <h6 class="fw-bold"><span class="badge-role role-finance">FIAS (Contabilidad)</span> Baja Contable del Donante</h6>
-                            <p class="small mb-1">FIAS registra la **baja definitiva** de los activos en sus libros (egreso patrimonial), respaldada por el **Acuerdo Protocolizado (Ruta Pública)** o el **Acta de Entrega-Recepción (Ruta Privada)**.</p>
-                            <div class="text-success fw-bold small"><i class="fas fa-check"></i> Output FIAS: Comprobante Contable de Egreso por Donación.</div>
-                        </div>
-                    </div>
-                    
-                    <div class="d-flex mb-4">
-                        <div class="me-3 text-center" style="min-width: 60px;">
-                            <div class="bg-light rounded p-2 fw-bold text-secondary">Paso 2</div>
-                        </div>
-                        <div class="flex-grow-1">
-                            <h6 class="fw-bold"><span class="badge-role role-finance">Donatario (Contabilidad / Bienes)</span> Alta Contable</h6>
-                            <p class="small mb-1">El Donatario registra el **alta** de los bienes, utilizando el valor y el instrumento de donación (Escritura o Acta).</p>
                         </div>
                     </div>
                     
@@ -616,21 +596,31 @@
 
             <section id="phase3" class="section-card" data-aos="fade-up">
                 <div class="section-header header-phase-3" data-bs-toggle="collapse" data-bs-target="#phase3Content">
-                    <h3 class="h5 mb-0 fw-bold" style="color: var(--fias-dark);"><i class="fas fa-clipboard-check me-2"></i> FASE 3: Asignación de Custodia y Registros</h3>
-                    <span class="badge bg-dark">Logística y Custodia (Ruta Común)</span>
+                    <h3 class="h5 mb-0 fw-bold" style="color: var(--fias-primary);">
+                        <span class="phase-number">3</span> FASE 3: Registro Contable (Baja y Alta)
+                    </h3>
+                    <span class="badge bg-primary">Financiero (Ruta Común)</span>
                 </div>
                 <div class="card-body p-4 collapse show" id="phase3Content">
-                    <p class="text-muted mb-4">Pasos finales para el registro patrimonial de los bienes muebles (no vehiculares) en la entidad beneficiaria.</p>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <h4 class="fw-bold mb-3 text-dark">Bienes Muebles de Alto Valor</h4>
-                            <div class="p-3 bg-light rounded border h-100">
-                                <ul class="list-unstyled small">
-                                    <li><i class="fas fa-couch text-success me-2"></i> <strong>Trámite de Custodia:</strong> Se procede con la **Asignación de Custodia** a un funcionario/responsable de la **Entidad Pública** o del **Donatario Privado**, utilizando el instrumento legal (Escritura/Acta) como respaldo del título de propiedad.</li>
-                                    <li><i class="fas fa-clipboard-check text-success me-2"></i> <strong>Etiquetado:</strong> Se debe identificar físicamente el bien con el nuevo código de inventario.</li>
-                                    <li><i class="fas fa-eraser text-success me-2"></i> <strong>Distintivos:</strong> Se debe verificar que se hayan borrado los logotipos o insignias de FIAS antes de su uso.</li>
-                                </ul>
-                            </div>
+                    <p class="text-muted mb-4">El proceso contable se realiza utilizando el instrumento legal definido en la Fase 2 como documento de respaldo.</p>
+                    <div class="d-flex mb-4">
+                        <div class="me-3 text-center" style="min-width: 60px;">
+                            <div class="bg-light rounded p-2 fw-bold text-secondary">Paso 1</div>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h6 class="fw-bold"><span class="badge-role role-finance">FIAS (Contabilidad)</span> Baja Contable del Donante</h6>
+                            <p class="small mb-1">FIAS registra la <span class="text-emphasis">baja definitiva</span> de los activos en sus libros (egreso patrimonial), respaldada por el <span class="text-emphasis">Acuerdo Protocolizado (Ruta Pública)</span> o el <span class="text-emphasis">Acta de Entrega-Recepción (Ruta Privada)</span>.</p>
+                            <div class="text-success fw-bold small"><i class="fas fa-check"></i> Output FIAS: Comprobante Contable de Egreso por Donación.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex mb-4">
+                        <div class="me-3 text-center" style="min-width: 60px;">
+                            <div class="bg-light rounded p-2 fw-bold text-secondary">Paso 2</div>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h6 class="fw-bold"><span class="badge-role role-finance">Donatario (Contabilidad / Bienes)</span> Alta Contable</h6>
+                            <p class="small mb-1">El Donatario registra el <span class="text-emphasis">alta</span> de los bienes, utilizando el valor y el instrumento de donación (Escritura o Acta).</p>
                         </div>
                     </div>
                     

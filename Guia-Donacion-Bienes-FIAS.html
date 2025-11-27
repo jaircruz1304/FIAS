@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía Operativa: Donación de Bienes FIAS (Privado) a Público/Privado</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Añadido: AOS Library para animaciones -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --fias-primary: #2c7d32;      /* Verde Institucional */
+            --fias-secondary: #8bc34a;    /* Verde Claro */
+            --fias-light: #e8f5e9;        /* Fondo suave */
+            --fias-dark: #1b5e20;         /* Verde Oscuro */
+            --fias-accent: #ffc107;       /* Amarillo Alerta */
+            --text-main: #343a40;
+            --sidebar-width: 280px;
+            --legal-public: #007bff; /* Azul para Notaría/Legal Público */
+            --legal-private: #fd7e14; /* Naranja para Legal Privado */
+        }
+
+        body {
+            background-color: #f4f6f9;
+            font-family: 'Inter', sans-serif;
+            color: var(--text-main);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* --- SIDEBAR NAVIGATION --- */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+            padding: 0;
+            box-shadow: 4px 0 15px rgba(0,0,0,0.05);
+            width: var(--sidebar-width);
+            background: white;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease-in-out;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            background: white;
+            padding: 1.5rem;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background-color: white;
+        }
+        
+        /* Logo style based on the uploaded file */
+        .logo-img {
+            max-width: 100%;
+            height: auto;
+            max-height: 80px;
+        }
+
+        .nav-link {
+            color: #555;
+            padding: 12px 20px;
+            font-weight: 500;
+            border-left: 4px solid transparent;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background-color: var(--fias-light);
+            color: var(--fias-dark);
+            border-left-color: var(--fias-secondary);
+        }
+
+        .nav-link i { width: 25px; text-align: center; margin-right: 8px; }
+
+        /* Sidebar Footer (Credits) */
+        .sidebar-footer {
+            margin-top: auto;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-top: 1px solid #eee;
+            font-size: 0.75rem;
+            color: #6c757d;
+        }
+        
+        /* --- MAIN CONTENT --- */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 2rem 3rem;
+            width: calc(100% - var(--sidebar-width));
+        }
+
+        @media (max-width: 992px) {
+            .sidebar { transform: translateX(-100%); }
+            .main-content { margin-left: 0; width: 100%; padding: 1rem; }
+            .sidebar.show { transform: translateX(0); }
+        }
+
+        /* --- CARDS & SECTIONS --- */
+        .section-card {
+            background: white;
+            border-radius: 12px;
+            border: none;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            margin-bottom: 2rem;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .section-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .section-header {
+            padding: 1.2rem 1.5rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+        
+        .header-phase-0 { border-left: 6px solid #6c757d; }
+        /* Nuevos colores para fases 1 */
+        .header-phase-1 { border-left: 6px solid var(--legal-public); }
+        .header-phase-1-public { background-color: #e6f0ff; border-left: 4px solid var(--legal-public); }
+        .header-phase-1-private { background-color: #fff9e6; border-left: 4px solid var(--legal-private); }
+        
+        .header-phase-2 { border-left: 6px solid var(--fias-primary); }
+        .header-phase-3 { border-left: 6px solid var(--fias-dark); }
+
+        /* --- TIMELINE VERTICAL --- */
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+            margin-top: 20px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 10px;
+            bottom: 0;
+            width: 3px;
+            background: #e9ecef;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2.5rem;
+        }
+
+        .timeline-marker {
+            position: absolute;
+            left: -39px;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: white;
+            border: 4px solid var(--legal-public); /* Color central por defecto (Público) */
+            z-index: 10;
+            transition: transform 0.3s;
+        }
+        
+        .timeline-item:hover .timeline-marker {
+            transform: scale(1.2);
+        }
+        
+        /* Marcador para la ruta privada */
+        .timeline-marker-private {
+            border-color: var(--legal-private) !important;
+        }
+
+        .timeline-content h5 {
+            font-weight: 700;
+            color: var(--fias-dark);
+            margin-bottom: 5px;
+        }
+
+        /* --- ROLE BADGES --- */
+        .badge-role {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            transition: all 0.3s;
+        }
+
+        .badge-role:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .role-admin { background: #e3f2fd; color: #0d47a1; }
+        .role-legal { background: #e0f7fa; color: #00838f; }
+        .role-finance { background: #e8f5e9; color: #1b5e20; }
+        .role-bene-public { background: #e1f5fe; color: var(--legal-public); } /* Entidad Pública */
+        .role-bene-private { background: #ffe0b2; color: var(--legal-private); } /* Tercero Privado */
+        .role-notary { background: #e1f5fe; color: var(--legal-public); }
+        .role-legal-fias { background: #fff3cd; color: #856404; }
+
+        /* --- ALERTS & BOXES --- */
+        .alert-highlight {
+            background-color: #f7f7f7;
+            border-left: 4px solid var(--fias-accent);
+            transition: all 0.3s;
+        }
+        
+        .alert-highlight:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .badge-internal-focus {
+            background: var(--fias-secondary);
+            color: white;
+        }
+
+        .doc-box {
+            background-color: #fafafa;
+            border: 1px dashed #ccc;
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+        
+        .doc-box:hover {
+            background-color: #f5f5f5;
+            border-color: #999;
+        }
+        
+        .doc-box strong { color: #555; display: block; margin-bottom: 5px; }
+        
+        /* New Styles for visual separation in Phase 1 */
+        .route-container {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+            height: 100%;
+        }
+        
+        .route-container:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .route-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+        
+        /* Progress Bar */
+        .progress-container {
+            position: fixed;
+            top: 0;
+            left: var(--sidebar-width);
+            right: 0;
+            height: 5px;
+            background: #e9ecef;
+            z-index: 1000;
+        }
+        
+        .progress-bar {
+            height: 5px;
+            background: var(--fias-secondary);
+            width: 0%;
+            transition: width 0.3s;
+        }
+        
+        /* Navigation Buttons */
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+        }
+        
+        /* Accordion */
+        .accordion-button:not(.collapsed) {
+            background-color: var(--fias-light);
+            color: var(--fias-dark);
+        }
+        
+        /* Tooltip custom */
+        .custom-tooltip {
+            --bs-tooltip-bg: var(--fias-primary);
+            --bs-tooltip-color: white;
+        }
+        
+        /* Floating Action Button */
+        .fab {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--fias-primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .fab:hover {
+            transform: scale(1.1);
+            background-color: var(--fias-dark);
+        }
+        
+        /* Print Styles */
+        @media print {
+            .sidebar, .fab, .nav-buttons, .progress-container {
+                display: none !important;
+            }
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+            .section-card {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Progress Bar -->
+    <div class="progress-container">
+        <div class="progress-bar" id="readingProgress"></div>
+    </div>
+    
+    <!-- Floating Action Button -->
+    <div class="fab" data-bs-toggle="modal" data-bs-target="#helpModal">
+        <i class="fas fa-question"></i>
+    </div>
+
+    <div class="d-flex" id="wrapper">
+        <div class="sidebar" id="sidebar-wrapper">
+            <div class="sidebar-header">
+                <img src="https://raw.githubusercontent.com/jaircruz1304/FIAS/main/Logo_FIAS.png" alt="Logo FIAS" class="logo-img">
+                <h6 class="fw-bold mt-2" style="color: var(--fias-primary);">FIAS <i class="fas fa-arrow-right"></i> Donatario</h6>
+                <small class="text-muted">Transferencia de Dominio</small>
+            </div>
+            <div class="list-group list-group-flush flex-grow-1">
+                <a href="#intro" class="list-group-item list-group-item-action py-3 active">
+                    <i class="fas fa-info-circle"></i> Introducción
+                </a>
+                <a href="#phase0" class="list-group-item list-group-item-action py-3">
+                    <i class="fas fa-hand-holding-usd"></i> Fase 0: Preparación
+                </a>
+                <a href="#phase1" class="list-group-item list-group-item-action py-3">
+                    <i class="fas fa-university"></i> Fase 1: Formalización Legal (Rutas)
+                </a>
+                <a href="#phase2" class="list-group-item list-group-item-action py-3">
+                    <i class="fas fa-book"></i> Fase 2: Registro Contable
+                </a>
+                <a href="#phase3" class="list-group-item list-group-item-action py-3">
+                    <i class="fas fa-clipboard-check"></i> Fase 3: Asignación de Custodia
+                </a>
+            </div>
+            <div class="sidebar-footer">
+                <p class="mb-0">Guía Operativa Institucional. <br>Versión Donación (FIAS Privado) 25-11-2025.</p>
+            </div>
+        </div>
+        <main id="page-content-wrapper" class="main-content">
+            
+            <section id="intro" class="section-card p-4 p-md-5" data-aos="fade-up">
+                <h1 class="fw-bold text-dark">Guía Operativa: Donación de Bienes y Transferencia de Dominio</h1>
+                <p class="text-muted lead">Procedimiento legal y administrativo para la **Donación de Bienes (Activos Fijos NO Vehiculares)** de FIAS (Privado) a una **Entidad Pública** o **Privada**.</p>
+                <div class="d-flex gap-2 mt-3 flex-wrap">
+                    <span class="badge badge-internal-focus"><i class="fas fa-balance-scale me-1"></i> GESTIÓN DE DONACIÓN</span>
+                    <span class="badge bg-danger">TRANSFERENCIA DE DOMINIO DE PRIVADO A TERCEROS</span>
+                </div>
+                
+                <div class="accordion mt-4" id="introAccordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingOne">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                <i class="fas fa-info-circle me-2"></i> Principio Clave: Formalización de la Transferencia
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#introAccordion">
+                            <div class="accordion-body">
+                                La transferencia de dominio requiere un instrumento formal. Su naturaleza (**Público** o **Privado**) dependerá de la institución beneficiaria y el valor de los bienes, siendo más estricta para **Entidades Públicas** (Ministerios, GADs, etc.).
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingTwo">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                <i class="fas fa-exclamation-triangle me-2"></i> EXCEPCIÓN - BIENES VEHICULARES
+                            </button>
+                        </h2>
+                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#introAccordion">
+                            <div class="accordion-body">
+                                Este procedimiento aplica para bienes muebles (equipos, mobiliario, etc.) y **NO INCLUYE VEHÍCULOS**. Los vehículos poseen un procedimiento de Donación con requisitos notariales específicos ante la ANT (Escritura Pública) que deben tramitarse por separado y bajo su normativa especial.
+                                <a href="https://jaircruz1304.github.io/FIAS/Guia-Donacion-Vehiculos-FIAS.html" target="_blank" class="btn btn-sm btn-warning mt-2 fw-bold">
+                                    <i class="fas fa-car me-1"></i> Ver Guía de Donación Vehicular
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="nav-buttons">
+                    <div></div> <!-- Empty div for spacing -->
+                    <a href="#phase0" class="btn btn-primary">
+                        Siguiente: Fase 0 <i class="fas fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </section>
+
+            <section id="phase0" class="section-card" data-aos="fade-up">
+                <div class="section-header header-phase-0" data-bs-toggle="collapse" data-bs-target="#phase0Content">
+                    <h3 class="h5 mb-0 fw-bold text-secondary"><i class="fas fa-hand-holding-usd me-2"></i> FASE 0: Preparación y Aprobación Interna (Ruta Común)</h3>
+                    <span class="badge bg-secondary">Pre-legal</span>
+                </div>
+                <div class="card-body p-4 collapse show" id="phase0Content">
+                    <p class="text-muted mb-4">Esta fase es indispensable para formalizar la voluntad de las partes **antes** de la transferencia legal, independientemente de la naturaleza del beneficiario (Público o Privado).</p>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-marker" style="border-color: var(--fias-dark);"></div>
+                            <div class="timeline-content">
+                                <span class="badge-role role-admin">Admin. Proyecto / Resp. Bienes</span>
+                                <h5>1. Identificación y Revisión de MOP</h5>
+                                <p>Se seleccionan los bienes no vehiculares para donación. Se prepara la documentación de respaldo para el Área Legal/DE:</p>
+                                <div class="doc-box">
+                                    <strong><i class="fas fa-folder-open"></i> Entregables al Área Legal/DE:</strong>
+                                    <ul class="mb-0 ps-3 small">
+                                        <li>Matriz de bienes a donar (Descripción, Nro. Serie/Inventario, Valor, Estado).</li>
+                                        <li>Borrador del Acta de Entrega-Recepción.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-marker" style="border-color: var(--fias-dark);"></div>
+                            <div class="timeline-content">
+                                <span class="badge-role role-legal">Dirección Ejecutiva (DE)</span>
+                                <h5>2. Insinuación de Donación</h5>
+                                <p>La DE envía un oficio formal ("Insinuación de donación") al **Donatario** (Público o Privado), adjuntando el borrador de los documentos y la matriz de bienes.</p>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-marker" style="border-color: var(--fias-dark);"></div>
+                            <div class="timeline-content">
+                                <span class="badge-role role-bene-public">Donatario (Público/Privado)</span>
+                                <h5>3. Aceptación Oficial</h5>
+                                <p>El Donatario debe responder oficialmente al oficio de Insinuación con la **Carta de Aceptación expresa de la donación**.</p>
+                                <div class="alert alert-highlight p-3 rounded">
+                                    **Diferencia de Requisitos:** Los requisitos legales anexos (Cédula, Nombramiento, RUC) varían en rigurosidad, siendo más exigentes para la **Entidad Pública**.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-marker" style="border-color: var(--fias-dark);"></div>
+                            <div class="timeline-content">
+                                <span class="badge-role role-legal-fias">Área Legal FIAS</span>
+                                <h5>4. Firma de Acta y Definición de Ruta Legal</h5>
+                                <p>Se suscribe el **Acta de Entrega-Recepción** por las partes y se define si se requiere **Protocolización Notarial (Público)** o si basta con el **Acta (Privado)**.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="nav-buttons">
+                        <a href="#intro" class="btn btn-outline-primary">
+                            <i class="fas fa-arrow-left me-1"></i> Anterior: Introducción
+                        </a>
+                        <a href="#phase1" class="btn btn-primary">
+                            Siguiente: Fase 1 <i class="fas fa-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <section id="phase1" class="section-card" data-aos="fade-up">
+                <div class="section-header header-phase-1" data-bs-toggle="collapse" data-bs-target="#phase1Content">
+                    <h3 class="h5 mb-0 fw-bold" style="color: var(--legal-public);"><i class="fas fa-university me-2"></i> FASE 1: Formalización Legal y Notarial</h3>
+                    <span class="badge bg-primary">Transferencia de Dominio (Diferenciada)</span>
+                </div>
+                <div class="card-body p-4 collapse show" id="phase1Content">
+                    <h4 class="fw-bold mb-4 text-center">Seleccione la Ruta de Formalización según el Beneficiario</h4>
+                    <div class="row">
+                        
+                        <div class="col-md-6">
+                            <div class="route-container header-phase-1-public h-100">
+                                <p class="route-title text-primary"><i class="fas fa-building me-2"></i> RUTA A: ENTIDAD PÚBLICA (Ministerio, GAD, Empresa Pública, etc.)</p>
+                                <div class="timeline">
+                                    <div class="timeline-item">
+                                        <div class="timeline-marker" style="border-color: var(--legal-public);"></div>
+                                        <div class="timeline-content">
+                                            <span class="badge-role role-notary">Notaría Pública</span>
+                                            <h5>1. Protocolización Notarial (Escritura Pública)</h5>
+                                            <p>El Área Legal prepara la **Minuta de Donación**. Los Representantes comparecen ante **Notaría Pública** para solicitar la protocolización (Instrumento Público). Este es el **título legal**.</p>
+                                            <div class="alert alert-danger p-2 rounded small mt-2">
+                                                <i class="fas fa-exclamation-triangle me-1"></i> **OBLIGATORIO** para que la entidad pública registre formalmente los bienes en su sistema de control patrimonial.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="timeline-item">
+                                        <div class="timeline-marker" style="border-color: var(--fias-secondary);"></div>
+                                        <div class="timeline-content">
+                                            <span class="badge-role role-admin">Logística Donatario Público y FIAS</span>
+                                            <h5>2. Entrega Física Definitiva</h5>
+                                            <p>Entrega material del bien. Título de soporte: **Escritura Pública/Acuerdo Protocolizado**.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="route-container header-phase-1-private h-100">
+                                <p class="route-title" style="color: var(--legal-private);"><i class="fas fa-handshake me-2"></i> RUTA B: INSTITUCIÓN PRIVADA (ONG, Fundación, Empresa Privada)</p>
+                                <div class="timeline">
+                                    <div class="timeline-item">
+                                        <div class="timeline-marker timeline-marker-private" style="border-color: var(--legal-private);"></div>
+                                        <div class="timeline-content">
+                                            <span class="badge-role role-legal-fias">Área Legal FIAS</span>
+                                            <h5>1. Legalización por Instrumento Privado</h5>
+                                            <p>La transferencia de dominio se formaliza con el **Acta de Entrega-Recepción Definitiva** o un **Convenio de Donación** (Instrumento Privado) firmado por los representantes legales.</p>
+                                            <div class="alert alert-warning p-2 rounded small mt-2">
+                                                <i class="fas fa-info-circle me-1"></i> La Protocolización **NO ES REQUERIDA**; el Acta es el soporte del título legal para la contabilidad de ambas partes.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="timeline-item">
+                                        <div class="timeline-marker timeline-marker-private" style="border-color: var(--fias-secondary);"></div>
+                                        <div class="timeline-content">
+                                            <span class="badge-role role-admin">Logística Donatario y FIAS</span>
+                                            <h5>2. Entrega Física Definitiva</h5>
+                                            <p>Entrega material del bien. Título de soporte: **Acta de Entrega-Recepción/Convenio Simple**.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="nav-buttons">
+                        <a href="#phase0" class="btn btn-outline-primary">
+                            <i class="fas fa-arrow-left me-1"></i> Anterior: Fase 0
+                        </a>
+                        <a href="#phase2" class="btn btn-primary">
+                            Siguiente: Fase 2 <i class="fas fa-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <section id="phase2" class="section-card" data-aos="fade-up">
+                <div class="section-header header-phase-2" data-bs-toggle="collapse" data-bs-target="#phase2Content">
+                    <h3 class="h5 mb-0 fw-bold" style="color: var(--fias-primary);"><i class="fas fa-book me-2"></i> FASE 2: Registro Contable (Baja y Alta)</h3>
+                    <span class="badge bg-primary">Financiero (Ruta Común)</span>
+                </div>
+                <div class="card-body p-4 collapse show" id="phase2Content">
+                    <p class="text-muted mb-4">El proceso contable se realiza utilizando el instrumento legal definido en la Fase 1 como documento de respaldo.</p>
+                    <div class="d-flex mb-4">
+                        <div class="me-3 text-center" style="min-width: 60px;">
+                            <div class="bg-light rounded p-2 fw-bold text-secondary">Paso 1</div>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h6 class="fw-bold"><span class="badge-role role-finance">FIAS (Contabilidad)</span> Baja Contable del Donante</h6>
+                            <p class="small mb-1">FIAS registra la **baja definitiva** de los activos en sus libros (egreso patrimonial), respaldada por el **Acuerdo Protocolizado (Ruta Pública)** o el **Acta de Entrega-Recepción (Ruta Privada)**.</p>
+                            <div class="text-success fw-bold small"><i class="fas fa-check"></i> Output FIAS: Comprobante Contable de Egreso por Donación.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex mb-4">
+                        <div class="me-3 text-center" style="min-width: 60px;">
+                            <div class="bg-light rounded p-2 fw-bold text-secondary">Paso 2</div>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h6 class="fw-bold"><span class="badge-role role-finance">Donatario (Contabilidad / Bienes)</span> Alta Contable</h6>
+                            <p class="small mb-1">El Donatario registra el **alta** de los bienes, utilizando el valor y el instrumento de donación (Escritura o Acta).</p>
+                        </div>
+                    </div>
+                    
+                    <div class="nav-buttons">
+                        <a href="#phase1" class="btn btn-outline-primary">
+                            <i class="fas fa-arrow-left me-1"></i> Anterior: Fase 1
+                        </a>
+                        <a href="#phase3" class="btn btn-primary">
+                            Siguiente: Fase 3 <i class="fas fa-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <section id="phase3" class="section-card" data-aos="fade-up">
+                <div class="section-header header-phase-3" data-bs-toggle="collapse" data-bs-target="#phase3Content">
+                    <h3 class="h5 mb-0 fw-bold" style="color: var(--fias-dark);"><i class="fas fa-clipboard-check me-2"></i> FASE 3: Asignación de Custodia y Registros</h3>
+                    <span class="badge bg-dark">Logística y Custodia (Ruta Común)</span>
+                </div>
+                <div class="card-body p-4 collapse show" id="phase3Content">
+                    <p class="text-muted mb-4">Pasos finales para el registro patrimonial de los bienes muebles (no vehiculares) en la entidad beneficiaria.</p>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4 class="fw-bold mb-3 text-dark">Bienes Muebles de Alto Valor</h4>
+                            <div class="p-3 bg-light rounded border h-100">
+                                <ul class="list-unstyled small">
+                                    <li><i class="fas fa-couch text-success me-2"></i> <strong>Trámite de Custodia:</strong> Se procede con la **Asignación de Custodia** a un funcionario/responsable de la **Entidad Pública** o del **Donatario Privado**, utilizando el instrumento legal (Escritura/Acta) como respaldo del título de propiedad.</li>
+                                    <li><i class="fas fa-clipboard-check text-success me-2"></i> <strong>Etiquetado:</strong> Se debe identificar físicamente el bien con el nuevo código de inventario.</li>
+                                    <li><i class="fas fa-eraser text-success me-2"></i> <strong>Distintivos:</strong> Se debe verificar que se hayan borrado los logotipos o insignias de FIAS antes de su uso.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="nav-buttons">
+                        <a href="#phase2" class="btn btn-outline-primary">
+                            <i class="fas fa-arrow-left me-1"></i> Anterior: Fase 2
+                        </a>
+                        <div></div> <!-- Empty div for spacing -->
+                    </div>
+                    
+                    <div class="text-center mt-5">
+                        <button class="btn btn-dark btn-lg" onclick="window.print()">
+                            <i class="fas fa-print me-2"></i> Imprimir Guía Operativa
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Help Modal -->
+    <div class="modal fade" id="helpModal" tabindex="-1" aria-labelledby="helpModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="helpModalLabel"><i class="fas fa-question-circle me-2"></i> Ayuda de Navegación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h6>Características de esta guía:</h6>
+                    <ul>
+                        <li><strong>Barra de progreso:</strong> Muestra tu avance en la lectura de la guía</li>
+                        <li><strong>Navegación por secciones:</strong> Haz clic en los enlaces del menú lateral para ir directamente a cada sección</li>
+                        <li><strong>Acordeones:</strong> Algunas secciones se pueden expandir/contraer para mejor organización</li>
+                        <li><strong>Navegación entre fases:</strong> Usa los botones al final de cada sección para navegar entre fases</li>
+                        <li><strong>Efectos visuales:</strong> Pasa el cursor sobre elementos para ver efectos sutiles</li>
+                    </ul>
+                    <p class="text-muted small">Esta guía está optimizada para impresión. Usa el botón "Imprimir Guía Operativa" al final.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Entendido</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Añadido: AOS Library para animaciones -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <script>
+        // Inicializar AOS (Animate On Scroll)
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
+        });
+        
+        // Actualizar barra de progreso de lectura
+        window.addEventListener('scroll', function() {
+            const winHeight = window.innerHeight;
+            const docHeight = document.documentElement.scrollHeight;
+            const scrollTop = window.pageYOffset;
+            const scrollPercent = (scrollTop / (docHeight - winHeight)) * 100;
+            document.getElementById('readingProgress').style.width = scrollPercent + '%';
+        });
+        
+        // Resaltar sección activa en el menú
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('.sidebar .nav-link');
+        
+        window.addEventListener('scroll', function() {
+            let current = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (scrollY >= (sectionTop - 200)) {
+                    current = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+        
+        // Tooltips de Bootstrap
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+        
+        // Navegación suave para enlaces internos
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 20,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

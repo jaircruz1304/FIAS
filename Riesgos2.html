@@ -61,6 +61,21 @@
         .risk-Muy-Bajo { background-color: #0dcaf0; color: white; }
         .risk-N-A { background-color: #6c757d; color: white; }
         
+        /* Estilos de Badges para Estado de Cumplimiento */
+        .compliance-badge {
+            padding: 0.5em 1em;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            white-space: nowrap;
+        }
+        
+        /* Estados de cumplimiento */
+        .compliance-Cumplido { background-color: #28a745; color: white; }
+        .compliance-Parcialmente-cumplido { background-color: #ffc107; color: #343a40; }
+        .compliance-No-cumplido { background-color: #dc3545; color: white; }
+        .compliance-NA { background-color: #6c757d; color: white; }
+        
         /* Contenedores de Gráfico con altura forzada */
         .chart-container-full {
             flex: 1; 
@@ -183,19 +198,19 @@
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-3 mb-2">
+                        <div class="col-md-2 mb-2">
                             <label for="projectFilter" class="form-label small">Filtrar por Proyecto</label>
                             <select class="form-select form-select-sm" id="projectFilter"></select>
                         </div>
-                        <div class="col-md-3 mb-2">
+                        <div class="col-md-2 mb-2">
                             <label for="localidadFilter" class="form-label small">Filtrar por Localidad</label>
                             <select class="form-select form-select-sm" id="localidadFilter"></select>
                         </div>
-                        <div class="col-md-3 mb-2">
+                        <div class="col-md-2 mb-2">
                             <label for="factorFilter" class="form-label small">Filtrar por Factor</label>
                             <select class="form-select form-select-sm" id="factorFilter"></select>
                         </div>
-                        <div class="col-md-3 mb-2">
+                        <div class="col-md-2 mb-2">
                             <label for="riskFilter" class="form-label small">Filtrar por Riesgo Residual</label>
                             <select class="form-select form-select-sm" id="riskFilter">
                                 <option value="">Todos los niveles</option>
@@ -204,6 +219,20 @@
                                 <option value="Bajo">Bajo</option>
                                 <option value="Muy Bajo">Muy Bajo</option>
                             </select>
+                        </div>
+                        <div class="col-md-2 mb-2">
+                            <label for="complianceFilter" class="form-label small">Filtrar por Estado de Cumplimiento</label>
+                            <select class="form-select form-select-sm" id="complianceFilter">
+                                <option value="">Todos los estados</option>
+                                <option value="Cumplido">Cumplido</option>
+                                <option value="Parcialmente cumplido">Parcialmente cumplido</option>
+                                <option value="No cumplido">No cumplido</option>
+                                <option value="NA">No aplica</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2 mb-2">
+                            <label for="responsableFilter" class="form-label small">Filtrar por Responsable</label>
+                            <select class="form-select form-select-sm" id="responsableFilter"></select>
                         </div>
                     </div>
                 </div>
@@ -251,6 +280,7 @@
                                             <th>Localidad</th>
                                             <th>Factor</th>
                                             <th>Riesgo Inherente (Nivel)</th>
+                                            <th>Estado de Cumplimiento</th>
                                             <th>Responsable</th>
                                             <th>Evento de Riesgo</th>
                                             <th>Acciones</th>
@@ -277,8 +307,9 @@
                             <div class="col-md-4"><strong>Proyecto:</strong> <span id="modal-project"></span></div>
                             <div class="col-md-4"><strong>Factor de Riesgo:</strong> <span id="modal-factor"></span></div>
                             <div class="col-md-4"><strong>Responsable:</strong> <span id="modal-responsible"></span></div>
-                            <div class="col-md-6"><strong>Nivel de Riesgo Residual:</strong> <span id="modal-risk"></span></div>
-                            <div class="col-md-6"><strong>Nivel de Riesgo Inherente:</strong> <span id="modal-inherent-risk"></span></div>
+                            <div class="col-md-4"><strong>Nivel de Riesgo Residual:</strong> <span id="modal-risk"></span></div>
+                            <div class="col-md-4"><strong>Nivel de Riesgo Inherente:</strong> <span id="modal-inherent-risk"></span></div>
+                            <div class="col-md-4"><strong>Estado de Cumplimiento:</strong> <span id="modal-efectividad"></span></div>
                         </div>
                         <hr>
                         <h6><i class="fas fa-exclamation-triangle me-2 text-danger"></i> Evento y Origen</h6>
@@ -295,7 +326,7 @@
                         <p><strong>Evidencia del cumplimiento:</strong> <span id="modal-evidencia" class="d-block p-2 bg-light rounded border text-break"></span></p>
                         <div class="row">
                             <div class="col-md-6">
-                                <p><strong>Efectividad del Control:</strong> <span id="modal-efectividad" class="d-block p-2 bg-light rounded border"></span></p>
+                                <p><strong>Efectividad del Control:</strong> <span id="modal-efectividad-detalle" class="d-block p-2 bg-light rounded border"></span></p>
                             </div>
                             <div class="col-md-6">
                                 <p><strong>Observación:</strong> <span id="modal-observacion" class="d-block p-2 bg-light rounded border"></span></p>
@@ -483,16 +514,61 @@
             return 'risk-N-A';
         }
         
-        // ** MODIFICACIÓN 1: Eliminación de tarjeta de Riesgo Inherente **
+        /**
+         * Obtiene la clase CSS para el badge de estado de cumplimiento.
+         */
+        function getComplianceBadgeClass(estado) {
+            if (!estado || estado === 'N/A') return 'compliance-NA';
+            
+            const normalizedEstado = estado.toLowerCase()
+                .replace(/\s/g, '-')
+                .replace(/á/g, 'a')
+                .replace(/é/g, 'e')
+                .replace(/í/g, 'i')
+                .replace(/ó/g, 'o')
+                .replace(/ú/g, 'u')
+                .replace(/[^a-z0-9\-]/g, '');
+            
+            if (normalizedEstado.includes('cumplido') && !normalizedEstado.includes('parcialmente')) 
+                return 'compliance-Cumplido';
+            if (normalizedEstado.includes('parcialmente-cumplido')) 
+                return 'compliance-Parcialmente-cumplido';
+            if (normalizedEstado.includes('no-cumplido')) 
+                return 'compliance-No-cumplido';
+            
+            return 'compliance-NA';
+        }
+        
         function updateDashboardCards(data) {
             const total = data.length;
             const alto = data.filter(item => (item.riesgoResidual || '').includes("Alto")).length;
-            const medioAlto = data.filter(item => (item.riesgoResidual || '').includes("Alto") || (item.riesgoResidual || '').includes("Medio")).length;
+            const medioAlto = data.filter(item => 
+                (item.riesgoResidual || '').includes("Alto") || 
+                (item.riesgoResidual || '').includes("Medio")
+            ).length;
+            
+            // Estadísticas de cumplimiento
+            const cumplido = data.filter(item => 
+                item.efectividad && 
+                item.efectividad.toLowerCase().includes('cumplido') && 
+                !item.efectividad.toLowerCase().includes('parcialmente')
+            ).length;
+            
+            const parcial = data.filter(item => 
+                item.efectividad && 
+                item.efectividad.toLowerCase().includes('parcialmente cumplido')
+            ).length;
+            
+            const noCumplido = data.filter(item => 
+                item.efectividad && 
+                item.efectividad.toLowerCase().includes('no cumplido')
+            ).length;
             
             const altoPercent = total > 0 ? Math.round((medioAlto / total) * 100) : 0;
+            const cumplimientoPercent = total > 0 ? Math.round((cumplido / total) * 100) : 0;
             
             document.getElementById('dashboardCards').innerHTML = `
-                <div class="col-xl-4 col-md-6 mb-3">
+                <div class="col-xl-3 col-md-6 mb-3">
                     <div class="card dashboard-card" style="border-left: 5px solid var(--fias-primary);">
                         <div class="card-body">
                             <i class="fas fa-layer-group fa-2x text-primary float-end"></i>
@@ -501,7 +577,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-xl-4 col-md-6 mb-3">
+                <div class="col-xl-3 col-md-6 mb-3">
                     <div class="card dashboard-card" style="border-left: 5px solid #dc3545;">
                         <div class="card-body">
                             <i class="fas fa-exclamation-circle fa-2x text-danger float-end"></i>
@@ -510,7 +586,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-xl-4 col-md-6 mb-3">
+                <div class="col-xl-3 col-md-6 mb-3">
                     <div class="card dashboard-card" style="border-left: 5px solid #fd7e14;">
                         <div class="card-body">
                             <i class="fas fa-percent fa-2x text-warning float-end"></i>
@@ -519,6 +595,19 @@
                             <div class="progress mt-2" style="height: 10px;">
                                 <div class="progress-bar bg-danger" role="progressbar" style="width: ${altoPercent}%"></div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6 mb-3">
+                    <div class="card dashboard-card" style="border-left: 5px solid #28a745;">
+                        <div class="card-body">
+                            <i class="fas fa-check-circle fa-2x text-success float-end"></i>
+                            <h5 class="card-title text-muted text-uppercase small">% Cumplimiento Total</h5>
+                            <h2 class="card-text">${cumplimientoPercent}%</h2>
+                            <div class="progress mt-2" style="height: 10px;">
+                                <div class="progress-bar bg-success" role="progressbar" style="width: ${cumplimientoPercent}%"></div>
+                            </div>
+                            <small class="text-muted">${cumplido} Cumplido / ${parcial} Parcial / ${noCumplido} No cumplido</small>
                         </div>
                     </div>
                 </div>`;
@@ -556,7 +645,6 @@
                 container.innerHTML += cardHtml;
             });
         }
-
 
         // ====================================================================
         // 🚀 FUNCIÓN DE GRÁFICOS (Solo Residual)
@@ -621,14 +709,16 @@
             if (table) {
                 table.destroy();
                 $('#risksTable tbody').off('click', '.view-btn');
-                // Limpiar la función de búsqueda personalizada
-                $.fn.dataTable.ext.search = $.fn.dataTable.ext.search.filter(func => !func.name.includes('residualRiskSearch'));
+                // Limpiar las funciones de búsqueda personalizada
+                $.fn.dataTable.ext.search = $.fn.dataTable.ext.search.filter(func => 
+                    !func.name.includes('residualRiskSearch') && !func.name.includes('complianceSearch') && !func.name.includes('responsableSearch')
+                );
             }
 
-            // Función de búsqueda personalizada para el Riesgo Residual (ya que se quitó de la columna)
+            // Función de búsqueda personalizada para el Riesgo Residual
             $.fn.dataTable.ext.search.push(
-                function residualRiskSearch( settings, data, dataIndex ) {
-                    if ( settings.nTable.id !== 'risksTable' ) {
+                function residualRiskSearch(settings, data, dataIndex) {
+                    if (settings.nTable.id !== 'risksTable') {
                         return true;
                     }
                     
@@ -648,7 +738,34 @@
                 }
             );
 
-            // ** MODIFICACIÓN 2: Eliminación de la columna de Riesgo Residual **
+            // Función de búsqueda personalizada para el Estado de Cumplimiento
+            $.fn.dataTable.ext.search.push(
+                function complianceSearch(settings, data, dataIndex) {
+                    if (settings.nTable.id !== 'risksTable') {
+                        return true;
+                    }
+                    
+                    const complianceFilter = document.getElementById('complianceFilter').value;
+                    if (complianceFilter === "") {
+                        return true;
+                    }
+                    
+                    const rowData = allRisksData[dataIndex];
+                    
+                    // Filtrar basándose en la efectividad
+                    if (rowData.efectividad && rowData.efectividad.includes(complianceFilter)) {
+                        return true;
+                    }
+                    
+                    // Para el caso "NA"
+                    if (complianceFilter === "NA" && (!rowData.efectividad || rowData.efectividad === "N/A" || rowData.efectividad === "")) {
+                        return true;
+                    }
+                    
+                    return false;
+                }
+            );
+
             table = $('#risksTable').DataTable({
                 data: allRisksData,
                 columns: [
@@ -656,7 +773,7 @@
                     { data: 'localidad', title: 'Localidad' }, 
                     { data: 'factorRiesgo', title: 'Factor' },
                     { 
-                        data: 'riesgoInherenteNivel', title: 'Riesgo Inherente (Nivel)', // <-- AHORA EN INDEX 3
+                        data: 'riesgoInherenteNivel', title: 'Riesgo Inherente (Nivel)',
                         render: function(data, type) {
                             if (type === 'display') {
                                 return `<span class="risk-badge ${getRiskBadgeClass(data)}">${data}</span>`;
@@ -664,6 +781,15 @@
                             return data;
                         }
                     }, 
+                    { 
+                        data: 'efectividad', title: 'Estado de Cumplimiento',
+                        render: function(data, type) {
+                            if (type === 'display') {
+                                return `<span class="compliance-badge ${getComplianceBadgeClass(data)}">${data}</span>`;
+                            }
+                            return data;
+                        }
+                    },
                     { data: 'responsable', title: 'Responsable' },
                     { 
                         data: 'eventoRiesgo', title: 'Evento de Riesgo',
@@ -676,7 +802,7 @@
                     }
                 ],
                 columnDefs: [
-                    { targets: [3], className: 'text-center' } // Solo el Riesgo Inherente (index 3)
+                    { targets: [3, 4], className: 'text-center' } // Riesgo Inherente y Estado de Cumplimiento centrados
                 ],
                 language: { url: '//cdn.datatables.net/plug-ins/1.13.5/i18n/es-ES.json' },
                 pageLength: 10,
@@ -697,6 +823,8 @@
             document.getElementById('modal-responsible').textContent = risk.responsable;
             document.getElementById('modal-risk').innerHTML = `<span class="risk-badge ${getRiskBadgeClass(risk.riesgoResidual)}">${risk.riesgoResidual}</span>`;
             document.getElementById('modal-inherent-risk').innerHTML = `<span class="risk-badge ${getRiskBadgeClass(risk.riesgoInherenteNivel)}">${risk.riesgoInherenteNivel}</span>`; 
+            document.getElementById('modal-efectividad').innerHTML = `<span class="compliance-badge ${getComplianceBadgeClass(risk.efectividad)}">${risk.efectividad}</span>`;
+            document.getElementById('modal-efectividad-detalle').textContent = risk.efectividad;
             
             document.getElementById('modal-date').textContent = risk.fechaSeguimiento;
             document.getElementById('modal-event').textContent = risk.eventoRiesgo;
@@ -706,7 +834,6 @@
 
             // ASIGNACIÓN DE NUEVOS CAMPOS
             document.getElementById('modal-evidencia').textContent = risk.evidencia;
-            document.getElementById('modal-efectividad').textContent = risk.efectividad;
             document.getElementById('modal-observacion').textContent = risk.observacion;
 
             const modal = new bootstrap.Modal(document.getElementById('detailModal'));
@@ -726,6 +853,7 @@
             const proyectos = [...new Set(allRisksData.map(item => item.proyecto))].filter(Boolean);
             const localidades = [...new Set(allRisksData.map(item => item.localidad))].filter(Boolean);
             const factores = [...new Set(allRisksData.map(item => item.factorRiesgo))].filter(Boolean);
+            const responsables = [...new Set(allRisksData.map(item => item.responsable))].filter(Boolean);
 
             const fillSelect = (selectId, options, label) => {
                 const select = document.getElementById(selectId);
@@ -739,6 +867,7 @@
             fillSelect('projectFilter', proyectos, 'proyectos');
             fillSelect('localidadFilter', localidades, 'localidades');
             fillSelect('factorFilter', factores, 'factores');
+            fillSelect('responsableFilter', responsables, 'responsables');
         }
 
         /**
@@ -748,13 +877,15 @@
             const projectFilter = document.getElementById('projectFilter').value;
             const localidadFilter = document.getElementById('localidadFilter').value;
             const factorFilter = document.getElementById('factorFilter').value;
+            const responsableFilter = document.getElementById('responsableFilter').value;
             
             // Aplicar filtros a las columnas visibles de DataTable
             table.column(0).search(projectFilter, true, false); // Columna Proyecto
             table.column(1).search(localidadFilter, true, false); // Columna Localidad
             table.column(2).search(factorFilter, true, false); // Columna Factor
-
-            // El filtro de Riesgo Residual se aplica mediante la función custom (residualRiskSearch), solo redibujamos
+            table.column(5).search(responsableFilter, true, false); // Columna Responsable
+            
+            // Los filtros de Riesgo Residual y Estado de Cumplimiento se aplican mediante funciones custom
             table.draw();
             
             // Obtener los datos filtrados actualmente en la tabla
@@ -876,11 +1007,13 @@
             document.getElementById('logoutBtn').addEventListener('click', handleLogout);
             document.getElementById('refreshData').addEventListener('click', loadExcelData);
             
-            // Event listeners para los filtros dinámicos (TODOS llaman a applyFilters)
+            // Event listeners para los filtros dinámicos
             document.getElementById('projectFilter').addEventListener('change', applyFilters);
             document.getElementById('localidadFilter').addEventListener('change', applyFilters);
-            document.getElementById('riskFilter').addEventListener('change', applyFilters); // Sigue aplicando el filtro a la data
+            document.getElementById('riskFilter').addEventListener('change', applyFilters);
             document.getElementById('factorFilter').addEventListener('change', applyFilters);
+            document.getElementById('complianceFilter').addEventListener('change', applyFilters);
+            document.getElementById('responsableFilter').addEventListener('change', applyFilters);
             
             document.getElementById('exportBtn').addEventListener('click', function() {
                 // Mapear solo los datos actualmente visibles/filtrados
@@ -889,16 +1022,15 @@
                     'Localidad': item.localidad,
                     'Factor de Riesgo': item.factorRiesgo,
                     'Nivel de Riesgo Inherente': item.riesgoInherenteNivel,
-                    'Nivel de Riesgo Residual': item.riesgoResidual, // Incluir Residual en el Exportar para el detalle
+                    'Nivel de Riesgo Residual': item.riesgoResidual,
+                    'Estado de Cumplimiento': item.efectividad,
                     'Evento de Riesgo': item.eventoRiesgo,
                     'Causa': item.causa,
                     'Efecto': item.efecto,
                     'Descripción del Control': item.planAccion,
                     'Responsable': item.responsable,
                     'Fecha de Seguimiento (AI)': item.fechaSeguimiento,
-                    // AGREGAR LOS NUEVOS CAMPOS AL EXPORTAR TAMBIÉN
                     'Evidencia del cumplimiento': item.evidencia,
-                    'Evaluación de la efectividad': item.efectividad,
                     'Observación': item.observacion
                 }));
                 const ws = XLSX.utils.json_to_sheet(exportData);

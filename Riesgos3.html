@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Matriz de Riesgos Residuales y Efectividad de Control - FIAS</title>
+    <title>Dashboard de Riesgos - FIAS</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/dataTables.bootstrap5.min.css">
@@ -30,7 +30,6 @@
             border-radius: 12px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
             height: 100%;
-            border-left: 5px solid var(--fias-primary);
         }
         
         .dashboard-card:hover {
@@ -46,7 +45,7 @@
             font-weight: 600;
         }
 
-        /* Estilos de Badges para Nivel de Riesgo Residual */
+        /* Estilos de Badges para Nivel de Riesgo */
         .risk-badge {
             padding: 0.5em 1em;
             border-radius: 20px;
@@ -55,14 +54,15 @@
             white-space: nowrap;
         }
         
-        .risk-Alto { background-color: #dc3545; color: white; } /* Rojo */
-        .risk-Medio { background-color: #ffc107; color: #343a40; } /* Amarillo */
-        .risk-Bajo { background-color: #28a745; color: white; } /* Verde */
-        .risk-Muy-Bajo { background-color: #0dcaf0; color: white; } /* Azul Claro */
-        .risk-N-A { background-color: #6c757d; color: white; } /* Gris */
-
-        /* Estilos de Badges para Efectividad del Control */
-        .status-badge {
+        /* Riesgo */
+        .risk-Alto { background-color: #dc3545; color: white; }
+        .risk-Medio { background-color: #ffc107; color: #343a40; }
+        .risk-Bajo { background-color: #28a745; color: white; }
+        .risk-Muy-Bajo { background-color: #0dcaf0; color: white; }
+        .risk-N-A { background-color: #6c757d; color: white; }
+        
+        /* Estilos de Badges para Estado de Cumplimiento */
+        .compliance-badge {
             padding: 0.5em 1em;
             border-radius: 20px;
             font-weight: 700;
@@ -70,80 +70,62 @@
             white-space: nowrap;
         }
         
-        .status-Apropiado { background-color: #2c7d32; color: white; } /* Verde FIAS */
-        .status-Aceptable { background-color: #8bc34a; color: white; } /* Verde Claro */
-        .status-Mejorable { background-color: #fd7e14; color: white; } /* Naranja */
-        .status-Deficiente { background-color: #dc3545; color: white; } /* Rojo */
-        .status-N-A { background-color: #6c757d; color: white; } /* Gris */
+        /* Estados de cumplimiento */
+        .compliance-Cumplido { background-color: #28a745; color: white; }
+        .compliance-Parcialmente-cumplido { background-color: #ffc107; color: #343a40; }
+        .compliance-No-cumplido { background-color: #dc3545; color: white; }
+        .compliance-NA { background-color: #6c757d; color: white; }
         
-        /* Matriz de Riesgos Visual */
-        #riskMatrixContainer {
-            margin-top: 20px;
+        /* Contenedores de Gráfico con altura forzada */
+        .chart-container-full {
+            flex: 1; 
+            max-height: 100%; /* Ocupa el 100% del espacio en el flex-column */
+            min-height: 0;
+        }
+        
+        /* Asegura que el canvas se ajuste al contenedor */
+        .chart-canvas {
+            width: 100% !important;
+            height: 100% !important;
         }
 
-        .risk-matrix {
-            display: grid;
-            grid-template-columns: 1fr repeat(4, 1fr);
-            grid-template-rows: repeat(4, 1fr);
-            gap: 1px;
-            background-color: #dee2e6;
-            border: 1px solid #dee2e6;
-            min-height: 400px;
-        }
-        
-        .matrix-cell {
-            background-color: white;
-            padding: 5px;
+        /* Estilo del overlay de carga */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            z-index: 1000;
             display: flex;
+            justify-content: center;
+            align-items: center;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            font-weight: 700;
-            font-size: 1.2rem;
-            color: #343a40;
-            cursor: pointer;
-            transition: background-color 0.2s;
         }
 
-        .matrix-header {
-            background-color: var(--fias-primary);
-            color: white;
-            font-weight: 700;
+        /* Tarjetas de Resumen por Factor (Reemplazo del Heatmap) */
+        .summary-card {
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 10px;
+            border-left: 5px solid var(--fias-primary);
+        }
+        .summary-card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--fias-primary);
+        }
+        .summary-card-content {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+        .summary-card-subtitle {
             font-size: 0.9rem;
-            text-align: center;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 5px;
+            color: #6c757d;
         }
-
-        .matrix-side-header {
-            background-color: #e9ecef;
-            color: #343a40;
-            font-weight: 700;
-            font-size: 0.9rem;
-            text-align: center;
-            writing-mode: vertical-rl;
-            transform: rotate(180deg);
-            padding: 10px 5px;
-        }
-
-        .matrix-title-label {
-            font-size: 0.8rem;
-            font-weight: 400;
-            margin-top: -5px;
-        }
-
-        /* Colores de las celdas de la matriz */
-        .matrix-cell-High { background-color: #f8d7da !important; }
-        .matrix-cell-Medium { background-color: #fff3cd !important; }
-        .matrix-cell-Low { background-color: #d4edda !important; }
-        .matrix-cell-Very-Low { background-color: #cce5ff !important; }
-
-        .matrix-cell-highlight {
-            border: 3px solid var(--fias-accent);
-            box-shadow: 0 0 10px rgba(255, 193, 7, 0.5);
-        }
+        
     </style>
 </head>
 <body>
@@ -168,8 +150,16 @@
                     <i class="fas fa-sign-in-alt me-2"></i> Iniciar sesión con Microsoft
                 </button>
                 <div class="mt-3 text-center">
-                    <small class="text-muted">Desarrollado por: Jair Cruz Gallegos</small>
-                </div>
+            <small class="text-muted">Utilice su cuenta corporativa de FIAS</small>
+         <p> <small class="text-muted">Desarrollado por:
+                            <a href="https://www.linkedin.com/in/jair-cruz-gallegos-65998776/" 
+                               target="_blank" 
+                               >
+                                Jair Cruz Gallegos
+                            </a>
+                        </small></p>
+           <p> <small class="text-muted">Especialista Administrativo</small></p>
+        </div>
             </div>
         </div>
     </div>
@@ -177,7 +167,7 @@
         <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
             <div class="container-fluid">
                 <img src="https://fias.org.ec/wp-content/uploads/2021/11/Logo_FIAS_web.png" height="40" alt="Logo de FIAS" class="me-3">
-                <a class="navbar-brand" href="#">Dashboard de Riesgos Residuales</a>
+                <a class="navbar-brand" href="#">Dashboard de Riesgos (Resumen)</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -202,120 +192,97 @@
             <div class="row mb-4" id="dashboardCards">
                 </div>
 
-            <div class="row mb-4" id="riskMatrixContainer">
-                <div class="col-12">
-                    <div class="card dashboard-card p-0">
+            <div class="card dashboard-card mb-4">
+                <div class="card-header-fias">
+                    <h5 class="mb-0"><i class="fas fa-filter me-2"></i> Filtros de Análisis Rápido</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-2 mb-2">
+                            <label for="projectFilter" class="form-label small">Filtrar por Proyecto</label>
+                            <select class="form-select form-select-sm" id="projectFilter"></select>
+                        </div>
+                        <div class="col-md-2 mb-2">
+                            <label for="localidadFilter" class="form-label small">Filtrar por Localidad</label>
+                            <select class="form-select form-select-sm" id="localidadFilter"></select>
+                        </div>
+                        <div class="col-md-2 mb-2">
+                            <label for="factorFilter" class="form-label small">Filtrar por Factor</label>
+                            <select class="form-select form-select-sm" id="factorFilter"></select>
+                        </div>
+                        <div class="col-md-2 mb-2">
+                            <label for="riskFilter" class="form-label small">Filtrar por Riesgo Residual</label>
+                            <select class="form-select form-select-sm" id="riskFilter">
+                                <option value="">Todos los niveles</option>
+                                <option value="Alto">Alto</option>
+                                <option value="Medio">Medio</option>
+                                <option value="Bajo">Bajo</option>
+                                <option value="Muy Bajo">Muy Bajo</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2 mb-2">
+                            <label for="complianceFilter" class="form-label small">Filtrar por Estado de Cumplimiento</label>
+                            <select class="form-select form-select-sm" id="complianceFilter">
+                                <option value="">Todos los estados</option>
+                                <option value="Cumplido">Cumplido</option>
+                                <option value="Parcialmente cumplido">Parcialmente cumplido</option>
+                                <option value="No cumplido">No cumplido</option>
+                                <option value="NA">No aplica</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2 mb-2">
+                            <label for="responsableFilter" class="form-label small">Filtrar por Responsable</label>
+                            <select class="form-select form-select-sm" id="responsableFilter"></select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mb-4">
+                
+                <div class="col-md-6 mb-3">
+                    <div class="card dashboard-card p-0 h-100">
                         <div class="card-header-fias">
-                            <h5 class="mb-0">Matriz de Riesgo Residual vs. Efectividad del Control (Vista Consolidada)</h5>
+                            <h5 class="mb-0">📈 Riesgo Residual por Factor (Tarjetas de Resumen)</h5>
                         </div>
                         <div class="card-body p-3">
-                            <div class="risk-matrix">
-                                <div class="matrix-header"></div>
-                                <div class="matrix-header">Deficiente</div>
-                                <div class="matrix-header">Mejorable</div>
-                                <div class="matrix-header">Aceptable</div>
-                                <div class="matrix-header">Apropiado</div>
-
-                                <div class="matrix-side-header">Alto</div>
-                                <div class="matrix-cell matrix-cell-High" data-risk="Alto" data-status="Deficiente" id="cell-Alto-Deficiente">0 <div class="matrix-title-label">Crítico</div></div>
-                                <div class="matrix-cell matrix-cell-High" data-risk="Alto" data-status="Mejorable" id="cell-Alto-Mejorable">0 <div class="matrix-title-label">Necesita Acción</div></div>
-                                <div class="matrix-cell matrix-cell-Medium" data-risk="Alto" data-status="Aceptable" id="cell-Alto-Aceptable">0 <div class="matrix-title-label">Monitorear</div></div>
-                                <div class="matrix-cell matrix-cell-Low" data-risk="Alto" data-status="Apropiado" id="cell-Alto-Apropiado">0 <div class="matrix-title-label">Satisfactorio</div></div>
-
-                                <div class="matrix-side-header">Medio</div>
-                                <div class="matrix-cell matrix-cell-Medium" data-risk="Medio" data-status="Deficiente" id="cell-Medio-Deficiente">0 <div class="matrix-title-label">Alerta</div></div>
-                                <div class="matrix-cell matrix-cell-Medium" data-risk="Medio" data-status="Mejorable" id="cell-Medio-Mejorable">0 <div class="matrix-title-label">Monitorear</div></div>
-                                <div class="matrix-cell matrix-cell-Low" data-risk="Medio" data-status="Aceptable" id="cell-Medio-Aceptable">0 <div class="matrix-title-label">Revisión</div></div>
-                                <div class="matrix-cell matrix-cell-Muy-Bajo" data-risk="Medio" data-status="Apropiado" id="cell-Medio-Apropiado">0 <div class="matrix-title-label">Aceptable</div></div>
-
-                                <div class="matrix-side-header">Bajo</div>
-                                <div class="matrix-cell matrix-cell-Low" data-risk="Bajo" data-status="Deficiente" id="cell-Bajo-Deficiente">0 <div class="matrix-title-label">Observación</div></div>
-                                <div class="matrix-cell matrix-cell-Low" data-risk="Bajo" data-status="Mejorable" id="cell-Bajo-Mejorable">0 <div class="matrix-title-label">Rutina</div></div>
-                                <div class="matrix-cell matrix-cell-Muy-Bajo" data-risk="Bajo" data-status="Aceptable" id="cell-Bajo-Aceptable">0 <div class="matrix-title-label">Rutina</div></div>
-                                <div class="matrix-cell matrix-cell-Muy-Bajo" data-risk="Bajo" data-status="Apropiado" id="cell-Bajo-Apropiado">0 <div class="matrix-title-label">Controlado</div></div>
-
-                                <div class="matrix-side-header">Muy Bajo</div>
-                                <div class="matrix-cell matrix-cell-Muy-Bajo" data-risk="Muy Bajo" data-status="Deficiente" id="cell-Muy-Bajo-Deficiente">0 <div class="matrix-title-label">Revisión Mínima</div></div>
-                                <div class="matrix-cell matrix-cell-Muy-Bajo" data-risk="Muy Bajo" data-status="Mejorable" id="cell-Muy-Bajo-Mejorable">0 <div class="matrix-title-label">Controlado</div></div>
-                                <div class="matrix-cell matrix-cell-Muy-Bajo" data-risk="Muy Bajo" data-status="Aceptable" id="cell-Muy-Bajo-Aceptable">0 <div class="matrix-title-label">Controlado</div></div>
-                                <div class="matrix-cell matrix-cell-Muy-Bajo" data-risk="Muy Bajo" data-status="Apropiado" id="cell-Muy-Bajo-Apropiado">0 <div class="matrix-title-label">Controlado</div></div>
-                                
-                            </div>
-                            <p class="text-center mt-2 text-muted small">Eje Horizontal: **Efectividad del Control** | Eje Vertical: **Nivel de Riesgo Residual**</p>
+                            <div class="row" id="summaryCardsContainer">
+                                </div>
+                            <div class="text-center small text-muted mt-3">Muestra la cantidad de riesgos residuales por factor. La barra roja indica el porcentaje de riesgos Alto/Medio.</div>
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="row mb-4">
-                <div class="col-md-6 mb-3">
-                    <div class="card dashboard-card">
-                        <div class="card-header-fias">
-                            <h5 class="mb-0">Riesgo Residual por Nivel</h5>
+                
+                <div class="col-md-6 mb-3 d-flex flex-column" style="height: auto; min-height: 400px;">
+                    <div class="card dashboard-card chart-container-full">
+                        <div class="card-header-fias"><h5 class="mb-0">Distribución del Riesgo Residual (Riesgos Activos)</h5></div>
+                        <div class="card-body p-3">
+                            <canvas id="residualRiskChart" class="chart-canvas"></canvas>
                         </div>
-                        <div class="card-body"><canvas id="riskLevelChart" height="250"></canvas></div>
                     </div>
                 </div>
-                <div class="col-md-6 mb-3">
-                    <div class="card dashboard-card">
-                        <div class="card-header-fias">
-                            <h5 class="mb-0">Evaluación de la Efectividad del Control</h5>
-                        </div>
-                        <div class="card-body"><canvas id="complianceChart" height="250"></canvas></div>
-                    </div>
                 </div>
-            </div>
-
             <div class="row mb-4">
                 <div class="col-12">
                     <div class="card dashboard-card">
                         <div class="card-header-fias d-flex justify-content-between align-items-center">
-                            <h5 class="mb-0">Detalle Completo de la Matriz</h5>
+                            <h5 class="mb-0">Detalle Completo de la Matriz (Datos Filtrados)</h5>
                             <button class="btn btn-sm btn-outline-light" id="exportBtn">
                                 <i class="fas fa-download me-1"></i> Exportar Datos Visibles
                             </button>
                         </div>
                         <div class="card-body">
-                            <div class="row mb-3">
-                                <div class="col-md-3">
-                                    <label for="projectFilter" class="form-label small">Filtrar por Proyecto</label>
-                                    <select class="form-select form-select-sm" id="projectFilter"></select>
-                                </div>
-                                <div class="col-md-3">
-                                    <label for="riskFilter" class="form-label small">Filtrar por Riesgo Residual</label>
-                                    <select class="form-select form-select-sm" id="riskFilter">
-                                        <option value="">Todos los niveles</option>
-                                        <option value="Alto">Alto</option>
-                                        <option value="Medio">Medio</option>
-                                        <option value="Bajo">Bajo</option>
-                                        <option value="Muy Bajo">Muy Bajo</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-3">
-                                    <label for="statusFilter" class="form-label small">Filtrar por Efectividad</label>
-                                    <select class="form-select form-select-sm" id="statusFilter">
-                                        <option value="">Todas las evaluaciones</option>
-                                        <option value="Apropiado">Apropiado</option>
-                                        <option value="Aceptable">Aceptable</option>
-                                        <option value="Mejorable">Mejorable</option>
-                                        <option value="Deficiente">Deficiente</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-3">
-                                    <label for="factorFilter" class="form-label small">Filtrar por Factor</label>
-                                    <select class="form-select form-select-sm" id="factorFilter"></select>
-                                </div>
-                            </div>
                             <div class="table-responsive" id="tableContainer">
                                 <table id="risksTable" class="table table-hover table-striped w-100">
                                     <thead>
                                         <tr>
                                             <th>Proyecto</th>
-                                            <th>Evento de Riesgo</th>
+                                            <th>Localidad</th>
                                             <th>Factor</th>
-                                            <th>Riesgo Residual</th>
+                                            <th>Riesgo Inherente (Nivel)</th>
+                                            <th>Estado de Cumplimiento</th>
                                             <th>Responsable</th>
-                                            <th>Efectividad Control</th>
+                                            <th>Evento de Riesgo</th>
                                             <th>Acciones</th>
                                         </tr>
                                     </thead>
@@ -340,8 +307,9 @@
                             <div class="col-md-4"><strong>Proyecto:</strong> <span id="modal-project"></span></div>
                             <div class="col-md-4"><strong>Factor de Riesgo:</strong> <span id="modal-factor"></span></div>
                             <div class="col-md-4"><strong>Responsable:</strong> <span id="modal-responsible"></span></div>
-                            <div class="col-md-6"><strong>Nivel de Riesgo Residual:</strong> <span id="modal-risk"></span></div>
-                            <div class="col-md-6"><strong>Efectividad del Control:</strong> <span id="modal-status"></span></div>
+                            <div class="col-md-4"><strong>Nivel de Riesgo Residual:</strong> <span id="modal-risk"></span></div>
+                            <div class="col-md-4"><strong>Nivel de Riesgo Inherente:</strong> <span id="modal-inherent-risk"></span></div>
+                            <div class="col-md-4"><strong>Estado de Cumplimiento:</strong> <span id="modal-efectividad"></span></div>
                         </div>
                         <hr>
                         <h6><i class="fas fa-exclamation-triangle me-2 text-danger"></i> Evento y Origen</h6>
@@ -352,13 +320,26 @@
                         <h6><i class="fas fa-shield-alt me-2 text-success"></i> Control y Seguimiento</h6>
                         <p><strong>Descripción del Control:</strong> <span id="modal-action" class="d-block p-2 bg-light rounded border"></span></p>
                         <p><strong>Fecha de Seguimiento (AI):</strong> <span id="modal-date" class="d-block p-2 bg-light rounded border"></span></p>
-                    </div>
+                        
+                        <hr>
+                        <h6><i class="fas fa-clipboard-check me-2 text-primary"></i> Auditoría y Evidencias</h6>
+                        <p><strong>Evidencia del cumplimiento:</strong> <span id="modal-evidencia" class="d-block p-2 bg-light rounded border text-break"></span></p>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Efectividad del Control:</strong> <span id="modal-efectividad-detalle" class="d-block p-2 bg-light rounded border"></span></p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Observación:</strong> <span id="modal-observacion" class="d-block p-2 bg-light rounded border"></span></p>
+                            </div>
+                        </div>
+                        </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                     </div>
                 </div>
             </div>
         </div>
+        
         <footer class="bg-dark text-white mt-5 py-4">
             <div class="container">
                 <p class="mb-0 text-center small">FIAS - Dashboard de Cumplimiento y Riesgos | Última actualización: <span id="lastUpdate"></span></p>
@@ -391,13 +372,16 @@
         const msalInstance = new msal.PublicClientApplication(msalConfig);
         let accessToken = null;
 
-        // ID del archivo Excel de la matriz de riesgos (¡ACTUALIZADO!)
+        // ====================================================================
+        // ⚠️ ID DEL ARCHIVO DE EXCEL (ACTUALIZADO CON EL VALOR FUNCIONAL)
+        // ====================================================================
         const EXCEL_FILE_ID = "u!aHR0cHM6Ly9maWFzZWMuc2hhcmVwb2ludC5jb20vOng6L3MvRk9ORE9ERUlOVkVSU0lPTkFNQklFTlRBTFNPU1RFTklCTEUvRVJ0X0xmQjkxaVpPZ1Z0QjNLSHBkN2NCLVk0S2w2eV9POHlmTFllaDBscVZzZw==";
+        // ====================================================================
         
         // Variables globales
         let allRisksData = [];
         let table;
-        let riskLevelChart, complianceChart; // Se simplifican los gráficos para el espacio
+        let residualRiskChart; 
         
         /**
          * Normaliza el texto de las cabeceras complejas para mapeo.
@@ -405,49 +389,72 @@
         const normalizeHeader = (header) => (header || '').replace(/\s+/g, ' ').trim().toLowerCase();
 
         /**
-         * Mapea las cabeceras del Excel a propiedades de JS.
+         * Convierte el valor de fecha de Excel (formato ISO o número) a DD/MM/YYYY.
+         */
+        const convertToDateString = (dateValue) => {
+            if (!dateValue) return 'N/A';
+
+            let date;
+            if (dateValue instanceof Date) {
+                date = dateValue;
+            } else if (typeof dateValue === 'string') {
+                date = new Date(dateValue);
+            } else if (typeof dateValue === 'number') {
+                 // Asume que es un número de días desde 1900
+                 date = new Date(0, 0, dateValue - 1, 0, 0, 0); // 1900-01-01
+            }
+            
+            if (date && !isNaN(date.getTime())) {
+                const day = String(date.getDate()).padStart(2, '0');
+                const month = String(date.getMonth() + 1).padStart(2, '0'); // Meses son 0-indexados
+                const year = date.getFullYear();
+                return `${day}/${month}/${year}`;
+            }
+
+            return 'N/A';
+        };
+
+        /**
+         * Mapea y limpia los datos de Excel (CRUCIAL para la estabilidad de los filtros).
          */
         function processExcelData(jsonData) {
             if (!jsonData || jsonData.length === 0) return [];
             
             const keys = Object.keys(jsonData[0]);
             
-            // Definición de cabeceras complejas del Excel (usando subcadenas o normalización para robustez)
+            // Mapeo flexible de cabeceras
             const mapHeaders = {
-                'PROYECTO- LOCALIDAD': 'localidad',
+                'PROYECTO': 'proyecto', 
+                'PROYECTO- LOCALIDAD': 'localidadCompleta',
                 'Descripción del evento de Riesgo': 'eventoRiesgo',
                 'Causa': 'causa',
-                'Efercto ': 'efecto', // La mayúscula y el espacio son sensibles
+                'Efercto ': 'efecto', // Incluye posible error tipográfico
                 'Factor de Riesgo': 'factorRiesgo',
-                'Nivel de Riesgo inherente': 'riesgoInherente',
-                'Nivel de Riesgo residual': 'riesgoResidual',
+                'Nivel de Riesgo inherente': 'riesgoInherenteNivel', 
+                'Riesgo inherente': 'riesgoInherenteEscala', 
+                'Nivel de Riesgo residual': 'riesgoResidual', 
                 'Descripción del Control': 'planAccion',
                 'Responsable': 'responsable',
                 'Fecha de seguimiento (Columna de Auditoría Interna)': 'fechaSeguimiento',
-                'Evaluación de la efectividad del control. (Columna de Auditoría Interna)': 'efectividadControl'
+                // NUEVOS CAMPOS AÑADIDOS
+                'Evidencia del cumplimiento': 'evidencia',
+                'Evaluación de la efectividad del control': 'efectividad',
+                'Observación': 'observacion'
             };
 
-            // Intentar encontrar las cabeceras exactas o cercanas
             const foundMapping = {};
             for (const excelHeader in mapHeaders) {
                 const targetKey = mapHeaders[excelHeader];
                 const normalizedTarget = normalizeHeader(excelHeader);
                 const foundKey = keys.find(key => normalizeHeader(key).includes(normalizedTarget) || normalizeHeader(key) === normalizedTarget);
-                foundMapping[foundKey] = targetKey;
-            }
-
-            // Función para convertir valor de fecha a string YYYY-MM-DD
-            const convertToDateString = (dateValue) => {
-                if (dateValue instanceof Date) {
-                    return dateValue.toISOString().split('T')[0];
+                if (foundKey) {
+                    foundMapping[foundKey] = targetKey;
                 }
-                return dateValue || 'N/A';
-            };
-
+            }
+            
             return jsonData.map((row, index) => {
-                const data = { id: index, proyecto: row.PROYECTO || 'N/A' };
+                const data = { id: index };
                 
-                // Mapear los datos usando las claves encontradas
                 for (const originalKey in foundMapping) {
                     const newKey = foundMapping[originalKey];
                     if (newKey) {
@@ -455,25 +462,61 @@
                     }
                 }
                 
-                // Limpieza y normalización
-                data.localidad = data.localidad || 'N/A';
+                // Limpieza de datos y manejo de nulos (CRUCIAL para los filtros)
+                data.proyecto = (data.proyecto || 'N/A').trim();
+                
+                // Separar Proyecto y Localidad si vienen juntos
+                let [project, ...localidadParts] = (data.localidadCompleta || 'N/A').split('/').map(s => s.trim());
+                if (localidadParts.length > 0) {
+                     data.localidad = localidadParts.join('/');
+                     // Si el campo PROYECTO estaba vacío, usar el primer segmento
+                     if (data.proyecto === 'N/A') data.proyecto = project;
+                } else {
+                     data.localidad = (data.localidadCompleta || 'N/A').trim();
+                }
+                
+                // Limpieza de saltos de línea y espacios en valores clave
+                data.riesgoResidual = (data.riesgoResidual || 'N/A').replace(/\n/g, ' ').trim();
+                
+                data.riesgoInherenteEscala = parseInt(data.riesgoInherenteEscala) || 0; 
+                data.riesgoInherenteNivel = (data.riesgoInherenteNivel || 'N/A').replace(/\n/g, ' ').trim(); 
+
+                // Formato de Fecha
+                data.fechaSeguimiento = convertToDateString(data.fechaSeguimiento);
+
                 data.eventoRiesgo = data.eventoRiesgo || 'N/A';
                 data.causa = data.causa || 'N/A';
                 data.efecto = data.efecto || 'N/A';
-                data.factorRiesgo = data.factorRiesgo || 'N/A';
-                data.riesgoInherente = (data.riesgoInherente || 'N/A').replace(/\n/g, ' ').trim();
-                data.riesgoResidual = (data.riesgoResidual || 'N/A').replace(/\n/g, ' ').trim();
-                data.planAccion = data.planAccion || 'N/A';
+                data.factorRiesgo = (data.factorRiesgo || 'N/A').trim(); 
                 data.responsable = data.responsable || 'N/A';
-                data.efectividadControl = (data.efectividadControl || 'N/A').replace(/\n/g, ' ').trim();
-                data.fechaSeguimiento = convertToDateString(data.fechaSeguimiento);
+                data.planAccion = data.planAccion || 'N/A';
+                
+                // SANITIZACIÓN DE NUEVOS CAMPOS CON CORRECCIÓN ESPECÍFICA PARA ESTADOS DE CUMPLIMIENTO
+                data.evidencia = data.evidencia || 'N/A';
+                data.observacion = data.observacion || 'N/A';
+                
+                // CORRECCIÓN CRÍTICA: Normalización de estados de cumplimiento
+                const efectividadRaw = (data.efectividad || 'N/A').trim();
+                if (efectividadRaw.toLowerCase().includes('parcialmente')) {
+                    data.efectividad = 'Parcialmente cumplido';
+                } else if (efectividadRaw.toLowerCase().includes('no cumplido') || 
+                          efectividadRaw.toLowerCase().includes('incumplido')) {
+                    data.efectividad = 'No cumplido';
+                } else if (efectividadRaw.toLowerCase().includes('cumplido') && 
+                          !efectividadRaw.toLowerCase().includes('parcialmente')) {
+                    data.efectividad = 'Cumplido';
+                } else {
+                    data.efectividad = efectividadRaw === 'N/A' ? 'N/A' : efectividadRaw;
+                }
+                
+                delete data.localidadCompleta;
 
                 return data;
-            }).filter(row => row.riesgoResidual !== 'N/A'); // Filtrar filas sin datos clave
+            }).filter(row => row.riesgoResidual !== 'N/A' && row.riesgoResidual !== undefined);
         }
         
         /**
-         * Obtiene la clase CSS para el badge de nivel de riesgo residual.
+         * Obtiene la clase CSS para el badge de nivel de riesgo (Residual o Inherente).
          */
         function getRiskBadgeClass(nivel) {
             const normalizedNivel = (nivel || '').toLowerCase().replace(/\s/g, '-').replace(/[^a-z0-9\-]/g, '');
@@ -483,133 +526,196 @@
             if (normalizedNivel.includes('muy-bajo')) return 'risk-Muy-Bajo';
             return 'risk-N-A';
         }
-
+        
         /**
-         * Obtiene la clase CSS para el badge de efectividad del control.
+         * CORRECCIÓN: Obtiene la clase CSS para el badge de estado de cumplimiento.
          */
-        function getStatusBadgeClass(estado) {
-            const normalizedEstado = (estado || '').toLowerCase().replace(/\s/g, '-').replace(/[^a-z0-9\-]/g, '');
-            if (normalizedEstado.includes('apropiado')) return 'status-Apropiado';
-            if (normalizedEstado.includes('aceptable')) return 'status-Aceptable';
-            if (normalizedEstado.includes('mejorable')) return 'status-Mejorable';
-            if (normalizedEstado.includes('deficiente')) return 'status-Deficiente';
-            return 'status-N-A';
+        function getComplianceBadgeClass(estado) {
+            if (!estado || estado === 'N/A' || estado.trim() === '') return 'compliance-NA';
+            
+            const estadoLower = estado.toLowerCase().trim();
+            
+            // Primero verificar "Parcialmente cumplido" (más específico)
+            if (estadoLower.includes('parcialmente cumplido') || estadoLower.includes('parcial cumplido')) 
+                return 'compliance-Parcialmente-cumplido';
+            
+            // Luego verificar "Cumplido" exacto (sin la palabra "parcialmente")
+            if (estadoLower === 'cumplido' || estadoLower.includes('cumplido') && !estadoLower.includes('parcial')) 
+                return 'compliance-Cumplido';
+            
+            // Luego verificar "No cumplido"
+            if (estadoLower.includes('no cumplido') || estadoLower.includes('incumplido')) 
+                return 'compliance-No-cumplido';
+            
+            // Si no coincide con ninguno de los anteriores
+            return 'compliance-NA';
         }
-
-        /**
-         * Actualiza las tarjetas de KPI.
-         */
+        
         function updateDashboardCards(data) {
             const total = data.length;
-            const alto = data.filter(item => item.riesgoResidual.includes("Alto")).length;
-            const medio = data.filter(item => item.riesgoResidual.includes("Medio")).length;
-            const bajo = data.filter(item => item.riesgoResidual.includes("Bajo")).length;
+            const alto = data.filter(item => (item.riesgoResidual || '').includes("Alto")).length;
+            const medioAlto = data.filter(item => 
+                (item.riesgoResidual || '').includes("Alto") || 
+                (item.riesgoResidual || '').includes("Medio")
+            ).length;
             
-            const apropiado = data.filter(item => item.efectividadControl.includes("Apropiado")).length;
-            const aceptable = data.filter(item => item.efectividadControl.includes("Aceptable")).length;
-            const mitigacionTotal = apropiado + aceptable;
+            // CORRECCIÓN: Estadísticas de cumplimiento con lógica mejorada
+            const cumplido = data.filter(item => {
+                const efectividad = (item.efectividad || '').toLowerCase().trim();
+                return efectividad === 'cumplido' || 
+                       (efectividad.includes('cumplido') && !efectividad.includes('parcialmente'));
+            }).length;
             
-            const mitigacionPercent = total > 0 ? Math.round((mitigacionTotal / total) * 100) : 0;
+            const parcial = data.filter(item => {
+                const efectividad = (item.efectividad || '').toLowerCase().trim();
+                return efectividad.includes('parcialmente cumplido') || 
+                       efectividad.includes('parcial cumplido');
+            }).length;
+            
+            const noCumplido = data.filter(item => {
+                const efectividad = (item.efectividad || '').toLowerCase().trim();
+                return efectividad.includes('no cumplido') || 
+                       efectividad.includes('incumplido');
+            }).length;
+            
+            const altoPercent = total > 0 ? Math.round((medioAlto / total) * 100) : 0;
+            const cumplimientoPercent = total > 0 ? Math.round((cumplido / total) * 100) : 0;
             
             document.getElementById('dashboardCards').innerHTML = `
                 <div class="col-xl-3 col-md-6 mb-3">
-                    <div class="card dashboard-card">
+                    <div class="card dashboard-card" style="border-left: 5px solid var(--fias-primary);">
                         <div class="card-body">
                             <i class="fas fa-layer-group fa-2x text-primary float-end"></i>
-                            <h5 class="card-title text-muted text-uppercase small">Total Riesgos</h5>
+                            <h5 class="card-title text-muted text-uppercase small">Total Riesgos Identificados</h5>
                             <h2 class="card-text">${total}</h2>
                         </div>
                     </div>
                 </div>
                 <div class="col-xl-3 col-md-6 mb-3">
-                    <div class="card dashboard-card" style="border-left-color: #dc3545;">
+                    <div class="card dashboard-card" style="border-left: 5px solid #dc3545;">
                         <div class="card-body">
-                            <i class="fas fa-arrow-up fa-2x text-danger float-end"></i>
+                            <i class="fas fa-exclamation-circle fa-2x text-danger float-end"></i>
                             <h5 class="card-title text-muted text-uppercase small">Riesgo Residual Alto</h5>
                             <h2 class="card-text">${alto}</h2>
                         </div>
                     </div>
                 </div>
                 <div class="col-xl-3 col-md-6 mb-3">
-                    <div class="card dashboard-card" style="border-left-color: #ffc107;">
+                    <div class="card dashboard-card" style="border-left: 5px solid #fd7e14;">
                         <div class="card-body">
-                            <i class="fas fa-check-circle fa-2x text-success float-end"></i>
-                            <h5 class="card-title text-muted text-uppercase small">Controles Efectivos (Apropiado)</h5>
-                            <h2 class="card-text">${apropiado}</h2>
+                            <i class="fas fa-percent fa-2x text-warning float-end"></i>
+                            <h5 class="card-title text-muted text-uppercase small">% Riesgo Residual Medio/Alto</h5>
+                            <h2 class="card-text">${altoPercent}%</h2>
+                            <div class="progress mt-2" style="height: 10px;">
+                                <div class="progress-bar bg-danger" role="progressbar" style="width: ${altoPercent}%"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-xl-3 col-md-6 mb-3">
-                    <div class="card dashboard-card" style="border-left-color: #28a745;">
+                    <div class="card dashboard-card" style="border-left: 5px solid #28a745;">
                         <div class="card-body">
-                            <i class="fas fa-percent fa-2x text-success float-end"></i>
-                            <h5 class="card-title text-muted text-uppercase small">Efectividad General</h5>
-                            <h2 class="card-text">${mitigacionPercent}%</h2>
+                            <i class="fas fa-check-circle fa-2x text-success float-end"></i>
+                            <h5 class="card-title text-muted text-uppercase small">% Cumplimiento Total</h5>
+                            <h2 class="card-text">${cumplimientoPercent}%</h2>
                             <div class="progress mt-2" style="height: 10px;">
-                                <div class="progress-bar bg-success" role="progressbar" style="width: ${mitigacionPercent}%"></div>
+                                <div class="progress-bar bg-success" role="progressbar" style="width: ${cumplimientoPercent}%"></div>
                             </div>
+                            <small class="text-muted">${cumplido} Cumplido / ${parcial} Parcial / ${noCumplido} No cumplido</small>
                         </div>
                     </div>
                 </div>`;
         }
         
         /**
-         * Inicializa la Matriz de Riesgo Visual (El componente sorpresa).
+         * Actualiza las Tarjetas de Resumen por Factor (Riesgo Residual).
          */
-        function updateRiskMatrix(data) {
-            const matrixData = {
-                'Alto-Deficiente': 0, 'Alto-Mejorable': 0, 'Alto-Aceptable': 0, 'Alto-Apropiado': 0,
-                'Medio-Deficiente': 0, 'Medio-Mejorable': 0, 'Medio-Aceptable': 0, 'Medio-Apropiado': 0,
-                'Bajo-Deficiente': 0, 'Bajo-Mejorable': 0, 'Bajo-Aceptable': 0, 'Bajo-Apropiado': 0,
-                'Muy Bajo-Deficiente': 0, 'Muy Bajo-Mejorable': 0, 'Muy Bajo-Aceptable': 0, 'Muy Bajo-Apropiado': 0,
-            };
+        function updateSummaryCards(data) {
+            const factors = [...new Set(data.map(item => item.factorRiesgo))].filter(Boolean).sort();
+            const container = document.getElementById('summaryCardsContainer');
+            container.innerHTML = '';
+            
+            factors.forEach(factor => {
+                const risksByFactor = data.filter(item => item.factorRiesgo === factor);
+                const total = risksByFactor.length;
+                const altoMedio = risksByFactor.filter(item => 
+                    (item.riesgoResidual || '').includes("Alto") || (item.riesgoResidual || '').includes("Medio")
+                ).length;
+                
+                const altoMedioPercent = total > 0 ? Math.round((altoMedio / total) * 100) : 0;
 
-            data.forEach(item => {
-                let risk = item.riesgoResidual.replace('Muy Bajo', 'Muy-Bajo').replace(' ', '-');
-                let status = item.efectividadControl.replace(' ', '-');
-
-                // Normalización de claves
-                const key = `${risk.split('-')[0]}-${status.split('-')[0]}`;
-                
-                if (matrixData.hasOwnProperty(key)) {
-                    matrixData[key]++;
-                } else if (matrixData.hasOwnProperty(risk + '-' + status)) {
-                    matrixData[risk + '-' + status]++;
-                }
-            });
-
-            // Llenar las celdas de la matriz
-            for (const key in matrixData) {
-                const parts = key.split('-');
-                const riskLevel = parts[0];
-                const controlStatus = parts[1];
-                const cellId = `cell-${riskLevel}-${controlStatus}`;
-                const cell = document.getElementById(cellId);
-                
-                if (cell) {
-                    cell.innerHTML = `${matrixData[key]} <div class="matrix-title-label">${cell.querySelector('.matrix-title-label').textContent}</div>`;
-                }
-            }
-
-            // Añadir funcionalidad de click para filtrar la tabla al seleccionar una celda
-            $('.matrix-cell').off('click').on('click', function() {
-                $('.matrix-cell').removeClass('matrix-cell-highlight');
-                $(this).addClass('matrix-cell-highlight');
-                
-                const risk = $(this).data('risk');
-                const status = $(this).data('status');
-                
-                document.getElementById('riskFilter').value = risk;
-                document.getElementById('statusFilter').value = status;
-                
-                document.getElementById('projectFilter').value = ""; // Limpiar otros filtros para solo mostrar los de la matriz
-                document.getElementById('factorFilter').value = "";
-                
-                applyFilters();
+                const cardHtml = `
+                    <div class="col-md-6 col-lg-6 col-xl-6 mb-3">
+                        <div class="summary-card bg-white">
+                            <div class="summary-card-title">${factor}</div>
+                            <div class="summary-card-content text-primary">${total} <span class="small text-muted">riesgos</span></div>
+                            <div class="summary-card-subtitle">${altoMedio} Alto/Medio (${altoMedioPercent}%)</div>
+                            <div class="progress mt-2" style="height: 5px;">
+                                <div class="progress-bar bg-danger" role="progressbar" style="width: ${altoMedioPercent}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += cardHtml;
             });
         }
 
+        // ====================================================================
+        // 🚀 FUNCIÓN DE GRÁFICOS (Solo Residual)
+        // ====================================================================
+        
+        /**
+         * Dibuja y actualiza el gráfico de Riesgo Residual.
+         */
+        function updateCharts(data) {
+            
+            const riskLevels = ['Muy Bajo', 'Bajo', 'Medio', 'Alto'];
+            const riskColors = { 'Alto': '#dc3545', 'Medio': '#ffc107', 'Bajo': '#28a745', 'Muy Bajo': '#0dcaf0' };
 
+            // --- DATOS para RIESGO RESIDUAL ---
+            const residualRiskCounts = data.reduce((acc, item) => {
+                const level = item.riesgoResidual;
+                acc[level] = (acc[level] || 0) + 1;
+                return acc;
+            }, { 'Alto': 0, 'Medio': 0, 'Bajo': 0, 'Muy Bajo': 0 });
+            
+            const residualLabels = riskLevels;
+            const residualValues = riskLevels.map(k => residualRiskCounts[k]);
+            const residualColors = residualLabels.map(level => riskColors[level] || '#6c757d');
+            
+            // --- DESTRUIR Y RECREAR GRÁFICO ---
+            if (residualRiskChart) residualRiskChart.destroy();
+            
+            // Gráfico de Riesgo Residual (Barra Horizontal)
+            residualRiskChart = new Chart(document.getElementById('residualRiskChart').getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: residualLabels, 
+                    datasets: [{
+                        label: 'Cantidad de Riesgos',
+                        data: residualValues,
+                        backgroundColor: residualColors,
+                        borderWidth: 1
+                    }]
+                },
+                options: { 
+                    indexAxis: 'y', 
+                    responsive: true, 
+                    maintainAspectRatio: false, 
+                    plugins: { 
+                        legend: { display: false },
+                        title: { display: false }
+                    },
+                    scales: { 
+                        x: { beginAtZero: true, title: { display: true, text: 'Cantidad de Riesgos' } },
+                        y: { stacked: true }
+                    },
+                    animation: { duration: 0 }, 
+                    hover: { animationDuration: 0 }
+                }
+            });
+        }
+        
         /**
          * Inicializa la tabla DataTable.
          */
@@ -617,49 +723,119 @@
             if (table) {
                 table.destroy();
                 $('#risksTable tbody').off('click', '.view-btn');
+                // Limpiar las funciones de búsqueda personalizada
+                $.fn.dataTable.ext.search = $.fn.dataTable.ext.search.filter(func => 
+                    !func.name.includes('residualRiskSearch') && !func.name.includes('complianceSearch') && !func.name.includes('responsableSearch')
+                );
             }
+
+            // Función de búsqueda personalizada para el Riesgo Residual
+            $.fn.dataTable.ext.search.push(
+                function residualRiskSearch(settings, data, dataIndex) {
+                    if (settings.nTable.id !== 'risksTable') {
+                        return true;
+                    }
+                    
+                    const riskFilter = document.getElementById('riskFilter').value;
+                    if (riskFilter === "") {
+                        return true;
+                    }
+                    
+                    const rowData = allRisksData[dataIndex]; 
+                    
+                    // Filtrar basándose en la data original (riesgoResidual)
+                    if (rowData.riesgoResidual && rowData.riesgoResidual.includes(riskFilter)) {
+                        return true;
+                    }
+                    
+                    return false;
+                }
+            );
+
+            // CORRECCIÓN: Función de búsqueda personalizada para el Estado de Cumplimiento
+            $.fn.dataTable.ext.search.push(
+                function complianceSearch(settings, data, dataIndex) {
+                    if (settings.nTable.id !== 'risksTable') {
+                        return true;
+                    }
+                    
+                    const complianceFilter = document.getElementById('complianceFilter').value;
+                    if (complianceFilter === "") {
+                        return true;
+                    }
+                    
+                    const rowData = allRisksData[dataIndex];
+                    const efectividad = (rowData.efectividad || '').toLowerCase().trim();
+                    
+                    // Filtrar con lógica similar a getComplianceBadgeClass
+                    if (complianceFilter === "Cumplido") {
+                        return efectividad === 'cumplido' || 
+                               (efectividad.includes('cumplido') && !efectividad.includes('parcialmente'));
+                    }
+                    
+                    if (complianceFilter === "Parcialmente cumplido") {
+                        return efectividad.includes('parcialmente cumplido') || 
+                               efectividad.includes('parcial cumplido');
+                    }
+                    
+                    if (complianceFilter === "No cumplido") {
+                        return efectividad.includes('no cumplido') || 
+                               efectividad.includes('incumplido');
+                    }
+                    
+                    // Para el caso "NA"
+                    if (complianceFilter === "NA" && (!rowData.efectividad || rowData.efectividad.trim() === "" || rowData.efectividad === "N/A")) {
+                        return true;
+                    }
+                    
+                    return false;
+                }
+            );
 
             table = $('#risksTable').DataTable({
                 data: allRisksData,
                 columns: [
-                    { data: 'localidad', render: function(data, type, row) { return `${row.proyecto} - ${data}`; } },
+                    { data: 'proyecto', title: 'Proyecto' }, 
+                    { data: 'localidad', title: 'Localidad' }, 
+                    { data: 'factorRiesgo', title: 'Factor' },
                     { 
-                        data: 'eventoRiesgo',
-                        render: function(data, type) { return type === 'display' && data.length > 80 ? data.substring(0, 80) + '...' : data; }
-                    },
-                    { data: 'factorRiesgo' },
-                    { 
-                        data: 'riesgoResidual',
+                        data: 'riesgoInherenteNivel', title: 'Riesgo Inherente (Nivel)',
                         render: function(data, type) {
                             if (type === 'display') {
                                 return `<span class="risk-badge ${getRiskBadgeClass(data)}">${data}</span>`;
                             }
                             return data;
                         }
-                    },
-                    { data: 'responsable' },
+                    }, 
                     { 
-                        data: 'efectividadControl',
+                        data: 'efectividad', title: 'Estado de Cumplimiento',
                         render: function(data, type) {
                             if (type === 'display') {
-                                return `<span class="status-badge ${getStatusBadgeClass(data)}">${data}</span>`;
+                                return `<span class="compliance-badge ${getComplianceBadgeClass(data)}">${data}</span>`;
                             }
                             return data;
                         }
                     },
+                    { data: 'responsable', title: 'Responsable' },
+                    { 
+                        data: 'eventoRiesgo', title: 'Evento de Riesgo',
+                        render: function(data, type) { return type === 'display' && (data || '').length > 80 ? data.substring(0, 80) + '...' : data; }
+                    },
                     {
-                        data: 'id',
+                        data: 'id', title: 'Acciones',
                         render: function(data) { return `<button class="btn btn-sm btn-info view-btn" data-id="${data}"><i class="fas fa-eye"></i> Ver</button>`; },
                         orderable: false
                     }
                 ],
+                columnDefs: [
+                    { targets: [3, 4], className: 'text-center' } // Riesgo Inherente y Estado de Cumplimiento centrados
+                ],
                 language: { url: '//cdn.datatables.net/plug-ins/1.13.5/i18n/es-ES.json' },
                 pageLength: 10,
                 responsive: true,
-                order: [[3, 'desc']], 
+                order: [[3, 'desc']], // Ordenar por Riesgo Inherente
             });
 
-            // Evento para mostrar detalles
             $('#risksTable tbody').on('click', '.view-btn', function() {
                 const riskId = parseInt($(this).data('id'));
                 const data = allRisksData.find(item => item.id === riskId);
@@ -667,94 +843,43 @@
             });
         }
 
-        /**
-         * Muestra el modal con los detalles del riesgo.
-         */
         function showRiskDetails(risk) {
             document.getElementById('modal-project').textContent = `${risk.proyecto} - ${risk.localidad}`;
             document.getElementById('modal-factor').textContent = risk.factorRiesgo;
             document.getElementById('modal-responsible').textContent = risk.responsable;
             document.getElementById('modal-risk').innerHTML = `<span class="risk-badge ${getRiskBadgeClass(risk.riesgoResidual)}">${risk.riesgoResidual}</span>`;
-            document.getElementById('modal-status').innerHTML = `<span class="status-badge ${getStatusBadgeClass(risk.efectividadControl)}">${risk.efectividadControl}</span>`;
+            document.getElementById('modal-inherent-risk').innerHTML = `<span class="risk-badge ${getRiskBadgeClass(risk.riesgoInherenteNivel)}">${risk.riesgoInherenteNivel}</span>`; 
+            document.getElementById('modal-efectividad').innerHTML = `<span class="compliance-badge ${getComplianceBadgeClass(risk.efectividad)}">${risk.efectividad}</span>`;
+            document.getElementById('modal-efectividad-detalle').textContent = risk.efectividad;
+            
             document.getElementById('modal-date').textContent = risk.fechaSeguimiento;
             document.getElementById('modal-event').textContent = risk.eventoRiesgo;
             document.getElementById('modal-cause').textContent = risk.causa;
             document.getElementById('modal-effect').textContent = risk.efecto;
             document.getElementById('modal-action').textContent = risk.planAccion;
 
+            // ASIGNACIÓN DE NUEVOS CAMPOS
+            document.getElementById('modal-evidencia').textContent = risk.evidencia;
+            document.getElementById('modal-observacion').textContent = risk.observacion;
+
             const modal = new bootstrap.Modal(document.getElementById('detailModal'));
             modal.show();
         }
 
-        /**
-         * Actualiza las visualizaciones (KPIs, Gráficos y Matriz).
-         */
         function updateVisualizations(data) {
             updateDashboardCards(data);
-            updateRiskMatrix(data);
+            updateSummaryCards(data); 
             updateCharts(data);
         }
 
-        function updateCharts(data) {
-            // Gráfico de niveles de riesgo (Residual)
-            const riskLevelCounts = data.reduce((acc, item) => {
-                const level = item.riesgoResidual;
-                acc[level] = (acc[level] || 0) + 1;
-                return acc;
-            }, { 'Alto': 0, 'Medio': 0, 'Bajo': 0, 'Muy Bajo': 0 });
-
-            // Gráfico de cumplimiento (Efectividad del Control)
-            const complianceCounts = data.reduce((acc, item) => {
-                const status = item.efectividadControl;
-                acc[status] = (acc[status] || 0) + 1;
-                return acc;
-            }, { 'Apropiado': 0, 'Aceptable': 0, 'Mejorable': 0, 'Deficiente': 0, 'N/A': 0 });
-
-            if (riskLevelChart) riskLevelChart.destroy();
-            if (complianceChart) complianceChart.destroy();
-
-            // Gráfico de niveles de riesgo (dona)
-            riskLevelChart = new Chart(document.getElementById('riskLevelChart').getContext('2d'), {
-                type: 'doughnut',
-                data: {
-                    labels: Object.keys(riskLevelCounts),
-                    datasets: [{
-                        data: Object.values(riskLevelCounts),
-                        backgroundColor: ['#dc3545', '#ffc107', '#28a745', '#0dcaf0', '#6c757d'],
-                    }]
-                },
-                options: { 
-                    responsive: true, 
-                    maintainAspectRatio: false, 
-                    plugins: { legend: { position: 'bottom' } } 
-                }
-            });
-
-            // Gráfico de cumplimiento (Efectividad del Control - barras)
-            complianceChart = new Chart(document.getElementById('complianceChart').getContext('2d'), {
-                type: 'bar',
-                data: {
-                    labels: Object.keys(complianceCounts),
-                    datasets: [{
-                        label: 'Cantidad de Riesgos',
-                        data: Object.values(complianceCounts),
-                        backgroundColor: ['#2c7d32', '#8bc34a', '#fd7e14', '#dc3545', '#6c757d'], 
-                        borderColor: 'rgba(0, 0, 0, 0.1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: { 
-                    responsive: true, 
-                    maintainAspectRatio: false, 
-                    scales: { y: { beginAtZero: true } },
-                    plugins: { legend: { display: false } }
-                }
-            });
-        }
-
+        /**
+         * Llena los selectores con opciones únicas.
+         */
         function updateFilters() {
-            const proyectos = [...new Set(allRisksData.map(item => `${item.proyecto} - ${item.localidad}`))].filter(Boolean);
+            const proyectos = [...new Set(allRisksData.map(item => item.proyecto))].filter(Boolean);
+            const localidades = [...new Set(allRisksData.map(item => item.localidad))].filter(Boolean);
             const factores = [...new Set(allRisksData.map(item => item.factorRiesgo))].filter(Boolean);
+            const responsables = [...new Set(allRisksData.map(item => item.responsable))].filter(Boolean);
 
             const fillSelect = (selectId, options, label) => {
                 const select = document.getElementById(selectId);
@@ -765,46 +890,40 @@
                 });
             };
 
-            fillSelect('projectFilter', proyectos, 'proyectos/localidades');
+            fillSelect('projectFilter', proyectos, 'proyectos');
+            fillSelect('localidadFilter', localidades, 'localidades');
             fillSelect('factorFilter', factores, 'factores');
+            fillSelect('responsableFilter', responsables, 'responsables');
         }
 
+        /**
+         * Aplica los filtros a la tabla y actualiza las visualizaciones.
+         */
         function applyFilters() {
             const projectFilter = document.getElementById('projectFilter').value;
-            const riskFilter = document.getElementById('riskFilter').value;
-            const statusFilter = document.getElementById('statusFilter').value;
+            const localidadFilter = document.getElementById('localidadFilter').value;
             const factorFilter = document.getElementById('factorFilter').value;
+            const responsableFilter = document.getElementById('responsableFilter').value;
             
-            $('.matrix-cell').removeClass('matrix-cell-highlight'); // Deseleccionar matriz al filtrar manualmente
-
-            let filteredData = allRisksData;
-
-            if (projectFilter) {
-                filteredData = filteredData.filter(item => `${item.proyecto} - ${item.localidad}` === projectFilter);
-            }
-
-            if (riskFilter) {
-                filteredData = filteredData.filter(item => item.riesgoResidual.includes(riskFilter));
-            }
-
-            if (statusFilter) {
-                filteredData = filteredData.filter(item => item.efectividadControl.includes(statusFilter));
-            }
-
-            if (factorFilter) {
-                filteredData = filteredData.filter(item => item.factorRiesgo === factorFilter);
-            }
-
+            // Aplicar filtros a las columnas visibles de DataTable
+            table.column(0).search(projectFilter, true, false); // Columna Proyecto
+            table.column(1).search(localidadFilter, true, false); // Columna Localidad
+            table.column(2).search(factorFilter, true, false); // Columna Factor
+            table.column(5).search(responsableFilter, true, false); // Columna Responsable
+            
+            // Los filtros de Riesgo Residual y Estado de Cumplimiento se aplican mediante funciones custom
+            table.draw();
+            
+            // Obtener los datos filtrados actualmente en la tabla
+            const filteredData = table.rows({ search: 'applied' }).data().toArray();
+            
+            // Actualizar las visualizaciones con los datos filtrados
             updateVisualizations(filteredData);
-            
-            if (table) {
-                table.clear().rows.add(filteredData).draw();
-            }
         }
 
         async function loadExcelData() {
-            // Lógica de carga de datos desde Excel (MS Graph API) - Se mantiene la estructura funcional
             try {
+                document.getElementById('loadingOverlay').style.display = 'flex';
                 updateLoadingText('Conectando con Excel Online...');
                 
                 if (!accessToken) throw new Error('No hay token de acceso disponible. Intente iniciar sesión.');
@@ -815,58 +934,57 @@
                     headers: { 'Authorization': `Bearer ${accessToken}` }
                 });
 
-                if (!response.ok) throw new Error(`Error al obtener el archivo: ${response.status} ${response.statusText}`);
+                if (!response.ok) {
+                    const errorDetails = response.status === 404 ? ' (El ID del archivo es inválido. Por favor, genere un nuevo ID de recurso compartido.)' : '';
+                    throw new Error(`Error al obtener el archivo: ${response.status} ${response.statusText}${errorDetails}`);
+                }
 
                 const arrayBuffer = await response.arrayBuffer();
                 const data = new Uint8Array(arrayBuffer);
+                
                 const workbook = XLSX.read(data, { type: 'array', cellDates: true, raw: false });
                 
-                // Asumimos que la primera hoja es la "Matriz de Riesgos LA-FT"
                 const firstSheetName = workbook.SheetNames[0]; 
                 const worksheet = workbook.Sheets[firstSheetName];
                 
                 const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-                
-                // Buscar la fila de cabeceras (la que contiene 'PROYECTO' y 'PROYECTO- LOCALIDAD')
-                const headerRowIndex = jsonData.findIndex(row => row.some(cell => typeof cell === 'string' && cell.includes('PROYECTO')));
+                const headerRowIndex = jsonData.findIndex(row => row.some(cell => typeof cell === 'string' && cell.toUpperCase().includes('PROYECTO')));
                 if (headerRowIndex === -1) throw new Error('No se pudo encontrar la fila de cabeceras en el archivo Excel.');
 
-                // Tomar la cabecera
                 const headers = jsonData[headerRowIndex];
                 
-                // Procesar datos desde la fila siguiente
-                const dataRows = jsonData.slice(headerRowIndex + 1);
-
-                // Re-ejecutar sheet_to_json con la cabecera explícita
-                const finalJson = XLSX.utils.sheet_to_json(worksheet, { header: headers, range: headerRowIndex + 1, raw: false, dateNF: 'yyyy-mm-dd' });
+                const finalJson = XLSX.utils.sheet_to_json(worksheet, { header: headers, range: headerRowIndex + 1, raw: false, dateNF: 'dd/mm/yyyy' });
                 
                 allRisksData = processExcelData(finalJson);
                 
-                // Inicializar y actualizar la interfaz
                 updateFilters();
-                updateVisualizations(allRisksData);
-                initializeTable();
+                
+                // Primero inicializa la tabla con todos los datos
+                initializeTable(); 
+
+                // Luego aplica los filtros (si ya tienen valores seleccionados) y actualiza las visualizaciones
+                applyFilters();
+
                 
                 document.getElementById('tableContainer').style.display = 'block';
                 document.getElementById('mainContent').style.display = 'block';
-                document.getElementById('lastUpdate').textContent = new Date().toLocaleString('es-EC');
+                document.getElementById('lastUpdate').textContent = new Date().toLocaleString('es-EC', { dateStyle: 'short', timeStyle: 'short' });
                 
                 setTimeout(() => { document.getElementById('loadingOverlay').style.display = 'none'; }, 500);
                 
             } catch (error) {
                 console.error('Error al cargar datos:', error);
-                updateLoadingText(`Error: ${error.message}. Verifique el ID o la estructura del Excel.`);
+                updateLoadingText(`Error: ${error.message}`);
                 setTimeout(() => {
                     document.getElementById('loadingOverlay').style.display = 'none';
-                    alert(`Error al cargar los datos. Verifique su conexión y permisos.\nMensaje: ${error.message}`);
+                    alert(`Error al cargar los datos. Verifique su conexión, permisos y el ID del archivo.\nMensaje: ${error.message}`);
                 }, 2000);
             }
         }
 
         function updateLoadingText(text) { document.getElementById('loadingText').textContent = text; }
 
-        // --- Funciones de Autenticación (handleAuth, handleLogin, handleLogout) ---
-        // Se mantienen las funciones de autenticación estándar de MSAL
+        // --- Funciones de Autenticación ---
         async function handleAuth() {
             try {
                 const accounts = msalInstance.getAllAccounts();
@@ -911,36 +1029,40 @@
         document.addEventListener('DOMContentLoaded', function() {
             msalInstance.initialize().then(() => { handleAuth(); });
 
-            // Event listeners
             document.getElementById('loginBtn').addEventListener('click', handleLogin);
             document.getElementById('logoutBtn').addEventListener('click', handleLogout);
             document.getElementById('refreshData').addEventListener('click', loadExcelData);
             
-            // Event listeners para filtros
+            // Event listeners para los filtros dinámicos
             document.getElementById('projectFilter').addEventListener('change', applyFilters);
+            document.getElementById('localidadFilter').addEventListener('change', applyFilters);
             document.getElementById('riskFilter').addEventListener('change', applyFilters);
-            document.getElementById('statusFilter').addEventListener('change', applyFilters);
             document.getElementById('factorFilter').addEventListener('change', applyFilters);
+            document.getElementById('complianceFilter').addEventListener('change', applyFilters);
+            document.getElementById('responsableFilter').addEventListener('change', applyFilters);
             
-            // Event listener para exportar datos
             document.getElementById('exportBtn').addEventListener('click', function() {
+                // Mapear solo los datos actualmente visibles/filtrados
                 const exportData = table.rows({ search: 'applied' }).data().toArray().map(item => ({
-                    'Proyecto - Localidad': `${item.proyecto} - ${item.localidad}`,
+                    'Proyecto': item.proyecto,
+                    'Localidad': item.localidad,
                     'Factor de Riesgo': item.factorRiesgo,
-                    'Nivel de Riesgo Inherente': item.riesgoInherente,
+                    'Nivel de Riesgo Inherente': item.riesgoInherenteNivel,
                     'Nivel de Riesgo Residual': item.riesgoResidual,
-                    'Efectividad del Control': item.efectividadControl,
+                    'Estado de Cumplimiento': item.efectividad,
                     'Evento de Riesgo': item.eventoRiesgo,
                     'Causa': item.causa,
                     'Efecto': item.efecto,
                     'Descripción del Control': item.planAccion,
                     'Responsable': item.responsable,
-                    'Fecha de Seguimiento (AI)': item.fechaSeguimiento
+                    'Fecha de Seguimiento (AI)': item.fechaSeguimiento,
+                    'Evidencia del cumplimiento': item.evidencia,
+                    'Observación': item.observacion
                 }));
                 const ws = XLSX.utils.json_to_sheet(exportData);
                 const wb = XLSX.utils.book_new();
-                XLSX.utils.book_append_sheet(wb, ws, "Riesgos Residuales Filtrados");
-                XLSX.writeFile(wb, "Matriz_Riesgos_Residuales_FIAS.xlsx");
+                XLSX.utils.book_append_sheet(wb, ws, "Matriz_Riesgos_Residuales_FIAS");
+                XLSX.writeFile(wb, "Matriz_Riesgos_Residuales_FIAS_Filtrado.xlsx");
             });
         });
     </script>

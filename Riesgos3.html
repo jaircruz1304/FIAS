@@ -415,6 +415,30 @@
         };
 
         /**
+         * Normaliza un estado de cumplimiento a valores estándar.
+         */
+        function normalizeComplianceState(state) {
+            if (!state || state.trim() === '' || state === 'N/A') return 'NA';
+            
+            const estadoLower = state.toLowerCase().trim();
+            
+            // Primero verificar "Parcialmente cumplido" 
+            if (estadoLower.includes('parcialmente cumplido') || estadoLower.includes('parcial cumplido')) 
+                return 'Parcialmente cumplido';
+            
+            // Luego verificar "No cumplido"
+            if (estadoLower.includes('no cumplido') || estadoLower.includes('incumplido')) 
+                return 'No cumplido';
+            
+            // Luego verificar "Cumplido"
+            if (estadoLower.includes('cumplido')) 
+                return 'Cumplido';
+            
+            // Si no coincide con ninguno de los anteriores
+            return 'NA';
+        }
+
+        /**
          * Mapea y limpia los datos de Excel (CRUCIAL para la estabilidad de los filtros).
          */
         function processExcelData(jsonData) {
@@ -491,23 +515,13 @@
                 data.responsable = data.responsable || 'N/A';
                 data.planAccion = data.planAccion || 'N/A';
                 
-                // SANITIZACIÓN DE NUEVOS CAMPOS CON CORRECCIÓN ESPECÍFICA PARA ESTADOS DE CUMPLIMIENTO
+                // SANITIZACIÓN DE NUEVOS CAMPOS
                 data.evidencia = data.evidencia || 'N/A';
                 data.observacion = data.observacion || 'N/A';
                 
-                // CORRECCIÓN CRÍTICA: Normalización de estados de cumplimiento
-                const efectividadRaw = (data.efectividad || 'N/A').trim();
-                if (efectividadRaw.toLowerCase().includes('parcialmente')) {
-                    data.efectividad = 'Parcialmente cumplido';
-                } else if (efectividadRaw.toLowerCase().includes('no cumplido') || 
-                          efectividadRaw.toLowerCase().includes('incumplido')) {
-                    data.efectividad = 'No cumplido';
-                } else if (efectividadRaw.toLowerCase().includes('cumplido') && 
-                          !efectividadRaw.toLowerCase().includes('parcialmente')) {
-                    data.efectividad = 'Cumplido';
-                } else {
-                    data.efectividad = efectividadRaw === 'N/A' ? 'N/A' : efectividadRaw;
-                }
+                // NORMALIZACIÓN CRÍTICA DE ESTADO DE CUMPLIMIENTO
+                const efectividadRaw = (data.efectividad || '').trim();
+                data.efectividad = normalizeComplianceState(efectividadRaw);
                 
                 delete data.localidadCompleta;
 
@@ -528,26 +542,20 @@
         }
         
         /**
-         * CORRECCIÓN: Obtiene la clase CSS para el badge de estado de cumplimiento.
+         * Obtiene la clase CSS para el badge de estado de cumplimiento.
          */
         function getComplianceBadgeClass(estado) {
-            if (!estado || estado === 'N/A' || estado.trim() === '') return 'compliance-NA';
+            const normalizedEstado = estado || 'NA';
             
-            const estadoLower = estado.toLowerCase().trim();
-            
-            // Primero verificar "Parcialmente cumplido" (más específico)
-            if (estadoLower.includes('parcialmente cumplido') || estadoLower.includes('parcial cumplido')) 
-                return 'compliance-Parcialmente-cumplido';
-            
-            // Luego verificar "Cumplido" exacto (sin la palabra "parcialmente")
-            if (estadoLower === 'cumplido' || estadoLower.includes('cumplido') && !estadoLower.includes('parcial')) 
+            if (normalizedEstado === 'Cumplido') 
                 return 'compliance-Cumplido';
             
-            // Luego verificar "No cumplido"
-            if (estadoLower.includes('no cumplido') || estadoLower.includes('incumplido')) 
+            if (normalizedEstado === 'Parcialmente cumplido') 
+                return 'compliance-Parcialmente-cumplido';
+            
+            if (normalizedEstado === 'No cumplido') 
                 return 'compliance-No-cumplido';
             
-            // Si no coincide con ninguno de los anteriores
             return 'compliance-NA';
         }
         
@@ -559,24 +567,11 @@
                 (item.riesgoResidual || '').includes("Medio")
             ).length;
             
-            // CORRECCIÓN: Estadísticas de cumplimiento con lógica mejorada
-            const cumplido = data.filter(item => {
-                const efectividad = (item.efectividad || '').toLowerCase().trim();
-                return efectividad === 'cumplido' || 
-                       (efectividad.includes('cumplido') && !efectividad.includes('parcialmente'));
-            }).length;
-            
-            const parcial = data.filter(item => {
-                const efectividad = (item.efectividad || '').toLowerCase().trim();
-                return efectividad.includes('parcialmente cumplido') || 
-                       efectividad.includes('parcial cumplido');
-            }).length;
-            
-            const noCumplido = data.filter(item => {
-                const efectividad = (item.efectividad || '').toLowerCase().trim();
-                return efectividad.includes('no cumplido') || 
-                       efectividad.includes('incumplido');
-            }).length;
+            // Estadísticas de cumplimiento con valores normalizados
+            const cumplido = data.filter(item => item.efectividad === 'Cumplido').length;
+            const parcial = data.filter(item => item.efectividad === 'Parcialmente cumplido').length;
+            const noCumplido = data.filter(item => item.efectividad === 'No cumplido').length;
+            const na = data.filter(item => item.efectividad === 'NA').length;
             
             const altoPercent = total > 0 ? Math.round((medioAlto / total) * 100) : 0;
             const cumplimientoPercent = total > 0 ? Math.round((cumplido / total) * 100) : 0;
@@ -588,6 +583,7 @@
                             <i class="fas fa-layer-group fa-2x text-primary float-end"></i>
                             <h5 class="card-title text-muted text-uppercase small">Total Riesgos Identificados</h5>
                             <h2 class="card-text">${total}</h2>
+                            <small class="text-muted">${cumplido} Cumplido | ${parcial} Parcial | ${noCumplido} No cumplido | ${na} N/A</small>
                         </div>
                     </div>
                 </div>
@@ -597,6 +593,7 @@
                             <i class="fas fa-exclamation-circle fa-2x text-danger float-end"></i>
                             <h5 class="card-title text-muted text-uppercase small">Riesgo Residual Alto</h5>
                             <h2 class="card-text">${alto}</h2>
+                            <small class="text-muted">${altoPercent}% del total</small>
                         </div>
                     </div>
                 </div>
@@ -621,7 +618,7 @@
                             <div class="progress mt-2" style="height: 10px;">
                                 <div class="progress-bar bg-success" role="progressbar" style="width: ${cumplimientoPercent}%"></div>
                             </div>
-                            <small class="text-muted">${cumplido} Cumplido / ${parcial} Parcial / ${noCumplido} No cumplido</small>
+                            <small class="text-muted">${cumplido} de ${total} riesgos</small>
                         </div>
                     </div>
                 </div>`;
@@ -765,26 +762,22 @@
                     }
                     
                     const rowData = allRisksData[dataIndex];
-                    const efectividad = (rowData.efectividad || '').toLowerCase().trim();
                     
-                    // Filtrar con lógica similar a getComplianceBadgeClass
-                    if (complianceFilter === "Cumplido") {
-                        return efectividad === 'cumplido' || 
-                               (efectividad.includes('cumplido') && !efectividad.includes('parcialmente'));
+                    // Filtrar basándose en el estado normalizado
+                    if (complianceFilter === "Cumplido" && rowData.efectividad === "Cumplido") {
+                        return true;
                     }
                     
-                    if (complianceFilter === "Parcialmente cumplido") {
-                        return efectividad.includes('parcialmente cumplido') || 
-                               efectividad.includes('parcial cumplido');
+                    if (complianceFilter === "Parcialmente cumplido" && rowData.efectividad === "Parcialmente cumplido") {
+                        return true;
                     }
                     
-                    if (complianceFilter === "No cumplido") {
-                        return efectividad.includes('no cumplido') || 
-                               efectividad.includes('incumplido');
+                    if (complianceFilter === "No cumplido" && rowData.efectividad === "No cumplido") {
+                        return true;
                     }
                     
                     // Para el caso "NA"
-                    if (complianceFilter === "NA" && (!rowData.efectividad || rowData.efectividad.trim() === "" || rowData.efectividad === "N/A")) {
+                    if (complianceFilter === "NA" && rowData.efectividad === "NA") {
                         return true;
                     }
                     

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mapa Interactivo de Áreas Protegidas del Ecuador</title>
+    <title>Mapa Interactivo de Áreas Protegidas del Ecuador - FIAS</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -91,18 +91,7 @@
             padding: 0.5rem;
         }
 
-        .nav-pills .nav-link {
-            border-radius: 8px;
-            padding: 0.5rem 1rem;
-            margin: 0 0.2rem;
-            transition: all 0.2s;
-        }
-
-        .nav-pills .nav-link.active {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            box-shadow: 0 2px 6px rgba(44, 94, 26, 0.3);
-        }
-
+        /* --- Estilos de Filtros --- */
         .filter-section {
             padding: 1rem;
             background-color: white;
@@ -165,7 +154,22 @@
             justify-content: space-between;
             align-items: center;
         }
+        
+        .filter-option .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 10px; 
+        }
 
+        .filter-option img {
+            width: 24px; 
+            height: 24px; 
+            object-fit: contain; 
+            border-radius: 50%;
+            background-color: #fff;
+            border: 1px solid #ddd;
+        }
+        
         .filter-option .count {
             font-size: 0.8rem;
             color: #6c757d;
@@ -186,6 +190,7 @@
             font-size: 0.8rem;
         }
 
+        /* --- Estilos de Tarjetas (Cards) --- */
         .area-card {
             border: 1px solid rgba(0,0,0,.125);
             border-radius: 10px;
@@ -225,15 +230,19 @@
             justify-content: space-between;
         }
 
-        .area-card-body {
-            padding: 1.2rem;
+        .area-card-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 0.7rem;
+            border: 2px solid #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            background-color: #f8f9fa;
         }
 
-        .area-card-icon {
-            font-size: 1.6rem;
-            margin-right: 0.7rem;
-            width: 35px;
-            text-align: center;
+        .area-card-body {
+            padding: 1.2rem;
         }
 
         .fias-badge {
@@ -304,20 +313,33 @@
             align-items: center;
         }
         
-        .leaflet-popup-content h5 i {
-            margin-right: 10px;
-            font-size: 1.2em;
-        }
-        
         @keyframes pulse {
             0% { box-shadow: 0 0 0 0 rgba(13, 110, 253, 0.7); }
             70% { box-shadow: 0 0 0 15px rgba(13, 110, 253, 0); }
             100% { box-shadow: 0 0 0 0 rgba(13, 110, 253, 0); }
         }
 
+        .custom-map-img {
+            width: 40px !important;
+            height: 40px !important;
+            border-radius: 50%;
+            border: 2px solid white;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.4);
+            object-fit: cover;
+            background-color: white;
+            transition: transform 0.2s;
+        }
+
+        .custom-map-img:hover {
+            transform: scale(1.2);
+            z-index: 1000 !important;
+            border-color: var(--primary-color);
+        }
+
         .fias-marker-pulse {
             border-radius: 50%;
             animation: pulse 2s infinite;
+            border: 2px solid var(--fias-color) !important;
         }
         
         #loading-overlay {
@@ -383,7 +405,6 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.15);
         }
 
-        /* Estilos específicos para áreas administrativas */
         .fiass-color { color: var(--fias-color); }
         .rem-color { color: var(--rem-color); }
         .fap-color { color: var(--fap-color); }
@@ -392,7 +413,6 @@
         .conserva-color { color: var(--conserva-color); }
         .feig-color { color: var(--feig-color); }
 
-        /* Mejoras de scrollbar */
         .sidebar-content::-webkit-scrollbar,
         .filter-options::-webkit-scrollbar {
             width: 8px;
@@ -422,7 +442,7 @@
         <div class="container-fluid">
             <a class="navbar-brand d-flex align-items-center" href="#">
                <img src="https://fias.org.ec/wp-content/uploads/2021/11/Logo_FIAS_web.png" height="30" width="150" alt="Logo de FIAS" loading="lazy">                
-<span class="fs-4 fw-bold">MAPA INTERACTIVO DE BIENES INSTITUCIONALES FIAS </span>
+               <span class="fs-4 fw-bold ms-3 d-none d-md-block">MAPA INTERACTIVO DE BIENES INSTITUCIONALES</span>
             </a>
             <div class="d-flex align-items-center ms-auto">
                 <button class="btn btn-sm btn-outline-light me-2 custom-btn" data-bs-toggle="tooltip" title="Reiniciar todos los filtros" id="reset-filters">
@@ -444,73 +464,52 @@
                 <input type="text" id="search-input" class="form-control" placeholder="🔎 Buscar por nombre...">
             </div>
             
-            <ul class="nav nav-pills p-3" id="filter-tabs" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="type-tab" data-bs-toggle="pill" data-bs-target="#type-panel" type="button" role="tab">
-                        <i class="fas fa-tag me-1"></i> Tipo
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="region-tab" data-bs-toggle="pill" data-bs-target="#region-panel" type="button" role="tab">
-                        <i class="fas fa-globe-americas me-1"></i> Región
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="admin-tab" data-bs-toggle="pill" data-bs-target="#admin-panel" type="button" role="tab">
-                        <i class="fas fa-building me-1"></i> Administrativas
-                    </button>
-                </li>
-            </ul>
-
-            <div class="tab-content">
-                <div class="tab-pane fade show active" id="type-panel" role="tabpanel">
-                    <div class="filter-section">
-                        <div class="filter-group">
-                            <h6>
-                                <span>Tipos de Áreas</span>
-                                <span class="badge bg-primary" id="selected-types-count">0</span>
-                            </h6>
-                            <div class="filter-options" id="type-options"></div>
-                            <div class="filter-actions">
-                                <button class="btn btn-sm btn-outline-primary" id="select-all-types">Seleccionar todos</button>
-                                <button class="btn btn-sm btn-outline-secondary" id="clear-all-types">Limpiar</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="tab-pane fade" id="region-panel" role="tabpanel">
-                    <div class="filter-section">
-                        <div class="filter-group">
-                            <h6>
-                                <span>Regiones</span>
-                                <span class="badge bg-primary" id="selected-regions-count">0</span>
-                            </h6>
-                            <div class="filter-options" id="region-options"></div>
-                            <div class="filter-actions">
-                                <button class="btn btn-sm btn-outline-primary" id="select-all-regions">Seleccionar todos</button>
-                                <button class="btn btn-sm btn-outline-secondary" id="clear-all-regions">Limpiar</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="tab-pane fade" id="admin-panel" role="tabpanel">
-                    <div class="filter-section">
-                        <div class="filter-group">
-                            <h6>
-                                <span>Áreas Administrativas</span>
-                                <span class="badge bg-primary" id="selected-admin-count">0</span>
-                            </h6>
-                            <div class="filter-options" id="admin-options"></div>
-                            <div class="filter-actions">
-                                <button class="btn btn-sm btn-outline-primary" id="select-all-admin">Seleccionar todos</button>
-                                <button class="btn btn-sm btn-outline-secondary" id="clear-all-admin">Limpiar</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <div class="sidebar-content">
+                
+                <div class="filter-section" id="region-panel">
+                    <div class="filter-group">
+                        <h6>
+                            <span><i class="fas fa-globe-americas me-2"></i>Regiones</span>
+                            <span class="badge bg-primary" id="selected-regions-count">0</span>
+                        </h6>
+                        <div class="filter-options" id="region-options"></div>
+                        <div class="filter-actions">
+                            <button class="btn btn-sm btn-outline-primary" id="select-all-regions">Seleccionar todos</button>
+                            <button class="btn btn-sm btn-outline-secondary" id="clear-all-regions">Limpiar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-section" id="type-panel">
+                    <div class="filter-group">
+                        <h6>
+                            <span><i class="fas fa-tag me-2"></i>Tipos de Áreas</span>
+                            <span class="badge bg-primary" id="selected-types-count">0</span>
+                        </h6>
+                        <div class="filter-options" id="type-options"></div>
+                        <div class="filter-actions">
+                            <button class="btn btn-sm btn-outline-primary" id="select-all-types">Seleccionar todos</button>
+                            <button class="btn btn-sm btn-outline-secondary" id="clear-all-types">Limpiar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-section" id="admin-panel">
+                    <div class="filter-group">
+                        <h6>
+                            <span><i class="fas fa-building me-2"></i>Áreas Administrativas</span>
+                            <span class="badge bg-primary" id="selected-admin-count">0</span>
+                        </h6>
+                        <div class="filter-options" id="admin-options"></div>
+                        <div class="filter-actions">
+                            <button class="btn btn-sm btn-outline-primary" id="select-all-admin">Seleccionar todos</button>
+                            <button class="btn btn-sm btn-outline-secondary" id="clear-all-admin">Limpiar</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <hr>
+
                 <div class="p-2">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <h6 class="text-success mb-0"><i class="fas fa-list me-1"></i> Áreas Encontradas</h6>
@@ -547,7 +546,18 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', async function() {
-            // **ACTUALIZACIÓN**: Se añaden las propiedades "link" y "logoURL" a todas las áreas protegidas.
+            
+            const repoBaseUrl = "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/";
+            const defaultImage = "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/FIAS.png"; 
+
+            function generarUrlImagen(nombre) {
+                const nombreLimpio = nombre.normalize("NFD").replace(/[\u0300-\u036f]/g, "") 
+                                           .replace(/\./g, "") 
+                                           .replace(/\s+/g, "_"); 
+                return `${repoBaseUrl}${nombreLimpio}.png`;
+            }
+
+            // LISTA DE ÁREAS PROTEGIDAS CON LOS NUEVOS ENLACES CONFIGURADOS
             const areasProtegidas = [
                 {id: 1, nombre: "Parque Nacional Yasuní", tipo: "Parque Nacional", region: "Amazonía", latitud: -1.5261, longitud: -76.4559, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/jguerrero_fias_org_ec/Ebzbg-n4aIJGihvdlnKFzgYBNS2jKALNXbE5IE5RLRS9pw?e=2veUI4", logoURL: "https://github.com/jaircruz1304/FIAS/blob/Img_Map/Parque%20Nacional%20Yasuní.png?raw=true"},
                 {id: 2, nombre: "Reserva Ecológica Cotacachi-Cayapas", tipo: "Reserva Ecológica", region: "Sierra", latitud: 0.681, longitud: -78.594, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/npaspuel_fias_org_ec/Eab6X42Aj9ZKrLLx4qpSg5ABacHpcPsTeKsaYRcHuZ6dFg?e=0FKWWT", logoURL: "https://github.com/jaircruz1304/FIAS/blob/Img_Map/Reserva%20Ecológica%20Cotacachi-Cayapas.png?raw=true"},
@@ -606,10 +616,14 @@
                 {id: 55, nombre: "Área Ecologíca de Conservación Municipal Curiquingue Gallocantana", tipo: "Área Ecológica de Conservación", region: "Sierra", latitud: -2.7574528, longitud: -79.1834216, link: "URL_AQUI", logoURL: "URL_AQUI"},
                 {id: 56, nombre: "Refugio de vida silvestre Machángara Tomebamba", tipo: "Refugio de Vida Silvestre", region: "Sierra", latitud: -2.7331373, longitud: -79.0614996, link: "URL_AQUI", logoURL: "URL_AQUI"}
             ];
+
+            // Generar URLs de imágenes para cada área
+            areasProtegidas.forEach(area => {
+                area.logoUrl = generarUrlImagen(area.nombre);
+            });
             
-            // Lista de áreas con bienes FIAS
             const fiasAreasNames = [
-                "Reserva Ecológica El Ángel", "Reserva Biológica El Quimi", "Parque Nacional Sangay", "Reserva Biológica El Cóndor", "Reserva de Producción de Fauna Chimborazo", 
+                "Reserva Ecológica El Ángel", "Parque Nacional Sangay", "Reserva de Producción de Fauna Chimborazo", 
                 "Parque Nacional Cotopaxi", "Area Nacional de Recreación El Boliche", "Reserva Ecológica Los Illinizas", 
                 "Reserva Ecológica Cotacachi-Cayapas", "Parque Nacional Podocarpus", "Refugio de Vida Silvestre El Zarza", 
                 "Parque Nacional de Yacuri", "Reserva Biológica Cerro Plateado", "Parque Nacional Cayambe-Coca", 
@@ -628,83 +642,58 @@
                 "Reserva Ecológica Cofán-Bermejo"
             ];
 
-            // Asigna la propiedad tieneBienesFIAS a cada área protegida que corresponda
             areasProtegidas.forEach(area => {
                 area.tieneBienesFIAS = fiasAreasNames.includes(area.nombre);
             });
-	            
-            // Configuración de iconos para cada tipo de área
-            const areaConfig = {
-                'Parque Nacional': { icon: 'fa-mountain-sun', color: '#2ecc71' },
-                'Reserva Biológica': { icon: 'fa-dna', color: '#3498db' },
-                'Reserva Geobotánica': { icon: 'fa-seedling', color: '#9b59b6' },
-                'Reserva Ecológica': { icon: 'fa-leaf', color: '#e74c3c' },
-                'Reserva Marina': { icon: 'fa-water', color: '#1abc9c' },
-                'Área Nacional de Recreación': { icon: 'fa-person-hiking', color: '#f1c40f' },
-                'Reserva de Producción de Fauna': { icon: 'fa-paw', color: '#e67e22' },
-                'Refugio de Vida Silvestre': { icon: 'fa-dove', color: '#e84393' },
-                'Área Ecológica de Conservación': { icon: 'fa-shield-halved', color: '#7f8c8d' },
-                'Bosque Protector': { icon: 'fa-tree', color: '#27ae60' },
-                'Área Protegida Privada': { icon: 'fa-lock', color: '#8e44ad' },
-                'default': { icon: 'fa-map-marker-alt', color: '#95a5a6' }
-            };
-            
-            // Agregar áreas administrativas
+                
+            // Áreas administrativas con sus Logos (apuntando al repo raw)
             const areasAdministrativas = [
                 {
                     id: 100, nombre: "FIAS Institucional", tipo: "Área Administrativa", subtipo: "FIAS", region: "Sierra", latitud: -0.2149, longitud: -78.5009,
                     direccion: "Edificio Concorde, Av. 12 de Octubre y Francisco Salazar", esAdministrativa: true,
                     link: "https://fiasec-my.sharepoint.com/:x:/g/personal/jcruzg_fias_org_ec/ET7cHBq4_bBBhZHTCjfVxdIBGImPaOuGN7m4RpZm5Egrag",
-                    logoURL: "URL_AQUI"
+                    logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/FIAS.png"
                 },
                 {
                     id: 101, nombre: "REM (REDD Early Movers)", tipo: "Área Administrativa", subtipo: "REM", region: "Sierra", latitud: -0.2149, longitud: -78.5009,
                     direccion: "Edificio Concorde, Av. 12 de Octubre y Francisco Salazar", esAdministrativa: true,
                     link: "https://sharepoint.fias.org.ec/inventario/REM",
-                    logoURL: "URL_AQUI"
+                    logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/REM.png"
                 },
                 {
                     id: 102, nombre: "FAP (Fondo de Áreas Protegidas)", tipo: "Área Administrativa", subtipo: "FAP", region: "Sierra", latitud: -0.2149, longitud: -78.5009,
                     direccion: "Edificio Concorde, Av. 12 de Octubre y Francisco Salazar", esAdministrativa: true,
                     link: "https://sharepoint.fias.org.ec/inventario/FAP",
-                    logoURL: "URL_AQUI"
+                    logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/FAP.jpg"
                 },
                 {
-                    id: 103, nombre: "Bioeconomía", tipo: "Área Administrativa", subtipo: "Bioeconomía", region: "Sierra", latitud: -0.1994, longitud: -78.4818,
-                    direccion: "Av. 6 de Diciembre N31-110 y Whymper", esAdministrativa: true,
-                    link: "https://fiasec-my.sharepoint.com/:x:/r/personal/mvaldiviezo_fias_org_ec/Documents/Documentos/BIOECONOMIA/BIENES/BIENES%20BIECONOMIA%202025/Copia%20de%20MATRIZ%20CONTROL%20INVENTARIO%20FIAS-BIOECONOMIA.xlsx?d=w15ae32f96d2e415abf31f7ed5b09fa7e&e=4%3a9f25ba1614d647838e63bdbd7ebdbe53&sharingv2=true&fromShare=true&at=9",
-                    logoURL: "URL_AQUI"
+                    id: 103, nombre: "Bioeconomía", tipo: "Área Administrativa", subtipo: "Bioeconomía", region: "Sierra", latitud: -0.2149, longitud: -78.5009,
+                    direccion: "Edificio Concorde, Av. 12 de Octubre y Francisco Salazar", esAdministrativa: true,
+                    link: "https://sharepoint.fias.org.ec/inventario/Bioeconomia",
+                    logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Bioeconom%C3%ADa.png"
                 },
                 {
-                    id: 104, nombre: "PASF (Proyecto Amazonia Sin Fuego)", tipo: "Área Administrativa", subtipo: "PASF", region: "Sierra", latitud: -0.2201, longitud: -78.5123,
-                    direccion: "Calle Toledo N22-286 y Lérida", esAdministrativa: true,
-                    link: "https://fiasec-my.sharepoint.com/:x:/g/personal/jcruzg_fias_org_ec/EW_7G9i0ZclBmAwB9LC-D8UB9w00kLVNIMPkgq_x3uNULw?e=PYi889",
-                    logoURL: "URL_AQUI"
+                    id: 104, nombre: "PASF (Proyecto Amazonia Sin Fuego)", tipo: "Área Administrativa", subtipo: "PASF", region: "Sierra", latitud: -0.2149, longitud: -78.5009,
+                    direccion: "Edificio Concorde, Av. 12 de Octubre y Francisco Salazar", esAdministrativa: true,
+                    link: "https://sharepoint.fias.org.ec/inventario/PASF",
+                    logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/PASF.png"
                 },
                 {
                     id: 105, nombre: "Conserva Aves", tipo: "Área Administrativa", subtipo: "Conserva Aves", region: "Sierra", latitud: -0.2149, longitud: -78.5009,
                     direccion: "Edificio Concorde, Av. 12 de Octubre y Francisco Salazar", esAdministrativa: true,
-                    link: "https://fiasec-my.sharepoint.com/:x:/g/personal/martin_vallejo_fias_org_ec/ESbRjgdd6xtPlw4wrvfLCqcBogR_kLoKFzDCbUJyH6EAXw?e=FVjdd0",
-                    logoURL: "URL_AQUI"
+                    link: "https://sharepoint.fias.org.ec/inventario/ConservaAves",
+                    logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Conserva%20Aves.png"
                 },
                 {
-                    id: 106, nombre: "FEIG (Fondo para Control de Especies Invasoras de Galápagos)", tipo: "Área Administrativa", subtipo: "FEIG", region: "Galápagos", latitud: -0.7456, longitud: -90.3018,
+                    id: 106, nombre: "FEIG (Fondo para Control de Especies Invasoras de Galápagos)", tipo: "Área Administrativa", subtipo: "FEIG", region: "Insular", latitud: -0.7456, longitud: -90.3018, 
                     direccion: "Marchena 115 y Charles Darwin, Puerto Ayora", esAdministrativa: true,
-                    link: "https://fiasec-my.sharepoint.com/:x:/g/personal/dcedeno_fias_org_ec/EQG0mksWSC5Js6DoOryz-YEBIvvMTfP11VyUY-V3OiomjQ?e=VU3aUv",
-                    logoURL: "URL_AQUI"
-                },
-                {
-                    id: 107, nombre: "RENDIMIENTOS", tipo: "Área Administrativa", subtipo: "REM", region: "Sierra", latitud: -0.2149, longitud: -78.5009,
-                    direccion: "Edificio Concorde, Av. 12 de Octubre y Francisco Salazar", esAdministrativa: true,
-                    link: "https://fiasec-my.sharepoint.com/:x:/g/personal/jcruzg_fias_org_ec/EdmeraZucJBNrQmeJPUcBckBtD9cELO1ag3VurLFBvbdJg?e=0lHvN0",
-                    logoURL: "URL_AQUI"
+                    link: "https://sharepoint.fias.org.ec/inventario/FEIG",
+                    logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/FEIG.png"
                 }
             ];
             
-            // Marcar todas las áreas administrativas para que muestren el botón de inventario.
             areasAdministrativas.forEach(area => area.tieneBienesFIAS = true);
 
-            // Combinar todas las áreas
             const todasLasAreas = [...areasProtegidas, ...areasAdministrativas];
             
             let map;
@@ -717,6 +706,37 @@
                 search: '',
                 fiasOnly: false
             };
+
+            // Configuración de iconos para tipos de áreas
+            const areaConfig = {
+                "Parque Nacional": { icon: "fa-tree", color: "var(--primary-color)" },
+                "Reserva Ecológica": { icon: "fa-leaf", color: "#28a745" },
+                "Reserva de Producción de Fauna": { icon: "fa-paw", color: "#ff6b6b" },
+                "Reserva de Producción de Fauna": { icon: "fa-paw", color: "#ff6b6b" },
+                "Reserva Marina": { icon: "fa-water", color: "#17a2b8" },
+                "Refugio de Vida Silvestre": { icon: "fa-dove", color: "#e83e8c" },
+                "Área Nacional de Recreación": { icon: "fa-hiking", color: "#6f42c1" },
+                "Reserva Biológica": { icon: "fa-seedling", color: "#20c997" },
+                "Reserva Geobotánica": { icon: "fa-spa", color: "#6610f2" },
+                "Área Ecológica de Conservación": { icon: "fa-mountain", color: "#fd7e14" },
+                "Área Protegida Privada": { icon: "fa-lock", color: "#343a40" },
+                "Bosque Protector": { icon: "fa-forest", color: "#2c5e1a" },
+                "default": { icon: "fa-map-marker-alt", color: "#6c757d" }
+            };
+
+            // Función para obtener color de área administrativa
+            function getAdminColor(subtipo) {
+                const colorMap = {
+                    "FIAS": "var(--fias-color)",
+                    "REM": "var(--rem-color)",
+                    "FAP": "var(--fap-color)",
+                    "Bioeconomía": "var(--bio-color)",
+                    "PASF": "var(--pasf-color)",
+                    "Conserva Aves": "var(--conserva-color)",
+                    "FEIG": "var(--feig-color)"
+                };
+                return colorMap[subtipo] || "var(--admin-color)";
+            }
             
             function init() {
                 createAppData();
@@ -755,7 +775,7 @@
                     
                     let popupContent = `<h5><i class="fas ${config.icon} me-2"></i>${area.nombre}</h5>`;
                     
-                    // **ACTUALIZACIÓN**: Agregar imagen del área si existe
+                    // Agregar imagen del área si existe
                     if (area.logoURL && area.logoURL !== 'URL_AQUI') {
                         popupContent += `<div class="text-center mb-2"><img src="${area.logoURL}" alt="${area.nombre}" style="max-width: 200px; max-height: 150px; border-radius: 8px;" class="img-fluid"></div>`;
                     }
@@ -784,21 +804,8 @@
                         }
                     });
                     
-                    return { ...area, marker, config };
+                    return { ...area, marker };
                 });
-            }
-            
-            function getAdminColor(subtipo) {
-                switch(subtipo) {
-                    case 'FIAS': return 'var(--fias-color)';
-                    case 'REM': return 'var(--rem-color)';
-                    case 'FAP': return 'var(--fap-color)';
-                    case 'Bioeconomía': return 'var(--bio-color)';
-                    case 'PASF': return 'var(--pasf-color)';
-                    case 'Conserva Aves': return 'var(--conserva-color)';
-                    case 'FEIG': return 'var(--feig-color)';
-                    default: return 'var(--admin-color)';
-                }
             }
             
             function initMap() {
@@ -806,12 +813,9 @@
                 const baseLayers = {
                     "OpenStreetMap": L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }),
                     "Satélite": L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { attribution: 'Tiles &copy; Esri' }),
-                    "Topográfico": L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', { attribution: 'Map data: &copy; OpenTopoMap' }), "CartoDB Positron": L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; CartoDB'
-        }),
-        "CartoDB Dark Matter": L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; CartoDB'
-        })
+                    "Topográfico": L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', { attribution: 'Map data: &copy; OpenTopoMap' }),
+                    "CartoDB Positron": L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { attribution: '&copy; CartoDB' }),
+                    "CartoDB Dark Matter": L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { attribution: '&copy; CartoDB' })
                 };
                 baseLayers.OpenStreetMap.addTo(map);
                 L.control.layers(baseLayers).addTo(map);
@@ -835,24 +839,39 @@
             function createFilterOptions() {
                 const types = [...new Set(areasProtegidas.map(a => a.tipo))].sort();
                 const typeOptions = document.getElementById('type-options');
-                types.forEach(type => typeOptions.appendChild(createFilterOption(type, areasProtegidas.filter(a => a.tipo === type).length, 'type')));
+                types.forEach(type => {
+                    const areaSample = areasProtegidas.find(a => a.tipo === type);
+                    typeOptions.appendChild(createFilterOption(type, areasProtegidas.filter(a => a.tipo === type).length, 'type', areaSample.logoUrl));
+                });
 
-                const regions = [...new Set(areasProtegidas.map(a => a.region))].sort();
+                const regions = [...new Set(todasLasAreas.map(a => a.region))].sort();
                 const regionOptions = document.getElementById('region-options');
-                regions.forEach(region => regionOptions.appendChild(createFilterOption(region, areasProtegidas.filter(a => a.region === region).length, 'region')));
+                regions.forEach(region => regionOptions.appendChild(createFilterOption(region, todasLasAreas.filter(a => a.region === region).length, 'region', null)));
 
                 const adminTypes = [...new Set(areasAdministrativas.map(a => a.subtipo))].sort();
                 const adminOptions = document.getElementById('admin-options');
-                adminTypes.forEach(subtipo => adminOptions.appendChild(createFilterOption(subtipo, areasAdministrativas.filter(a => a.subtipo === subtipo).length, 'adminType')));
+                adminTypes.forEach(subtipo => {
+                    const areaSample = areasAdministrativas.find(a => a.subtipo === subtipo);
+                    adminOptions.appendChild(createFilterOption(subtipo, areasAdministrativas.filter(a => a.subtipo === subtipo).length, 'adminType', areaSample.logoUrl));
+                });
             }
             
-            function createFilterOption(value, count, type) {
+            function createFilterOption(value, count, type, logoUrl) {
                 const option = document.createElement('div');
                 option.className = 'filter-option';
                 const id = `${type}-${value.replace(/\s+/g, '-').toLowerCase()}`;
+                
+                const logoHtml = logoUrl ? `<img src="${logoUrl}" alt="Logo" loading="lazy" onerror="this.style.display='none'">` : '<i class="fas fa-map-marker-alt text-muted" style="width:24px; text-align:center;"></i>';
+
                 option.innerHTML = `
                     <input type="checkbox" id="${id}" data-filter-type="${type}" data-value="${value}">
-                    <label for="${id}"><span>${value}</span><span class="count">${count}</span></label>`;
+                    <label for="${id}">
+                        <span class="logo-container">
+                            ${logoHtml}
+                            <span>${value}</span>
+                        </span>
+                        <span class="count">${count}</span>
+                    </label>`;
                 
                 option.querySelector('input').addEventListener('change', function() {
                     const { filterType, value } = this.dataset;
@@ -872,7 +891,7 @@
                 });
                 return option;
             }
-            
+
             function updateSelectedCounts() {
                 document.getElementById('selected-types-count').textContent = activeFilters.types.length;
                 document.getElementById('selected-regions-count').textContent = activeFilters.regions.length;
@@ -892,17 +911,32 @@
                 
                 const filteredAreas = areaData.filter(area => {
                     const searchMatch = area.nombre.toLowerCase().includes(search);
-                    if (!searchMatch) return false;
+                    const regionMatch = activeFilters.regions.length === 0 || activeFilters.regions.includes(area.region);
+                    const fiasMatch = !fiasOnly || area.tieneBienesFIAS;
+
+                    if (!searchMatch || !regionMatch || !fiasMatch) return false;
+                    
+                    const typesActive = activeFilters.types.length > 0;
+                    const adminTypesActive = activeFilters.adminTypes.length > 0;
+
+                    if (!typesActive && !adminTypesActive) {
+                        return true;
+                    }
+                    
+                    let typeMatch = false;
+                    let adminMatch = false;
 
                     if (area.esAdministrativa) {
-                        if (fiasOnly) return true;
-                        return activeFilters.adminTypes.length === 0 || activeFilters.adminTypes.includes(area.subtipo);
+                        if (adminTypesActive) {
+                            adminMatch = activeFilters.adminTypes.includes(area.subtipo);
+                        }
                     } else {
-                        if (fiasOnly && !area.tieneBienesFIAS) return false;
-                        const typeMatch = activeFilters.types.length === 0 || activeFilters.types.includes(area.tipo);
-                        const regionMatch = activeFilters.regions.length === 0 || activeFilters.regions.includes(area.region);
-                        return typeMatch && regionMatch;
+                        if (typesActive) {
+                            typeMatch = activeFilters.types.includes(area.tipo);
+                        }
                     }
+                    
+                    return typeMatch || adminMatch;
                 });
                 
                 filteredAreas.forEach(area => {
@@ -911,16 +945,23 @@
                     card.className = `area-card ${area.esAdministrativa ? 'admin-card' : ''}`;
                     card.dataset.id = area.id;
                     
-                    let colorClass = '';
-                    if (area.esAdministrativa) {
-                        colorClass = `${area.subtipo.toLowerCase().replace(/\s/g, '-')}-color`;
-                    }
-                    
                     const fiasBadge = area.tieneBienesFIAS ? '<span class="badge fias-badge ms-2"><i class="fas fa-gem me-1"></i>FIAS</span>' : '';
                     
+                    let inventoryButtonHtml = '';
+                    if (area.tieneBienesFIAS) {
+                        if (area.link && area.link !== 'URL_AQUI') {
+                            inventoryButtonHtml = `<button class="btn btn-sm btn-outline-success" onclick="viewInventory(${area.id})" data-bs-toggle="tooltip" title="Abrir inventario"><i class="fas fa-boxes-stacked"></i></button>`;
+                        } else {
+                            inventoryButtonHtml = `<button class="btn btn-sm btn-outline-secondary" disabled data-bs-toggle="tooltip" title="Inventario no disponible"><i class="fas fa-boxes-stacked"></i></button>`;
+                        }
+                    }
+
                     card.innerHTML = `
                         <div class="area-card-header">
-                            <div><i class="fas ${area.config.icon} area-card-icon ${colorClass}"></i><strong>${area.nombre}</strong>${fiasBadge}</div>
+                            <div class="d-flex align-items-center">
+                                 <img src="${area.logoUrl}" class="area-card-img" onerror="this.onerror=null;this.src='${defaultImage}';">
+                                 <div><strong>${area.nombre}</strong>${fiasBadge}</div>
+                            </div>
                         </div>
                         <div class="area-card-body">
                             <div class="d-flex justify-content-between">
@@ -930,7 +971,7 @@
                             ${area.direccion ? `<p class="mt-2 mb-0 small text-muted"><i class="fas fa-map-marker-alt me-1"></i>${area.direccion}</p>` : ''}
                             <div class="mt-2">
                                 <button class="btn btn-sm btn-outline-primary me-2" onclick="viewDetails(${area.id})" data-bs-toggle="tooltip" title="Ver detalles"><i class="fas fa-info-circle"></i></button>
-                                ${area.tieneBienesFIAS ? `<button class="btn btn-sm btn-outline-success" onclick="viewInventory(${area.id})" data-bs-toggle="tooltip" title="Abrir inventario"><i class="fas fa-boxes-stacked"></i></button>` : ''}
+                                ${inventoryButtonHtml}
                             </div>
                         </div>`;
                     
@@ -943,6 +984,13 @@
                     areasCards.appendChild(card);
                 });
                 
+                if (filteredAreas.length > 0) {
+                    const featureGroup = L.featureGroup(filteredAreas.map(a => a.marker));
+                    map.fitBounds(featureGroup.getBounds().pad(0.1), { maxZoom: 15 });
+                } else {
+                    map.setView([-1.8312, -78.1834], 7);
+                }
+
                 document.getElementById('visible-count').textContent = filteredAreas.length;
                 document.getElementById('total-count').textContent = areaData.length;
                 document.getElementById('areas-count').textContent = `${filteredAreas.length}/${areaData.length}`;
@@ -983,18 +1031,20 @@
                 document.getElementById('reset-filters').addEventListener('click', resetFilters);
                 document.getElementById('scroll-to-top').addEventListener('click', () => document.querySelector('.sidebar-content').scrollTo({ top: 0, behavior: 'smooth' }));
                 
-                const setupFilterActions = (type) => {
-                    document.getElementById(`select-all-${type}s`).addEventListener('click', () => {
-                        activeFilters[`${type}s`] = [...new Set( (type === 'admin' ? areasAdministrativas.map(a => a.subtipo) : areasProtegidas.map(a => a[type])) )];
+                const setupFilterActions = (type, sourceArray) => {
+                    const plural = type === 'type' ? 'types' : 'regions';
+                    document.getElementById(`select-all-${plural}`).addEventListener('click', () => {
+                         activeFilters[plural] = [...new Set(sourceArray.map(a => a[type]))];
                         updateMapAndList();
                     });
-                    document.getElementById(`clear-all-${type}s`).addEventListener('click', () => {
-                        activeFilters[`${type}s`] = [];
+                    document.getElementById(`clear-all-${plural}`).addEventListener('click', () => {
+                        activeFilters[plural] = [];
                         updateMapAndList();
                     });
                 };
-                setupFilterActions('type');
-                setupFilterActions('region');
+                setupFilterActions('type', areasProtegidas);
+                setupFilterActions('region', todasLasAreas);
+
                 document.getElementById('select-all-admin').addEventListener('click', () => {
                     activeFilters.adminTypes = [...new Set(areasAdministrativas.map(a => a.subtipo))];
                     updateMapAndList();
@@ -1008,6 +1058,7 @@
                     document.getElementById('sidebar').classList.toggle('collapsed');
                     this.querySelector('i').classList.toggle('fa-bars');
                     this.querySelector('i').classList.toggle('fa-chevron-right');
+                    setTimeout(() => map.invalidateSize(), 300);
                 });
             }
 
@@ -1045,7 +1096,7 @@
                 if (area) {
                     let content = `<div class="text-start">`;
                     
-                    // **ACTUALIZACIÓN**: Agregar imagen del área si existe
+                    // Agregar imagen del área si existe
                     if (area.logoURL && area.logoURL !== 'URL_AQUI') {
                         content += `<div class="text-center mb-3"><img src="${area.logoURL}" alt="${area.nombre}" style="max-width: 250px; max-height: 180px; border-radius: 8px;" class="img-fluid border"></div>`;
                     }
@@ -1069,14 +1120,16 @@
             };
             
             function initializeTooltips() {
+                const oldTooltips = document.querySelectorAll('.tooltip');
+                oldTooltips.forEach(t => t.remove());
                 const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
                 tooltipTriggerList.map(function (tooltipTriggerEl) {
                     return new bootstrap.Tooltip(tooltipTriggerEl);
                 });
             }
 
+            // Inicializar la aplicación
             init();
-            initializeTooltips();
         });
     </script>
 </body>

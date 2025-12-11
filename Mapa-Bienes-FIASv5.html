@@ -531,18 +531,7 @@
     </button>
 </div>
 
-<div class="creditos-container mt-2 pt-2 border-top">
-    <small class="text-muted d-flex align-items-center">
-        Desarrollado por:
-        <a href="https://www.linkedin.com/in/jair-cruz-gallegos-65998776/" 
-           target="_blank" 
-           class="d-inline-flex align-items-center ms-1"
-           data-bs-toggle="tooltip" 
-           title="LinkedIn de Jair Cruz Gallegos">
-            <i class="fab fa-linkedin fs-5"></i>
-        </a>
-    </small>
-</div>
+
         </div>
         <div id="map-wrapper">
             <div id="loading-overlay">
@@ -814,7 +803,19 @@
                     const div = L.DomUtil.create('div', 'legend');
                     div.innerHTML = `
                         <h4><i class="fas fa-gem text-primary"></i> Con bienes institucionales</h4>
-                      
+                      <div class="creditos-container mt-2 pt-2 border-top">
+    <small class="text-muted d-flex align-items-center">
+        Desarrollado por: 
+        <a href="https://www.linkedin.com/in/jair-cruz-gallegos-65998776/" 
+           target="_blank" 
+           class="d-inline-flex align-items-center ms-1 text-decoration-none"
+           data-bs-toggle="tooltip" 
+           title="LinkedIn de Jair Cruz Gallegos">
+            Jair Cruz
+            <i class="fab fa-linkedin ms-1 fs-6"></i>
+        </a>
+    </small>
+</div>
                     `;
                     return div;
                 };

@@ -5,11 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Mapa Interactivo de Áreas Protegidas del Ecuador - FIAS</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.Default.css" />
+    
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
@@ -18,832 +19,491 @@
             --secondary-color: #4a8c2c;
             --fias-color: #0d6efd;
             --light-bg: #f8f9fa;
-            --admin-color: #6f42c1;
-            /* Altura de la barra de navegación para cálculos */
-            --navbar-height: 60px;
+            --navbar-height: 56px;
         }
 
         body {
             display: flex;
             flex-direction: column;
             height: 100vh;
-            height: 100dvh; /* Soporte para móviles dinámicos */
+            height: 100dvh; /* Para móviles modernos */
             overflow: hidden;
-            background-color: var(--light-bg);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--light-bg);
         }
 
+        /* --- Navbar --- */
         .navbar {
             background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            padding: 0.5rem 1rem;
-            z-index: 1030;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
             height: var(--navbar-height);
+            z-index: 1030;
+            padding: 0 1rem;
             flex-shrink: 0;
         }
 
-        .navbar-brand img {
-            height: 25px;
-            width: auto;
-        }
+        .navbar-brand img { height: 25px; width: auto; }
+        .navbar-brand span { font-size: 1rem; color: white; margin-left: 10px; font-weight: 700; }
 
+        /* --- Layout Principal --- */
         #map-container {
             display: flex;
             flex: 1;
-            overflow: hidden;
-            position: relative; /* Importante para el posicionamiento absoluto en móvil */
+            position: relative;
             height: calc(100vh - var(--navbar-height));
+            height: calc(100dvh - var(--navbar-height));
+            overflow: hidden;
         }
 
-        /* --- Sidebar Configuración Desktop por defecto --- */
+        /* --- Sidebar (Escritorio y Móvil) --- */
         #sidebar {
-            width: 400px;
+            width: 380px;
             background: #ffffff;
             display: flex;
             flex-direction: column;
-            box-shadow: 3px 0 10px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
             z-index: 1001;
-            border-right: 1px solid #eaeaea;
+            border-right: 1px solid #ddd;
+            transition: transform 0.3s ease;
             position: relative;
             height: 100%;
-        }
-        
-        #sidebar.collapsed {
-            margin-left: -400px; /* Usamos margin en desktop para que el mapa ocupe el espacio */
-            transform: none;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
         }
 
-        .sidebar-header {
-            padding: 1rem;
-            border-bottom: 1px solid #e0e0e0;
-            background-color: white;
-            flex-shrink: 0;
-        }
-        
-        #search-input {
-            border-radius: 50px;
-            padding: 0.5rem 1rem;
-            font-size: 0.95rem;
-        }
+        /* En escritorio, "collapsed" lo mueve a la izquierda fuera de pantalla */
+        #sidebar.collapsed { margin-left: -380px; }
 
+        .sidebar-header { padding: 10px 15px; border-bottom: 1px solid #eee; background: #fff; }
+        #search-input { border-radius: 20px; font-size: 0.9rem; }
+        
         .sidebar-content {
             flex: 1;
             overflow-y: auto;
-            padding: 0.5rem;
-            -webkit-overflow-scrolling: touch; /* Suavidad en iOS */
+            padding: 10px;
+            background: #fdfdfd;
         }
 
-        /* --- Ajustes de Tarjetas y Filtros --- */
+        /* --- Tarjetas y Filtros --- */
         .filter-section {
-            padding: 0.8rem;
-            background-color: white;
-            border-radius: 8px;
-            margin: 0.5rem 0.2rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            background: white;
             border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 10px;
         }
-
-        .filter-group h6 {
-            font-size: 0.95rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .filter-options {
-            max-height: 150px; /* Reducido un poco para pantallas chicas */
-            overflow-y: auto;
-        }
-
-        .filter-option {
-            padding: 0.3rem 0.5rem;
-        }
+        
+        .filter-options { max-height: 120px; overflow-y: auto; }
+        .filter-option { font-size: 0.85rem; padding: 2px 0; }
         
         .area-card {
-            border: 1px solid rgba(0,0,0,.125);
-            border-radius: 8px;
-            margin-bottom: 0.8rem;
-            background-color: white;
-            transition: all 0.2s;
-        }
-        
-        .area-card:active {
-            background-color: #f0f0f0;
-        }
-
-        .area-card-header {
-            padding: 0.7rem 1rem;
-        }
-
-        .area-card-img {
-            width: 35px;
-            height: 35px;
-            margin-right: 0.5rem;
-        }
-
-        .area-card-body {
-            padding: 0.8rem 1rem;
-        }
-
-        .stats-container {
-            padding: 0.8rem;
-            background: #f8f9fa;
-            border-top: 1px solid #e9ecef;
-            flex-shrink: 0;
-        }
-
-        #map-wrapper {
-            flex: 1;
-            position: relative;
-            height: 100%;
-            width: 100%;
-        }
-        
-        #map {
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-        }
-
-        /* Botón Flotante para el Sidebar */
-        #toggle-sidebar-btn {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            z-index: 1002;
-            border-radius: 50%;
-            width: 45px;
-            height: 45px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
             background: white;
-            border: none;
-            color: var(--primary-color);
-            transition: all 0.3s;
-        }
-
-        #toggle-sidebar-btn:active {
-            transform: scale(0.95);
-        }
-
-        /* --- Leyenda --- */
-        .legend {
-            padding: 8px 12px;
-            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid #e0e0e0;
             border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-            font-size: 0.8rem;
-            max-width: 200px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
-
-        /* --- Estilos de Imágenes del Mapa --- */
-        .custom-map-img {
-            width: 40px !important;
-            height: 40px !important;
-            border-radius: 50%;
-            border: 2px solid white;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.4);
-            object-fit: cover;
-            background-color: white;
-        }
+        .area-card:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .area-card.active { border-left: 4px solid var(--primary-color); background: #f0f9eb; }
         
-        .fias-marker-pulse {
-            border: 2px solid var(--fias-color) !important;
-            animation: pulse 2s infinite;
-        }
+        .area-card-header { padding: 8px 12px; display: flex; align-items: center; border-bottom: 1px solid #f0f0f0; }
+        .area-card-img { width: 32px; height: 32px; border-radius: 50%; margin-right: 10px; object-fit: cover; border: 1px solid #ddd; }
+        .area-card-body { padding: 8px 12px; font-size: 0.85rem; }
 
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(13, 110, 253, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(13, 110, 253, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(13, 110, 253, 0); }
-        }
+        /* --- Mapa --- */
+        #map-wrapper { flex: 1; position: relative; height: 100%; width: 100%; }
+        #map { width: 100%; height: 100%; z-index: 1; }
 
+        /* Botón toggle */
+        #toggle-sidebar-btn {
+            position: absolute; top: 10px; left: 10px; z-index: 1002;
+            width: 40px; height: 40px; border-radius: 50%;
+            border: none; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            color: var(--primary-color); font-size: 1.2rem;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: 0.2s;
+        }
+        #toggle-sidebar-btn:hover { background: #f0f0f0; }
+
+        /* Overlay de Carga */
         #loading-overlay {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(255, 255, 255, 0.95);
-            z-index: 2000;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255,255,255,0.98); z-index: 9999;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
         }
 
-        /* =========================================
-           MEDIA QUERIES PARA MÓVILES
-           ========================================= */
+        /* Marcadores */
+        .custom-map-img {
+            width: 36px !important; height: 36px !important;
+            border-radius: 50%; border: 2px solid white;
+            box-shadow: 0 3px 5px rgba(0,0,0,0.3); object-fit: cover; background: white;
+        }
+        .fias-marker-pulse { border-color: var(--fias-color) !important; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(13, 110, 253, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(13, 110, 253, 0); } 100% { box-shadow: 0 0 0 0 rgba(13, 110, 253, 0); } }
+
+        /* --- MÓVIL (Media Queries) --- */
         @media (max-width: 768px) {
+            .navbar-brand span { font-size: 0.9rem; max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
             
-            /* Ajuste Navbar */
-            .navbar-brand span {
-                font-size: 0.9rem !important;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                max-width: 180px;
-                display: block !important; /* Mostrar texto si cabe */
-            }
-            
-            .navbar {
-                padding: 0.5rem;
-            }
-
-            /* Sidebar Overlay Total */
+            /* En móvil, el sidebar flota sobre el mapa (overlay) */
             #sidebar {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                margin-left: 0;
-                transform: translateX(0);
-                z-index: 2000; /* Encima de todo */
+                position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+                margin-left: 0; transform: translateX(0);
             }
-
-            #sidebar.collapsed {
-                transform: translateX(-100%);
-                margin-left: 0; /* Reset del margen desktop */
-            }
-
-            /* Botón Menú */
-            #toggle-sidebar-btn {
-                top: 10px;
-                left: 10px;
-                width: 40px;
-                height: 40px;
-                font-size: 1.2rem;
-            }
-
-            /* Mapa ocupa todo el espacio detrás */
-            #map-wrapper {
-                width: 100%;
-            }
-
-            /* Ajustes visuales para pantallas chicas */
-            .filter-section {
-                margin: 0.5rem 0;
-            }
+            #sidebar.collapsed { transform: translateX(-100%); margin-left: 0; }
             
-            .area-card-img {
-                width: 45px;
-                height: 45px;
-            }
-
-            /* Leyenda más compacta o oculta si molesta mucho */
-            .legend {
-                margin-bottom: 20px;
-                margin-right: 0;
-                max-width: 150px;
-            }
-            
-            /* Ajuste de controles de Leaflet */
-            .leaflet-control-zoom {
-                margin-top: 60px !important; /* Para que no choque con el botón de menú */
-            }
-            
-            /* SweetAlert responsivo */
-            div:where(.swal2-container) div:where(.swal2-popup) {
-                width: 90% !important;
-                padding: 1em;
-            }
+            .legend { display: none; } /* Ocultar leyenda en móvil para ganar espacio */
         }
     </style>
 </head>
 <body>
 
     <nav class="navbar navbar-expand navbar-dark">
-        <div class="container-fluid px-2">
+        <div class="d-flex align-items-center w-100">
             <a class="navbar-brand d-flex align-items-center" href="#">
-               <img src="https://fias.org.ec/wp-content/uploads/2021/11/Logo_FIAS_web.png" alt="Logo de FIAS" loading="lazy">                
-               <span class="fw-bold ms-2 text-white">MAPA BIENES</span>
+               <img src="https://fias.org.ec/wp-content/uploads/2021/11/Logo_FIAS_web.png" alt="FIAS">
+               <span>MAPA BIENES</span>
             </a>
-            <div class="d-flex align-items-center ms-auto">
-                <button class="btn btn-sm btn-outline-light me-2 p-1 px-2" id="reset-filters">
-                    <i class="fas fa-filter-circle-xmark"></i>
-                </button>
-                <div class="form-check form-switch m-0">
-                    <input class="form-check-input" type="checkbox" role="switch" id="fias-filter">
-                    <label class="form-check-label text-white small" for="fias-filter">
-                        FIAS
-                    </label>
+            <div class="ms-auto d-flex align-items-center">
+                <button class="btn btn-sm btn-outline-light me-2 py-0" id="reset-filters" title="Resetear"><i class="fas fa-undo"></i></button>
+                <div class="form-check form-switch m-0 text-white">
+                    <input class="form-check-input" type="checkbox" id="fias-filter">
+                    <label class="form-check-label small" for="fias-filter">FIAS</label>
                 </div>
             </div>
         </div>
     </nav>
 
     <div id="map-container">
-        
         <div id="sidebar">
             <div class="sidebar-header d-flex justify-content-between align-items-center">
-                <input type="text" id="search-input" class="form-control" placeholder="🔎 Buscar área...">
-                <button class="btn btn-sm btn-light d-md-none ms-2" id="close-sidebar-mobile">
-                    <i class="fas fa-times"></i>
-                </button>
+                <input type="text" id="search-input" class="form-control" placeholder="Buscar área...">
+                <button class="btn btn-sm btn-light d-md-none ms-2" id="close-sidebar-mobile"><i class="fas fa-times"></i></button>
             </div>
             
             <div class="sidebar-content">
-                
-                <div class="filter-section" id="region-panel">
-                    <div class="filter-group">
-                        <h6>
-                            <span><i class="fas fa-globe-americas me-2"></i>Regiones</span>
-                            <span class="badge bg-primary" id="selected-regions-count">0</span>
-                        </h6>
-                        <div class="filter-options" id="region-options"></div>
-                        <div class="filter-actions d-flex gap-1 mt-2">
-                            <button class="btn btn-sm btn-outline-primary w-50" id="select-all-regions">Todos</button>
-                            <button class="btn btn-sm btn-outline-secondary w-50" id="clear-all-regions">Limpiar</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="filter-section" id="type-panel">
-                    <div class="filter-group">
-                        <h6>
-                            <span><i class="fas fa-tag me-2"></i>Tipos</span>
-                            <span class="badge bg-primary" id="selected-types-count">0</span>
-                        </h6>
-                        <div class="filter-options" id="type-options"></div>
-                        <div class="filter-actions d-flex gap-1 mt-2">
-                            <button class="btn btn-sm btn-outline-primary w-50" id="select-all-types">Todos</button>
-                            <button class="btn btn-sm btn-outline-secondary w-50" id="clear-all-types">Limpiar</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="filter-section" id="admin-panel">
-                    <div class="filter-group">
-                        <h6>
-                            <span><i class="fas fa-building me-2"></i>Admin</span>
-                            <span class="badge bg-primary" id="selected-admin-count">0</span>
-                        </h6>
-                        <div class="filter-options" id="admin-options"></div>
-                        <div class="filter-actions d-flex gap-1 mt-2">
-                            <button class="btn btn-sm btn-outline-primary w-50" id="select-all-admin">Todos</button>
-                            <button class="btn btn-sm btn-outline-secondary w-50" id="clear-all-admin">Limpiar</button>
-                        </div>
-                    </div>
+                <div class="filter-section">
+                    <h6 class="small fw-bold text-primary mb-2">Región (<span id="count-regions">0</span>)</h6>
+                    <div class="filter-options" id="region-options"></div>
                 </div>
                 
-                <hr>
-
-                <div class="p-1">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h6 class="text-success mb-0"><i class="fas fa-list me-1"></i> Resultados</h6>
-                        <span class="badge bg-secondary rounded-pill" id="areas-count">0/0</span>
-                    </div>
-                    <div id="areas-cards"></div>
+                <div class="filter-section">
+                    <h6 class="small fw-bold text-primary mb-2">Tipo (<span id="count-types">0</span>)</h6>
+                    <div class="filter-options" id="type-options"></div>
                 </div>
-            </div>
-            
-            <div class="stats-container d-flex justify-content-between align-items-center">
-                <small class="text-muted">
-                    Viendo <strong id="visible-count">0</strong> de <strong id="total-count">0</strong>
-                </small>
-                <button class="btn btn-sm btn-outline-secondary rounded-circle" id="scroll-to-top">
-                    <i class="fas fa-arrow-up"></i>
-                </button>
+
+                <div class="filter-section">
+                    <h6 class="small fw-bold text-primary mb-2">Administrativo (<span id="count-admin">0</span>)</h6>
+                    <div class="filter-options" id="admin-options"></div>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mt-3 mb-2 border-bottom pb-2">
+                    <span class="small fw-bold text-success">Resultados</span>
+                    <span class="badge bg-secondary" id="results-count">0</span>
+                </div>
+                <div id="areas-cards"></div>
             </div>
         </div>
 
         <div id="map-wrapper">
             <div id="loading-overlay">
-                <div class="spinner-border text-success" role="status"></div>
-                <span class="loading-text mt-3 small">Cargando mapa...</span>
+                <div class="spinner-border text-primary" role="status"></div>
+                <span class="mt-2 text-muted small">Cargando mapa...</span>
             </div>
-           
-           <button id="toggle-sidebar-btn" title="Abrir/Cerrar menú"><i class="fas fa-bars"></i></button>
-           <div id="map"></div>
+            <button id="toggle-sidebar-btn"><i class="fas fa-bars"></i></button>
+            <div id="map"></div>
         </div>
-
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.js"></script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', async function() {
-            
-            // Constantes
-            const repoBaseUrl = "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/";
-            const defaultImage = "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/mae.jpg"; 
+        // Configuración Global
+        const DEFAULT_IMG = "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/mae.jpg";
+        let map, markersLayer;
+        let areaData = [];
+        let activeFilters = { types: [], regions: [], adminTypes: [], search: '', fiasOnly: false };
 
-            const areasProtegidas = [
-    {id: 1, nombre: "Parque Nacional Yasuní", tipo: "Parque Nacional", region: "Amazonía", latitud: -1.5261, longitud: -76.4559, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/jguerrero_fias_org_ec/Ebzbg-n4aIJGihvdlnKFzgYBNS2jKALNXbE5IE5RLRS9pw?e=2veUI4", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Parque%20Nacional%20Yasun%C3%AD.png"},
-    {id: 2, nombre: "Reserva Ecológica Cotacachi-Cayapas", tipo: "Reserva Ecológica", region: "Sierra", latitud: 0.681, longitud: -78.594, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/npaspuel_fias_org_ec/Eab6X42Aj9ZKrLLx4qpSg5ABacHpcPsTeKsaYRcHuZ6dFg?e=0FKWWT", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Reserva%20Ecol%C3%B3gica%20Cotacachi-Cayapas.png"},
-    {id: 3, nombre: "Parque Nacional Galápagos", tipo: "Parque Nacional", region: "Insular", latitud: -0.9538, longitud: -90.9656, link: "URL_AQUI", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/refs/heads/Img_Map/Parque%20nacional%20Galapagos.png"},
-    {id: 4, nombre: "Parque Nacional Machalilla", tipo: "Parque Nacional", region: "Costa", latitud: -1.5427, longitud: -80.7512, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/dascencio_fias_org_ec/EecEtd5uu6JGojx4VeqCvekB1p5h2fjxWgU7e1a8GZQc0w?e=4ESyOd", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Parque%20Nacional%20Machalilla.png"},
-    {id: 5, nombre: "Reserva de Producción Faunística Cuyabeno", tipo: "Reserva de Producción de Fauna", region: "Amazonía", latitud: -0.1807, longitud: -76.1507, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/ntacure_fias_org_ec/EfA1Iy38mT1DmiT0wzce0UABLeW-JczYfZ0AknaV2-Nzeg?e=yCqE7d", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Reserva%20de%20Producci%C3%B3n%20Faun%C3%ADstica%20Cuyabeno.png"},
-    {id: 6, nombre: "Parque Nacional Sangay", tipo: "Parque Nacional", region: "Sierra", latitud: -1.837, longitud: -78.3864, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/mmurillo_fias_org_ec/EUA1Mbpds0pCqv6QEmjpmRkBHFzxGU20o9WAE4tDKoiJOg", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Parque%20Nacional%20Sangay.png"},
-    {id: 7, nombre: "Parque Nacional Cajas", tipo: "Parque Nacional", region: "Sierra", latitud: -2.8487368, longitud: -79.2537609, link: "URL_AQUI", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Parque%20Nacional%20Cajas.png"},
-    {id: 8, nombre: "Reserva Ecológica El Ángel", tipo: "Reserva Ecológica", region: "Sierra", latitud: 0.7551564, longitud: -77.9053182, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/mcuaspud_fias_org_ec/EVzkgKlLIMJAt9HzA8dgURMBYpEu58j70EtB2dALyAL2Kg?e=4SDhTf", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Reserva%20Ecol%C3%B3gica%20El%20%C3%81ngel.png"},
-    {id: 9, nombre: "Reserva Ecológica Mache-Chindul", tipo: "Reserva Ecológica", region: "Costa", latitud: 0.4802566, longitud: -79.7848422, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/bleverone_fias_org_ec/EToEcGwLmQhJiP2_sqJqkoEBgY9c0vTMWSIL6NwQPqm49g?e=cbdWBR", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Reserva%20Ecol%C3%B3gica%20Mache-Chindul.png"},
-    {id: 10, nombre: "Reserva Ecológica Manglares Cayapas Mataje", tipo: "Reserva Ecológica", region: "Costa", latitud: 1.2839279, longitud: -78.9061921, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/jbetancourt_fias_org_ec/EceA_pgdGLhPkDgM-xg--wUB_lhvcQKh4kTeWE_x5EgHjw?e=JP8Ha7", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Reserva%20Ecol%C3%B3gica%20Manglares%20Cayapas%20Mataje.png"},
-    {id: 11, nombre: "Refugio de Vida Silvestre La Chiquita", tipo: "Refugio de Vida Silvestre", region: "Costa", latitud: 1.2298436, longitud: -78.7647658, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/jbetancourt_fias_org_ec/EQn7SGfJ86ZNuA63CICFgvAB0oJwmHqc-T6o3RIByi6P6A?e=Cx0vgk", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Refugio%20de%20Vida%20Silvestre%20La%20Chiquita.png"},
-    {id: 12, nombre: "Reserva Marina Galera San Francisco", tipo: "Reserva Marina", region: "Costa", latitud: 0.7572725, longitud: -80.0946498, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/cmorante_fias_org_ec/ESCTnLNzBftFlrJmROXhT_oBFoV_wdXJZ1AxSPSTtjghVA?e=IwAtgT", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Reserva%20Marina%20Galera%20San%20Francisco.png"},
-    {id: 13, nombre: "Refugio de Vida Silvestre Manglares Estuario Río Esmeraldas", tipo: "Refugio de Vida Silvestre", region: "Costa", latitud: 0.9775963, longitud: -79.645929, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/bleverone_fias_org_ec/EToEcGwLmQhJiP2_sqJqkoEBgY9c0vTMWSIL6NwQPqm49g?e=cbdWBR", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Refugio%20de%20Vida%20Silvestre%20Manglares%20Estuario%20R%C3%ADo%20Esmeraldas.png"},
-    {id: 14, nombre: "Refugio de Vida Silvestre El Pambilar", tipo: "Refugio de Vida Silvestre", region: "Costa", latitud: 0.6089452, longitud: -79.1648003, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/bleverone_fias_org_ec/EToEcGwLmQhJiP2_sqJqkoEBgY9c0vTMWSIL6NwQPqm49g?e=cbdWBR", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Refugio%20de%20Vida%20Silvestre%20El%20Pambilar.png"},
-    {id: 15, nombre: "Refugio de Vida Silvestre Isla Corazón y Fragata", tipo: "Refugio de Vida Silvestre", region: "Costa", latitud: -0.6503938, longitud: -80.3712221, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/acedeno_fias_org_ec/ESE9REovGCdGvEcS9OnfkDYBkQJQLWqOGGTgP-ARJ-dMcQ?e=jwqpAe", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Refugio%20de%20Vida%20Silvestre%20Isla%20Coraz%C3%B3n%20y%20Fragata.png"},
-    {id: 16, nombre: "Refugio de Vida Silvestre Marino Costera Pacoche", tipo: "Refugio de Vida Silvestre", region: "Costa", latitud: -1.0688227, longitud: -80.886806, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/acedeno_fias_org_ec/EaqAVoQubUJAg0wxUl49AHcBSzLi06OLcbqbiOv6MhN7Dg?e=UPcSAa", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Refugio%20de%20Vida%20Silvestre%20Marino%20Costera%20Pacoche.png"},
-    {id: 17, nombre: "Reserva Marina El Pelado", tipo: "Reserva Marina", region: "Costa", latitud: -1.9432125, longitud: -80.7879407, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/eamores_fias_org_ec/ER5SMEbRoVdIukdpXPEbJIQBjCm3uDT_WzAcFo8U1269oA?e=scAlVq", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Reserva%20Marina%20El%20Pelado.png"},
-    {id: 18, nombre: "Reserva Puntilla De Santa Elena", tipo: "Reserva de Producción de Fauna", region: "Costa", latitud: -2.1887133, longitud: -81.0110023, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/grey_fias_org_ec/EcEVdK7PYutFiPpU94KoiboBTVpW9bsbF4GTH5U2IN_hUw?e=xhlBGd", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Reserva%20Puntilla%20De%20Santa%20Elena.png"},
-    {id: 19, nombre: "Área Nacional De Recreación Playas Villamil", tipo: "Área Nacional de Recreación", region: "Costa", latitud: -2.6423745, longitud: -80.3886322, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/gguerrero_fias_org_ec/EdoJAEb7CW1IjZutfd21uX0BlzzwznaQJ_nI_hxlvIIPgQ?e=eERFh2", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/%C3%81rea%20Nacional%20De%20Recreaci%C3%B3n%20Playas%20Villamil.png"},
-    {id: 20, nombre: "Parque Lago de Chongón", tipo: "Área Nacional de Recreación", region: "Costa", latitud: -2.2242155, longitud: -80.0966835, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/ddecimavilla_fias_org_ec/Ee96bwS-z9hCrHIw058keJUByFNDTraJs3Xt5DVR4LaH0Q?e=T2LJii", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Parque%20Lago.png"},
-    {id: 21, nombre: "Reserva de Producción de Fauna Manglares El Salado", tipo: "Reserva de Producción de Fauna", region: "Costa", latitud: -2.2578119, longitud: -79.9484319, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/ddecimavilla_fias_org_ec/EZCymGqDTb1LvaeWfQ8UjgcBc1fSpMyoVrQrhS0jcJinDw?e=rdGNrj", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Reserva%20de%20Producci%C3%B3n%20de%20Fauna%20Manglares%20El%20Salado.png"},
-    {id: 22, nombre: "Área Nacional de Recreación Isla Santay", tipo: "Área Nacional de Recreación", region: "Costa", latitud: -2.2237935, longitud: -79.874174, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/gguerrero_fias_org_ec/EXiAyZR-OI1Dhf0Wm_xIL_QBAXQ-BchmA7ith5ZFKHh6Ug?e=tWgqE2", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/%C3%81rea%20Nacional%20de%20Recreaci%C3%B3n%20Isla%20Santay.png"},
-    {id: 23, nombre: "Reserva Ecológica Manglares Churute", tipo: "Reserva Ecológica", region: "Costa", latitud: -2.4195775, longitud: -79.6246449, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/ddecimavilla_fias_org_ec/ET3IU7SwD6ZGj9IuDpT3xjABWh2CpACXfzVMAztJ97DZoA?e=EScNaM", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Reserva%20Ecol%C3%B3gica%20Manglares%20Churute.png"},
-    {id: 24, nombre: "Refugio de Vida Silvestre Manglares el Morro", tipo: "Refugio de Vida Silvestre", region: "Costa", latitud: -2.6245454, longitud: -80.2450472, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/gguerrero_fias_org_ec/EeYVQVuBYJtHkW-gR9l_sn8BplcaqUgnz6XiDQcVd-IZug?e=Vqbdww", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Refugio%20de%20Vida%20Silvestre%20Manglares%20el%20Morro.png"},
-    {id: 25, nombre: "Reserva Marina Isla Santa Clara", tipo: "Reserva Marina", region: "Costa", latitud: -3.1665538, longitud: -80.4333558, link: "URL_AQUI", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Isla%20Santa%20Clara.png"}, 
-    {id: 26, nombre: "Reserva Ecológica de Arenillas", tipo: "Reserva Ecológica", region: "Costa", latitud: -3.5665416, longitud: -80.1429895, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/grey_fias_org_ec/EcEVdK7PYutFiPpU94KoiboBTVpW9bsbF4GTH5U2IN_hUw?e=xhlBGd", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Reserva%20Ecológica%20de%20Arenillas.jpeg"}, 
-    {id: 27, nombre: "Reserva Ecológica Antisana", tipo: "Reserva Ecológica", region: "Sierra", latitud: -0.5516115, longitud: -78.1564432, link: "URL_AQUI", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Reserva%20Ecol%C3%B3gica%20Antisana.png"},
-    {id: 28, nombre: "Parque Nacional Cayambe-Coca", tipo: "Parque Nacional", region: "Sierra", latitud: -0.0730003, longitud: -77.8367282, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/cjarrin_fias_org_ec/ETMZQJwANg9JtYBZyygtQkYBhTt_fuBK3ZxlUuzhBgbVwA?e=HsQEQa", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Parque%20Nacional%20Cayambe-Coca.png"},
-    {id: 29, nombre: "Refugio de Vida Silvestre Pasochoa", tipo: "Refugio de Vida Silvestre", region: "Sierra", latitud: -0.4596148, longitud: -78.4524591, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/cjarrin_fias_org_ec/ETMZQJwANg9JtYBZyygtQkYBhTt_fuBK3ZxlUuzhBgbVwA?e=HsQEQa", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Refugio%20de%20Vida%20Silvestre%20Pasochoa.png"},
-    {id: 30, nombre: "Reserva Ecológica Los Illinizas", tipo: "Reserva Ecológica", region: "Sierra", latitud: -0.7022491, longitud: -79.0645695, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/mzambrano_fias_org_ec/EQ_ZXb1kJUFAoZOBbdhcpnYBAPid0lC6_bffwcNjBuysew?e=rBhhbA2", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Reserva%20Ecol%C3%B3gica%20Los%20Illinizas.png"},
-    {id: 31, nombre: "Parque Nacional Cotopaxi", tipo: "Parque Nacional", region: "Sierra", latitud: -0.7007416, longitud: -78.4297187, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/mzambrano_fias_org_ec/EebujJKUXVNIgZ9zGkSTpCwBLT7VsXvHTSPX0qWfotZGmA?e=vF2FcZ", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Parque%20Nacional%20Cotopaxi.png"},
-    {id: 32, nombre: "Area Nacional de Recreación El Boliche", tipo: "Área Nacional de Recreación", region: "Sierra", latitud: -0.794213, longitud: -78.5433701, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/mzambrano_fias_org_ec/ESPXmFoTwmJCnKgk5IdmXiQBsSpZ104j2UZdtyCH3mUsJA?e=nbqIJv", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Area%20Nacional%20de%20Recreaci%C3%B3n%20El%20Boliche.png"},
-    {id: 33, nombre: "Reserva Biológica Colonso Chalupas", tipo: "Reserva Biológica", region: "Amazonía", latitud: -0.9889268, longitud: -77.9078127, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/jortiz_fias_org_ec/EeT-M6Q2zK5JnYxeN-JnrBQBq3YaIJJroHMBS147ocABow?e=Tz9rGT", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Reserva%20Biol%C3%B3gica%20Colonso%20Chalupas.png"},
-    {id: 34, nombre: "Parque Nacional Llanganates", tipo: "Parque Nacional", region: "Sierra", latitud: -1.1491018, longitud: -78.2476146, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/jortiz_fias_org_ec/EeT-M6Q2zK5JnYxeN-JnrBQBq3YaIJJroHMBS147ocABow?e=Tz9rGT", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Parque%20Nacional%20Llanganates.png"},
-    {id: 35, nombre: "Reserva de Producción de Fauna Chimborazo", tipo: "Reserva de Producción de Fauna", region: "Sierra", latitud: -1.4693018, longitud: -78.8169396, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/mmurillo_fias_org_ec/EUA1Mbpds0pCqv6QEmjpmRkBHFzxGU20o9WAE4tDKoiJOg", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Reserva%20de%20Producci%C3%B3n%20de%20Fauna%20Chimborazo.png"},
-    {id: 36, nombre: "Área Nacional de Recreación Quimsacocha", tipo: "Área Nacional de Recreación", region: "Sierra", latitud: -2.9942882, longitud: -79.2366048, link: "URL_AQUI", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/%C3%81rea%20Nacional%20de%20Recreaci%C3%B3n%20Quimsacocha.png"},
-    {id: 37, nombre: "Parque Nacional Podocarpus", tipo: "Parque Nacional", region: "Sierra", latitud: -4.1260477, longitud: -78.9950463, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/rjaramillo_fias_org_ec/EaFFYJKDHypPmYWaUWDZHhsBHzFNgIHWsBkEFTZyr2k2mA?e=AyrYMV", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Parque%20Nacional%20Podocarpus.png"},
-    {id: 38, nombre: "Parque Nacional de Yacuri", tipo: "Parque Nacional", region: "Sierra", latitud: -4.6257708, longitud: -79.3127543, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/rjaramillo_fias_org_ec/EQokc_H-3b5Bo9OwxJoniqQBuJcg10XDoZFDJ_r7gOBLmw?e=fausAE", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Parque%20Nacional%20de%20Yacuri.png"},
-    {id: 39, nombre: "Reserva Ecológica Cofán-Bermejo", tipo: "Reserva Ecológica", region: "Amazonía", latitud: 0.3640394, longitud: -77.4126177, link: "URL_AQUI", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Reserva%20Ecol%C3%B3gica%20Cof%C3%A1n-Bermejo.png"},
-    {id: 40, nombre: "Parque Nacional Sumaco Napo-Galeras", tipo: "Parque Nacional", region: "Amazonía", latitud: -0.3659083, longitud: -77.4701972, link: "URL_AQUI", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Parque%20Nacional%20Sumaco%20Napo-Galeras.png"},
-    {id: 41, nombre: "Reserva Biológica Limoncocha", tipo: "Reserva Biológica", region: "Amazonía", latitud: -0.3967244, longitud: -76.6123884, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/jguerrero_fias_org_ec/Ebzbg-n4aIJGihvdlnKFzgYBNS2jKALNXbE5IE5RLRS9pw?e=2veUI4", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Reserva%20Biol%C3%B3gica%20Limoncocha.png"},
-    {id: 42, nombre: "Reserva Biológica El Cóndor", tipo: "Reserva Biológica", region: "Amazonía", latitud: -3.4375542, longitud: -78.2074508, link: "URL_AQUI", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Reserva%20Biol%C3%B3gica%20El%20C%C3%B3ndor.png"},
-    {id: 43, nombre: "Reserva Biológica El Quimi", tipo: "Reserva Biológica", region: "Amazonía", latitud: -3.4385812, longitud: -78.4093123, link: "URL_AQUI", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Reserva%20Biol%C3%B3gica%20El%20Quimi.png"},
-    {id: 44, nombre: "Refugio de Vida Silvestre El Zarza", tipo: "Refugio de Vida Silvestre", region: "Amazonía", latitud: -3.8235978, longitud: -78.7569332, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/rjaramillo_fias_org_ec/Eb89RBL5KEZDjs3QyKtdsdMBAmeX-5kAsqzE6O0bJXzi3w?e=6bZ0Ja", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Refugio%20de%20Vida%20Silvestre%20El%20Zarza.png"},
-    {id: 45, nombre: "Reserva Biológica Cerro Plateado", tipo: "Reserva Biológica", region: "Amazonía", latitud: -4.6041852, longitud: -78.7368989, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/rjaramillo_fias_org_ec/EUAktThMH6tOhQCHfuA43YgB8z-_yc-9sZEXSXNNsi_AKA?e=mX4eUj", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Reserva%20Biol%C3%B3gica%20Cerro%20Plateado.png"},
-    {id: 46, nombre: "Área Ecológica de Conservación Municipal Siete Iglesias", tipo: "Área Ecológica de Conservación", region: "Amazonía", latitud: -3.101546, longitud: -78.6120758, link: "URL_AQUI", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/%C3%81rea%20Ecol%C3%B3gica%20de%20Conservaci%C3%B3n%20Municipal%20Siete%20Iglesias.png"},
-    {id: 47, nombre: "Área Ecológico de Conservación Municipal Taita Imbabura", tipo: "Área Ecológica de Conservación", region: "Sierra", latitud: 0.2734667, longitud: -78.1290715, link: "URL_AQUI", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/mae.png"}, 
-    {id: 48, nombre: "Área Ecológica de Conservación Municipal La Bonita Cofanes/Chingual", tipo: "Área Ecológica de Conservación", region: "Amazonía", latitud: 0.4734698, longitud: -77.5442678, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/ntacure_fias_org_ec/EfA1Iy38mT1DmiT0wzce0UABLeW-JczYfZ0AknaV2-Nzeg?e=yCqE7d", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/mae.jpg"}, 
-    {id: 49, nombre: "Área nacional de recreación Parque Samanes", tipo: "Área Nacional de Recreación", region: "Costa", latitud: -2.1035904, longitud: -79.896413, link: "URL_AQUI", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/%C3%81rea%20nacional%20de%20recreaci%C3%B3n%20Parque%20Samanes.png"},
-    {id: 50, nombre: "Reserva Geobotánica Pululahua", tipo: "Reserva Geobotánica", region: "Sierra", latitud: 0.038, longitud: -78.463, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/cjarrin_fias_org_ec/ETMZQJwANg9JtYBZyygtQkYBhTt_fuBK3ZxlUuzhBgbVwA?e=HsQEQaI", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Reserva%20Geobot%C3%A1nica%20Pululahua.png"},
-    {id: 51, nombre: "Cordillera Oriental del Carchi", tipo: "Área Ecológica de Conservación", region: "Sierra", latitud: 0.5335199, longitud: -77.8011826, link: "URL_AQUI", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/mae.jpg"}, 
-    {id: 52, nombre: "Reserva Marina Galápagos", tipo: "Reserva Marina", region: "Insular", latitud: -0.8061698, longitud: -90.5477817, link: "URL_AQUI", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/refs/heads/Img_Map/Parque%20nacional%20Galapagos.png"}, 
-    {id: 53, nombre: "Área Protegida Privada Ichubamba Yasepan", tipo: "Área Protegida Privada", region: "Sierra", latitud: -2.0855835, longitud: -78.4940793, link: "URL_AQUI", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/mae.jpg"}, 
-    {id: 54, nombre: "Bosque La Perla", tipo: "Bosque Protector", region: "Costa", latitud: -0.1564607, longitud: -79.2828232, link: "URL_AQUI", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/mae.jpg"}, 
-    {id: 55, nombre: "Área Ecologíca de Conservación Municipal Curiquingue Gallocantana", tipo: "Área Ecológica de Conservación", region: "Sierra", latitud: -2.7574528, longitud: -79.1834216, link: "URL_AQUI", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/mae.jpg"}, 
-    {id: 56, nombre: "Refugio de vida silvestre Machángara Tomebamba", tipo: "Refugio de Vida Silvestre", region: "Sierra", latitud: -2.7331373, longitud: -79.0614996, link: "URL_AQUI", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/mae.jpg"} 
-];
-          
-            
-            const fiasAreasNames = [
-                "Reserva Ecológica El Ángel", "Parque Nacional Sangay", "Reserva de Producción de Fauna Chimborazo", 
-                "Parque Nacional Cotopaxi", "Area Nacional de Recreación El Boliche", "Reserva Ecológica Los Illinizas", 
-                "Reserva Ecológica Cotacachi-Cayapas", "Parque Nacional Podocarpus", "Refugio de Vida Silvestre El Zarza", 
-                "Parque Nacional de Yacuri", "Reserva Biológica Cerro Plateado", "Parque Nacional Cayambe-Coca", 
-                "Reserva Geobotánica Pululahua", "Refugio de Vida Silvestre Pasochoa", "Parque Nacional Llanganates", 
-                "Reserva Biológica Colonso Chalupas", "Reserva Marina El Pelado", "Reserva Puntilla De Santa Elena", 
-                "Parque Nacional Machalilla", "Refugio de Vida Silvestre Marino Costera Pacoche", 
-                "Refugio de Vida Silvestre Isla Corazón y Fragata", "Reserva Ecológica Manglares Churute", 
-                "Parque Lago de Chongón", "Reserva de Producción de Fauna Manglares El Salado", 
-                "Área Nacional de Recreación Isla Santay", "Refugio de Vida Silvestre Manglares el Morro", 
-                "Área Nacional De Recreación Playas Villamil", "Reserva Ecológica Manglares Cayapas Mataje", 
-                "Refugio de Vida Silvestre La Chiquita", "Reserva Ecológica Mache-Chindul", 
-                "Refugio de Vida Silvestre Manglares Estuario Río Esmeraldas", "Refugio de Vida Silvestre El Pambilar", 
-                "Reserva Marina Galera San Francisco", "Reserva Marina Isla Santa Clara", 
-                "Reserva Ecológica de Arenillas", "Reserva Ecológica Antisana", "Parque Nacional Sumaco Napo-Galeras", 
-                "Parque Nacional Yasuní", "Reserva Biológica Limoncocha", "Reserva de Producción Faunística Cuyabeno", 
-                "Reserva Ecológica Cofán-Bermejo"
-            ];
+        // DATOS (Copia exacta de tu lista)
+        const areasProtegidas = [
+            {id: 1, nombre: "Parque Nacional Yasuní", tipo: "Parque Nacional", region: "Amazonía", latitud: -1.5261, longitud: -76.4559, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/jguerrero_fias_org_ec/Ebzbg-n4aIJGihvdlnKFzgYBNS2jKALNXbE5IE5RLRS9pw?e=2veUI4", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Parque%20Nacional%20Yasun%C3%AD.png"},
+            {id: 2, nombre: "Reserva Ecológica Cotacachi-Cayapas", tipo: "Reserva Ecológica", region: "Sierra", latitud: 0.681, longitud: -78.594, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/npaspuel_fias_org_ec/Eab6X42Aj9ZKrLLx4qpSg5ABacHpcPsTeKsaYRcHuZ6dFg?e=0FKWWT", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Reserva%20Ecol%C3%B3gica%20Cotacachi-Cayapas.png"},
+            {id: 3, nombre: "Parque Nacional Galápagos", tipo: "Parque Nacional", region: "Insular", latitud: -0.9538, longitud: -90.9656, link: "URL_AQUI", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/refs/heads/Img_Map/Parque%20nacional%20Galapagos.png"},
+            {id: 4, nombre: "Parque Nacional Machalilla", tipo: "Parque Nacional", region: "Costa", latitud: -1.5427, longitud: -80.7512, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/dascencio_fias_org_ec/EecEtd5uu6JGojx4VeqCvekB1p5h2fjxWgU7e1a8GZQc0w?e=4ESyOd", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Parque%20Nacional%20Machalilla.png"},
+            {id: 5, nombre: "Reserva de Producción Faunística Cuyabeno", tipo: "Reserva de Producción de Fauna", region: "Amazonía", latitud: -0.1807, longitud: -76.1507, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/ntacure_fias_org_ec/EfA1Iy38mT1DmiT0wzce0UABLeW-JczYfZ0AknaV2-Nzeg?e=yCqE7d", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Reserva%20de%20Producci%C3%B3n%20Faun%C3%ADstica%20Cuyabeno.png"},
+            {id: 6, nombre: "Parque Nacional Sangay", tipo: "Parque Nacional", region: "Sierra", latitud: -1.837, longitud: -78.3864, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/mmurillo_fias_org_ec/EUA1Mbpds0pCqv6QEmjpmRkBHFzxGU20o9WAE4tDKoiJOg", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Parque%20Nacional%20Sangay.png"},
+            {id: 7, nombre: "Parque Nacional Cajas", tipo: "Parque Nacional", region: "Sierra", latitud: -2.8487368, longitud: -79.2537609, link: "URL_AQUI", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Parque%20Nacional%20Cajas.png"},
+            {id: 8, nombre: "Reserva Ecológica El Ángel", tipo: "Reserva Ecológica", region: "Sierra", latitud: 0.7551564, longitud: -77.9053182, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/mcuaspud_fias_org_ec/EVzkgKlLIMJAt9HzA8dgURMBYpEu58j70EtB2dALyAL2Kg?e=4SDhTf", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Reserva%20Ecol%C3%B3gica%20El%20%C3%81ngel.png"},
+            {id: 9, nombre: "Reserva Ecológica Mache-Chindul", tipo: "Reserva Ecológica", region: "Costa", latitud: 0.4802566, longitud: -79.7848422, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/bleverone_fias_org_ec/EToEcGwLmQhJiP2_sqJqkoEBgY9c0vTMWSIL6NwQPqm49g?e=cbdWBR", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Reserva%20Ecol%C3%B3gica%20Mache-Chindul.png"},
+            {id: 10, nombre: "Reserva Ecológica Manglares Cayapas Mataje", tipo: "Reserva Ecológica", region: "Costa", latitud: 1.2839279, longitud: -78.9061921, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/jbetancourt_fias_org_ec/EceA_pgdGLhPkDgM-xg--wUB_lhvcQKh4kTeWE_x5EgHjw?e=JP8Ha7", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Reserva%20Ecol%C3%B3gica%20Manglares%20Cayapas%20Mataje.png"},
+            {id: 11, nombre: "Refugio de Vida Silvestre La Chiquita", tipo: "Refugio de Vida Silvestre", region: "Costa", latitud: 1.2298436, longitud: -78.7647658, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/jbetancourt_fias_org_ec/EQn7SGfJ86ZNuA63CICFgvAB0oJwmHqc-T6o3RIByi6P6A?e=Cx0vgk", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Refugio%20de%20Vida%20Silvestre%20La%20Chiquita.png"},
+            {id: 12, nombre: "Reserva Marina Galera San Francisco", tipo: "Reserva Marina", region: "Costa", latitud: 0.7572725, longitud: -80.0946498, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/cmorante_fias_org_ec/ESCTnLNzBftFlrJmROXhT_oBFoV_wdXJZ1AxSPSTtjghVA?e=IwAtgT", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Reserva%20Marina%20Galera%20San%20Francisco.png"},
+            {id: 13, nombre: "Refugio de Vida Silvestre Manglares Estuario Río Esmeraldas", tipo: "Refugio de Vida Silvestre", region: "Costa", latitud: 0.9775963, longitud: -79.645929, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/bleverone_fias_org_ec/EToEcGwLmQhJiP2_sqJqkoEBgY9c0vTMWSIL6NwQPqm49g?e=cbdWBR", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Refugio%20de%20Vida%20Silvestre%20Manglares%20Estuario%20R%C3%ADo%20Esmeraldas.png"},
+            {id: 14, nombre: "Refugio de Vida Silvestre El Pambilar", tipo: "Refugio de Vida Silvestre", region: "Costa", latitud: 0.6089452, longitud: -79.1648003, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/bleverone_fias_org_ec/EToEcGwLmQhJiP2_sqJqkoEBgY9c0vTMWSIL6NwQPqm49g?e=cbdWBR", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Refugio%20de%20Vida%20Silvestre%20El%20Pambilar.png"},
+            {id: 15, nombre: "Refugio de Vida Silvestre Isla Corazón y Fragata", tipo: "Refugio de Vida Silvestre", region: "Costa", latitud: -0.6503938, longitud: -80.3712221, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/acedeno_fias_org_ec/ESE9REovGCdGvEcS9OnfkDYBkQJQLWqOGGTgP-ARJ-dMcQ?e=jwqpAe", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Refugio%20de%20Vida%20Silvestre%20Isla%20Coraz%C3%B3n%20y%20Fragata.png"},
+            {id: 16, nombre: "Refugio de Vida Silvestre Marino Costera Pacoche", tipo: "Refugio de Vida Silvestre", region: "Costa", latitud: -1.0688227, longitud: -80.886806, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/acedeno_fias_org_ec/EaqAVoQubUJAg0wxUl49AHcBSzLi06OLcbqbiOv6MhN7Dg?e=UPcSAa", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Refugio%20de%20Vida%20Silvestre%20Marino%20Costera%20Pacoche.png"},
+            {id: 17, nombre: "Reserva Marina El Pelado", tipo: "Reserva Marina", region: "Costa", latitud: -1.9432125, longitud: -80.7879407, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/eamores_fias_org_ec/ER5SMEbRoVdIukdpXPEbJIQBjCm3uDT_WzAcFo8U1269oA?e=scAlVq", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Reserva%20Marina%20El%20Pelado.png"},
+            {id: 18, nombre: "Reserva Puntilla De Santa Elena", tipo: "Reserva de Producción de Fauna", region: "Costa", latitud: -2.1887133, longitud: -81.0110023, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/grey_fias_org_ec/EcEVdK7PYutFiPpU94KoiboBTVpW9bsbF4GTH5U2IN_hUw?e=xhlBGd", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Reserva%20Puntilla%20De%20Santa%20Elena.png"},
+            {id: 19, nombre: "Área Nacional De Recreación Playas Villamil", tipo: "Área Nacional de Recreación", region: "Costa", latitud: -2.6423745, longitud: -80.3886322, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/gguerrero_fias_org_ec/EdoJAEb7CW1IjZutfd21uX0BlzzwznaQJ_nI_hxlvIIPgQ?e=eERFh2", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/%C3%81rea%20Nacional%20De%20Recreaci%C3%B3n%20Playas%20Villamil.png"},
+            {id: 20, nombre: "Parque Lago de Chongón", tipo: "Área Nacional de Recreación", region: "Costa", latitud: -2.2242155, longitud: -80.0966835, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/ddecimavilla_fias_org_ec/Ee96bwS-z9hCrHIw058keJUByFNDTraJs3Xt5DVR4LaH0Q?e=T2LJii", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Parque%20Lago.png"},
+            {id: 21, nombre: "Reserva de Producción de Fauna Manglares El Salado", tipo: "Reserva de Producción de Fauna", region: "Costa", latitud: -2.2578119, longitud: -79.9484319, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/ddecimavilla_fias_org_ec/EZCymGqDTb1LvaeWfQ8UjgcBc1fSpMyoVrQrhS0jcJinDw?e=rdGNrj", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Reserva%20de%20Producci%C3%B3n%20de%20Fauna%20Manglares%20El%20Salado.png"},
+            {id: 22, nombre: "Área Nacional de Recreación Isla Santay", tipo: "Área Nacional de Recreación", region: "Costa", latitud: -2.2237935, longitud: -79.874174, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/gguerrero_fias_org_ec/EXiAyZR-OI1Dhf0Wm_xIL_QBAXQ-BchmA7ith5ZFKHh6Ug?e=tWgqE2", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/%C3%81rea%20Nacional%20de%20Recreaci%C3%B3n%20Isla%20Santay.png"},
+            {id: 23, nombre: "Reserva Ecológica Manglares Churute", tipo: "Reserva Ecológica", region: "Costa", latitud: -2.4195775, longitud: -79.6246449, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/ddecimavilla_fias_org_ec/ET3IU7SwD6ZGj9IuDpT3xjABWh2CpACXfzVMAztJ97DZoA?e=EScNaM", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Reserva%20Ecol%C3%B3gica%20Manglares%20Churute.png"},
+            {id: 24, nombre: "Refugio de Vida Silvestre Manglares el Morro", tipo: "Refugio de Vida Silvestre", region: "Costa", latitud: -2.6245454, longitud: -80.2450472, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/gguerrero_fias_org_ec/EeYVQVuBYJtHkW-gR9l_sn8BplcaqUgnz6XiDQcVd-IZug?e=Vqbdww", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Refugio%20de%20Vida%20Silvestre%20Manglares%20el%20Morro.png"},
+            {id: 25, nombre: "Reserva Marina Isla Santa Clara", tipo: "Reserva Marina", region: "Costa", latitud: -3.1665538, longitud: -80.4333558, link: "URL_AQUI", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Isla%20Santa%20Clara.png"}, 
+            {id: 26, nombre: "Reserva Ecológica de Arenillas", tipo: "Reserva Ecológica", region: "Costa", latitud: -3.5665416, longitud: -80.1429895, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/grey_fias_org_ec/EcEVdK7PYutFiPpU94KoiboBTVpW9bsbF4GTH5U2IN_hUw?e=xhlBGd", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Reserva%20Ecológica%20de%20Arenillas.jpeg"}, 
+            {id: 27, nombre: "Reserva Ecológica Antisana", tipo: "Reserva Ecológica", region: "Sierra", latitud: -0.5516115, longitud: -78.1564432, link: "URL_AQUI", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Reserva%20Ecol%C3%B3gica%20Antisana.png"},
+            {id: 28, nombre: "Parque Nacional Cayambe-Coca", tipo: "Parque Nacional", region: "Sierra", latitud: -0.0730003, longitud: -77.8367282, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/cjarrin_fias_org_ec/ETMZQJwANg9JtYBZyygtQkYBhTt_fuBK3ZxlUuzhBgbVwA?e=HsQEQa", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Parque%20Nacional%20Cayambe-Coca.png"},
+            {id: 29, nombre: "Refugio de Vida Silvestre Pasochoa", tipo: "Refugio de Vida Silvestre", region: "Sierra", latitud: -0.4596148, longitud: -78.4524591, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/cjarrin_fias_org_ec/ETMZQJwANg9JtYBZyygtQkYBhTt_fuBK3ZxlUuzhBgbVwA?e=HsQEQa", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Refugio%20de%20Vida%20Silvestre%20Pasochoa.png"},
+            {id: 30, nombre: "Reserva Ecológica Los Illinizas", tipo: "Reserva Ecológica", region: "Sierra", latitud: -0.7022491, longitud: -79.0645695, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/mzambrano_fias_org_ec/EQ_ZXb1kJUFAoZOBbdhcpnYBAPid0lC6_bffwcNjBuysew?e=rBhhbA2", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Reserva%20Ecol%C3%B3gica%20Los%20Illinizas.png"},
+            {id: 31, nombre: "Parque Nacional Cotopaxi", tipo: "Parque Nacional", region: "Sierra", latitud: -0.7007416, longitud: -78.4297187, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/mzambrano_fias_org_ec/EebujJKUXVNIgZ9zGkSTpCwBLT7VsXvHTSPX0qWfotZGmA?e=vF2FcZ", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Parque%20Nacional%20Cotopaxi.png"},
+            {id: 32, nombre: "Area Nacional de Recreación El Boliche", tipo: "Área Nacional de Recreación", region: "Sierra", latitud: -0.794213, longitud: -78.5433701, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/mzambrano_fias_org_ec/ESPXmFoTwmJCnKgk5IdmXiQBsSpZ104j2UZdtyCH3mUsJA?e=nbqIJv", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Area%20Nacional%20de%20Recreaci%C3%B3n%20El%20Boliche.png"},
+            {id: 33, nombre: "Reserva Biológica Colonso Chalupas", tipo: "Reserva Biológica", region: "Amazonía", latitud: -0.9889268, longitud: -77.9078127, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/jortiz_fias_org_ec/EeT-M6Q2zK5JnYxeN-JnrBQBq3YaIJJroHMBS147ocABow?e=Tz9rGT", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Reserva%20Biol%C3%B3gica%20Colonso%20Chalupas.png"},
+            {id: 34, nombre: "Parque Nacional Llanganates", tipo: "Parque Nacional", region: "Sierra", latitud: -1.1491018, longitud: -78.2476146, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/jortiz_fias_org_ec/EeT-M6Q2zK5JnYxeN-JnrBQBq3YaIJJroHMBS147ocABow?e=Tz9rGT", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Parque%20Nacional%20Llanganates.png"},
+            {id: 35, nombre: "Reserva de Producción de Fauna Chimborazo", tipo: "Reserva de Producción de Fauna", region: "Sierra", latitud: -1.4693018, longitud: -78.8169396, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/mmurillo_fias_org_ec/EUA1Mbpds0pCqv6QEmjpmRkBHFzxGU20o9WAE4tDKoiJOg", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Reserva%20de%20Producci%C3%B3n%20de%20Fauna%20Chimborazo.png"},
+            {id: 36, nombre: "Área Nacional de Recreación Quimsacocha", tipo: "Área Nacional de Recreación", region: "Sierra", latitud: -2.9942882, longitud: -79.2366048, link: "URL_AQUI", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/%C3%81rea%20Nacional%20de%20Recreaci%C3%B3n%20Quimsacocha.png"},
+            {id: 37, nombre: "Parque Nacional Podocarpus", tipo: "Parque Nacional", region: "Sierra", latitud: -4.1260477, longitud: -78.9950463, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/rjaramillo_fias_org_ec/EaFFYJKDHypPmYWaUWDZHhsBHzFNgIHWsBkEFTZyr2k2mA?e=AyrYMV", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Parque%20Nacional%20Podocarpus.png"},
+            {id: 38, nombre: "Parque Nacional de Yacuri", tipo: "Parque Nacional", region: "Sierra", latitud: -4.6257708, longitud: -79.3127543, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/rjaramillo_fias_org_ec/EQokc_H-3b5Bo9OwxJoniqQBuJcg10XDoZFDJ_r7gOBLmw?e=fausAE", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Parque%20Nacional%20de%20Yacuri.png"},
+            {id: 39, nombre: "Reserva Ecológica Cofán-Bermejo", tipo: "Reserva Ecológica", region: "Amazonía", latitud: 0.3640394, longitud: -77.4126177, link: "URL_AQUI", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Reserva%20Ecol%C3%B3gica%20Cof%C3%A1n-Bermejo.png"},
+            {id: 40, nombre: "Parque Nacional Sumaco Napo-Galeras", tipo: "Parque Nacional", region: "Amazonía", latitud: -0.3659083, longitud: -77.4701972, link: "URL_AQUI", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Parque%20Nacional%20Sumaco%20Napo-Galeras.png"},
+            {id: 41, nombre: "Reserva Biológica Limoncocha", tipo: "Reserva Biológica", region: "Amazonía", latitud: -0.3967244, longitud: -76.6123884, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/jguerrero_fias_org_ec/Ebzbg-n4aIJGihvdlnKFzgYBNS2jKALNXbE5IE5RLRS9pw?e=2veUI4", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Reserva%20Biol%C3%B3gica%20Limoncocha.png"},
+            {id: 42, nombre: "Reserva Biológica El Cóndor", tipo: "Reserva Biológica", region: "Amazonía", latitud: -3.4375542, longitud: -78.2074508, link: "URL_AQUI", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Reserva%20Biol%C3%B3gica%20El%20C%C3%B3ndor.png"},
+            {id: 43, nombre: "Reserva Biológica El Quimi", tipo: "Reserva Biológica", region: "Amazonía", latitud: -3.4385812, longitud: -78.4093123, link: "URL_AQUI", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Reserva%20Biol%C3%B3gica%20El%20Quimi.png"},
+            {id: 44, nombre: "Refugio de Vida Silvestre El Zarza", tipo: "Refugio de Vida Silvestre", region: "Amazonía", latitud: -3.8235978, longitud: -78.7569332, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/rjaramillo_fias_org_ec/Eb89RBL5KEZDjs3QyKtdsdMBAmeX-5kAsqzE6O0bJXzi3w?e=6bZ0Ja", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Refugio%20de%20Vida%20Silvestre%20El%20Zarza.png"},
+            {id: 45, nombre: "Reserva Biológica Cerro Plateado", tipo: "Reserva Biológica", region: "Amazonía", latitud: -4.6041852, longitud: -78.7368989, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/rjaramillo_fias_org_ec/EUAktThMH6tOhQCHfuA43YgB8z-_yc-9sZEXSXNNsi_AKA?e=mX4eUj", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Reserva%20Biol%C3%B3gica%20Cerro%20Plateado.png"},
+            {id: 46, nombre: "Área Ecológica de Conservación Municipal Siete Iglesias", tipo: "Área Ecológica de Conservación", region: "Amazonía", latitud: -3.101546, longitud: -78.6120758, link: "URL_AQUI", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/%C3%81rea%20Ecol%C3%B3gica%20de%20Conservaci%C3%B3n%20Municipal%20Siete%20Iglesias.png"},
+            {id: 47, nombre: "Área Ecológico de Conservación Municipal Taita Imbabura", tipo: "Área Ecológica de Conservación", region: "Sierra", latitud: 0.2734667, longitud: -78.1290715, link: "URL_AQUI", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/mae.png"}, 
+            {id: 48, nombre: "Área Ecológica de Conservación Municipal La Bonita Cofanes/Chingual", tipo: "Área Ecológica de Conservación", region: "Amazonía", latitud: 0.4734698, longitud: -77.5442678, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/ntacure_fias_org_ec/EfA1Iy38mT1DmiT0wzce0UABLeW-JczYfZ0AknaV2-Nzeg?e=yCqE7d", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/mae.jpg"}, 
+            {id: 49, nombre: "Área nacional de recreación Parque Samanes", tipo: "Área Nacional de Recreación", region: "Costa", latitud: -2.1035904, longitud: -79.896413, link: "URL_AQUI", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/%C3%81rea%20nacional%20de%20recreaci%C3%B3n%20Parque%20Samanes.png"},
+            {id: 50, nombre: "Reserva Geobotánica Pululahua", tipo: "Reserva Geobotánica", region: "Sierra", latitud: 0.038, longitud: -78.463, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/cjarrin_fias_org_ec/ETMZQJwANg9JtYBZyygtQkYBhTt_fuBK3ZxlUuzhBgbVwA?e=HsQEQaI", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Reserva%20Geobot%C3%A1nica%20Pululahua.png"},
+            {id: 51, nombre: "Cordillera Oriental del Carchi", tipo: "Área Ecológica de Conservación", region: "Sierra", latitud: 0.5335199, longitud: -77.8011826, link: "URL_AQUI", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/mae.jpg"}, 
+            {id: 52, nombre: "Reserva Marina Galápagos", tipo: "Reserva Marina", region: "Insular", latitud: -0.8061698, longitud: -90.5477817, link: "URL_AQUI", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/refs/heads/Img_Map/Parque%20nacional%20Galapagos.png"}, 
+            {id: 53, nombre: "Área Protegida Privada Ichubamba Yasepan", tipo: "Área Protegida Privada", region: "Sierra", latitud: -2.0855835, longitud: -78.4940793, link: "URL_AQUI", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/mae.jpg"}, 
+            {id: 54, nombre: "Bosque La Perla", tipo: "Bosque Protector", region: "Costa", latitud: -0.1564607, longitud: -79.2828232, link: "URL_AQUI", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/mae.jpg"}, 
+            {id: 55, nombre: "Área Ecologíca de Conservación Municipal Curiquingue Gallocantana", tipo: "Área Ecológica de Conservación", region: "Sierra", latitud: -2.7574528, longitud: -79.1834216, link: "URL_AQUI", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/mae.jpg"}, 
+            {id: 56, nombre: "Refugio de vida silvestre Machángara Tomebamba", tipo: "Refugio de Vida Silvestre", region: "Sierra", latitud: -2.7331373, longitud: -79.0614996, link: "URL_AQUI", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/mae.jpg"} 
+        ];
 
-            areasProtegidas.forEach(area => {
-                area.tieneBienesFIAS = fiasAreasNames.includes(area.nombre);
-            });
-                
-            const areasAdministrativas = [
-                {
-                    id: 100, nombre: "FIAS Institucional", tipo: "Área Administrativa", subtipo: "FIAS", region: "Sierra", latitud: -0.2149, longitud: -78.5009,
-                    direccion: "Edificio Concorde, Av. 12 de Octubre y Francisco Salazar", esAdministrativa: true,
-                    link: "https://fiasec-my.sharepoint.com/:x:/g/personal/jcruzg_fias_org_ec/ET7cHBq4_bBBhZHTCjfVxdIBGImPaOuGN7m4RpZm5Egrag",
-                    logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/FIAS.png"
-                },
-                {
-                    id: 101, nombre: "REM (REDD Early Movers)", tipo: "Área Administrativa", subtipo: "REM", region: "Sierra", latitud: -0.2149, longitud: -78.5009,
-                    direccion: "Edificio Concorde, Av. 12 de Octubre y Francisco Salazar", esAdministrativa: true,
-                    link: "https://sharepoint.fias.org.ec/inventario/REM",
-                    logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/REM.png"
-                },
-                {
-                    id: 102, nombre: "FAP (Fondo de Áreas Protegidas)", tipo: "Área Administrativa", subtipo: "FAP", region: "Sierra", latitud: -0.2149, longitud: -78.5009,
-                    direccion: "Edificio Concorde, Av. 12 de Octubre y Francisco Salazar", esAdministrativa: true,
-                    link: "https://sharepoint.fias.org.ec/inventario/FAP",
-                    logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/FAP.jpg"
-                },
-                {
-                    id: 103, nombre: "Bioeconomía", tipo: "Área Administrativa", subtipo: "Bioeconomía", region: "Sierra", latitud: -0.2149, longitud: -78.5009,
-                    direccion: "Edificio Concorde, Av. 12 de Octubre y Francisco Salazar", esAdministrativa: true,
-                    link: "https://sharepoint.fias.org.ec/inventario/Bioeconomia",
-                    logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Bioeconom%C3%ADa.png"
-                },
-                {
-                    id: 104, nombre: "PASF (Proyecto Amazonia Sin Fuego)", tipo: "Área Administrativa", subtipo: "PASF", region: "Sierra", latitud: -0.2149, longitud: -78.5009,
-                    direccion: "Edificio Concorde, Av. 12 de Octubre y Francisco Salazar", esAdministrativa: true,
-                    link: "https://sharepoint.fias.org.ec/inventario/PASF",
-                    logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/PASF.png"
-                },
-                {
-                    id: 105, nombre: "Conserva Aves", tipo: "Área Administrativa", subtipo: "Conserva Aves", region: "Sierra", latitud: -0.2149, longitud: -78.5009,
-                    direccion: "Edificio Concorde, Av. 12 de Octubre y Francisco Salazar", esAdministrativa: true,
-                    link: "https://sharepoint.fias.org.ec/inventario/ConservaAves",
-                    logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Conserva%20Aves.png"
-                },
-                {
-                    id: 106, nombre: "FEIG (Fondo para Control de Especies Invasoras de Galápagos)", tipo: "Área Administrativa", subtipo: "FEIG", region: "Insular", latitud: -0.7456, longitud: -90.3018, 
-                    direccion: "Marchena 115 y Charles Darwin, Puerto Ayora", esAdministrativa: true,
-                    link: "https://sharepoint.fias.org.ec/inventario/FEIG",
-                    logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/FEIG.png"
-                }
-            ];
+        const fiasAreasNames = [
+            "Reserva Ecológica El Ángel", "Parque Nacional Sangay", "Reserva de Producción de Fauna Chimborazo", 
+            "Parque Nacional Cotopaxi", "Area Nacional de Recreación El Boliche", "Reserva Ecológica Los Illinizas", 
+            "Reserva Ecológica Cotacachi-Cayapas", "Parque Nacional Podocarpus", "Refugio de Vida Silvestre El Zarza", 
+            "Parque Nacional de Yacuri", "Reserva Biológica Cerro Plateado", "Parque Nacional Cayambe-Coca", 
+            "Reserva Geobotánica Pululahua", "Refugio de Vida Silvestre Pasochoa", "Parque Nacional Llanganates", 
+            "Reserva Biológica Colonso Chalupas", "Reserva Marina El Pelado", "Reserva Puntilla De Santa Elena", 
+            "Parque Nacional Machalilla", "Refugio de Vida Silvestre Marino Costera Pacoche", 
+            "Refugio de Vida Silvestre Isla Corazón y Fragata", "Reserva Ecológica Manglares Churute", 
+            "Parque Lago de Chongón", "Reserva de Producción de Fauna Manglares El Salado", 
+            "Área Nacional de Recreación Isla Santay", "Refugio de Vida Silvestre Manglares el Morro", 
+            "Área Nacional De Recreación Playas Villamil", "Reserva Ecológica Manglares Cayapas Mataje", 
+            "Refugio de Vida Silvestre La Chiquita", "Reserva Ecológica Mache-Chindul", 
+            "Refugio de Vida Silvestre Manglares Estuario Río Esmeraldas", "Refugio de Vida Silvestre El Pambilar", 
+            "Reserva Marina Galera San Francisco", "Reserva Marina Isla Santa Clara", 
+            "Reserva Ecológica de Arenillas", "Reserva Ecológica Antisana", "Parque Nacional Sumaco Napo-Galeras", 
+            "Parque Nacional Yasuní", "Reserva Biológica Limoncocha", "Reserva de Producción Faunística Cuyabeno", 
+            "Reserva Ecológica Cofán-Bermejo"
+        ];
+
+        const areasAdministrativas = [
+            { id: 100, nombre: "FIAS Institucional", tipo: "Área Administrativa", subtipo: "FIAS", region: "Sierra", latitud: -0.2149, longitud: -78.5009, direccion: "Edificio Concorde, Av. 12 de Octubre y Francisco Salazar", esAdministrativa: true, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/jcruzg_fias_org_ec/ET7cHBq4_bBBhZHTCjfVxdIBGImPaOuGN7m4RpZm5Egrag", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/FIAS.png" },
+            { id: 101, nombre: "REM (REDD Early Movers)", tipo: "Área Administrativa", subtipo: "REM", region: "Sierra", latitud: -0.2149, longitud: -78.5009, direccion: "Edificio Concorde, Av. 12 de Octubre y Francisco Salazar", esAdministrativa: true, link: "https://sharepoint.fias.org.ec/inventario/REM", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/REM.png" },
+            { id: 102, nombre: "FAP (Fondo de Áreas Protegidas)", tipo: "Área Administrativa", subtipo: "FAP", region: "Sierra", latitud: -0.2149, longitud: -78.5009, direccion: "Edificio Concorde, Av. 12 de Octubre y Francisco Salazar", esAdministrativa: true, link: "https://sharepoint.fias.org.ec/inventario/FAP", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/FAP.jpg" },
+            { id: 103, nombre: "Bioeconomía", tipo: "Área Administrativa", subtipo: "Bioeconomía", region: "Sierra", latitud: -0.2149, longitud: -78.5009, direccion: "Edificio Concorde, Av. 12 de Octubre y Francisco Salazar", esAdministrativa: true, link: "https://sharepoint.fias.org.ec/inventario/Bioeconomia", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Bioeconom%C3%ADa.png" },
+            { id: 104, nombre: "PASF (Proyecto Amazonia Sin Fuego)", tipo: "Área Administrativa", subtipo: "PASF", region: "Sierra", latitud: -0.2149, longitud: -78.5009, direccion: "Edificio Concorde, Av. 12 de Octubre y Francisco Salazar", esAdministrativa: true, link: "https://sharepoint.fias.org.ec/inventario/PASF", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/PASF.png" },
+            { id: 105, nombre: "Conserva Aves", tipo: "Área Administrativa", subtipo: "Conserva Aves", region: "Sierra", latitud: -0.2149, longitud: -78.5009, direccion: "Edificio Concorde, Av. 12 de Octubre y Francisco Salazar", esAdministrativa: true, link: "https://sharepoint.fias.org.ec/inventario/ConservaAves", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Conserva%20Aves.png" },
+            { id: 106, nombre: "FEIG (Control Especies Invasoras)", tipo: "Área Administrativa", subtipo: "FEIG", region: "Insular", latitud: -0.7456, longitud: -90.3018, direccion: "Puerto Ayora, Galápagos", esAdministrativa: true, link: "https://sharepoint.fias.org.ec/inventario/FEIG", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/FEIG.png" }
+        ];
+
+        // --- LÓGICA DE INICIALIZACIÓN BLINDADA ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const overlay = document.getElementById('loading-overlay');
             
-            areasAdministrativas.forEach(area => area.tieneBienesFIAS = true);
-            const todasLasAreas = [...areasProtegidas, ...areasAdministrativas];
-            
-            let map;
-            let markersLayer;
-            let areaData = [];
-            let activeFilters = {
-                types: [],
-                regions: [],
-                adminTypes: [],
-                search: '',
-                fiasOnly: false
-            };
-            
-            function init() {
-                // Comprobar si es móvil
-                const isMobile = window.innerWidth <= 768;
-                
-                // Si es móvil, colapsar sidebar por defecto
-                if(isMobile) {
+            // Failsafe: Quitar pantalla de carga después de 3 seg pase lo que pase
+            setTimeout(() => { if(overlay) overlay.style.display = 'none'; }, 3000);
+
+            try {
+                // Preparar Datos
+                areasProtegidas.forEach(area => area.tieneBienesFIAS = fiasAreasNames.includes(area.nombre));
+                areasAdministrativas.forEach(area => area.tieneBienesFIAS = true);
+                const todasLasAreas = [...areasProtegidas, ...areasAdministrativas];
+
+                // Comprobar móvil
+                if (window.innerWidth <= 768) {
                     document.getElementById('sidebar').classList.add('collapsed');
                 }
 
-                createAppData();
-                initMap();
-                createFilterOptions();
-                updateMapAndList();
-                initEventListeners();
-                
-                setTimeout(() => {
-                    document.getElementById('loading-overlay').style.display = 'none';
-                }, 1000);
-            }
-            
-            function createAppData() {
-                areaData = todasLasAreas.map(area => {
-                    const imageHtml = `<img src="${area.logoUrl}" class="custom-map-img ${area.tieneBienesFIAS ? 'fias-marker-pulse' : ''}" onerror="this.onerror=null;this.src='${defaultImage}';">`;
+                // Iniciar Mapa
+                const mapOptions = { zoomControl: false, attributionControl: false };
+                map = L.map('map', mapOptions).setView([-1.83, -78.18], window.innerWidth <= 768 ? 5 : 7);
+                L.control.zoom({ position: 'bottomright' }).addTo(map);
 
-                    const customIcon = L.divIcon({ 
-                        html: imageHtml, 
-                        className: '',
-                        iconSize: [40, 40], 
-                        iconAnchor: [20, 20], 
-                        popupAnchor: [0, -20] 
-                    });
-                    
-                    const marker = L.marker([area.latitud, area.longitud], { icon: customIcon });
-                    
-                    let popupContent = `<div style="text-align:center;">
-                        <h6 style="margin-bottom:5px; color:var(--primary-color);">${area.nombre}</h6>
-                        <img src="${area.logoUrl}" style="width:40px; height:40px; object-fit:contain; border-radius:50%; margin:5px 0;" onerror="this.src='${defaultImage}'">
-                        <p style="margin:0; font-size:0.85rem;">${area.tipo}</p>
-                        ${area.tieneBienesFIAS ? '<p class="text-primary fw-bold my-1" style="font-size:0.8rem;"><i class="fas fa-gem"></i> Bienes FIAS</p>' : ''}
-                        <div class="mt-2 d-flex justify-content-center gap-2">
-                             <button class="btn btn-xs btn-primary py-1 px-2" style="font-size:0.75rem;" onclick="viewDetails(${area.id})">Detalles</button>`;
-                    
-                    if (area.tieneBienesFIAS && area.link && area.link !== 'URL_AQUI') {
-                        popupContent += `<button class="btn btn-xs btn-success py-1 px-2" style="font-size:0.75rem;" onclick="viewInventory(${area.id})">Inventario</button>`;
-                    }
-                    
-                    popupContent += `</div></div>`;
-                    
-                    marker.bindPopup(popupContent, { maxWidth: 220 }); // Popup más angosto para móvil
-                    
-                    marker.on('click', () => {
-                        highlightCard(area.id);
-                        // En móvil no scrolleamos la lista porque está oculta
-                        if(window.innerWidth > 768) {
-                            const cardElement = document.querySelector(`.area-card[data-id='${area.id}']`);
-                            if (cardElement) cardElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        }
-                    });
-                    
-                    return { ...area, marker };
-                });
-            }
-            
-            function initMap() {
-                // Zoom diferente para móvil
-                const initialZoom = window.innerWidth <= 768 ? 5 : 7;
-                
-                map = L.map('map', { zoomControl: false }).setView([-1.8312, -78.1834], initialZoom);
-                
-                // Mover controles de zoom
-                L.control.zoom({ position: 'topright' }).addTo(map);
-
-                const baseLayers = {
-                    "Mapa Base": L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }),
-                    "Satélite": L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { attribution: 'Tiles &copy; Esri' }),
-                    "Oscuro": L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { attribution: '&copy; CartoDB' })
-                };
-                baseLayers["Mapa Base"].addTo(map);
-                
-                // Capas colapsadas en móvil
-                L.control.layers(baseLayers, null, { collapsed: true, position: 'topright' }).addTo(map);
-                
-                markersLayer = L.markerClusterGroup({
-                    maxClusterRadius: 40 // Clusters más pequeños para móvil
-                });
+                // Capas
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(map);
+                markersLayer = L.markerClusterGroup({ maxClusterRadius: 40 });
                 map.addLayer(markersLayer);
 
-                const legend = L.control({position: 'bottomright'});
-                legend.onAdd = function(map) {
-                    const div = L.DomUtil.create('div', 'legend');
-                    // Versión simplificada para móvil
-                    if(window.innerWidth <= 768) {
-                        div.innerHTML = `<i class="fas fa-gem text-primary"></i> <small>Bienes FIAS</small>`;
-                    } else {
-                        div.innerHTML = `
-                            <h4><i class="fas fa-gem text-primary"></i> Con bienes institucionales</h4>
-                            <div class="creditos-container mt-2 pt-2 border-top">
-                                <small class="text-muted">Desarrollado por: <a href="#" class="text-decoration-none">Jair Cruz <i class="fab fa-linkedin"></i></a></small>
-                            </div>
-                        `;
-                    }
-                    return div;
-                };
-                legend.addTo(map);
-            }
-            
-            function createFilterOptions() {
-                const types = [...new Set(areasProtegidas.map(a => a.tipo))].sort();
-                const typeOptions = document.getElementById('type-options');
-                types.forEach(type => {
-                    const areaSample = areasProtegidas.find(a => a.tipo === type);
-                    typeOptions.appendChild(createFilterOption(type, areasProtegidas.filter(a => a.tipo === type).length, 'type', areaSample.logoUrl));
-                });
-
-                const regions = [...new Set(todasLasAreas.map(a => a.region))].sort();
-                const regionOptions = document.getElementById('region-options');
-                regions.forEach(region => regionOptions.appendChild(createFilterOption(region, todasLasAreas.filter(a => a.region === region).length, 'region', null)));
-
-                const adminTypes = [...new Set(areasAdministrativas.map(a => a.subtipo))].sort();
-                const adminOptions = document.getElementById('admin-options');
-                adminTypes.forEach(subtipo => {
-                    const areaSample = areasAdministrativas.find(a => a.subtipo === subtipo);
-                    adminOptions.appendChild(createFilterOption(subtipo, areasAdministrativas.filter(a => a.subtipo === subtipo).length, 'adminType', areaSample.logoUrl));
-                });
-            }
-            
-            function createFilterOption(value, count, type, logoUrl) {
-                const option = document.createElement('div');
-                option.className = 'filter-option';
-                const id = `${type}-${value.replace(/\s+/g, '-').toLowerCase()}`;
-                const logoHtml = logoUrl ? `<img src="${logoUrl}" style="width:20px; height:20px; object-fit:contain; border-radius:50%; margin-right:8px;" loading="lazy" onerror="this.style.display='none'">` : '';
-
-                option.innerHTML = `
-                    <div class="form-check m-0 d-flex align-items-center w-100">
-                        <input class="form-check-input me-2" type="checkbox" id="${id}" data-filter-type="${type}" data-value="${value}">
-                        <label class="form-check-label d-flex justify-content-between align-items-center w-100 small" for="${id}" style="cursor:pointer;">
-                            <span class="text-truncate">${logoHtml}${value}</span>
-                            <span class="badge bg-light text-dark ms-1">${count}</span>
-                        </label>
-                    </div>`;
-                
-                option.querySelector('input').addEventListener('change', function() {
-                    const { filterType, value } = this.dataset;
-                    let targetArray = filterType === 'type' ? activeFilters.types : (filterType === 'region' ? activeFilters.regions : activeFilters.adminTypes);
-
-                    if (this.checked) { if (!targetArray.includes(value)) targetArray.push(value); } 
-                    else { const index = targetArray.indexOf(value); if (index > -1) targetArray.splice(index, 1); }
+                // Procesar Datos para Mapa
+                areaData = todasLasAreas.map(area => {
+                    const iconHtml = `<img src="${area.logoUrl}" class="custom-map-img ${area.tieneBienesFIAS ? 'fias-marker-pulse' : ''}" onerror="this.src='${DEFAULT_IMG}'">`;
+                    const icon = L.divIcon({ html: iconHtml, className: '', iconSize: [36, 36], iconAnchor: [18, 18], popupAnchor: [0, -20] });
+                    const marker = L.marker([area.latitud, area.longitud], { icon: icon });
                     
-                    updateSelectedCounts();
-                    updateMapAndList();
-                });
-                return option;
-            }
-
-            function updateSelectedCounts() {
-                document.getElementById('selected-types-count').textContent = activeFilters.types.length;
-                document.getElementById('selected-regions-count').textContent = activeFilters.regions.length;
-                document.getElementById('selected-admin-count').textContent = activeFilters.adminTypes.length;
-            }
-            
-            function updateMapAndList() {
-                markersLayer.clearLayers();
-                const areasCards = document.getElementById('areas-cards');
-                areasCards.innerHTML = '';
-                
-                const search = document.getElementById('search-input').value.toLowerCase();
-                const fiasOnly = document.getElementById('fias-filter').checked;
-                
-                activeFilters.search = search;
-                activeFilters.fiasOnly = fiasOnly;
-                
-                const filteredAreas = areaData.filter(area => {
-                    const searchMatch = area.nombre.toLowerCase().includes(search);
-                    const regionMatch = activeFilters.regions.length === 0 || activeFilters.regions.includes(area.region);
-                    const fiasMatch = !fiasOnly || area.tieneBienesFIAS;
-
-                    if (!searchMatch || !regionMatch || !fiasMatch) return false;
-                    
-                    const typesActive = activeFilters.types.length > 0;
-                    const adminTypesActive = activeFilters.adminTypes.length > 0;
-
-                    if (!typesActive && !adminTypesActive) return true;
-                    
-                    if (area.esAdministrativa) return adminTypesActive && activeFilters.adminTypes.includes(area.subtipo);
-                    return typesActive && activeFilters.types.includes(area.tipo);
-                });
-                
-                filteredAreas.forEach(area => {
-                    markersLayer.addLayer(area.marker);
-                    
-                    // Crear Tarjeta
-                    const card = document.createElement('div');
-                    card.className = `area-card ${area.esAdministrativa ? 'admin-card' : ''}`;
-                    card.dataset.id = area.id;
-                    
-                    card.innerHTML = `
-                        <div class="area-card-header d-flex align-items-center">
-                             <img src="${area.logoUrl}" class="area-card-img rounded-circle border" onerror="this.src='${defaultImage}';">
-                             <div class="lh-sm">
-                                <div class="fw-bold small">${area.nombre}</div>
-                                ${area.tieneBienesFIAS ? '<span class="badge bg-primary mt-1" style="font-size:0.6rem">FIAS</span>' : ''}
-                             </div>
+                    const popupContent = `<div class="text-center p-2">
+                        <h6 class="mb-1 text-primary fw-bold">${area.nombre}</h6>
+                        <span class="badge bg-light text-dark mb-2 border">${area.tipo}</span>
+                        ${area.tieneBienesFIAS ? '<br><small class="text-success fw-bold"><i class="fas fa-check"></i> Inventario Disponible</small>' : ''}
+                        <div class="mt-2">
+                            <button class="btn btn-sm btn-primary w-100 mb-1" onclick="viewDetails(${area.id})">Detalles</button>
+                            ${area.tieneBienesFIAS && area.link !== 'URL_AQUI' ? `<button class="btn btn-sm btn-success w-100" onclick="window.open('${area.link}')">Ver Inventario</button>` : ''}
                         </div>
-                        <div class="area-card-body pt-0">
-                            <div class="d-flex gap-1 mb-2">
-                                <span class="badge bg-light text-secondary border">${area.region}</span>
-                            </div>
-                            <div class="d-flex justify-content-between">
-                                <button class="btn btn-sm btn-outline-primary w-100 me-1" onclick="viewDetails(${area.id})">Info</button>
-                                ${area.tieneBienesFIAS && area.link !== 'URL_AQUI' ? 
-                                `<button class="btn btn-sm btn-outline-success w-100" onclick="viewInventory(${area.id})">Inventario</button>` : 
-                                `<button class="btn btn-sm btn-outline-secondary w-100" disabled>N/A</button>`}
-                            </div>
-                        </div>`;
+                    </div>`;
                     
-                    card.addEventListener('click', (e) => {
-                        // Evitar doble disparo si se clickea en botones
-                        if(e.target.tagName === 'BUTTON') return;
-
+                    marker.bindPopup(popupContent, { minWidth: 200 });
+                    marker.on('click', () => {
                         highlightCard(area.id);
-                        area.marker.openPopup();
-                        map.setView([area.latitud, area.longitud], 11);
-                        
-                        // En móvil, cerrar sidebar al seleccionar
-                        if(window.innerWidth <= 768) {
-                            toggleSidebar();
+                        if (window.innerWidth > 768) {
+                            const card = document.querySelector(`.area-card[data-id='${area.id}']`);
+                            if(card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
                         }
                     });
-                    areasCards.appendChild(card);
+
+                    return { ...area, marker };
                 });
-                
-                if (filteredAreas.length > 0) {
-                    const featureGroup = L.featureGroup(filteredAreas.map(a => a.marker));
-                    map.fitBounds(featureGroup.getBounds().pad(0.1));
-                }
 
-                document.getElementById('visible-count').textContent = filteredAreas.length;
-                document.getElementById('total-count').textContent = areaData.length;
-                document.getElementById('areas-count').textContent = `${filteredAreas.length}`;
-            }
-            
-            function highlightCard(id) {
-                document.querySelectorAll('.area-card').forEach(card => card.style.borderColor = 'rgba(0,0,0,.125)');
-                const selectedCard = document.querySelector(`.area-card[data-id='${id}']`);
-                if (selectedCard) selectedCard.style.borderColor = 'var(--primary-color)';
-            }
-            
-            function toggleSidebar() {
-                const sidebar = document.getElementById('sidebar');
-                const btnIcon = document.querySelector('#toggle-sidebar-btn i');
+                // Crear Filtros
+                createFilters(areasProtegidas, areasAdministrativas, todasLasAreas);
                 
-                sidebar.classList.toggle('collapsed');
+                // Renderizar
+                updateMapAndList();
                 
-                // Cambiar icono
-                if (sidebar.classList.contains('collapsed')) {
-                    btnIcon.className = 'fas fa-bars';
-                } else {
-                    btnIcon.className = 'fas fa-chevron-left'; 
-                }
-                
-                // Refrescar mapa solo si no es móvil (en móvil es overlay)
-                if(window.innerWidth > 768) {
-                    setTimeout(() => map.invalidateSize(), 300);
-                }
-            }
+                // Event Listeners
+                setupListeners(areasProtegidas, areasAdministrativas, todasLasAreas);
 
-            // Event Listeners
+                // ÉXITO: Quitar pantalla de carga inmediatamente
+                overlay.style.display = 'none';
+
+            } catch (error) {
+                console.error("Error crítico inicializando el mapa:", error);
+                overlay.innerHTML = `<div class="text-danger text-center p-3"><i class="fas fa-exclamation-triangle fa-2x mb-2"></i><br>Error cargando el mapa.<br>Intente recargar.</div>`;
+            }
+        });
+
+        // --- FUNCIONES AUXILIARES ---
+        function createFilters(prot, admin, all) {
+            const types = [...new Set(prot.map(a => a.tipo))].sort();
+            const regions = [...new Set(all.map(a => a.region))].sort();
+            const adminTypes = [...new Set(admin.map(a => a.subtipo))].sort();
+
+            const renderOpts = (arr, containerId, type) => {
+                const container = document.getElementById(containerId);
+                arr.forEach(val => {
+                    const div = document.createElement('div');
+                    div.className = 'filter-option form-check';
+                    div.innerHTML = `
+                        <input class="form-check-input" type="checkbox" id="${type}-${val.replace(/\s/g,'')}" data-type="${type}" data-val="${val}">
+                        <label class="form-check-label w-100" for="${type}-${val.replace(/\s/g,'')}">${val}</label>
+                    `;
+                    div.querySelector('input').addEventListener('change', handleFilterChange);
+                    container.appendChild(div);
+                });
+            };
+
+            renderOpts(types, 'type-options', 'type');
+            renderOpts(regions, 'region-options', 'region');
+            renderOpts(adminTypes, 'admin-options', 'admin');
+        }
+
+        function handleFilterChange(e) {
+            const { type, val } = e.target.dataset;
+            let target = type === 'type' ? activeFilters.types : (type === 'region' ? activeFilters.regions : activeFilters.adminTypes);
+            
+            if (e.target.checked) target.push(val);
+            else { const idx = target.indexOf(val); if (idx > -1) target.splice(idx, 1); }
+            
+            updateMapAndList();
+        }
+
+        function updateMapAndList() {
+            markersLayer.clearLayers();
+            const cardContainer = document.getElementById('areas-cards');
+            cardContainer.innerHTML = '';
+
+            const search = document.getElementById('search-input').value.toLowerCase();
+            const fiasOnly = document.getElementById('fias-filter').checked;
+            
+            const filtered = areaData.filter(item => {
+                const matchesSearch = item.nombre.toLowerCase().includes(search);
+                const matchesRegion = activeFilters.regions.length === 0 || activeFilters.regions.includes(item.region);
+                const matchesFias = !fiasOnly || item.tieneBienesFIAS;
+                
+                if (!matchesSearch || !matchesRegion || !matchesFias) return false;
+                
+                // Lógica combinada Tipos + Admin
+                const hasTypeFilter = activeFilters.types.length > 0;
+                const hasAdminFilter = activeFilters.adminTypes.length > 0;
+
+                if (!hasTypeFilter && !hasAdminFilter) return true;
+                
+                if (item.esAdministrativa) return hasAdminFilter && activeFilters.adminTypes.includes(item.subtipo);
+                return hasTypeFilter && activeFilters.types.includes(item.tipo);
+            });
+
+            // Actualizar contadores
+            document.getElementById('count-regions').innerText = activeFilters.regions.length;
+            document.getElementById('count-types').innerText = activeFilters.types.length;
+            document.getElementById('count-admin').innerText = activeFilters.adminTypes.length;
+            document.getElementById('results-count').innerText = filtered.length;
+
+            filtered.forEach(item => {
+                markersLayer.addLayer(item.marker);
+                
+                const card = document.createElement('div');
+                card.className = `area-card ${item.esAdministrativa ? 'border-start-0 border-end-0' : ''}`;
+                card.dataset.id = item.id;
+                card.innerHTML = `
+                    <div class="area-card-header">
+                        <img src="${item.logoUrl}" class="area-card-img" onerror="this.src='${DEFAULT_IMG}'">
+                        <div style="flex:1; min-width:0;">
+                            <div class="fw-bold text-truncate">${item.nombre}</div>
+                            <div class="small text-muted">${item.tipo}</div>
+                        </div>
+                        ${item.tieneBienesFIAS ? '<i class="fas fa-gem text-primary" title="Bienes FIAS"></i>' : ''}
+                    </div>
+                `;
+                card.addEventListener('click', () => {
+                    highlightCard(item.id);
+                    item.marker.openPopup();
+                    map.setView([item.latitud, item.longitud], 11);
+                    if (window.innerWidth <= 768) toggleSidebar(); 
+                });
+                cardContainer.appendChild(card);
+            });
+
+            if (filtered.length > 0 && search !== '') {
+               map.fitBounds(L.featureGroup(filtered.map(i => i.marker)).getBounds().pad(0.1));
+            }
+        }
+
+        function highlightCard(id) {
+            document.querySelectorAll('.area-card').forEach(c => c.classList.remove('active'));
+            const active = document.querySelector(`.area-card[data-id='${id}']`);
+            if(active) active.classList.add('active');
+        }
+
+        function toggleSidebar() {
+            const sb = document.getElementById('sidebar');
+            sb.classList.toggle('collapsed');
+            const icon = document.querySelector('#toggle-sidebar-btn i');
+            icon.className = sb.classList.contains('collapsed') ? 'fas fa-bars' : 'fas fa-chevron-left';
+        }
+
+        function setupListeners() {
             document.getElementById('search-input').addEventListener('input', updateMapAndList);
             document.getElementById('fias-filter').addEventListener('change', updateMapAndList);
-            
+            document.getElementById('toggle-sidebar-btn').addEventListener('click', toggleSidebar);
+            document.getElementById('close-sidebar-mobile').addEventListener('click', toggleSidebar);
             document.getElementById('reset-filters').addEventListener('click', () => {
                 activeFilters = { types: [], regions: [], adminTypes: [], search: '', fiasOnly: false };
                 document.getElementById('search-input').value = '';
@@ -851,70 +511,24 @@
                 document.querySelectorAll('input[type="checkbox"]').forEach(c => c.checked = false);
                 updateMapAndList();
             });
+        }
 
-            document.getElementById('toggle-sidebar-btn').addEventListener('click', toggleSidebar);
-            document.getElementById('close-sidebar-mobile').addEventListener('click', toggleSidebar);
-
-            // Helpers para botones de selección masiva
-            const setupBatch = (idAll, idClear, type, source) => {
-                document.getElementById(idAll).addEventListener('click', () => {
-                    if(type === 'type') activeFilters.types = [...new Set(source.map(a => a.tipo))];
-                    if(type === 'region') activeFilters.regions = [...new Set(source.map(a => a.region))];
-                    if(type === 'admin') activeFilters.adminTypes = [...new Set(source.map(a => a.subtipo))];
-                    updateCheckboxes(); updateSelectedCounts(); updateMapAndList();
-                });
-                document.getElementById(idClear).addEventListener('click', () => {
-                    if(type === 'type') activeFilters.types = [];
-                    if(type === 'region') activeFilters.regions = [];
-                    if(type === 'admin') activeFilters.adminTypes = [];
-                    updateCheckboxes(); updateSelectedCounts(); updateMapAndList();
-                });
-            };
-            
-            setupBatch('select-all-types', 'clear-all-types', 'type', areasProtegidas);
-            setupBatch('select-all-regions', 'clear-all-regions', 'region', todasLasAreas);
-            setupBatch('select-all-admin', 'clear-all-admin', 'admin', areasAdministrativas);
-
-            function updateCheckboxes() {
-                document.querySelectorAll('.filter-option input').forEach(input => {
-                    const { filterType, value } = input.dataset;
-                    if(filterType === 'type') input.checked = activeFilters.types.includes(value);
-                    if(filterType === 'region') input.checked = activeFilters.regions.includes(value);
-                    if(filterType === 'adminType') input.checked = activeFilters.adminTypes.includes(value);
+        window.viewDetails = function(id) {
+            const item = areaData.find(i => i.id === id);
+            if(item) {
+                Swal.fire({
+                    title: item.nombre,
+                    html: `<div class="text-start fs-6">
+                        <div class="text-center mb-3"><img src="${item.logoUrl}" style="width:80px; height:80px; object-fit:contain; border-radius:50%; border:1px solid #eee;" onerror="this.src='${DEFAULT_IMG}'"></div>
+                        <p><b>Tipo:</b> ${item.tipo}</p>
+                        <p><b>Región:</b> ${item.region}</p>
+                        ${item.direccion ? `<p><b>Dirección:</b> ${item.direccion}</p>` : ''}
+                        ${item.tieneBienesFIAS ? '<p class="text-success fw-bold"><i class="fas fa-check-circle"></i> Inventario Disponible</p>' : ''}
+                    </div>`,
+                    confirmButtonColor: 'var(--primary-color)'
                 });
             }
-
-            // Funciones Globales para Popups
-            window.viewInventory = function(id) {
-                const area = areaData.find(a => a.id === id);
-                if (area && area.link) window.open(area.link, '_blank');
-            };
-
-            window.viewDetails = function(id) {
-                const area = areaData.find(a => a.id === id);
-                if (area) {
-                    Swal.fire({
-                        title: `<span class="fs-5">${area.nombre}</span>`,
-                        html: `
-                            <div class="text-start small">
-                                <div class="text-center mb-2">
-                                    <img src="${area.logoUrl}" style="width:80px; height:80px; object-fit:contain; border-radius:50%;" onerror="this.src='${defaultImage}'">
-                                </div>
-                                <b>Tipo:</b> ${area.tipo}<br>
-                                <b>Región:</b> ${area.region}<br>
-                                ${area.direccion ? `<b>Dirección:</b> ${area.direccion}<br>` : ''}
-                                ${area.tieneBienesFIAS ? '<br><span class="text-primary"><i class="fas fa-check-circle"></i> Inventario disponible</span>' : ''}
-                            </div>
-                        `,
-                        confirmButtonText: 'Cerrar',
-                        confirmButtonColor: 'var(--primary-color)',
-                        customClass: { popup: 'swal-mobile' }
-                    });
-                }
-            };
-
-            init();
-        });
+        };
     </script>
 </body>
 </html>

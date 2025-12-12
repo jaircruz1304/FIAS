@@ -26,7 +26,7 @@
             display: flex;
             flex-direction: column;
             height: 100vh;
-            height: 100dvh; /* Para móviles modernos */
+            height: 100dvh;
             overflow: hidden;
             margin: 0;
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
@@ -56,22 +56,20 @@
             overflow: hidden;
         }
 
-        /* --- Sidebar (Escritorio y Móvil) --- */
+        /* --- Sidebar General --- */
         #sidebar {
             width: 380px;
+            min-width: 380px; /* Importante para que el layout funcione bien con flex */
             background: #ffffff;
             display: flex;
             flex-direction: column;
             z-index: 1001;
             border-right: 1px solid #ddd;
-            transition: transform 0.3s ease;
+            transition: all 0.3s ease; /* Transición para colapsar en escritorio */
             position: relative;
             height: 100%;
             box-shadow: 2px 0 10px rgba(0,0,0,0.1);
         }
-
-        /* En escritorio, "collapsed" lo mueve a la izquierda fuera de pantalla */
-        #sidebar.collapsed { margin-left: -380px; }
 
         .sidebar-header { padding: 10px 15px; border-bottom: 1px solid #eee; background: #fff; }
         #search-input { border-radius: 20px; font-size: 0.9rem; }
@@ -82,8 +80,14 @@
             padding: 10px;
             background: #fdfdfd;
         }
+        
+        /* Contenido del Sidebar con transición de opacidad */
+        .sidebar-header, .sidebar-content {
+            opacity: 1;
+            transition: opacity 0.2s ease;
+        }
 
-        /* --- Tarjetas y Filtros --- */
+        /* --- Tarjetas y Filtros (Estilos sin cambios) --- */
         .filter-section {
             background: white;
             border: 1px solid #eee;
@@ -141,18 +145,49 @@
         .fias-marker-pulse { border-color: var(--fias-color) !important; animation: pulse 2s infinite; }
         @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(13, 110, 253, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(13, 110, 253, 0); } 100% { box-shadow: 0 0 0 0 rgba(13, 110, 253, 0); } }
 
-        /* --- MÓVIL (Media Queries) --- */
+        /* ------------------------------------------------------------------- */
+        /* --- MÓVIL (Media Queries: Pantallas de 768px o menos) --- */
+        /* ------------------------------------------------------------------- */
         @media (max-width: 768px) {
             .navbar-brand span { font-size: 0.9rem; max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
             
             /* En móvil, el sidebar flota sobre el mapa (overlay) */
             #sidebar {
                 position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-                margin-left: 0; transform: translateX(0);
+                min-width: 100%;
+                transform: translateX(0);
+                margin-left: 0; 
+                box-shadow: 0 0 10px rgba(0,0,0,0.2);
             }
-            #sidebar.collapsed { transform: translateX(-100%); margin-left: 0; }
+            /* Estado Colapsado en Móvil: Se mueve fuera de la pantalla */
+            #sidebar.collapsed { transform: translateX(-100%); }
+            
+            /* Ocultar botón de cerrar solo en escritorio */
+            #close-sidebar-mobile { display: block; }
             
             .legend { display: none; } /* Ocultar leyenda en móvil para ganar espacio */
+        }
+
+
+        /* ------------------------------------------------------------------- */
+        /* --- ESCRITORIO (Media Queries: Pantallas de 769px o más) --- */
+        /* ------------------------------------------------------------------- */
+        @media (min-width: 769px) {
+            /* Estado Colapsado en Escritorio: Mantiene la posición pero se reduce el ancho a 0 */
+            #sidebar.collapsed { 
+                 width: 0px; 
+                 min-width: 0px; 
+                 margin-left: -1px; /* Oculta el borde */
+                 padding: 0;
+                 overflow: hidden;
+            }
+            /* Ocultar el contenido del sidebar colapsado */
+            #sidebar.collapsed .sidebar-header, 
+            #sidebar.collapsed .sidebar-content {
+                opacity: 0;
+            }
+            /* Ocultar botón de cerrar solo en móvil */
+            #close-sidebar-mobile { display: none !important; }
         }
     </style>
 </head>
@@ -226,7 +261,9 @@
         let areaData = [];
         let activeFilters = { types: [], regions: [], adminTypes: [], search: '', fiasOnly: false };
 
-        // DATOS (Copia exacta de tu lista)
+        // -------------------------------------------------------------------
+        // --- DATOS (Sin cambios) ---
+        // -------------------------------------------------------------------
         const areasProtegidas = [
             {id: 1, nombre: "Parque Nacional Yasuní", tipo: "Parque Nacional", region: "Amazonía", latitud: -1.5261, longitud: -76.4559, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/jguerrero_fias_org_ec/Ebzbg-n4aIJGihvdlnKFzgYBNS2jKALNXbE5IE5RLRS9pw?e=2veUI4", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Parque%20Nacional%20Yasun%C3%AD.png"},
             {id: 2, nombre: "Reserva Ecológica Cotacachi-Cayapas", tipo: "Reserva Ecológica", region: "Sierra", latitud: 0.681, longitud: -78.594, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/npaspuel_fias_org_ec/Eab6X42Aj9ZKrLLx4qpSg5ABacHpcPsTeKsaYRcHuZ6dFg?e=0FKWWT", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Reserva%20Ecol%C3%B3gica%20Cotacachi-Cayapas.png"},
@@ -315,7 +352,16 @@
             { id: 105, nombre: "Conserva Aves", tipo: "Área Administrativa", subtipo: "Conserva Aves", region: "Sierra", latitud: -0.2149, longitud: -78.5009, direccion: "Edificio Concorde, Av. 12 de Octubre y Francisco Salazar", esAdministrativa: true, link: "https://sharepoint.fias.org.ec/inventario/ConservaAves", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/Conserva%20Aves.png" },
             { id: 106, nombre: "FEIG (Control Especies Invasoras)", tipo: "Área Administrativa", subtipo: "FEIG", region: "Insular", latitud: -0.7456, longitud: -90.3018, direccion: "Puerto Ayora, Galápagos", esAdministrativa: true, link: "https://sharepoint.fias.org.ec/inventario/FEIG", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/FEIG.png" }
         ];
+        // -------------------------------------------------------------------
+        // --- FIN DE DATOS ---
+        // -------------------------------------------------------------------
 
+        // Código para detectar vista móvil
+        function isMobileView() {
+            // El breakpoint debe coincidir con el del CSS (@media max-width: 768px)
+            return window.innerWidth <= 768; 
+        }
+        
         // --- LÓGICA DE INICIALIZACIÓN BLINDADA ---
         document.addEventListener('DOMContentLoaded', () => {
             const overlay = document.getElementById('loading-overlay');
@@ -329,14 +375,24 @@
                 areasAdministrativas.forEach(area => area.tieneBienesFIAS = true);
                 const todasLasAreas = [...areasProtegidas, ...areasAdministrativas];
 
-                // Comprobar móvil
-                if (window.innerWidth <= 768) {
+                // Comprobar móvil y configurar sidebar inicial
+                if (isMobileView()) {
+                    // CERRADO en móvil
                     document.getElementById('sidebar').classList.add('collapsed');
+                    document.getElementById('close-sidebar-mobile').style.display = 'block'; // Mostrar botón de cierre
+                } else {
+                    // ABIERTO en escritorio
+                    document.getElementById('sidebar').classList.remove('collapsed');
+                    document.getElementById('close-sidebar-mobile').style.display = 'none'; // Ocultar botón de cierre
                 }
 
-                // Iniciar Mapa
+                // INICIO DEL MAPA Y AJUSTE DE VISTA
                 const mapOptions = { zoomControl: false, attributionControl: false };
-                map = L.map('map', mapOptions).setView([-1.83, -78.18], window.innerWidth <= 768 ? 5 : 7);
+                
+                // El zoom inicial depende de si es móvil o escritorio
+                const initialZoom = isMobileView() ? 5 : 7;
+
+                map = L.map('map', mapOptions).setView([-1.83, -78.18], initialZoom);
                 L.control.zoom({ position: 'bottomright' }).addTo(map);
 
                 // Capas
@@ -363,7 +419,8 @@
                     marker.bindPopup(popupContent, { minWidth: 200 });
                     marker.on('click', () => {
                         highlightCard(area.id);
-                        if (window.innerWidth > 768) {
+                        if (!isMobileView()) {
+                            // Solo para escritorio: desplazar la tarjeta para que sea visible
                             const card = document.querySelector(`.area-card[data-id='${area.id}']`);
                             if(card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
                         }
@@ -398,6 +455,8 @@
 
             const renderOpts = (arr, containerId, type) => {
                 const container = document.getElementById(containerId);
+                // Limpiar filtros antes de renderizar (prevención)
+                container.innerHTML = '';
                 arr.forEach(val => {
                     const div = document.createElement('div');
                     div.className = 'filter-option form-check';
@@ -476,7 +535,9 @@
                     highlightCard(item.id);
                     item.marker.openPopup();
                     map.setView([item.latitud, item.longitud], 11);
-                    if (window.innerWidth <= 768) toggleSidebar(); 
+                    
+                    // Solo en vista móvil, cerrar el sidebar al seleccionar una tarjeta
+                    if (isMobileView()) toggleSidebar(); 
                 });
                 cardContainer.appendChild(card);
             });
@@ -495,7 +556,10 @@
         function toggleSidebar() {
             const sb = document.getElementById('sidebar');
             sb.classList.toggle('collapsed');
+            
+            // Cambiar icono del botón
             const icon = document.querySelector('#toggle-sidebar-btn i');
+            // Si está colapsado, mostrar el icono de menú (bars)
             icon.className = sb.classList.contains('collapsed') ? 'fas fa-bars' : 'fas fa-chevron-left';
         }
 
@@ -510,6 +574,11 @@
                 document.getElementById('fias-filter').checked = false;
                 document.querySelectorAll('input[type="checkbox"]').forEach(c => c.checked = false);
                 updateMapAndList();
+            });
+            // Agregamos un listener para reajustar si el usuario cambia el tamaño de la ventana (e.g., gira el móvil)
+            window.addEventListener('resize', () => {
+                // Reajustar mapa a la nueva vista
+                if (map) map.invalidateSize(true);
             });
         }
 

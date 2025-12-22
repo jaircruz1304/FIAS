@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía Interactiva: Baja de Bienes - FIAS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --fias-primary: #2c7d32;
+            --fias-secondary: #8bc34a;
+            --fias-light: #e8f5e9;
+            --fias-dark: #1b5e20;
+            --fias-accent: #ffc107;
+            --fias-danger: #dc3545;
+            --fias-warning: #ff9800;
+            --text-main: #343a40;
+            --sidebar-width: 280px;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Inter', sans-serif;
+            color: var(--text-main);
+            overflow-x: hidden;
+            padding-top: 70px;
+        }
+
+        /* --- HEADER --- */
+        .main-header {
+            background: linear-gradient(135deg, var(--fias-primary) 0%, var(--fias-dark) 100%);
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .header-badge {
+            background: rgba(255,255,255,0.15);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* --- NAVIGATION TABS --- */
+        .process-tabs {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .nav-process {
+            display: flex;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            padding: 0;
+            background: #f8f9fa;
+        }
+
+        .nav-process .nav-item {
+            flex: 1;
+            min-width: 180px;
+            text-align: center;
+        }
+
+        .nav-process .nav-link {
+            color: var(--fias-dark) !important;
+            padding: 1rem !important;
+            border-radius: 0;
+            border-bottom: 4px solid transparent;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .nav-process .nav-link.active {
+            border-bottom: 4px solid var(--fias-primary);
+            background-color: white !important;
+            color: var(--fias-primary) !important;
+        }
+
+        /* --- PROCESS STEPS --- */
+        .process-step-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .process-step-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        }
+
+        .step-header {
+            padding: 1.2rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #eee;
+        }
+
+        .step-number {
+            width: 36px;
+            height: 36px;
+            background: var(--fias-primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 12px;
+        }
+
+        .step-title {
+            font-weight: 700;
+            color: var(--fias-dark);
+            margin: 0;
+            flex: 1;
+        }
+
+        .step-body {
+            padding: 1.5rem;
+        }
+
+        /* --- RESPONSABLE BADGES --- */
+        .responsable-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+
+        .responsable-admin { background: #e3f2fd; color: #0d47a1; }
+        .responsable-finance { background: #e8f5e9; color: #1b5e20; }
+        .responsable-legal { background: #f3e5f5; color: #4a148c; }
+        .responsable-bienes { background: #fff3cd; color: #856404; }
+        .responsable-direccion { background: #fce4ec; color: #880e4f; }
+
+        /* --- DOCUMENT BOXES --- */
+        .doc-box {
+            background-color: #f8f9fa;
+            border-left: 4px solid var(--fias-secondary);
+            padding: 1rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1rem 0;
+        }
+
+        .doc-box strong {
+            color: var(--fias-dark);
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .doc-box ul {
+            margin-bottom: 0;
+        }
+
+        /* --- ALERTS --- */
+        .alert-custom {
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-left: 4px solid;
+        }
+
+        .alert-warning-custom {
+            background: #fff8e1;
+            border-left-color: var(--fias-warning);
+            color: #5a4a05;
+        }
+
+        .alert-danger-custom {
+            background: #ffebee;
+            border-left-color: var(--fias-danger);
+            color: #721c24;
+        }
+
+        .alert-info-custom {
+            background: #e3f2fd;
+            border-left-color: var(--fias-primary);
+            color: #0d47a1;
+        }
+
+        /* --- TIMELINE VISUAL --- */
+        .process-visual {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .timeline-visual {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .timeline-step {
+            flex: 1;
+            min-width: 180px;
+            text-align: center;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .timeline-step.active {
+            background: var(--fias-light);
+            border: 2px solid var(--fias-secondary);
+        }
+
+        .timeline-step.completed {
+            background: #d4edda;
+            border: 2px solid #28a745;
+        }
+
+        .step-indicator {
+            width: 32px;
+            height: 32px;
+            background: white;
+            border: 2px solid var(--fias-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-weight: bold;
+        }
+
+        .timeline-step.active .step-indicator {
+            background: var(--fias-primary);
+            color: white;
+        }
+
+        .timeline-step.completed .step-indicator {
+            background: #28a745;
+            color: white;
+            border-color: #28a745;
+        }
+
+        /* --- FOOTER --- */
+        .main-footer {
+            background: var(--fias-dark);
+            color: white;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+
+        .footer-links a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: white;
+            text-decoration: underline;
+        }
+
+        /* --- PRINT STYLES --- */
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            
+            body {
+                padding-top: 0;
+            }
+            
+            .process-step-card {
+                break-inside: avoid;
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 768px) {
+            .nav-process {
+                flex-direction: column;
+            }
+            
+            .nav-process .nav-item {
+                min-width: 100%;
+            }
+            
+            .timeline-visual {
+                flex-direction: column;
+            }
+            
+            .process-visual {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="main-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="fw-bold mb-3">Guía Interactiva: Procedimiento de Baja de Bienes</h1>
+                    <p class="lead mb-3">Procedimiento paso a paso para dar de baja activos en FIAS, Fondos, Programas y Proyectos</p>
+                    <div class="d-flex flex-wrap gap-2">
+                        <span class="header-badge"><i class="fas fa-shield-alt"></i> Uso Institucional</span>
+                        <span class="header-badge"><i class="fas fa-calendar-check"></i> Vigente 2025</span>
+                        <span class="header-badge"><i class="fas fa-users"></i> Responsables de Bienes</span>
+                    </div>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <img src="https://raw.githubusercontent.com/jaircruz1304/FIAS/main/Logo_FIAS.png" alt="Logo FIAS" height="80" class="mb-3">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Navigation Tabs -->
+        <div class="process-tabs no-print">
+            <ul class="nav nav-process nav-justified" id="processTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="proceso-tab" data-bs-toggle="tab" data-bs-target="#proceso" type="button" role="tab" aria-controls="proceso" aria-selected="true">
+                        <i class="fas fa-list-ol me-2"></i> Proceso Paso a Paso
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="visual-tab" data-bs-toggle="tab" data-bs-target="#visual" type="button" role="tab" aria-controls="visual" aria-selected="false">
+                        <i class="fas fa-project-diagram me-2"></i> Vista General
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="normativo-tab" data-bs-toggle="tab" data-bs-target="#normativo" type="button" role="tab" aria-controls="normativo" aria-selected="false">
+                        <i class="fas fa-gavel me-2"></i> Marco Normativo
+                    </button>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Tab Content -->
+        <div class="tab-content" id="processTabContent">
+            <!-- Proceso Paso a Paso -->
+            <div class="tab-pane fade show active" id="proceso" role="tabpanel" aria-labelledby="proceso-tab">
+                <!-- Step 1 -->
+                <div class="process-step-card">
+                    <div class="step-header">
+                        <div class="d-flex align-items-center">
+                            <div class="step-number">1</div>
+                            <h3 class="step-title">Elaboración de la Lista de Bienes a Dar de Baja</h3>
+                        </div>
+                        <div class="d-flex">
+                            <span class="responsable-badge responsable-bienes">
+                                <i class="fas fa-user-tie"></i> Responsable de Activos FIAS/PyP
+                            </span>
+                        </div>
+                    </div>
+                    <div class="step-body">
+                        <p>Se elabora la lista detallada de bienes que se propone dar de baja, incluyendo los sustentos técnicos o documentales correspondientes para cada caso.</p>
+                        
+                        <div class="alert-info-custom alert-custom">
+                            <strong><i class="fas fa-info-circle"></i> Requisito previo:</strong> La lista debe ser validada por el área de Contabilidad antes de continuar con el proceso.
+                        </div>
+                        
+                        <div class="doc-box">
+                            <strong><i class="fas fa-file-alt"></i> Documentación requerida:</strong>
+                            <ul>
+                                <li>Lista detallada de bienes (códigos, descripciones, valores)</li>
+                                <li>Sustento técnico de la baja (obsolescencia, deterioro, etc.)</li>
+                                <li>Sustento documental (informes de estado, evaluaciones)</li>
+                                <li>Validación previa del área contable</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="process-step-card">
+                    <div class="step-header">
+                        <div class="d-flex align-items-center">
+                            <div class="step-number">2</div>
+                            <h3 class="step-title">Envío de la Lista con Memorando</h3>
+                        </div>
+                        <div class="d-flex">
+                            <span class="responsable-badge responsable-bienes">
+                                <i class="fas fa-user-tie"></i> Responsable de Activos FIAS/PyP
+                            </span>
+                        </div>
+                    </div>
+                    <div class="step-body">
+                        <p>Se entrega la lista completa al Director Administrativo y RRHH mediante memorándum formal, adjuntando toda la documentación de sustento.</p>
+                        
+                        <div class="doc-box">
+                            <strong><i class="fas fa-paper-plane"></i> Detalles del envío:</strong>
+                            <ul>
+                                <li>Memorando dirigido al Director Administrativo y RRHH</li>
+                                <li>Lista de bienes con sustentos como anexos</li>
+                                <li>Copia para registro del área requirente</li>
+                                <li>Fecha límite de respuesta según normativa interna</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="process-step-card">
+                    <div class="step-header">
+                        <div class="d-flex align-items-center">
+                            <div class="step-number">3</div>
+                            <h3 class="step-title">Evaluación de la Lista de Bienes</h3>
+                        </div>
+                        <div class="d-flex">
+                            <span class="responsable-badge responsable-admin">
+                                <i class="fas fa-user-cog"></i> Director Administrativo y RRHH
+                            </span>
+                        </div>
+                    </div>
+                    <div class="step-body">
+                        <p>Revisión exhaustiva del contenido y pertinencia de la lista de bienes propuesta para baja, verificando el cumplimiento de normativa y procedimientos.</p>
+                        
+                        <div class="alert-warning-custom alert-custom">
+                            <strong><i class="fas fa-exclamation-triangle"></i> Puntos críticos de evaluación:</strong>
+                            <ul class="mb-0 mt-2">
+                                <li>Verificar que los sustentos sean técnicamente válidos</li>
+                                <li>Confirmar que no existan alternativas de reparación o reutilización</li>
+                                <li>Validar que los valores contables sean correctos</li>
+                                <li>Verificar cumplimiento de normativa ambiental para disposición</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="process-step-card">
+                    <div class="step-header">
+                        <div class="d-flex align-items-center">
+                            <div class="step-number">4</div>
+                            <h3 class="step-title">Regularización de Observaciones (si aplica)</h3>
+                        </div>
+                        <div class="d-flex">
+                            <span class="responsable-badge responsable-admin">
+                                <i class="fas fa-user-cog"></i> Director Administrativo y RRHH
+                            </span>
+                            <span class="responsable-badge responsable-bienes">
+                                <i class="fas fa-user-tie"></i> Responsable de Activos
+                            </span>
+                        </div>
+                    </div>
+                    <div class="step-body">
+                        <p>Si durante la evaluación se identifican novedades u observaciones, se devuelve la lista al Responsable de Activos para los ajustes necesarios.</p>
+                        
+                        <div class="doc-box">
+                            <strong><i class="fas fa-clipboard-check"></i> Proceso de regularización:</strong>
+                            <ul>
+                                <li>Elaboración de informe de observaciones</li>
+                                <li>Plazo para ajustes según complejidad</li>
+                                <li>Validación de ajustes realizados</li>
+                                <li>Registro de modificaciones en el expediente</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 5 -->
+                <div class="process-step-card">
+                    <div class="step-header">
+                        <div class="d-flex align-items-center">
+                            <div class="step-number">5</div>
+                            <h3 class="step-title">Emisión del Documento de Instrucciones para la Baja</h3>
+                        </div>
+                        <div class="d-flex">
+                            <span class="responsable-badge responsable-admin">
+                                <i class="fas fa-user-cog"></i> Director Administrativo y RRHH
+                            </span>
+                            <span class="responsable-badge responsable-finance">
+                                <i class="fas fa-chart-line"></i> Gerente Financiero
+                            </span>
+                        </div>
+                    </div>
+                    <div class="step-body">
+                        <p>Evaluar la pertinencia de baja de los activos fijos y emitir el documento formal de instrucciones para proceder con la baja.</p>
+                        
+                        <div class="alert-info-custom alert-custom">
+                            <strong><i class="fas fa-file-contract"></i> Contenido del documento:</strong>
+                            <ul class="mb-0 mt-2">
+                                <li>Lista definitiva de bienes a dar de baja</li>
+                                <li>Instrucciones específicas para cada tipo de bien</li>
+                                <li>Responsables designados para la ejecución</li>
+                                <li>Plazos establecidos para cada acción</li>
+                                <li>Disposiciones finales (venta, donación, destrucción)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 6 -->
+                <div class="process-step-card">
+                    <div class="step-header">
+                        <div class="d-flex align-items-center">
+                            <div class="step-number">6</div>
+                            <h3 class="step-title">Aprobación del Documento de Baja</h3>
+                        </div>
+                        <div class="d-flex">
+                            <span class="responsable-badge responsable-direccion">
+                                <i class="fas fa-user-check"></i> Dirección Ejecutiva
+                            </span>
+                        </div>
+                    </div>
+                    <div class="step-body">
+                        <p>Autorización formal por parte de la Dirección Ejecutiva para la ejecución del proceso de baja de activos.</p>
+                        
+                        <div class="alert-warning-custom alert-custom">
+                            <strong><i class="fas fa-exclamation-circle"></i> Esta aprobación es obligatoria para:</strong>
+                            <ul class="mb-0 mt-2">
+                                <li>Iniciar cualquier acción de disposición de bienes</li>
+                                <li>Realizar ajustes contables relacionados</li>
+                                <li>Actualizar registros de inventario</li>
+                                <li>Proceder con actas de baja</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 7 -->
+                <div class="process-step-card">
+                    <div class="step-header">
+                        <div class="d-flex align-items-center">
+                            <div class="step-number">7</div>
+                            <h3 class="step-title">Ejecución de la Baja de Activos</h3>
+                        </div>
+                        <div class="d-flex">
+                            <span class="responsable-badge responsable-admin">
+                                <i class="fas fa-user-cog"></i> Director Administrativo y RRHH
+                            </span>
+                        </div>
+                    </div>
+                    <div class="step-body">
+                        <p>Se procede con la ejecución del proceso de baja conforme a las instrucciones aprobadas, siguiendo los métodos establecidos para cada tipo de bien.</p>
+                        
+                        <div class="doc-box">
+                            <strong><i class="fas fa-tasks"></i> Métodos de disposición:</strong>
+                            <ul>
+                                <li><strong>Venta:</strong> Subasta, venta directa, licitación</li>
+                                <li><strong>Donación:</strong> Según protocolo de donaciones FIAS</li>
+                                <li><strong>Destrucción:</strong> Para bienes sin valor o peligrosos</li>
+                                <li><strong>Canje:</strong> Intercambio por otros bienes</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 8 -->
+                <div class="process-step-card">
+                    <div class="step-header">
+                        <div class="d-flex align-items-center">
+                            <div class="step-number">8</div>
+                            <h3 class="step-title">Firma de Acta de Baja de Bienes</h3>
+                        </div>
+                        <div class="d-flex">
+                            <span class="responsable-badge responsable-admin">
+                                <i class="fas fa-user-cog"></i> Participantes Designados
+                            </span>
+                        </div>
+                    </div>
+                    <div class="step-body">
+                        <p>Se firman las actas correspondientes a los bienes dados de baja, documentando formalmente la disposición realizada.</p>
+                        
+                        <div class="alert-info-custom alert-custom">
+                            <strong><i class="fas fa-file-signature"></i> Requisitos del acta:</strong>
+                            <ul class="mb-0 mt-2">
+                                <li>Lista completa de bienes dados de baja</li>
+                                <li>Método de disposición aplicado</li>
+                                <li>Firmas de testigos y responsables</li>
+                                <li>Fecha y lugar de la disposición</li>
+                                <li>Resultado obtenido (monto, destino, etc.)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 9 -->
+                <div class="process-step-card">
+                    <div class="step-header">
+                        <div class="d-flex align-items-center">
+                            <div class="step-number">9</div>
+                            <h3 class="step-title">Actualización de la Matriz de Activos</h3>
+                        </div>
+                        <div class="d-flex">
+                            <span class="responsable-badge responsable-bienes">
+                                <i class="fas fa-user-tie"></i> Responsable de Activos FIAS/PyP
+                            </span>
+                        </div>
+                    </div>
+                    <div class="step-body">
+                        <p>Se registra la baja en el inventario institucional y se desactiva el código del bien en el sistema de administración de activos.</p>
+                        
+                        <div class="doc-box">
+                            <strong><i class="fas fa-database"></i> Acciones de actualización:</strong>
+                            <ul>
+                                <li>Marcar bienes como "Dados de baja" en sistema</li>
+                                <li>Actualizar estado en matriz de activos</li>
+                                <li>Archivar documentación de respaldo</li>
+                                <li>Notificar a áreas involucradas sobre la actualización</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 10 -->
+                <div class="process-step-card">
+                    <div class="step-header">
+                        <div class="d-flex align-items-center">
+                            <div class="step-number">10</div>
+                            <h3 class="step-title">Registro Contable</h3>
+                        </div>
+                        <div class="d-flex">
+                            <span class="responsable-badge responsable-finance">
+                                <i class="fas fa-chart-line"></i> Contabilidad de FIAS/PyP
+                            </span>
+                        </div>
+                    </div>
+                    <div class="step-body">
+                        <p>Se realizan los ajustes contables correspondientes en función del acta de baja, eliminando el bien del balance institucional.</p>
+                        
+                        <div class="alert-warning-custom alert-custom">
+                            <strong><i class="fas fa-exclamation-triangle"></i> Nota importante:</strong>
+                            <p class="mb-0 mt-2">Una vez ejecutada la baja y firmadas las actas correspondientes, el Responsable de Activos deberá coordinar con el área contable la actualización del registro contable, asegurando que el bien sea eliminado del balance institucional y que se refleje adecuadamente en los estados financieros.</p>
+                        </div>
+                        
+                        <div class="doc-box">
+                            <strong><i class="fas fa-calculator"></i> Proceso contable:</strong>
+                            <ul>
+                                <li>Registro de baja en libros contables</li>
+                                <li>Actualización de depreciación acumulada</li>
+                                <li>Registro de ganancias/pérdidas por disposición</li>
+                                <li>Actualización de reportes financieros</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vista General -->
+            <div class="tab-pane fade" id="visual" role="tabpanel" aria-labelledby="visual-tab">
+                <div class="process-visual">
+                    <h3 class="text-center mb-4" style="color: var(--fias-dark);">
+                        <i class="fas fa-project-diagram me-2"></i>Flujograma del Proceso de Baja de Bienes
+                    </h3>
+                    
+                    <div class="timeline-visual">
+                        <div class="timeline-step active">
+                            <div class="step-indicator">1</div>
+                            <h6>Elaboración de Lista</h6>
+                            <small class="text-muted">Responsable de Activos</small>
+                        </div>
+                        
+                        <div class="timeline-step">
+                            <div class="step-indicator">2</div>
+                            <h6>Envío Memorando</h6>
+                            <small class="text-muted">Responsable de Activos</small>
+                        </div>
+                        
+                        <div class="timeline-step">
+                            <div class="step-indicator">3</div>
+                            <h6>Evaluación</h6>
+                            <small class="text-muted">Director Admin.</small>
+                        </div>
+                        
+                        <div class="timeline-step">
+                            <div class="step-indicator">4</div>
+                            <h6>Regularización</h6>
+                            <small class="text-muted">Colaborativo</small>
+                        </div>
+                        
+                        <div class="timeline-step">
+                            <div class="step-indicator">5</div>
+                            <h6>Instrucciones</h6>
+                            <small class="text-muted">Director Admin.</small>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-visual mt-4">
+                        <div class="timeline-step">
+                            <div class="step-indicator">6</div>
+                            <h6>Aprobación</h6>
+                            <small class="text-muted">Dirección Ejecutiva</small>
+                        </div>
+                        
+                        <div class="timeline-step">
+                            <div class="step-indicator">7</div>
+                            <h6>Ejecución</h6>
+                            <small class="text-muted">Director Admin.</small>
+                        </div>
+                        
+                        <div class="timeline-step">
+                            <div class="step-indicator">8</div>
+                            <h6>Acta de Baja</h6>
+                            <small class="text-muted">Participantes</small>
+                        </div>
+                        
+                        <div class="timeline-step">
+                            <div class="step-indicator">9</div>
+                            <h6>Actualización</h6>
+                            <small class="text-muted">Responsable Activos</small>
+                        </div>
+                        
+                        <div class="timeline-step">
+                            <div class="step-indicator">10</div>
+                            <h6>Registro Contable</h6>
+                            <small class="text-muted">Contabilidad</small>
+                        </div>
+                    </div>
+                    
+                    <div class="row mt-5">
+                        <div class="col-md-6">
+                            <div class="alert-info-custom alert-custom">
+                                <h6><i class="fas fa-clock"></i> Tiempo estimado del proceso</h6>
+                                <p class="mb-0"><strong>Duración total:</strong> 15-30 días hábiles</p>
+                                <p class="mb-0"><strong>Paso más largo:</strong> Ejecución (5-10 días)</p>
+                                <p class="mb-0"><strong>Paso crítico:</strong> Aprobación Dirección</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="alert-warning-custom alert-custom">
+                                <h6><i class="fas fa-exclamation-triangle"></i> Puntos de atención</h6>
+                                <p class="mb-0"><strong>Validación contable previa</strong></p>
+                                <p class="mb-0"><strong>Documentación completa</strong></p>
+                                <p class="mb-0"><strong>Coordinación interáreas</strong></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="process-step-card mt-4">
+                    <div class="step-header">
+                        <h3 class="step-title"><i class="fas fa-users me-2"></i>Roles y Responsabilidades</h3>
+                    </div>
+                    <div class="step-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="d-flex align-items-center mb-2">
+                                    <span class="responsable-badge responsable-bienes me-2">
+                                        <i class="fas fa-user-tie"></i>
+                                    </span>
+                                    <strong>Responsable de Activos FIAS/PyP</strong>
+                                </div>
+                                <ul class="small">
+                                    <li>Elaborar lista de bienes a dar de baja</li>
+                                    <li>Preparar sustentos técnicos</li>
+                                    <li>Actualizar matriz de activos</li>
+                                    <li>Coordinar con contabilidad</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <div class="d-flex align-items-center mb-2">
+                                    <span class="responsable-badge responsable-admin me-2">
+                                        <i class="fas fa-user-cog"></i>
+                                    </span>
+                                    <strong>Director Administrativo y RRHH</strong>
+                                </div>
+                                <ul class="small">
+                                    <li>Evaluar lista de bienes</li>
+                                    <li>Emitir instrucciones de baja</li>
+                                    <li>Ejecutar proceso de disposición</li>
+                                    <li>Custodiar garantías (si aplica)</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <div class="d-flex align-items-center mb-2">
+                                    <span class="responsable-badge responsable-direccion me-2">
+                                        <i class="fas fa-user-check"></i>
+                                    </span>
+                                    <strong>Dirección Ejecutiva</strong>
+                                </div>
+                                <ul class="small">
+                                    <li>Autorizar inicio del proceso</li>
+                                    <li>Aprobar documento de baja</li>
+                                    <li>Firmar actas cuando corresponda</li>
+                                    <li>Supervisar cumplimiento normativo</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <div class="d-flex align-items-center mb-2">
+                                    <span class="responsable-badge responsable-finance me-2">
+                                        <i class="fas fa-chart-line"></i>
+                                    </span>
+                                    <strong>Contabilidad FIAS/PyP</strong>
+                                </div>
+                                <ul class="small">
+                                    <li>Validar lista inicial</li>
+                                    <li>Realizar ajustes contables</li>
+                                    <li>Actualizar estados financieros</li>
+                                    <li>Archivar documentación contable</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Marco Normativo -->
+            <div class="tab-pane fade" id="normativo" role="tabpanel" aria-labelledby="normativo-tab">
+                <div class="process-step-card">
+                    <div class="step-header">
+                        <h3 class="step-title"><i class="fas fa-gavel me-2"></i>Marco Normativo y Referencias</h3>
+                    </div>
+                    <div class="step-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Paso</th>
+                                        <th>Actividad</th>
+                                        <th>Fuente Normativa (Manual FIAS)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>Elaboración de la lista de bienes a dar de baja</td>
+                                        <td>Sección 5.4 - Administración de Activos: Egresos de activos: "Desde: Elaborar la lista de bienes a dar de baja con los sustentos en cada caso." (p. 45)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>Envío de la lista con memorando</td>
+                                        <td>No se indica como paso específico, pero implícito en la frase "con los sustentos en cada caso" y por los roles del Director Administrativo y RRHH (p. 6 y 7)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td>Evaluación de la lista de bienes</td>
+                                        <td>Roles - Director Administrativo y RRHH: "Emitir las actas, informes, etc. relacionados a la baja de los activos fijos, a fin de conseguir la autorización correspondiente." (p. 6 y 7)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>4</td>
+                                        <td>Regularización de observaciones</td>
+                                        <td>Implícito en el proceso administrativo: se desprende de la interacción entre el Director y Responsable de Activos en ajustes previos a emitir informes.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>5</td>
+                                        <td>Emisión del documento de instrucciones para la baja</td>
+                                        <td>Roles - Director Administrativo y RRHH, y Gerente Administrativo Financiero: "Evaluar la pertinencia de baja de los activos fijos y emitir el documento de instrucciones." (p. 5)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>6</td>
+                                        <td>Aprobación del documento de baja</td>
+                                        <td>Roles - Director Ejecutivo / Delegado: "Autorizar la baja de activos fijos." (p. 5)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>7</td>
+                                        <td>Ejecución de la baja de activos</td>
+                                        <td>Sección 5.4 - Administración de Activos: "Hasta: Actualizar la matriz de administración de activos." (p. 45)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>8</td>
+                                        <td>Firma de actas de baja de bienes</td>
+                                        <td>Implícito en: "Emitir las actas, informes, etc. relacionados a la baja..." (p. 7)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>9</td>
+                                        <td>Actualización de la matriz de activos</td>
+                                        <td>Sección 5.4 - Administración de Activos: "Hasta: Actualizar la matriz de administración de activos." (p. 45)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>10</td>
+                                        <td>Ajuste contable</td>
+                                        <td>Roles y Responsabilidades, se menciona que el Asistente Contable tiene como función: "Registrar contablemente y entregar documento físico para custodia" (p. 7)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="alert-info-custom alert-custom mt-4">
+                            <strong><i class="fas fa-book"></i> Documentación de referencia:</strong>
+                            <ul class="mb-0 mt-2">
+                                <li>Manual de Políticas y Procesos Administrativos FIAS (Actualizado 11-06-2021)</li>
+                                <li>Sección 5.4 - Administración de Activos: Egresos de activos</li>
+                                <li>Reglamento Interno de Administración de Bienes</li>
+                                <li>Normativa Contable Gubernamental vigente</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Print and Export Section -->
+        <div class="row mt-4 no-print">
+            <div class="col-12 text-center">
+                <div class="d-flex flex-wrap justify-content-center gap-3">
+                    <button class="btn btn-primary btn-lg" onclick="window.print()">
+                        <i class="fas fa-print me-2"></i> Imprimir Guía Completa
+                    </button>
+                    <button class="btn btn-success btn-lg" onclick="exportToPDF()">
+                        <i class="fas fa-file-pdf me-2"></i> Exportar a PDF
+                    </button>
+                    <button class="btn btn-dark btn-lg" onclick="toggleChecklist()">
+                        <i class="fas fa-check-square me-2"></i> Lista de Verificación
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <h5>FIAS - Fondo de Inversión Ambiental Sostenible</h5>
+                    <p>Guía Interactiva: Procedimiento de Baja de Bienes</p>
+                    <p>Versión 1.0 - 2025</p>
+                    <p>
+                        Desarrollado por: 
+                        <a href="https://www.linkedin.com/in/jair-cruz-gallegos-65998776/" target="_blank">
+                            <i class="fab fa-linkedin me-1"></i> Jair Cruz Gallegos
+                        </a>
+                    </p>
+                </div>
+                <div class="col-md-3 mb-4 footer-links">
+                    <h5>Enlaces Relacionados</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="Guia-Donacion-Vehiculos-FIAS%20(1).html">Guía de Donación de Vehículos</a></li>
+                        <li><a href="Guia-Contrataci%C3%B3n-FIAS%20(3).html">Guía de Contrataciones</a></li>
+                        <li><a href="https://fias.org.ec/" target="_blank">Sitio web FIAS</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3 mb-4 footer-links">
+                    <h5>Soporte</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="mailto:jcruzg@fias.org.ec">jcruzg@fias.org.ec</a></li>
+                        <li>Extensión: 102</li>
+                        <li>Horario: 08:30 - 17:30</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="mt-0 mb-4">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p class="mb-0">&copy; 2025 FIAS. Todos los derechos reservados.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="mb-0">Para uso interno de funcionarios responsables de bienes</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Función para exportar a PDF (simulada)
+        function exportToPDF() {
+            alert('Función de exportación a PDF activada. En un entorno real, esto generaría un PDF descargable.');
+            // En implementación real, usaríamos una librería como jsPDF
+        }
+        
+        // Función para mostrar/ocultar checklist
+        function toggleChecklist() {
+            const checklistHTML = `
+                <div class="process-step-card mt-4" id="checklistModal">
+                    <div class="step-header">
+                        <h3 class="step-title"><i class="fas fa-check-square me-2"></i>Lista de Verificación para Baja de Bienes</h3>
+                        <button type="button" class="btn-close" onclick="document.getElementById('checklistModal').remove()"></button>
+                    </div>
+                    <div class="step-body">
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="check1">
+                            <label class="form-check-label" for="check1">
+                                Lista de bienes elaborada con sustentos técnicos/documentales
+                            </label>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="check2">
+                            <label class="form-check-label" for="check2">
+                                Validación previa del área contable obtenida
+                            </label>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="check3">
+                            <label class="form-check-label" for="check3">
+                                Memorando enviado al Director Administrativo y RRHH
+                            </label>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="check4">
+                            <label class="form-check-label" for="check4">
+                                Observaciones regularizadas (si aplica)
+                            </label>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="check5">
+                            <label class="form-check-label" for="check5">
+                                Documento de instrucciones emitido
+                            </label>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="check6">
+                            <label class="form-check-label" for="check6">
+                                Aprobación de Dirección Ejecutiva obtenida
+                            </label>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="check7">
+                            <label class="form-check-label" for="check7">
+                                Proceso de disposición ejecutado según instrucciones
+                            </label>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="check8">
+                            <label class="form-check-label" for="check8">
+                                Acta de baja firmada por participantes designados
+                            </label>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="check9">
+                            <label class="form-check-label" for="check9">
+                                Matriz de activos actualizada en el sistema
+                            </label>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="check10">
+                            <label class="form-check-label" for="check10">
+                                Ajustes contables realizados y documentados
+                            </label>
+                        </div>
+                        <div class="text-center mt-4">
+                            <button class="btn btn-success" onclick="alert('Lista de verificación guardada (simulación)')">
+                                <i class="fas fa-save me-2"></i> Guardar Progreso
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Si ya existe, removerlo; si no, agregarlo
+            const existingChecklist = document.getElementById('checklistModal');
+            if (existingChecklist) {
+                existingChecklist.remove();
+            } else {
+                document.querySelector('main .container').insertAdjacentHTML('beforeend', checklistHTML);
+            }
+        }
+        
+        // Inicializar tooltips de Bootstrap
+        document.addEventListener('DOMContentLoaded', function() {
+            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+            
+            // Marcar el primer paso del timeline como activo
+            const firstStep = document.querySelector('.timeline-step');
+            if (firstStep) {
+                firstStep.classList.add('active');
+            }
+        });
+        
+        // Cambiar pestañas y actualizar timeline visual
+        const tabEls = document.querySelectorAll('button[data-bs-toggle="tab"]');
+        tabEls.forEach(tabEl => {
+            tabEl.addEventListener('shown.bs.tab', event => {
+                // Actualizar clase activa en navegación de procesos
+                document.querySelectorAll('.nav-process .nav-link').forEach(link => {
+                    link.classList.remove('active');
+                });
+                event.target.classList.add('active');
+                
+                // Si estamos en la vista visual, animar timeline
+                if (event.target.id === 'visual-tab') {
+                    animateTimeline();
+                }
+            });
+        });
+        
+        // Función para animar el timeline
+        function animateTimeline() {
+            const steps = document.querySelectorAll('.timeline-step');
+            steps.forEach((step, index) => {
+                setTimeout(() => {
+                    step.classList.add('active');
+                }, index * 200);
+            });
+        }
+    </script>
+</body>
+</html>

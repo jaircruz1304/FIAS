@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portal de Innovación Digital - FIAS</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+  />
+
+  <style>
+    :root {
+      --fias-blue: #005596;
+      --fias-blue-dark: #00385f;
+      --fias-green: #8dc63f;
+      --fias-green-dark: #6fa42e;
+      --soft-bg: #f4f7fb;
+      --text-main: #183247;
+      --text-soft: #5e7285;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: linear-gradient(180deg, #f6f9fc 0%, #eef4f9 100%);
+      color: var(--text-main);
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .gradient-fias {
+      background:
+        linear-gradient(rgba(0, 53, 92, 0.82), rgba(0, 85, 150, 0.78)),
+        url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
+    }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .portal-card {
+      transition: all 0.35s ease;
+    }
+
+    .portal-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 35px rgba(0, 0, 0, 0.12);
+    }
+
+    .tool-image {
+      height: 190px;
+      object-fit: cover;
+      width: 100%;
+    }
+
+    .section-title::after {
+      content: "";
+      display: block;
+      width: 74px;
+      height: 4px;
+      border-radius: 999px;
+      margin-top: 12px;
+      background: linear-gradient(90deg, var(--fias-green), var(--fias-blue));
+    }
+
+    .badge-soft {
+      background: rgba(141, 198, 63, 0.12);
+      color: var(--fias-green-dark);
+      border: 1px solid rgba(141, 198, 63, 0.28);
+    }
+
+    .btn-main {
+      background: linear-gradient(135deg, var(--fias-blue), var(--fias-blue-dark));
+      transition: all 0.3s ease;
+    }
+
+    .btn-main:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px rgba(0, 85, 150, 0.22);
+    }
+
+    .btn-outline {
+      border: 1px solid rgba(255,255,255,0.4);
+      background: rgba(255,255,255,0.08);
+      transition: all 0.3s ease;
+    }
+
+    .btn-outline:hover {
+      background: rgba(255,255,255,0.16);
+      transform: translateY(-2px);
+    }
+
+    .stat-card {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="bg-white/95 backdrop-blur-md shadow-sm border-b-4 border-[#8dc63f] sticky top-0 z-50">
+    <div class="container mx-auto px-6 py-4 flex flex-col lg:flex-row justify-between items-center gap-4">
+      <div class="flex items-center gap-4">
+        <img
+          src="https://fias.org.ec/wp-content/uploads/2021/11/Logo_FIAS_web.png"
+          alt="Logo FIAS"
+          class="h-14"
+        />
+        <div class="hidden md:block h-10 w-px bg-gray-200"></div>
+        <div class="hidden md:block">
+          <p class="text-xs uppercase tracking-[0.25em] text-gray-400 font-semibold">Portal Institucional</p>
+          <p class="text-sm text-gray-600 font-medium">Innovación, automatización y control</p>
+        </div>
+      </div>
+
+      <div class="text-center lg:text-right">
+        <h1 class="text-xl md:text-2xl font-extrabold text-[#005596] uppercase tracking-tight">
+          Ecosistema de Soluciones Digitales
+        </h1>
+        <p class="text-sm text-gray-500 font-medium">
+          Gestión y desarrollo: Jair Alexander Cruz Gallegos
+        </p>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="gradient-fias text-white py-20 md:py-24 relative overflow-hidden">
+    <div class="container mx-auto px-6">
+      <div class="max-w-4xl">
+        <span class="inline-flex items-center gap-2 badge-soft bg-white/10 text-white border-white/20 px-4 py-2 rounded-full text-sm font-semibold mb-6">
+          <i class="fas fa-bolt"></i> Plataforma de apoyo a la gestión institucional
+        </span>
+
+        <h2 class="text-4xl md:text-6xl font-extrabold leading-tight mb-6">
+          Transformación Digital,
+          <span class="text-[#b9f26b]">inteligencia normativa</span>
+          y control operativo
+        </h2>
+
+        <p class="text-lg md:text-xl opacity-95 max-w-3xl leading-relaxed mb-8">
+          Espacio centralizado para acceder a herramientas digitales desarrolladas para
+          optimizar procesos, fortalecer el seguimiento institucional, mejorar la toma
+          de decisiones y apoyar la gestión integral del FIAS.
+        </p>
+
+        <div class="flex flex-wrap gap-4">
+          <a href="#herramientas" class="btn-main text-white px-7 py-3 rounded-xl font-bold shadow-lg inline-flex items-center">
+            <i class="fas fa-grid-2 mr-2"></i> Explorar herramientas
+          </a>
+          <a href="https://rrhh.fias.org.ec" target="_blank" class="btn-outline text-white px-7 py-3 rounded-xl font-bold inline-flex items-center">
+            <i class="fas fa-arrow-up-right-from-square mr-2"></i> Ir a Talento Humano
+          </a>
+        </div>
+      </div>
+
+      <!-- STATS -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-12">
+        <div class="stat-card rounded-2xl p-5">
+          <p class="text-3xl font-extrabold">6+</p>
+          <p class="text-sm opacity-85 mt-1">Herramientas activas</p>
+        </div>
+        <div class="stat-card rounded-2xl p-5">
+          <p class="text-3xl font-extrabold">100%</p>
+          <p class="text-sm opacity-85 mt-1">Enfoque institucional</p>
+        </div>
+        <div class="stat-card rounded-2xl p-5">
+          <p class="text-3xl font-extrabold">24/7</p>
+          <p class="text-sm opacity-85 mt-1">Acceso digital centralizado</p>
+        </div>
+        <div class="stat-card rounded-2xl p-5">
+          <p class="text-3xl font-extrabold">FIAS</p>
+          <p class="text-sm opacity-85 mt-1">Innovación para sostenibilidad</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <main class="container mx-auto px-6 py-14" id="herramientas">
+
+    <!-- PRINCIPAL TOOL -->
+    <section class="mb-20">
+      <div class="mb-8">
+        <h3 class="section-title text-3xl font-extrabold text-gray-800 flex items-center gap-3">
+          <i class="fas fa-star text-yellow-500"></i>
+          Herramienta de Gestión Principal
+        </h3>
+      </div>
+
+      <div class="bg-white rounded-[28px] shadow-2xl overflow-hidden border border-blue-100 grid grid-cols-1 lg:grid-cols-2">
+        <div class="relative min-h-[320px]">
+          <img
+            src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1200&q=80"
+            alt="Gestión de talento humano"
+            class="w-full h-full object-cover"
+          />
+          <div class="absolute inset-0 bg-gradient-to-tr from-[#00385f]/85 via-[#005596]/60 to-transparent"></div>
+          <div class="absolute bottom-0 left-0 p-8 text-white">
+            <span class="inline-block bg-[#8dc63f] text-[#163300] px-4 py-1 rounded-full text-xs font-extrabold uppercase tracking-wide mb-4">
+              En producción
+            </span>
+            <h4 class="text-3xl font-extrabold mb-2">Talento Humano</h4>
+            <p class="text-white/90 max-w-md">
+              Plataforma central para la gestión de personal, asistencia, expedientes y flujos administrativos.
+            </p>
+          </div>
+        </div>
+
+        <div class="p-8 md:p-10 flex flex-col justify-center">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-12 h-12 rounded-xl bg-[#005596]/10 text-[#005596] flex items-center justify-center text-xl">
+              <i class="fas fa-users-cog"></i>
+            </div>
+            <div>
+              <p class="text-sm uppercase tracking-[0.18em] text-gray-400 font-bold">Aplicación estratégica</p>
+              <h4 class="text-2xl md:text-3xl font-extrabold text-[#005596]">
+                Sistema Integral de Talento Humano
+              </h4>
+            </div>
+          </div>
+
+          <p class="text-gray-600 leading-relaxed mb-6 text-[15px] md:text-base">
+            Solución institucional desarrollada con arquitectura propia para centralizar la
+            operación del capital humano. Facilita la automatización de procesos, el control
+            de asistencia, la gestión documental del personal y la trazabilidad de flujos
+            administrativos, reduciendo tiempos operativos y dependencia de tareas manuales.
+          </p>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+            <div class="rounded-2xl bg-blue-50 border border-blue-100 p-4">
+              <p class="font-bold text-[#005596] mb-1"><i class="fas fa-check-circle mr-2"></i>Control operativo</p>
+              <p class="text-sm text-gray-600">Asistencia, permisos, ausentismos, vacaciones y expedientes.</p>
+            </div>
+            <div class="rounded-2xl bg-green-50 border border-green-100 p-4">
+              <p class="font-bold text-green-700 mb-1"><i class="fas fa-shield-alt mr-2"></i>Trazabilidad</p>
+              <p class="text-sm text-gray-600">Seguimiento de flujos, validaciones y gestión institucional.</p>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-4">
+            <a
+              href="https://rrhh.fias.org.ec"
+              target="_blank"
+              class="btn-main text-white px-8 py-3 rounded-xl font-bold shadow-lg inline-flex items-center"
+            >
+              <i class="fas fa-external-link-alt mr-2"></i> Abrir aplicación
+            </a>
+            <span class="text-sm text-gray-400 italic">
+              Desplegado en infraestructura institucional
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECONDARY TOOLS -->
+    <section>
+      <div class="mb-8">
+        <h3 class="section-title text-3xl font-extrabold text-gray-800 flex items-center gap-3">
+          <i class="fas fa-layer-group text-[#8dc63f]"></i>
+          Inteligencia Normativa y Control
+        </h3>
+        <p class="text-gray-500 mt-4 max-w-3xl">
+          Herramientas especializadas orientadas al fortalecimiento de la gestión institucional,
+          prevención de riesgos, administración de activos y soporte a procesos normativos.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+
+        <!-- AUDITORIA -->
+        <article class="portal-card bg-white rounded-2xl shadow-lg overflow-hidden border border-red-100">
+          <img
+            src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1200&q=80"
+            alt="Seguimiento de auditoría"
+            class="tool-image"
+          />
+          <div class="p-6">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 rounded-xl bg-red-50 text-red-500 flex items-center justify-center text-xl mr-3">
+                <i class="fas fa-clipboard-check"></i>
+              </div>
+              <div>
+                <h3 class="font-extrabold text-lg text-gray-800">Seguimiento de Auditoría</h3>
+                <p class="text-xs uppercase tracking-wide text-red-500 font-bold">Control y monitoreo</p>
+              </div>
+            </div>
+            <p class="text-gray-600 text-sm leading-relaxed mb-5">
+              Dashboard orientado al seguimiento de recomendaciones, hallazgos, acciones correctivas
+              y niveles de riesgo institucional para fortalecer el control interno.
+            </p>
+            <a
+              href="https://jaircruz1304.github.io/FIAS/Auditoria.html"
+              target="_blank"
+              class="text-red-500 font-bold hover:underline inline-flex items-center"
+            >
+              Acceder <i class="fas fa-arrow-right ml-2 text-xs"></i>
+            </a>
+          </div>
+        </article>
+
+        <!-- RIESGOS -->
+        <article class="portal-card bg-white rounded-2xl shadow-lg overflow-hidden border border-orange-100">
+          <img
+            src="https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=1200&q=80"
+            alt="Gestión de riesgos"
+            class="tool-image"
+          />
+          <div class="p-6">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 rounded-xl bg-orange-50 text-orange-500 flex items-center justify-center text-xl mr-3">
+                <i class="fas fa-chart-line"></i>
+              </div>
+              <div>
+                <h3 class="font-extrabold text-lg text-gray-800">Gestión de Riesgos</h3>
+                <p class="text-xs uppercase tracking-wide text-orange-500 font-bold">Prevención institucional</p>
+              </div>
+            </div>
+            <p class="text-gray-600 text-sm leading-relaxed mb-5">
+              Matriz estructurada para el análisis, seguimiento y control de riesgos residuales
+              por factor, apoyando el cumplimiento preventivo y la toma de decisiones.
+            </p>
+            <a
+              href="https://jaircruz1304.github.io/FIAS/Riesgos.html"
+              target="_blank"
+              class="text-orange-500 font-bold hover:underline inline-flex items-center"
+            >
+              Ver matriz <i class="fas fa-arrow-right ml-2 text-xs"></i>
+            </a>
+          </div>
+        </article>
+
+        <!-- MAPA ACTIVOS -->
+        <article class="portal-card bg-white rounded-2xl shadow-lg overflow-hidden border border-blue-100">
+          <img
+            src="https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=1200&q=80"
+            alt="Mapa de activos"
+            class="tool-image"
+          />
+          <div class="p-6">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-500 flex items-center justify-center text-xl mr-3">
+                <i class="fas fa-map-marked-alt"></i>
+              </div>
+              <div>
+                <h3 class="font-extrabold text-lg text-gray-800">Mapa de Activos</h3>
+                <p class="text-xs uppercase tracking-wide text-blue-500 font-bold">Visualización geográfica</p>
+              </div>
+            </div>
+            <p class="text-gray-600 text-sm leading-relaxed mb-5">
+              Plataforma georreferenciada para visualizar bienes, puntos de control,
+              sedes institucionales y activos ubicados en áreas protegidas.
+            </p>
+            <a
+              href="https://jaircruz1304.github.io/FIAS/Bienes-FIAS-Map.html"
+              target="_blank"
+              class="text-blue-500 font-bold hover:underline inline-flex items-center"
+            >
+              Abrir mapa <i class="fas fa-arrow-right ml-2 text-xs"></i>
+            </a>
+          </div>
+        </article>
+
+        <!-- CONTRATACION -->
+        <article class="portal-card bg-white rounded-2xl shadow-lg overflow-hidden border border-green-100">
+          <img
+            src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1200&q=80"
+            alt="Guía de contratación"
+            class="tool-image"
+          />
+          <div class="p-6">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 rounded-xl bg-green-50 text-green-600 flex items-center justify-center text-xl mr-3">
+                <i class="fas fa-file-contract"></i>
+              </div>
+              <div>
+                <h3 class="font-extrabold text-lg text-gray-800">Guía de Contratación</h3>
+                <p class="text-xs uppercase tracking-wide text-green-600 font-bold">Procedimientos interactivos</p>
+              </div>
+            </div>
+            <p class="text-gray-600 text-sm leading-relaxed mb-5">
+              Recurso digital para consulta de rutas operativas y procedimientos aplicables
+              a modalidades de contratación institucional.
+            </p>
+            <a
+              href="https://jaircruz1304.github.io/FIAS/Guia-Contrataci%C3%B3n-FIAS.html"
+              target="_blank"
+              class="text-green-600 font-bold hover:underline inline-flex items-center"
+            >
+              Ver procedimientos <i class="fas fa-arrow-right ml-2 text-xs"></i>
+            </a>
+          </div>
+        </article>
+
+        <!-- DONACION BIENES -->
+        <article class="portal-card bg-white rounded-2xl shadow-lg overflow-hidden border border-teal-100">
+          <img
+            src="https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&w=1200&q=80"
+            alt="Donación de bienes"
+            class="tool-image"
+          />
+          <div class="p-6">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 rounded-xl bg-teal-50 text-teal-500 flex items-center justify-center text-xl mr-3">
+                <i class="fas fa-hand-holding-heart"></i>
+              </div>
+              <div>
+                <h3 class="font-extrabold text-lg text-gray-800">Donación de Bienes</h3>
+                <p class="text-xs uppercase tracking-wide text-teal-500 font-bold">Transferencia de dominio</p>
+              </div>
+            </div>
+            <p class="text-gray-600 text-sm leading-relaxed mb-5">
+              Guía operativa para orientar procesos de transferencia de dominio de bienes muebles
+              entre entidades públicas o hacia beneficiarios autorizados.
+            </p>
+            <a
+              href="https://jaircruz1304.github.io/FIAS/Guia-Donacion-Bienes-FIAS.html"
+              target="_blank"
+              class="text-teal-500 font-bold hover:underline inline-flex items-center"
+            >
+              Consultar guía <i class="fas fa-arrow-right ml-2 text-xs"></i>
+            </a>
+          </div>
+        </article>
+
+        <!-- DONACION VEHICULAR -->
+        <article class="portal-card bg-white rounded-2xl shadow-lg overflow-hidden border border-indigo-100">
+          <img
+            src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80"
+            alt="Donación vehicular"
+            class="tool-image"
+          />
+          <div class="p-6">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl mr-3">
+                <i class="fas fa-car"></i>
+              </div>
+              <div>
+                <h3 class="font-extrabold text-lg text-gray-800">Donación Vehicular</h3>
+                <p class="text-xs uppercase tracking-wide text-indigo-600 font-bold">Protocolos y regularización</p>
+              </div>
+            </div>
+            <p class="text-gray-600 text-sm leading-relaxed mb-5">
+              Ruta de consulta para procesos de traspaso de dominio vehicular, con referencia
+              a componentes notariales, tributarios y registrales.
+            </p>
+            <a
+              href="https://jaircruz1304.github.io/FIAS/Guia-Donacion-Vehiculos-FIAS.html"
+              target="_blank"
+              class="text-indigo-600 font-bold hover:underline inline-flex items-center"
+            >
+              Ver protocolo <i class="fas fa-arrow-right ml-2 text-xs"></i>
+            </a>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- EXTRA CTA -->
+    <section class="mt-20">
+      <div class="rounded-[28px] overflow-hidden relative">
+        <div class="absolute inset-0 bg-gradient-to-r from-[#00385f] via-[#005596] to-[#0f6a8f]"></div>
+        <div class="absolute inset-0 opacity-20 bg-[url('https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=1400&q=80')] bg-cover bg-center"></div>
+
+        <div class="relative px-8 md:px-12 py-12 text-white">
+          <div class="max-w-4xl">
+            <p class="uppercase tracking-[0.25em] text-white/70 text-xs font-bold mb-3">FIAS · Innovación digital</p>
+            <h3 class="text-3xl md:text-4xl font-extrabold mb-4">
+              Un portal para centralizar soluciones, fortalecer control y acelerar la gestión institucional
+            </h3>
+            <p class="text-white/90 leading-relaxed max-w-3xl mb-6">
+              Este ecosistema integra herramientas que apoyan la eficiencia operativa,
+              la transparencia, la trazabilidad documental y la modernización tecnológica
+              de los procesos institucionales del FIAS.
+            </p>
+            <a href="#herramientas" class="inline-flex items-center bg-white text-[#005596] px-6 py-3 rounded-xl font-extrabold shadow-lg hover:shadow-xl transition">
+              <i class="fas fa-compass mr-2"></i> Ver soluciones disponibles
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="mt-16 bg-white border-t">
+    <div class="container mx-auto px-6 py-12">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+        <div>
+          <img
+            src="https://fias.org.ec/wp-content/uploads/2021/11/Logo_FIAS_web.png"
+            alt="Logo FIAS"
+            class="h-11 mb-4"
+          />
+         <p class="text-sm text-gray-500 italic">
+            © 2026 Fondo de Inversión Ambiental Sostenible
+          </p>
+        </div>
+
+        <div class="text-sm text-gray-500">
+          <p class="font-bold text-gray-700 mb-3">Accesos destacados</p>
+          <ul class="space-y-2">
+            <li><a href="https://rrhh.fias.org.ec" target="_blank" class="hover:text-[#005596]">Talento Humano</a></li>
+            <li><a href="https://jaircruz1304.github.io/FIAS/Auditoria.html" target="_blank" class="hover:text-[#005596]">Seguimiento de Auditoría</a></li>
+            <li><a href="https://jaircruz1304.github.io/FIAS/Riesgos.html" target="_blank" class="hover:text-[#005596]">Gestión de Riesgos</a></li>
+          </ul>
+        </div>
+
+        <div class="md:text-right">
+          <p class="text-sm text-gray-400 uppercase tracking-[0.2em] font-bold mb-2">Portal institucional</p>
+          
+         
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"/>
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css"/>
-<script type="text/javascript" src="https://gc.kes.v2.scr.kaspersky-labs.com/7EA5E9BB-55E1-4C31-9C21-4943DDFED2E4/main.js?attr=MaLV6mpbc3FHoIbgxvXTb2eay5muQ8WV8YtjOGmeMaH1uon0deSXSwr2ZCk9YM61fZZBv7JMoeDgQCZvUQDJu6QnsAXD3F5kq7vfCN0O4AX3IeO6kjuecC-r_DJ6uz4lPi2fwwt6Vm11hNFm2P-AjnXYk_fJm6_aWUyCM88rUZOvSs15HSjxlOgLU5KboaHh7TaHJAGqQaqPzdPaCxf0j0uCKIxo2EHebuiMiBcoKHOnzdxGyFZtaDWsP6o2Wo9o5HkhXbQ3JqQQVOsFhFoTAg" charset="UTF-8"></script><style>
+<style>
 :root {
   --primary:#1f5f3b; --secondary:#3e8a58; --bg:#f4f7f5; --alto:#1f9d55; --medio:#f4c430; --bajo:#f97316; --critico:#dc2626;
   --card:#ffffff; --text:#1f2937; --muted:#6b7280;
@@ -33,6 +33,13 @@ body { margin:0; background:var(--bg); color:var(--text); font-family:'Segoe UI'
 .area-card { display:flex; gap:10px; align-items:flex-start; padding:12px; border-radius:14px; border:1px solid #e7ece8; background:#fff; box-shadow:0 2px 10px rgba(0,0,0,.03); cursor:pointer; transition:.2s ease; }
 .area-card:hover { transform:translateY(-2px); box-shadow:0 8px 18px rgba(0,0,0,.08); }
 .area-card.active { border-left:5px solid var(--primary); background:#fbfefc; }
+.area-card.dimmed { opacity:.35; filter:grayscale(.15); }
+#top10Body tr { cursor:pointer; transition:.18s ease; }
+#top10Body tr:hover { background:#f5f9f6; }
+#top10Body tr.active-row { outline:1px solid #d8e6dc; background:#eef6f0; }
+.selection-hint { font-size:.78rem; color:var(--muted); margin-top:8px; }
+.selection-actions { display:flex; gap:8px; margin-top:10px; }
+.selection-actions .btn { border-radius:10px; }
 .card-logo { width:44px; height:44px; border-radius:50%; object-fit:cover; background:#f2f4f3; border:2px solid #fff; box-shadow:0 2px 8px rgba(0,0,0,.08); }
 .card-title { font-weight:700; line-height:1.15; margin-bottom:3px; }
 .card-sub { color:var(--muted); font-size:.8rem; }
@@ -119,6 +126,10 @@ body { margin:0; background:var(--bg); color:var(--text); font-family:'Segoe UI'
             <tbody id="top10Body"></tbody>
           </table>
         </div>
+        <div class="selection-actions">
+          <button id="clearSelectionBtn" class="btn btn-sm btn-outline-secondary w-100"><i class="fas fa-eye me-1"></i>Mostrar todas</button>
+        </div>
+        <div class="selection-hint">Al elegir una card o una fila del Top 10, el mapa aislará solo esa área.</div>
       </div>
 
       <div class="panel">
@@ -263,23 +274,71 @@ function popupHtml(a) {
   `;
 }
 
+
 let markers = [];
+let selectedAreaName = null;
+
+function applySelection(name, options = {}) {
+  const { openPopup = true, zoom = 8, source = 'ui' } = options;
+  selectedAreaName = name;
+  render();
+  const found = markers.find(m => m.name === name);
+  if (found) {
+    map.setView(found.marker.getLatLng(), zoom);
+    if (openPopup) found.marker.openPopup();
+  }
+  highlightCard(name);
+  highlightTop10(name);
+  if (window.innerWidth < 1100 && source !== 'top10') document.getElementById('sidebar').classList.remove('show');
+}
+
+function clearSelection({ preserveView = false } = {}) {
+  selectedAreaName = null;
+  render();
+  highlightCard(null);
+  highlightTop10(null);
+  if (!preserveView) {
+    const filtered = getFiltered();
+    const bounds = filtered
+      .filter(a => a.latitud != null && a.longitud != null)
+      .map(a => [a.latitud, a.longitud]);
+    if (bounds.length) map.fitBounds(bounds, { padding:[30,30] });
+  }
+}
+
+function getRenderableData() {
+  const filtered = getFiltered();
+  if (!selectedAreaName) return filtered;
+  const selected = filtered.find(a => a.nombre_area === selectedAreaName);
+  if (selected) return [selected];
+  selectedAreaName = null;
+  return filtered;
+}
+
 function render() {
   const filtered = getFiltered();
+  const visibleData = getRenderableData();
   cluster.clearLayers();
   markers = [];
   els.cards.innerHTML = '';
   const bounds = [];
-  filtered.forEach((a, idx) => {
-    if (a.latitud != null && a.longitud != null) {
-      const marker = L.marker([a.latitud, a.longitud], {icon:createIcon(a)}).bindPopup(popupHtml(a));
-      marker.on('click', ()=>highlightCard(a.nombre_area));
+
+  filtered.forEach((a) => {
+    const isSelected = !selectedAreaName || a.nombre_area === selectedAreaName;
+    if (isSelected && a.latitud != null && a.longitud != null) {
+      const marker = L.marker([a.latitud, a.longitud], { icon:createIcon(a) }).bindPopup(popupHtml(a));
+      marker.on('click', () => {
+        selectedAreaName = a.nombre_area;
+        highlightCard(a.nombre_area);
+        highlightTop10(a.nombre_area);
+      });
       cluster.addLayer(marker);
-      markers.push({name:a.nombre_area, marker});
+      markers.push({ name:a.nombre_area, marker });
       bounds.push([a.latitud, a.longitud]);
     }
+
     els.cards.insertAdjacentHTML('beforeend', `
-      <div class="area-card" data-name="${esc(a.nombre_area)}">
+      <div class="area-card ${selectedAreaName && !isSelected ? 'dimmed' : ''} ${selectedAreaName === a.nombre_area ? 'active' : ''}" data-name="${esc(a.nombre_area)}">
         <img class="card-logo" src="${esc(a.url_img || '')}" onerror="this.src='https://fias.org.ec/wp-content/uploads/2021/11/Logo_FIAS_web.png'">
         <div class="flex-grow-1">
           <div class="d-flex justify-content-between gap-2">
@@ -291,66 +350,90 @@ function render() {
         </div>
       </div>`);
   });
+
   document.querySelectorAll('.area-card').forEach(card => {
     card.addEventListener('click', () => {
       const name = card.dataset.name;
-      const found = markers.find(m => m.name === name);
-      if (found) {
-        map.setView(found.marker.getLatLng(), 8);
-        found.marker.openPopup();
+      if (selectedAreaName === name) {
+        clearSelection({ preserveView:false });
+        return;
       }
-      highlightCard(name);
-      if (window.innerWidth < 1100) document.getElementById('sidebar').classList.remove('show');
+      applySelection(name, { source:'card' });
     });
   });
-  if (bounds.length) map.fitBounds(bounds, {padding:[30,30]});
-  updateSummary(filtered);
+
+  if (bounds.length) map.fitBounds(bounds, { padding:[30,30] });
+  updateSummary(visibleData, filtered);
   renderTop10(filtered);
 }
 
 function highlightCard(name) {
-  document.querySelectorAll('.area-card').forEach(c => c.classList.toggle('active', c.dataset.name === name));
+  document.querySelectorAll('.area-card').forEach(c => {
+    c.classList.toggle('active', !!name && c.dataset.name === name);
+    c.classList.toggle('dimmed', !!name && c.dataset.name !== name);
+  });
 }
 
-function updateSummary(filtered) {
-  const totalAsignado = filtered.reduce((s,a)=>s+(a.total_asignado_2025||0),0);
-  const totalEjecutado = filtered.reduce((s,a)=>s+(a.total_ejecutado_2025||0),0);
-  const totalSaldo = filtered.reduce((s,a)=>s+(a.saldo_no_ejecutado_2025||0),0);
+function highlightTop10(name) {
+  document.querySelectorAll('#top10Body tr').forEach(r => {
+    r.classList.toggle('active-row', !!name && r.dataset.name === name);
+  });
+}
+
+function updateSummary(visibleData, filteredBase) {
+  const totalAsignado = visibleData.reduce((s,a)=>s+(a.total_asignado_2025||0),0);
+  const totalEjecutado = visibleData.reduce((s,a)=>s+(a.total_ejecutado_2025||0),0);
+  const totalSaldo = visibleData.reduce((s,a)=>s+(a.saldo_no_ejecutado_2025||0),0);
   const pctExec = totalAsignado ? totalEjecutado/totalAsignado : 0;
-  const risk = filtered.filter(a => ['Bajo','Crítico','Critico'].includes(a.estado_ejecucion)).length;
-  const maxSaldo = filtered.reduce((m,a)=>Math.max(m,a.saldo_no_ejecutado_2025||0),0);
+  const risk = visibleData.filter(a => ['Bajo','Crítico','Critico'].includes(a.estado_ejecucion)).length;
+  const maxSaldo = visibleData.reduce((m,a)=>Math.max(m,a.saldo_no_ejecutado_2025||0),0);
   els.kpiAsignado.textContent = money(totalAsignado);
   els.kpiEjecutado.textContent = money(totalEjecutado);
   els.kpiSaldo.textContent = money(totalSaldo);
   els.kpiPct.textContent = pct(pctExec);
-  els.floatAreas.textContent = filtered.length;
+  els.floatAreas.textContent = visibleData.length;
   els.floatPct.textContent = pct(pctExec);
   els.floatRisk.textContent = risk;
   els.floatMaxSaldo.textContent = money(maxSaldo);
-  els.countChip.textContent = `${filtered.length} / ${AREAS.length}`;
-  els.visibleChip.textContent = `${filtered.length} entidades`;
+  els.countChip.textContent = `${visibleData.length} / ${filteredBase.length}`;
+  els.visibleChip.textContent = selectedAreaName ? '1 entidad seleccionada' : `${visibleData.length} entidades`;
 }
 
 function renderTop10(filtered) {
-  const top = [...filtered].sort((a,b) => (b.porcentaje_ejecucion - a.porcentaje_ejecucion) || (b.total_ejecutado_2025 - a.total_ejecutado_2025)).slice(0,10);
+  const top = [...filtered]
+    .sort((a,b) => (b.porcentaje_ejecucion - a.porcentaje_ejecucion) || (b.total_ejecutado_2025 - a.total_ejecutado_2025))
+    .slice(0,10);
   els.top10.innerHTML = top.map((a,i)=>`
-    <tr>
+    <tr data-name="${esc(a.nombre_area)}" class="${selectedAreaName === a.nombre_area ? 'active-row' : ''}">
       <td>${i+1}</td>
       <td><div class="fw-semibold">${esc(a.nombre_area)}</div><div class="text-muted small">${esc(a.region||'')}</div></td>
       <td><span class="badge-state state-${esc(a.estado_ejecucion)}">${pct(a.porcentaje_ejecucion)}</span></td>
       <td class="text-end">${money(a.total_ejecutado_2025)}</td>
     </tr>`).join('');
+
+  document.querySelectorAll('#top10Body tr').forEach(row => {
+    row.addEventListener('click', () => {
+      const name = row.dataset.name;
+      if (selectedAreaName === name) {
+        clearSelection({ preserveView:false });
+        return;
+      }
+      applySelection(name, { source:'top10' });
+    });
+  });
 }
 
 ['input','change'].forEach(evt => {
-  els.search.addEventListener(evt, render);
-  els.region.addEventListener(evt, render);
-  els.estado.addEventListener(evt, render);
-  els.tipo.addEventListener(evt, render);
+  els.search.addEventListener(evt, () => { selectedAreaName = null; render(); });
+  els.region.addEventListener(evt, () => { selectedAreaName = null; render(); });
+  els.estado.addEventListener(evt, () => { selectedAreaName = null; render(); });
+  els.tipo.addEventListener(evt, () => { selectedAreaName = null; render(); });
 });
 els.resetBtn.addEventListener('click', ()=> {
+  selectedAreaName = null;
   els.search.value=''; els.region.value=''; els.estado.value=''; els.tipo.value=''; render();
 });
+document.getElementById('clearSelectionBtn')?.addEventListener('click', () => clearSelection({ preserveView:false }));
 
 populateFilters();
 render();

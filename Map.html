@@ -326,19 +326,16 @@
 {id: 58, nombre: "Refugio de Vida Silvestre Manglares Estuario Río Musine", tipo: "Refugio de vida Silvestre", region: "Costa", latitud: 0.37891, longitud: -80.19648, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/jcruzg_fias_org_ec/IQA9QiXO1S1sSKj59pyl0h6ZAfBQ8UWdBHFsMXKOQBTcS90?e=DMEztR", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/mae.jpg"} ,
 {id: 59, nombre: "Parque Nacional Río Negro Sopladora", tipo: "Parque Nacional", region: "Costa", latitud:  -2.7338527777778, longitud: -78.54405, link: "https://fiasec-my.sharepoint.com/:x:/g/personal/jcruzg_fias_org_ec/IQBW33ApoiFNTaZneZvskG2JAegYePO-Qq6vSnfSERUD-3Q?e=Pttv1p", logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/mae.jpg"}  // URL_AQUI corregida
 ];
-            // Las áreas con bienes se identifican automáticamente por tener link de acceso válido.
-            // Si no tiene link, queda sin bienes y sin botón de acceso.
-            const esLinkValido = (link) => typeof link === 'string' && link.trim() !== '' && link.trim() !== 'URL_AQUI';
-            const fiasAreasNames = areasProtegidas
-                .filter(area => esLinkValido(area.link))
-                .map(area => area.nombre);
 
-            areasProtegidas.forEach(area => {
-                area.tieneBienesFIAS = esLinkValido(area.link);
-            });
-                
-            // Áreas administrativas con sus Logos (apuntando al repo raw)
-            const areasAdministrativas = [
+        const esLinkValido = (link) => typeof link === 'string' && link.trim() !== '' && link.trim() !== 'URL_AQUI';
+
+        // Igual que en el HTML original: las áreas con bienes se identifican automáticamente por tener link válido.
+        // Así, toda área nueva que tenga link aparece en el filtro FIAS, en las tarjetas, en los marcadores y con botón de inventario.
+        const fiasAreasNames = areasProtegidas
+            .filter(area => esLinkValido(area.link))
+            .map(area => area.nombre);
+
+        const areasAdministrativas = [
                 {
                     id: 100, nombre: "FIAS Institucional", tipo: "Área Administrativa", subtipo: "FIAS", region: "Sierra", latitud: -0.2149, longitud: -78.5009,
                     direccion: "Edificio Concorde, Av. 12 de Octubre y Francisco Salazar", esAdministrativa: true,
@@ -382,8 +379,9 @@
                     logoUrl: "https://raw.githubusercontent.com/jaircruz1304/FIAS/Img_Map/FEIG.png"
                 }
             ];
-            
-            areasAdministrativas.forEach(area => area.tieneBienesFIAS = true);
+        // -------------------------------------------------------------------
+        // --- FIN DE DATOS ---
+        // -------------------------------------------------------------------
 
         // Código para detectar vista móvil
         function isMobileView() {
@@ -400,7 +398,7 @@
 
             try {
                 // Preparar Datos
-                areasProtegidas.forEach(area => area.tieneBienesFIAS = fiasAreasNames.includes(area.nombre));
+                areasProtegidas.forEach(area => area.tieneBienesFIAS = esLinkValido(area.link));
                 areasAdministrativas.forEach(area => area.tieneBienesFIAS = true);
                 const todasLasAreas = [...areasProtegidas, ...areasAdministrativas];
 
@@ -441,7 +439,7 @@
                         ${area.tieneBienesFIAS ? '<br><small class="text-success fw-bold"><i class="fas fa-check"></i> Inventario Disponible</small>' : ''}
                         <div class="mt-2">
                             <button class="btn btn-sm btn-primary w-100 mb-1" onclick="viewDetails(${area.id})">Detalles</button>
-                            ${area.tieneBienesFIAS && area.link !== 'URL_AQUI' ? `<button class="btn btn-sm btn-success w-100" onclick="window.open('${area.link}')">Ver Inventario</button>` : ''}
+                            ${area.tieneBienesFIAS && esLinkValido(area.link) ? `<button class="btn btn-sm btn-success w-100" onclick="window.open('${area.link}', '_blank', 'noopener')">Ver Inventario</button>` : ''}
                         </div>
                     </div>`;
                     
@@ -463,6 +461,7 @@
                 
                 // Renderizar
                 updateMapAndList();
+                setTimeout(() => { if (map) { map.invalidateSize(true); fitFilteredBounds(areaData, true); } }, 250);
                 
                 // Event Listeners
                 setupListeners(areasProtegidas, areasAdministrativas, todasLasAreas);
@@ -513,12 +512,37 @@
             updateMapAndList();
         }
 
+
+        function fitFilteredBounds(filtered, force = false) {
+            if (!map || !filtered || filtered.length === 0) return;
+
+            const shouldFit =
+                force ||
+                document.getElementById('search-input').value.trim() !== '' ||
+                document.getElementById('fias-filter').checked ||
+                activeFilters.regions.length > 0 ||
+                activeFilters.types.length > 0 ||
+                activeFilters.adminTypes.length > 0 ||
+                !map.__initialBoundsFitted;
+
+            if (!shouldFit) return;
+
+            const bounds = L.featureGroup(filtered.map(i => i.marker)).getBounds();
+            if (bounds.isValid()) {
+                map.fitBounds(bounds.pad(isMobileView() ? 0.25 : 0.15), {
+                    maxZoom: isMobileView() ? 7 : 8,
+                    animate: true
+                });
+                map.__initialBoundsFitted = true;
+            }
+        }
+
         function updateMapAndList() {
             markersLayer.clearLayers();
             const cardContainer = document.getElementById('areas-cards');
             cardContainer.innerHTML = '';
 
-            const search = document.getElementById('search-input').value.toLowerCase();
+            const search = document.getElementById('search-input').value.trim().toLowerCase();
             const fiasOnly = document.getElementById('fias-filter').checked;
             
             const filtered = areaData.filter(item => {
@@ -571,9 +595,9 @@
                 cardContainer.appendChild(card);
             });
 
-            if (filtered.length > 0 && search !== '') {
-               map.fitBounds(L.featureGroup(filtered.map(i => i.marker)).getBounds().pad(0.1));
-            }
+            // Ajustar la vista para que en móvil y escritorio se visualicen correctamente
+            // las áreas cargadas, incluidas las nuevas.
+            fitFilteredBounds(filtered);
         }
 
         function highlightCard(id) {

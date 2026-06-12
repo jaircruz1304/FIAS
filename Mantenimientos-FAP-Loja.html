@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ERP de Mantenimientos Vehiculares | SharePoint + IA</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap5.min.css" />
+  <style>
+    :root{
+      --fias-primary:#1f7a38;
+      --fias-primary-2:#2fa84f;
+      --fias-dark:#12351f;
+      --fias-soft:#eef8f1;
+      --ink:#1f2937;
+      --muted:#667085;
+      --line:#e5e7eb;
+      --warn:#f59e0b;
+      --danger:#dc3545;
+      --ok:#198754;
+      --info:#0d6efd;
+      --shadow:0 14px 35px rgba(16,24,40,.10);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:#f5f7fa;color:var(--ink);}
+    .app-shell{min-height:100vh;}
+    .navbar{background:linear-gradient(135deg,var(--fias-dark),var(--fias-primary));box-shadow:var(--shadow);}
+    .brand-title{font-weight:800;letter-spacing:-.02em;}
+    .logo-box{background:#fff;border-radius:12px;padding:6px 10px;display:flex;align-items:center;justify-content:center;}
+    .hero{background:linear-gradient(135deg,#0d3b22 0%,#1f7a38 55%,#45c36b 100%);color:white;border-radius:0 0 28px 28px;padding:28px 0 34px;box-shadow:var(--shadow);}
+    .hero h1{font-size:clamp(1.6rem,2.6vw,2.5rem);font-weight:800;}
+    .hero p{opacity:.92;max-width:960px;margin:0;}
+    .glass{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);backdrop-filter:blur(8px);border-radius:16px;}
+    .layout{display:grid;grid-template-columns:280px 1fr;gap:18px;margin-top:-22px;}
+    .sidebar{background:white;border-radius:var(--radius);box-shadow:var(--shadow);padding:14px;position:sticky;top:82px;height:max-content;}
+    .side-btn{width:100%;border:0;background:transparent;border-radius:14px;padding:12px 14px;text-align:left;color:#334155;font-weight:650;margin-bottom:6px;display:flex;align-items:center;gap:10px;}
+    .side-btn:hover,.side-btn.active{background:var(--fias-soft);color:var(--fias-primary);}
+    .main-panel{min-width:0;}
+    .card-app{border:1px solid #edf0f3;border-radius:var(--radius);box-shadow:0 8px 26px rgba(16,24,40,.07);overflow:hidden;background:white;}
+    .card-app .card-header{background:white;border-bottom:1px solid var(--line);font-weight:800;}
+    .kpi-card{border:1px solid #edf0f3;border-radius:18px;background:white;box-shadow:0 8px 26px rgba(16,24,40,.07);height:100%;}
+    .kpi-icon{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:var(--fias-soft);color:var(--fias-primary);font-size:1.35rem;}
+    .kpi-value{font-size:2rem;font-weight:850;letter-spacing:-.03em;}
+    .small-muted{font-size:.85rem;color:var(--muted);}
+    .badge-soft{border-radius:999px;padding:.42rem .7rem;font-weight:700;background:#eef2ff;color:#3444a1;}
+    .status-ok{background:#e7f7ef;color:#087343}.status-warn{background:#fff5dc;color:#986500}.status-danger{background:#fde8e8;color:#b42318}.status-info{background:#e7f0ff;color:#0b4ab8}.status-dark{background:#eef0f2;color:#344054}
+    .chart-wrap{position:relative;height:300px;}
+    .chart-wrap-sm{position:relative;height:240px;}
+    .table td,.table th{vertical-align:middle;}
+    .text-truncate-2{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+    .loading-overlay{position:fixed;inset:0;background:rgba(255,255,255,.92);z-index:5000;display:flex;align-items:center;justify-content:center;flex-direction:column;}
+    .config-card{background:#fffdf5;border:1px solid #ffe6a3;border-radius:16px;}
+    .form-label{font-weight:700;color:#344054;font-size:.88rem;}
+    .required::after{content:' *';color:var(--danger)}
+    .line-item{border:1px dashed #cbd5e1;border-radius:14px;padding:12px;background:#fafafa;}
+    .alert-item{border-left:5px solid var(--warn);border-radius:14px;background:#fff;padding:14px;box-shadow:0 4px 18px rgba(16,24,40,.06);}
+    .alert-critical{border-left-color:var(--danger)}.alert-good{border-left-color:var(--ok)}.alert-info-l{border-left-color:var(--info)}
+    .codebox{background:#101828;color:#d0d5dd;border-radius:14px;padding:14px;font-family:Consolas,Monaco,monospace;font-size:.86rem;overflow:auto;}
+    .tab-pane{display:none}.tab-pane.active{display:block;}
+    .dataTables_wrapper .dataTables_filter input{border-radius:10px;border:1px solid var(--line);padding:.45rem .7rem;}
+    .modal-header{background:linear-gradient(135deg,var(--fias-dark),var(--fias-primary));color:#fff;}
+    footer{color:#667085;}
+    @media (max-width: 992px){.layout{grid-template-columns:1fr}.sidebar{position:relative;top:auto}.side-btn{display:inline-flex;width:auto}.sidebar .nav-stack{display:flex;overflow:auto;gap:6px}.hero{border-radius:0 0 18px 18px}.chart-wrap{height:260px}}
+    @media (max-width: 576px){.kpi-value{font-size:1.55rem}.hero{padding:22px 0 28px}.container-fluid{padding-left:12px!important;padding-right:12px!important}.logo-box img{height:28px!important}.brand-title{font-size:.95rem}.chart-wrap{height:230px}}
+  </style>
+</head>
+<body>
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="spinner-border text-success" role="status"></div>
+    <p class="mt-3 fw-semibold" id="loadingText">Inicializando sistema...</p>
+  </div>
+
+  <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+    <div class="container-fluid px-3 px-lg-4">
+      <div class="logo-box me-3"><img src="https://fias.org.ec/wp-content/uploads/2021/11/Logo_FIAS_web.png" height="36" alt="FIAS"></div>
+      <a class="navbar-brand brand-title" href="#">ERP de Mantenimientos Vehiculares</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#topNav"><span class="navbar-toggler-icon"></span></button>
+      <div class="collapse navbar-collapse" id="topNav">
+        <div class="ms-auto d-flex gap-2 mt-3 mt-lg-0">
+          <button class="btn btn-sm btn-outline-light" id="btnLogin"><i class="fa-brands fa-microsoft me-1"></i> Microsoft 365</button>
+          <button class="btn btn-sm btn-outline-light" id="btnSync"><i class="fa-solid fa-rotate me-1"></i> Sincronizar</button>
+          <button class="btn btn-sm btn-light text-success" id="btnSaveConfig"><i class="fa-solid fa-floppy-disk me-1"></i> Guardar config.</button>
+          <button class="btn btn-sm btn-outline-light" id="btnLogout"><i class="fa-solid fa-right-from-bracket"></i></button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="container-fluid px-3 px-lg-4">
+      <div class="row align-items-end g-3">
+        <div class="col-lg-8">
+          <span class="badge bg-light text-success mb-2"><i class="fa-solid fa-shield-halved me-1"></i> Control interno + trazabilidad + IA</span>
+          <h1 class="mb-2">Sistema web para gestión integral de mantenimientos vehiculares</h1>
+          <p>Registra, consulta y actualiza intervenciones; controla kilometraje, repuestos, mano de obra, costos, duplicidades, alertas preventivas y patrones recurrentes. Preparado para SharePoint, Microsoft Graph, Power BI, Power Automate y futura integración ERP.</p>
+        </div>
+        <div class="col-lg-4">
+          <div class="glass p-3">
+            <div class="d-flex justify-content-between"><span>Modo de operación</span><strong id="modeBadge">Demo local</strong></div>
+            <div class="d-flex justify-content-between"><span>Última sincronización</span><strong id="lastSync">Pendiente</strong></div>
+            <div class="d-flex justify-content-between"><span>Usuario</span><strong id="userLabel">No autenticado</strong></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container-fluid px-3 px-lg-4 pb-5">
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="nav-stack">
+          <button class="side-btn active" data-tab="dashboard"><i class="fa-solid fa-chart-pie"></i> Dashboard</button>
+          <button class="side-btn" data-tab="mantenimientos"><i class="fa-solid fa-screwdriver-wrench"></i> Mantenimientos</button>
+          <button class="side-btn" data-tab="vehiculos"><i class="fa-solid fa-truck-pickup"></i> Vehículos</button>
+          <button class="side-btn" data-tab="costos"><i class="fa-solid fa-coins"></i> Repuestos y costos</button>
+          <button class="side-btn" data-tab="ia"><i class="fa-solid fa-brain"></i> IA y alertas</button>
+          <button class="side-btn" data-tab="configuracion"><i class="fa-solid fa-gears"></i> SharePoint / ERP</button>
+        </div>
+        <hr>
+        <div class="small-muted px-2">
+          <strong>Control recomendado:</strong> trabajar sobre tablas de Excel normalizadas o, para producción, migrar a listas de SharePoint/Dataverse.
+        </div>
+      </aside>
+
+      <section class="main-panel">
+        <div id="dashboard" class="tab-pane active">
+          <div class="row g-3 mb-3" id="kpiCards"></div>
+          <div class="card-app mb-3">
+            <div class="card-header d-flex flex-column flex-lg-row gap-2 justify-content-between align-items-lg-center">
+              <span><i class="fa-solid fa-filter me-2 text-success"></i>Filtros inteligentes</span>
+              <div class="d-flex flex-wrap gap-2">
+                <input class="form-control form-control-sm" id="smartSearch" placeholder="Búsqueda IA: placa, repuesto, proveedor, falla, fecha..." style="min-width:280px">
+                <select class="form-select form-select-sm" id="filterVehiculo"><option value="">Todos los vehículos</option></select>
+                <select class="form-select form-select-sm" id="filterTipo"><option value="">Todos los tipos</option><option>Preventivo</option><option>Correctivo</option><option>Predictivo</option><option>Emergente</option></select>
+                <select class="form-select form-select-sm" id="filterEstado"><option value="">Todos los estados</option><option>Registrado</option><option>Validado</option><option>Observado</option><option>Cerrado</option></select>
+              </div>
+            </div>
+          </div>
+          <div class="row g-3 mb-3">
+            <div class="col-xl-6"><div class="card-app h-100"><div class="card-header">Costo por vehículo</div><div class="card-body"><div class="chart-wrap"><canvas id="chartCostVehicle"></canvas></div></div></div></div>
+            <div class="col-xl-6"><div class="card-app h-100"><div class="card-header">Distribución por tipo de mantenimiento</div><div class="card-body"><div class="chart-wrap"><canvas id="chartType"></canvas></div></div></div></div>
+            <div class="col-xl-6"><div class="card-app h-100"><div class="card-header">Repuestos / servicios más utilizados</div><div class="card-body"><div class="chart-wrap"><canvas id="chartParts"></canvas></div></div></div></div>
+            <div class="col-xl-6"><div class="card-app h-100"><div class="card-header">Costos mensuales</div><div class="card-body"><div class="chart-wrap"><canvas id="chartMonthly"></canvas></div></div></div></div>
+          </div>
+        </div>
+
+        <div id="mantenimientos" class="tab-pane">
+          <div class="row g-3">
+            <div class="col-12 col-xxl-4">
+              <div class="card-app">
+                <div class="card-header"><i class="fa-solid fa-plus me-2 text-success"></i>Registrar mantenimiento</div>
+                <div class="card-body">
+                  <form id="maintenanceForm" class="row g-2">
+                    <div class="col-12"><label class="form-label required">Vehículo</label><select id="mVehiculo" class="form-select" required></select></div>
+                    <div class="col-md-6"><label class="form-label required">Fecha</label><input id="mFecha" type="date" class="form-control" required></div>
+                    <div class="col-md-6"><label class="form-label required">Kilometraje</label><input id="mKm" type="number" min="0" class="form-control" required></div>
+                    <div class="col-md-6"><label class="form-label required">Tipo</label><select id="mTipo" class="form-select" required><option>Preventivo</option><option>Correctivo</option><option>Predictivo</option><option>Emergente</option></select></div>
+                    <div class="col-md-6"><label class="form-label">Proveedor / taller</label><input id="mProveedor" class="form-control" placeholder="Nombre del taller"></div>
+                    <div class="col-md-6"><label class="form-label">Factura / OT</label><input id="mDocumento" class="form-control" placeholder="Nro. factura u orden"></div>
+                    <div class="col-md-6"><label class="form-label">Estado de control</label><select id="mEstado" class="form-select"><option>Registrado</option><option>Validado</option><option>Observado</option><option>Cerrado</option></select></div>
+                    <div class="col-12"><label class="form-label required">Descripción técnica</label><textarea id="mDescripcion" class="form-control" rows="2" placeholder="Describir falla, mantenimiento realizado y sustento técnico" required></textarea></div>
+                    <div class="col-12"><label class="form-label">Repuestos, insumos y mano de obra</label><div id="lineItems" class="d-grid gap-2"></div><button type="button" class="btn btn-outline-success btn-sm mt-2" id="btnAddLine"><i class="fa-solid fa-plus me-1"></i> Agregar ítem</button></div>
+                    <div class="col-12"><label class="form-label">Observación / validación</label><textarea id="mObservacion" class="form-control" rows="2"></textarea></div>
+                    <div class="col-12 d-grid"><button class="btn btn-success" type="submit"><i class="fa-solid fa-cloud-arrow-up me-1"></i> Guardar en SharePoint / repositorio</button></div>
+                    <div class="col-12"><div class="small-muted">Antes de guardar, el sistema revisa duplicidad por vehículo, fecha, kilometraje, proveedor, documento, repuesto y recurrencia técnica.</div></div>
+                  </form>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-xxl-8">
+              <div class="card-app">
+                <div class="card-header d-flex justify-content-between align-items-center"><span><i class="fa-solid fa-list-check me-2 text-success"></i>Histórico de intervenciones</span><button class="btn btn-sm btn-outline-success" id="btnExportIntervenciones"><i class="fa-solid fa-file-excel me-1"></i> Exportar</button></div>
+                <div class="card-body"><div class="table-responsive"><table id="tblMantenimientos" class="table table-hover table-striped w-100"><thead><tr><th>ID</th><th>Fecha</th><th>Vehículo</th><th>Km</th><th>Tipo</th><th>Proveedor</th><th>Costo</th><th>Estado</th><th>Acciones</th></tr></thead><tbody></tbody></table></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="vehiculos" class="tab-pane">
+          <div class="row g-3">
+            <div class="col-lg-4">
+              <div class="card-app">
+                <div class="card-header"><i class="fa-solid fa-car-side me-2 text-success"></i>Registrar / actualizar vehículo</div>
+                <div class="card-body">
+                  <form id="vehicleForm" class="row g-2">
+                    <input type="hidden" id="vRowIndex">
+                    <div class="col-md-6"><label class="form-label required">Placa / código</label><input id="vPlaca" class="form-control" required></div>
+                    <div class="col-md-6"><label class="form-label">Tipo</label><input id="vTipo" class="form-control" placeholder="Camioneta, moto, equipo..."></div>
+                    <div class="col-12"><label class="form-label">Marca / modelo</label><input id="vModelo" class="form-control"></div>
+                    <div class="col-md-6"><label class="form-label required">Km actual</label><input id="vKm" type="number" min="0" class="form-control" required></div>
+                    <div class="col-md-6"><label class="form-label">Presupuesto anual</label><input id="vPresupuesto" type="number" min="0" step="0.01" class="form-control"></div>
+                    <div class="col-12"><label class="form-label">Responsable / custodio</label><input id="vResponsable" class="form-control"></div>
+                    <div class="col-md-6"><label class="form-label">Periodicidad preventiva km</label><input id="vPeriodicidad" type="number" min="1" class="form-control" value="5000"></div>
+                    <div class="col-md-6"><label class="form-label">Estado</label><select id="vEstado" class="form-select"><option>Activo</option><option>Inactivo</option><option>En mantenimiento</option></select></div>
+                    <div class="col-12 d-grid"><button class="btn btn-success"><i class="fa-solid fa-save me-1"></i> Guardar vehículo</button></div>
+                  </form>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-8"><div class="card-app"><div class="card-header">Inventario de vehículos y control de kilometraje</div><div class="card-body"><div class="table-responsive"><table id="tblVehiculos" class="table table-hover table-striped w-100"><thead><tr><th>Placa</th><th>Tipo</th><th>Marca/modelo</th><th>Km actual</th><th>Último mant.</th><th>Próximo km</th><th>Presupuesto</th><th>Estado</th><th>Acciones</th></tr></thead><tbody></tbody></table></div></div></div></div>
+          </div>
+        </div>
+
+        <div id="costos" class="tab-pane">
+          <div class="card-app">
+            <div class="card-header d-flex justify-content-between align-items-center"><span><i class="fa-solid fa-gears me-2 text-success"></i>Detalle de repuestos, insumos, mano de obra y vida útil</span><button class="btn btn-sm btn-outline-success" id="btnExportDetalle"><i class="fa-solid fa-file-excel me-1"></i> Exportar</button></div>
+            <div class="card-body"><div class="table-responsive"><table id="tblDetalle" class="table table-hover table-striped w-100"><thead><tr><th>ID Mant.</th><th>Vehículo</th><th>Categoría</th><th>Ítem</th><th>Cantidad</th><th>Costo unit.</th><th>Costo total</th><th>Vida útil km</th><th>Próximo km</th><th>Alerta</th></tr></thead><tbody></tbody></table></div></div>
+          </div>
+        </div>
+
+        <div id="ia" class="tab-pane">
+          <div class="row g-3">
+            <div class="col-xl-5"><div class="card-app h-100"><div class="card-header"><i class="fa-solid fa-magnifying-glass-chart me-2 text-success"></i>Búsqueda inteligente</div><div class="card-body"><textarea class="form-control mb-2" id="aiQuery" rows="4" placeholder="Ej.: mostrar mantenimientos correctivos de camioneta con cambio de llantas en 2026, proveedor X, costos altos..."></textarea><button class="btn btn-success" id="btnAiSearch"><i class="fa-solid fa-brain me-1"></i> Analizar consulta</button><div class="mt-3" id="aiSearchResults"></div></div></div></div>
+            <div class="col-xl-7"><div class="card-app h-100"><div class="card-header"><i class="fa-solid fa-triangle-exclamation me-2 text-warning"></i>Alertas predictivas y control de duplicidad</div><div class="card-body"><div id="alertsContainer" class="d-grid gap-2"></div></div></div></div>
+            <div class="col-12"><div class="card-app"><div class="card-header"><i class="fa-solid fa-lightbulb me-2 text-success"></i>Recomendaciones preventivas generadas por IA analítica local</div><div class="card-body"><div id="recommendations" class="row g-3"></div></div></div></div>
+          </div>
+        </div>
+
+        <div id="configuracion" class="tab-pane">
+          <div class="row g-3">
+            <div class="col-xl-5">
+              <div class="card-app config-card">
+                <div class="card-header bg-transparent"><i class="fa-brands fa-microsoft me-2 text-success"></i>Configuración Microsoft 365 / SharePoint</div>
+                <div class="card-body">
+                  <div class="alert alert-warning small"><strong>Importante:</strong> este HTML no debe contener secretos. Use una aplicación SPA registrada en Microsoft Entra ID. El administrador debe autorizar permisos delegados de lectura/escritura.</div>
+                  <form id="configForm" class="row g-2">
+                    <div class="col-md-6"><label class="form-label required">Tenant ID</label><input id="cfgTenant" class="form-control" placeholder="GUID del tenant"></div>
+                    <div class="col-md-6"><label class="form-label required">Client ID</label><input id="cfgClient" class="form-control" placeholder="Application / client ID"></div>
+                    <div class="col-12"><label class="form-label">Share ID codificado</label><input id="cfgShare" class="form-control" placeholder="u!... si se usa enlace compartido"></div>
+                    <div class="col-md-6"><label class="form-label">Drive ID</label><input id="cfgDrive" class="form-control" placeholder="Alternativa al Share ID"></div>
+                    <div class="col-md-6"><label class="form-label">Item ID del Excel</label><input id="cfgItem" class="form-control" placeholder="ID del archivo .xlsx"></div>
+                    <div class="col-md-6"><label class="form-label">Tabla intervenciones</label><input id="cfgTblInterv" class="form-control" value="tblIntervenciones"></div>
+                    <div class="col-md-6"><label class="form-label">Tabla detalle</label><input id="cfgTblDetalle" class="form-control" value="tblDetalle"></div>
+                    <div class="col-md-6"><label class="form-label">Tabla vehículos</label><input id="cfgTblVeh" class="form-control" value="tblVehiculos"></div>
+                    <div class="col-md-6"><label class="form-label">Tabla auditoría</label><input id="cfgTblAudit" class="form-control" value="tblAuditoria"></div>
+                    <div class="col-12 d-grid"><button type="submit" class="btn btn-success"><i class="fa-solid fa-floppy-disk me-1"></i> Guardar configuración local</button></div>
+                  </form>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-7">
+              <div class="card-app mb-3">
+                <div class="card-header"><i class="fa-solid fa-database me-2 text-success"></i>Estructura mínima requerida del Excel en SharePoint</div>
+                <div class="card-body">
+                  <p>El archivo Excel debe contener tablas formales de Excel con nombres definidos. No basta con hojas simples. La página trabaja con estas tablas y columnas:</p>
+                  <div class="accordion" id="schemaAccordion">
+                    <div class="accordion-item"><h2 class="accordion-header"><button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#schema1">tblVehiculos</button></h2><div id="schema1" class="accordion-collapse collapse show" data-bs-parent="#schemaAccordion"><div class="accordion-body codebox">idVehiculo | placa | tipoVehiculo | marcaModelo | kmActual | kmUltimoMantenimiento | proximoMantenimientoKm | presupuestoAnual | responsable | periodicidadKm | estado | actualizadoEn</div></div></div>
+                    <div class="accordion-item"><h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#schema2">tblIntervenciones</button></h2><div id="schema2" class="accordion-collapse collapse" data-bs-parent="#schemaAccordion"><div class="accordion-body codebox">idIntervencion | fecha | idVehiculo | placa | kilometraje | tipoMantenimiento | proveedor | documento | descripcion | costoTotal | estadoControl | observacion | creadoPor | creadoEn | actualizadoEn</div></div></div>
+                    <div class="accordion-item"><h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#schema3">tblDetalle</button></h2><div id="schema3" class="accordion-collapse collapse" data-bs-parent="#schemaAccordion"><div class="accordion-body codebox">idDetalle | idIntervencion | idVehiculo | placa | categoria | item | cantidad | costoUnitario | costoTotal | vidaUtilKm | proximoCambioKm | garantia | observacion</div></div></div>
+                    <div class="accordion-item"><h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#schema4">tblAuditoria</button></h2><div id="schema4" class="accordion-collapse collapse" data-bs-parent="#schemaAccordion"><div class="accordion-body codebox">idAuditoria | fechaHora | usuario | accion | tabla | registroId | detalle | resultado</div></div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-app">
+                <div class="card-header"><i class="fa-solid fa-diagram-project me-2 text-success"></i>Arquitectura escalable recomendada</div>
+                <div class="card-body">
+                  <ol class="mb-0">
+                    <li><strong>Etapa 1:</strong> Excel en SharePoint con tablas normalizadas y control por Microsoft Graph.</li>
+                    <li><strong>Etapa 2:</strong> Power Automate para flujos de aprobación, notificaciones y evidencias.</li>
+                    <li><strong>Etapa 3:</strong> Power BI conectado a SharePoint/Excel o listas para tableros institucionales.</li>
+                    <li><strong>Etapa 4:</strong> migración a SharePoint Lists, Dataverse o ERP formal para concurrencia, permisos por rol, auditoría y bloqueo transaccional.</li>
+                  </ol>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div class="modal fade" id="recordModal" tabindex="-1"><div class="modal-dialog modal-xl modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="recordModalTitle">Detalle</h5><button class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div><div class="modal-body" id="recordModalBody"></div><div class="modal-footer"><button class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button></div></div></div></div>
+
+  <footer class="container-fluid px-3 px-lg-4 py-4"><div class="d-flex flex-column flex-md-row justify-content-between gap-2"><span>FIAS · Sistema de control de mantenimientos vehiculares</span><span>Desarrollado por <a href="https://www.linkedin.com/in/jair-cruz-gallegos-65998776/" target="_blank" rel="noopener">Jair Cruz Gallegos</a></span></div></footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://alcdn.msauth.net/browser/2.38.3/js/msal-browser.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script>
+    const COLUMNS = {
+      vehiculos: ['idVehiculo','placa','tipoVehiculo','marcaModelo','kmActual','kmUltimoMantenimiento','proximoMantenimientoKm','presupuestoAnual','responsable','periodicidadKm','estado','actualizadoEn'],
+      intervenciones: ['idIntervencion','fecha','idVehiculo','placa','kilometraje','tipoMantenimiento','proveedor','documento','descripcion','costoTotal','estadoControl','observacion','creadoPor','creadoEn','actualizadoEn'],
+      detalle: ['idDetalle','idIntervencion','idVehiculo','placa','categoria','item','cantidad','costoUnitario','costoTotal','vidaUtilKm','proximoCambioKm','garantia','observacion'],
+      auditoria: ['idAuditoria','fechaHora','usuario','accion','tabla','registroId','detalle','resultado']
+    };
+
+    const demo = {
+      vehiculos: [
+        {idVehiculo:'VEH-001',placa:'PEI-1023',tipoVehiculo:'Camioneta',marcaModelo:'Toyota Hilux',kmActual:89320,kmUltimoMantenimiento:85000,proximoMantenimientoKm:90000,presupuestoAnual:3500,responsable:'Administración',periodicidadKm:5000,estado:'Activo',actualizadoEn:todayISO()},
+        {idVehiculo:'VEH-002',placa:'PEI-1140',tipoVehiculo:'Camioneta',marcaModelo:'Chevrolet D-Max',kmActual:64210,kmUltimoMantenimiento:60000,proximoMantenimientoKm:65000,presupuestoAnual:3000,responsable:'Logística',periodicidadKm:5000,estado:'Activo',actualizadoEn:todayISO()},
+        {idVehiculo:'VEH-003',placa:'EQ-ARCH-01',tipoVehiculo:'Equipo',marcaModelo:'Generador móvil',kmActual:0,kmUltimoMantenimiento:0,proximoMantenimientoKm:0,presupuestoAnual:1200,responsable:'Mantenimiento',periodicidadKm:0,estado:'Activo',actualizadoEn:todayISO()}
+      ],
+      intervenciones: [
+        {idIntervencion:'MAN-2026-0001',fecha:'2026-01-18',idVehiculo:'VEH-001',placa:'PEI-1023',kilometraje:85000,tipoMantenimiento:'Preventivo',proveedor:'Taller Amazónico',documento:'FAC-001-100',descripcion:'Cambio de aceite, filtros y revisión general.',costoTotal:285.50,estadoControl:'Validado',observacion:'Sustento técnico adjunto.',creadoPor:'Sistema demo',creadoEn:'2026-01-18',actualizadoEn:'2026-01-18'},
+        {idIntervencion:'MAN-2026-0002',fecha:'2026-03-05',idVehiculo:'VEH-001',placa:'PEI-1023',kilometraje:87200,tipoMantenimiento:'Correctivo',proveedor:'Taller Amazónico',documento:'FAC-001-142',descripcion:'Cambio de pastillas de freno delanteras por desgaste.',costoTotal:198.00,estadoControl:'Observado',observacion:'Verificar recurrencia de frenos.',creadoPor:'Sistema demo',creadoEn:'2026-03-05',actualizadoEn:'2026-03-05'},
+        {idIntervencion:'MAN-2026-0003',fecha:'2026-04-11',idVehiculo:'VEH-002',placa:'PEI-1140',kilometraje:62000,tipoMantenimiento:'Preventivo',proveedor:'ServiMotor',documento:'OT-338',descripcion:'Mantenimiento preventivo programado.',costoTotal:310.75,estadoControl:'Cerrado',observacion:'Sin novedades.',creadoPor:'Sistema demo',creadoEn:'2026-04-11',actualizadoEn:'2026-04-11'}
+      ],
+      detalle: [
+        {idDetalle:'DET-0001',idIntervencion:'MAN-2026-0001',idVehiculo:'VEH-001',placa:'PEI-1023',categoria:'Repuesto',item:'Filtro de aceite',cantidad:1,costoUnitario:18,costoTotal:18,vidaUtilKm:5000,proximoCambioKm:90000,garantia:'N/A',observacion:''},
+        {idDetalle:'DET-0002',idIntervencion:'MAN-2026-0001',idVehiculo:'VEH-001',placa:'PEI-1023',categoria:'Insumo',item:'Aceite 15W40',cantidad:2,costoUnitario:62.5,costoTotal:125,vidaUtilKm:5000,proximoCambioKm:90000,garantia:'N/A',observacion:''},
+        {idDetalle:'DET-0003',idIntervencion:'MAN-2026-0001',idVehiculo:'VEH-001',placa:'PEI-1023',categoria:'Mano de obra',item:'Servicio preventivo',cantidad:1,costoUnitario:95,costoTotal:95,vidaUtilKm:5000,proximoCambioKm:90000,garantia:'30 días',observacion:''},
+        {idDetalle:'DET-0004',idIntervencion:'MAN-2026-0002',idVehiculo:'VEH-001',placa:'PEI-1023',categoria:'Repuesto',item:'Pastillas de freno delanteras',cantidad:1,costoUnitario:128,costoTotal:128,vidaUtilKm:25000,proximoCambioKm:112200,garantia:'6 meses',observacion:'Recurrencia a controlar'},
+        {idDetalle:'DET-0005',idIntervencion:'MAN-2026-0002',idVehiculo:'VEH-001',placa:'PEI-1023',categoria:'Mano de obra',item:'Cambio de pastillas de freno',cantidad:1,costoUnitario:70,costoTotal:70,vidaUtilKm:25000,proximoCambioKm:112200,garantia:'30 días',observacion:''},
+        {idDetalle:'DET-0006',idIntervencion:'MAN-2026-0003',idVehiculo:'VEH-002',placa:'PEI-1140',categoria:'Repuesto',item:'Filtro de combustible',cantidad:1,costoUnitario:42,costoTotal:42,vidaUtilKm:10000,proximoCambioKm:72000,garantia:'N/A',observacion:''},
+        {idDetalle:'DET-0007',idIntervencion:'MAN-2026-0003',idVehiculo:'VEH-002',placa:'PEI-1140',categoria:'Insumo',item:'Aceite 10W30',cantidad:2,costoUnitario:68,costoTotal:136,vidaUtilKm:5000,proximoCambioKm:67000,garantia:'N/A',observacion:''}
+      ],
+      auditoria: []
+    };
+
+    let state = { vehiculos: [], intervenciones: [], detalle: [], auditoria: [], filtered: [], graphReady:false, token:null, account:null, sessionId:null, config:{} };
+    let tables = {}, charts = {}, msalInstance = null;
+
+    const defaultConfig = {
+      tenantId:'5e23e4af-237d-4d97-bf6e-dca808015787',
+      clientId:'3cff952f-40db-4fcc-83aa-6ea6d5931047',
+      shareId:'u!aHR0cHM6Ly9maWFzZWMuc2hhcmVwb2ludC5jb20vOng6L3MvRk9ORE9ERUlOVkVSU0lPTkFNQklFTlRBTFNPU1RFTklCTEUvSVFETS1PLUhINWxyUklZZ2lIdG9CclJfQWRaSVN1X0oyQlZjUHl2ZGZOMGlMX1U_ZT1rUllYbmo',
+      driveId:'',
+      itemId:'',
+      tableIntervenciones:'tblIntervenciones',
+      tableDetalle:'tblDetalle',
+      tableVehiculos:'tblVehiculos',
+      tableAuditoria:'tblAuditoria'
+    };
+
+    function todayISO(){ return new Date().toISOString().slice(0,10); }
+    function nowISO(){ return new Date().toISOString(); }
+    function money(v){ return new Intl.NumberFormat('es-EC',{style:'currency',currency:'USD'}).format(Number(v||0)); }
+    function num(v){ return Number(v||0); }
+    function norm(s){ return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim(); }
+    function safeId(prefix, n){ return `${prefix}-${new Date().getFullYear()}-${String(n).padStart(4,'0')}`; }
+    function setLoading(show, text='Procesando...'){ document.getElementById('loadingOverlay').style.display = show ? 'flex':'none'; document.getElementById('loadingText').textContent = text; }
+    function toast(msg, type='success'){ const el=document.createElement('div'); el.className=`alert alert-${type} position-fixed shadow`; el.style.cssText='right:18px;bottom:18px;z-index:6000;max-width:420px'; el.innerHTML=msg; document.body.appendChild(el); setTimeout(()=>el.remove(),4500); }
+
+    function normalizeShareId(value){
+      const raw = String(value||'').trim();
+      if(!raw) return '';
+      if(raw.startsWith('u!')) return raw.replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+      return raw;
+    }
+
+    function loadConfig(){
+      state.config = {...defaultConfig, ...(JSON.parse(localStorage.getItem('mv_config')||'{}'))};
+      if(!state.config.shareId && String(state.config.itemId||'').startsWith('u!')){
+        state.config.shareId = normalizeShareId(state.config.itemId);
+        state.config.itemId = '';
+        localStorage.setItem('mv_config', JSON.stringify(state.config));
+      }
+      state.config.shareId = normalizeShareId(state.config.shareId);
+      Object.entries({cfgTenant:'tenantId',cfgClient:'clientId',cfgShare:'shareId',cfgDrive:'driveId',cfgItem:'itemId',cfgTblInterv:'tableIntervenciones',cfgTblDetalle:'tableDetalle',cfgTblVeh:'tableVehiculos',cfgTblAudit:'tableAuditoria'}).forEach(([id,key])=>{ const el=document.getElementById(id); if(el) el.value=state.config[key]||''; });
+    }
+    function saveConfig(){
+      const rawShare = document.getElementById('cfgShare').value.trim();
+      const rawItem = document.getElementById('cfgItem').value.trim();
+      state.config = {
+        tenantId:document.getElementById('cfgTenant').value.trim(),
+        clientId:document.getElementById('cfgClient').value.trim(),
+        shareId:normalizeShareId(rawShare || (rawItem.startsWith('u!') ? rawItem : '')),
+        driveId:document.getElementById('cfgDrive').value.trim(),
+        itemId:rawItem.startsWith('u!') ? '' : rawItem,
+        tableIntervenciones:document.getElementById('cfgTblInterv').value.trim()||'tblIntervenciones',
+        tableDetalle:document.getElementById('cfgTblDetalle').value.trim()||'tblDetalle',
+        tableVehiculos:document.getElementById('cfgTblVeh').value.trim()||'tblVehiculos',
+        tableAuditoria:document.getElementById('cfgTblAudit').value.trim()||'tblAuditoria'
+      };
+      localStorage.setItem('mv_config', JSON.stringify(state.config));
+      setupMsal(); toast('Configuración guardada localmente. Inicie sesión para conectar con SharePoint.'); updateMode();
+    }
+    function setupMsal(){
+      if(!state.config.clientId || !state.config.tenantId || !window.msal) return;
+      msalInstance = new msal.PublicClientApplication({ auth:{ clientId:state.config.clientId, authority:`https://login.microsoftonline.com/${state.config.tenantId}`, redirectUri:window.location.origin }, cache:{ cacheLocation:'sessionStorage', storeAuthStateInCookie:false }});
+      msalInstance.initialize?.();
+    }
+    function driveItemPath(){
+      const c=state.config;
+      if(c.shareId) return `/shares/${encodeURIComponent(c.shareId)}/driveItem`;
+      if(c.driveId && c.itemId) return `/drives/${encodeURIComponent(c.driveId)}/items/${encodeURIComponent(c.itemId)}`;
+      throw new Error('Configure Share ID o Drive ID + Item ID del Excel.');
+    }
+    async function login(){
+      try{
+        if(!msalInstance) { setupMsal(); }
+        if(!msalInstance) throw new Error('Falta Client ID o Tenant ID en configuración.');
+        const request={ scopes:['Files.ReadWrite','Files.ReadWrite.All','Sites.ReadWrite.All'] };
+        const response=await msalInstance.loginPopup(request);
+        state.token=response.accessToken; state.account=response.account; state.graphReady=true;
+        document.getElementById('userLabel').textContent=response.account?.username || 'Autenticado';
+        await createWorkbookSession(); await syncFromSharePoint(); updateMode();
+      }catch(e){ console.error(e); toast('No fue posible iniciar sesión: '+e.message,'danger'); }
+    }
+    async function logout(){ if(msalInstance) await msalInstance.logoutPopup(); state.token=null; state.graphReady=false; state.account=null; updateMode(); }
+    async function graphFetch(path, options={}){
+      if(!state.token) throw new Error('No hay token de Microsoft Graph.');
+      const headers = { Authorization:`Bearer ${state.token}`, 'Content-Type':'application/json', ...(options.headers||{}) };
+      if(state.sessionId) headers['Workbook-Session-Id']=state.sessionId;
+      const res = await fetch(`https://graph.microsoft.com/v1.0${path}`, {...options, headers});
+      if(!res.ok){ const txt=await res.text().catch(()=>res.statusText); throw new Error(`Graph ${res.status}: ${txt}`); }
+      if(res.status===204) return null;
+      return await res.json();
+    }
+    async function createWorkbookSession(){
+      const res=await graphFetch(`${driveItemPath()}/workbook/createSession`, {method:'POST', body:JSON.stringify({persistChanges:true}), headers:{}});
+      state.sessionId=res?.id || null;
+    }
+    async function loadTable(tableName, columns){
+      const data = await graphFetch(`${driveItemPath()}/workbook/tables/${encodeURIComponent(tableName)}/rows`);
+      return (data.value||[]).map(row=>{
+        const values = Array.isArray(row.values?.[0]) ? row.values[0] : [];
+        const obj={_index:row.index}; columns.forEach((col,i)=>obj[col]=values[i] ?? ''); return obj;
+      });
+    }
+    async function addRows(tableName, columns, objects){
+      const values=objects.map(obj=>columns.map(c=>obj[c] ?? ''));
+      return await graphFetch(`${driveItemPath()}/workbook/tables/${encodeURIComponent(tableName)}/rows/add`, {method:'POST', body:JSON.stringify({values})});
+    }
+    async function updateRow(tableName, columns, rowIndex, object){
+      const values=[columns.map(c=>object[c] ?? '')];
+      return await graphFetch(`${driveItemPath()}/workbook/tables/${encodeURIComponent(tableName)}/rows/${rowIndex}`, {method:'PATCH', body:JSON.stringify({index:rowIndex, values})});
+    }
+    async function audit(action, table, registroId, detalle, resultado='OK'){
+      const rec={idAuditoria:'AUD-'+Date.now(),fechaHora:nowISO(),usuario:state.account?.username || 'demo/local',accion:action,tabla:table,registroId:registroId,detalle:detalle,resultado:resultado};
+      state.auditoria.push(rec);
+      if(state.graphReady) { try{ await addRows(state.config.tableAuditoria, COLUMNS.auditoria, [rec]); }catch(e){ console.warn('Auditoría no registrada',e); } }
+    }
+
+    async function syncFromSharePoint(){
+      try{
+        setLoading(true,'Leyendo tablas desde Excel en SharePoint...');
+        if(!state.graphReady) throw new Error('Modo demo local activo.');
+        state.vehiculos = await loadTable(state.config.tableVehiculos, COLUMNS.vehiculos);
+        state.intervenciones = await loadTable(state.config.tableIntervenciones, COLUMNS.intervenciones);
+        state.detalle = await loadTable(state.config.tableDetalle, COLUMNS.detalle);
+        try{ state.auditoria = await loadTable(state.config.tableAuditoria, COLUMNS.auditoria); }catch(e){ state.auditoria=[]; }
+        document.getElementById('lastSync').textContent=new Date().toLocaleString('es-EC');
+        updateMode(); refreshAll(); toast('Datos sincronizados con SharePoint.');
+      }catch(e){
+        console.warn(e); state.graphReady=false; state.vehiculos=structuredClone(demo.vehiculos); state.intervenciones=structuredClone(demo.intervenciones); state.detalle=structuredClone(demo.detalle); state.auditoria=[]; document.getElementById('lastSync').textContent='Demo local'; updateMode(); refreshAll(); toast('Trabajando en modo demo local. Configure Microsoft 365 para escritura real.','warning');
+      }finally{ setLoading(false); }
+    }
+    function updateMode(){ document.getElementById('modeBadge').textContent = state.graphReady ? 'SharePoint conectado' : 'Demo local'; document.getElementById('modeBadge').className = state.graphReady ? 'text-white' : 'text-warning'; }
+
+    function calculateMaintenanceCost(id){ return state.detalle.filter(d=>d.idIntervencion===id).reduce((a,b)=>a+num(b.costoTotal),0); }
+    function filteredInterventions(){
+      const q=norm(document.getElementById('smartSearch')?.value||''); const veh=document.getElementById('filterVehiculo')?.value||''; const tipo=document.getElementById('filterTipo')?.value||''; const estado=document.getElementById('filterEstado')?.value||'';
+      return state.intervenciones.filter(r=>{
+        const blob=norm(Object.values(r).join(' ')+' '+state.detalle.filter(d=>d.idIntervencion===r.idIntervencion).map(d=>`${d.item} ${d.categoria}`).join(' '));
+        return (!q || q.split(/\s+/).every(t=>blob.includes(t))) && (!veh || r.placa===veh || r.idVehiculo===veh) && (!tipo || r.tipoMantenimiento===tipo) && (!estado || r.estadoControl===estado);
+      });
+    }
+    function refreshAll(){ populateSelectors(); renderKpis(); renderTables(); renderCharts(); renderAlerts(); renderRecommendations(); }
+    function populateSelectors(){
+      const plates=[...new Set(state.vehiculos.map(v=>v.placa).filter(Boolean))].sort();
+      const fill=(id, html)=>{const el=document.getElementById(id); if(el) el.innerHTML=html;};
+      fill('filterVehiculo','<option value="">Todos los vehículos</option>'+plates.map(p=>`<option>${p}</option>`).join(''));
+      fill('mVehiculo','<option value="">Seleccione...</option>'+state.vehiculos.map(v=>`<option value="${v.idVehiculo}">${v.placa} · ${v.marcaModelo||''}</option>`).join(''));
+    }
+    function renderKpis(){
+      const data=filteredInterventions(); const totalCost=data.reduce((a,b)=>a+num(b.costoTotal||calculateMaintenanceCost(b.idIntervencion)),0); const vehicles=state.vehiculos.length; const alerts=buildAlerts().filter(a=>a.level!=='ok').length; const budget=state.vehiculos.reduce((a,b)=>a+num(b.presupuestoAnual),0); const percentBudget=budget?Math.round(totalCost/budget*100):0;
+      const cards=[
+        ['fa-truck-pickup','Vehículos / equipos',vehicles,'Activos registrados'],['fa-screwdriver-wrench','Intervenciones',data.length,'Registros filtrados'],['fa-sack-dollar','Costo acumulado',money(totalCost),`${percentBudget}% del presupuesto anual`],['fa-bell','Alertas de control',alerts,'Duplicidad, km, vencimientos o recurrencias']
+      ];
+      document.getElementById('kpiCards').innerHTML=cards.map(c=>`<div class="col-sm-6 col-xl-3"><div class="kpi-card p-3"><div class="d-flex justify-content-between align-items-start"><div><div class="small-muted text-uppercase fw-bold">${c[1]}</div><div class="kpi-value">${c[2]}</div><div class="small-muted">${c[3]}</div></div><div class="kpi-icon"><i class="fa-solid ${c[0]}"></i></div></div></div></div>`).join('');
+    }
+    function dtOptions(){ return {destroy:true,pageLength:10,responsive:true,language:{url:'https://cdn.datatables.net/plug-ins/1.13.8/i18n/es-ES.json'}}; }
+    function renderTables(){
+      const ints=filteredInterventions().map(r=>({...r,costoTotal:num(r.costoTotal||calculateMaintenanceCost(r.idIntervencion))}));
+      if(tables.mant) tables.mant.destroy();
+      tables.mant=$('#tblMantenimientos').DataTable({...dtOptions(),data:ints,columns:[
+        {data:'idIntervencion'},{data:'fecha'},{data:'placa'},{data:'kilometraje',render:d=>Number(d||0).toLocaleString('es-EC')},{data:'tipoMantenimiento'},{data:'proveedor'},{data:'costoTotal',render:d=>money(d)},{data:'estadoControl',render:d=>badgeEstado(d)},{data:null,orderable:false,render:r=>`<button class="btn btn-sm btn-outline-success" onclick="showIntervention('${r.idIntervencion}')"><i class="fa-solid fa-eye"></i></button> <button class="btn btn-sm btn-outline-primary" onclick="markValidated('${r.idIntervencion}')"><i class="fa-solid fa-check"></i></button>`}
+      ]});
+      if(tables.veh) tables.veh.destroy();
+      tables.veh=$('#tblVehiculos').DataTable({...dtOptions(),data:state.vehiculos,columns:[
+        {data:'placa'},{data:'tipoVehiculo'},{data:'marcaModelo'},{data:'kmActual',render:d=>Number(d||0).toLocaleString('es-EC')},{data:'kmUltimoMantenimiento',render:d=>Number(d||0).toLocaleString('es-EC')},{data:'proximoMantenimientoKm',render:d=>Number(d||0).toLocaleString('es-EC')},{data:'presupuestoAnual',render:d=>money(d)},{data:'estado',render:d=>badgeEstado(d)},{data:null,orderable:false,render:r=>`<button class="btn btn-sm btn-outline-primary" onclick="editVehicle('${r.idVehiculo}')"><i class="fa-solid fa-pen"></i></button>`}
+      ]});
+      const det=state.detalle.filter(d=>!document.getElementById('filterVehiculo')?.value || d.placa===document.getElementById('filterVehiculo').value);
+      if(tables.det) tables.det.destroy();
+      tables.det=$('#tblDetalle').DataTable({...dtOptions(),data:det,columns:[
+        {data:'idIntervencion'},{data:'placa'},{data:'categoria'},{data:'item'},{data:'cantidad'},{data:'costoUnitario',render:d=>money(d)},{data:'costoTotal',render:d=>money(d)},{data:'vidaUtilKm',render:d=>Number(d||0).toLocaleString('es-EC')},{data:'proximoCambioKm',render:d=>Number(d||0).toLocaleString('es-EC')},{data:null,render:r=>partAlertBadge(r)}
+      ]});
+    }
+    function badgeEstado(d){ const x=norm(d); let cls='status-dark'; if(x.includes('valid')||x.includes('cerr')||x.includes('activo')) cls='status-ok'; if(x.includes('observ')||x.includes('mantenimiento')) cls='status-warn'; if(x.includes('venc')||x.includes('inactivo')) cls='status-danger'; if(x.includes('registr')) cls='status-info'; return `<span class="badge-soft ${cls}">${d||'N/A'}</span>`; }
+    function partAlertBadge(r){ const v=state.vehiculos.find(x=>x.idVehiculo===r.idVehiculo); if(!v || !num(r.proximoCambioKm)) return '<span class="badge-soft status-dark">Sin dato</span>'; const diff=num(r.proximoCambioKm)-num(v.kmActual); if(diff<=0) return '<span class="badge-soft status-danger">Vencido</span>'; if(diff<=500) return '<span class="badge-soft status-warn">Próximo</span>'; return '<span class="badge-soft status-ok">Vigente</span>'; }
+    function renderCharts(){
+      const data=filteredInterventions(); const byVehicle=sumBy(data,'placa','costoTotal'); const byType=countBy(data,'tipoMantenimiento'); const parts=countBy(state.detalle,'item',8); const byMonth=sumBy(data.map(r=>({...r,month:(r.fecha||'').slice(0,7)})),'month','costoTotal');
+      drawBar('chartCostVehicle', Object.keys(byVehicle), Object.values(byVehicle), 'Costo acumulado USD');
+      drawDoughnut('chartType', Object.keys(byType), Object.values(byType));
+      drawBar('chartParts', Object.keys(parts), Object.values(parts), 'Frecuencia');
+      drawLine('chartMonthly', Object.keys(byMonth).sort(), Object.keys(byMonth).sort().map(k=>byMonth[k]), 'Costo mensual USD');
+    }
+    function sumBy(arr,key,val){ return arr.reduce((a,b)=>{const k=b[key]||'N/A'; a[k]=(a[k]||0)+num(b[val]); return a;},{}); }
+    function countBy(arr,key,limit=null){ const o=arr.reduce((a,b)=>{const k=b[key]||'N/A'; a[k]=(a[k]||0)+1; return a;},{}); const entries=Object.entries(o).sort((a,b)=>b[1]-a[1]).slice(0,limit||999); return Object.fromEntries(entries); }
+    function baseChart(id,type,labels,data,label){ if(charts[id]) charts[id].destroy(); charts[id]=new Chart(document.getElementById(id),{type,data:{labels,datasets:[{label,data,borderWidth:2,tension:.35}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:type==='doughnut'}}}}); }
+    function drawBar(id,labels,data,label){ baseChart(id,'bar',labels,data,label); }
+    function drawLine(id,labels,data,label){ baseChart(id,'line',labels,data,label); }
+    function drawDoughnut(id,labels,data){ baseChart(id,'doughnut',labels,data,''); }
+
+    function addLineItem(pref={}){
+      const id='li_'+Date.now()+Math.floor(Math.random()*1000);
+      const html=`<div class="line-item" id="${id}"><div class="row g-2"><div class="col-md-3"><select class="form-select li-cat"><option>Repuesto</option><option>Insumo</option><option>Mano de obra</option><option>Servicio externo</option></select></div><div class="col-md-3"><input class="form-control li-item" placeholder="Ítem / actividad" value="${pref.item||''}"></div><div class="col-md-1"><input class="form-control li-cant" type="number" min="0" step="0.01" value="${pref.cantidad||1}"></div><div class="col-md-2"><input class="form-control li-costo" type="number" min="0" step="0.01" placeholder="Costo unit." value="${pref.costoUnitario||''}"></div><div class="col-md-2"><input class="form-control li-vida" type="number" min="0" placeholder="Vida km" value="${pref.vidaUtilKm||''}"></div><div class="col-md-1 d-grid"><button type="button" class="btn btn-outline-danger" onclick="document.getElementById('${id}').remove()"><i class="fa-solid fa-trash"></i></button></div><div class="col-md-6"><input class="form-control li-garantia" placeholder="Garantía" value="${pref.garantia||''}"></div><div class="col-md-6"><input class="form-control li-obs" placeholder="Observación técnica" value="${pref.observacion||''}"></div></div></div>`;
+      document.getElementById('lineItems').insertAdjacentHTML('beforeend',html);
+      const el=document.getElementById(id); el.querySelector('.li-cat').value=pref.categoria||'Repuesto';
+    }
+    function collectLineItems(km, idVeh, placa, idMant){
+      return [...document.querySelectorAll('#lineItems .line-item')].map((el,i)=>{
+        const cat=el.querySelector('.li-cat').value, item=el.querySelector('.li-item').value.trim(), cantidad=num(el.querySelector('.li-cant').value), costoUnitario=num(el.querySelector('.li-costo').value), vidaUtilKm=num(el.querySelector('.li-vida').value), costoTotal=+(cantidad*costoUnitario).toFixed(2);
+        return {idDetalle:'DET-'+Date.now()+'-'+(i+1),idIntervencion:idMant,idVehiculo:idVeh,placa,categoria:cat,item,cantidad,costoUnitario,costoTotal,vidaUtilKm,proximoCambioKm:vidaUtilKm?num(km)+vidaUtilKm:'',garantia:el.querySelector('.li-garantia').value.trim(),observacion:el.querySelector('.li-obs').value.trim()};
+      }).filter(x=>x.item && x.cantidad>0);
+    }
+    function detectDuplicate(newMant, items){
+      const sameDoc = newMant.documento && state.intervenciones.some(r=>norm(r.documento)===norm(newMant.documento) && r.idVehiculo===newMant.idVehiculo);
+      const sameDayKm = state.intervenciones.some(r=>r.idVehiculo===newMant.idVehiculo && r.fecha===newMant.fecha && Math.abs(num(r.kilometraje)-num(newMant.kilometraje))<=50);
+      const repeatedItems = items.filter(it=> state.detalle.some(d=>d.idVehiculo===newMant.idVehiculo && norm(d.item)===norm(it.item) && Math.abs(num(d.proximoCambioKm)-num(newMant.kilometraje))>0 && num(newMant.kilometraje) < num(d.proximoCambioKm))).map(it=>it.item);
+      const errors=[]; if(sameDoc) errors.push('Existe una factura u orden de trabajo ya registrada para el mismo vehículo.'); if(sameDayKm) errors.push('Existe una intervención del mismo vehículo en la misma fecha y kilometraje similar.'); if(repeatedItems.length) errors.push('Repuestos/servicios podrían estar dentro de vida útil vigente: '+[...new Set(repeatedItems)].join(', ')); return errors;
+    }
+    async function saveMaintenance(e){
+      e.preventDefault();
+      const idVeh=document.getElementById('mVehiculo').value; const veh=state.vehiculos.find(v=>v.idVehiculo===idVeh); if(!veh) return toast('Seleccione un vehículo válido.','warning');
+      const km=num(document.getElementById('mKm').value); if(km < num(veh.kmActual)-1000000) return toast('Kilometraje inválido.','danger'); if(km < num(veh.kmUltimoMantenimiento)) toast('Advertencia: el kilometraje es menor al último mantenimiento registrado. Revise antes de validar.','warning');
+      const idMant=safeId('MAN', state.intervenciones.length+1);
+      const items=collectLineItems(km,idVeh,veh.placa,idMant); if(items.length===0) return toast('Debe registrar al menos un repuesto, insumo, servicio o mano de obra.','warning');
+      const costoTotal=items.reduce((a,b)=>a+num(b.costoTotal),0);
+      const mant={idIntervencion:idMant,fecha:document.getElementById('mFecha').value,idVehiculo:idVeh,placa:veh.placa,kilometraje:km,tipoMantenimiento:document.getElementById('mTipo').value,proveedor:document.getElementById('mProveedor').value.trim(),documento:document.getElementById('mDocumento').value.trim(),descripcion:document.getElementById('mDescripcion').value.trim(),costoTotal:+costoTotal.toFixed(2),estadoControl:document.getElementById('mEstado').value,observacion:document.getElementById('mObservacion').value.trim(),creadoPor:state.account?.username||'local',creadoEn:nowISO(),actualizadoEn:nowISO()};
+      const dup=detectDuplicate(mant,items); if(dup.length && !confirm('Alertas detectadas:\n\n- '+dup.join('\n- ')+'\n\n¿Desea guardar de todas formas?')) return;
+      try{
+        setLoading(true,'Guardando intervención y detalle...');
+        if(state.graphReady){ await addRows(state.config.tableIntervenciones,COLUMNS.intervenciones,[mant]); await addRows(state.config.tableDetalle,COLUMNS.detalle,items); }
+        state.intervenciones.push(mant); state.detalle.push(...items);
+        if(km >= num(veh.kmActual)){ veh.kmActual=km; veh.kmUltimoMantenimiento=km; veh.proximoMantenimientoKm = num(veh.periodicidadKm)? km+num(veh.periodicidadKm): veh.proximoMantenimientoKm; veh.actualizadoEn=nowISO(); if(state.graphReady && veh._index!==undefined) await updateRow(state.config.tableVehiculos,COLUMNS.vehiculos,veh._index,veh); }
+        await audit('CREAR','MANTENIMIENTO',idMant,`Intervención registrada: ${mant.placa} / ${mant.tipoMantenimiento} / ${money(mant.costoTotal)}`);
+        document.getElementById('maintenanceForm').reset(); document.getElementById('mFecha').value=todayISO(); document.getElementById('lineItems').innerHTML=''; addLineItem(); refreshAll(); toast('Mantenimiento guardado correctamente.');
+      }catch(err){ console.error(err); toast('Error al guardar: '+err.message,'danger'); }
+      finally{ setLoading(false); }
+    }
+    async function saveVehicle(e){
+      e.preventDefault(); const rowIndex=document.getElementById('vRowIndex').value; const existing=state.vehiculos.find(v=>v._index==rowIndex); const plate=document.getElementById('vPlaca').value.trim().toUpperCase();
+      if(!existing && state.vehiculos.some(v=>norm(v.placa)===norm(plate))) return toast('Ya existe un vehículo con esa placa/código.','warning');
+      const km=num(document.getElementById('vKm').value), periodicidad=num(document.getElementById('vPeriodicidad').value||5000);
+      const rec={idVehiculo: existing?.idVehiculo || 'VEH-'+String(state.vehiculos.length+1).padStart(3,'0'), placa:plate, tipoVehiculo:document.getElementById('vTipo').value.trim(), marcaModelo:document.getElementById('vModelo').value.trim(), kmActual:km, kmUltimoMantenimiento:existing?.kmUltimoMantenimiento||0, proximoMantenimientoKm:existing?.proximoMantenimientoKm||km+periodicidad, presupuestoAnual:num(document.getElementById('vPresupuesto').value), responsable:document.getElementById('vResponsable').value.trim(), periodicidadKm:periodicidad, estado:document.getElementById('vEstado').value, actualizadoEn:nowISO(), _index:existing?._index};
+      try{ setLoading(true,'Guardando vehículo...'); if(existing){ Object.assign(existing,rec); if(state.graphReady) await updateRow(state.config.tableVehiculos,COLUMNS.vehiculos,existing._index,existing); await audit('ACTUALIZAR','VEHICULO',existing.idVehiculo,'Vehículo actualizado'); } else { if(state.graphReady) await addRows(state.config.tableVehiculos,COLUMNS.vehiculos,[rec]); state.vehiculos.push(rec); await audit('CREAR','VEHICULO',rec.idVehiculo,'Vehículo registrado'); } document.getElementById('vehicleForm').reset(); document.getElementById('vPeriodicidad').value=5000; document.getElementById('vRowIndex').value=''; refreshAll(); toast('Vehículo guardado correctamente.'); } catch(err){toast('Error al guardar vehículo: '+err.message,'danger')} finally{setLoading(false)}
+    }
+    function editVehicle(id){ const v=state.vehiculos.find(x=>x.idVehiculo===id); if(!v) return; document.getElementById('vRowIndex').value=v._index??''; document.getElementById('vPlaca').value=v.placa||''; document.getElementById('vTipo').value=v.tipoVehiculo||''; document.getElementById('vModelo').value=v.marcaModelo||''; document.getElementById('vKm').value=v.kmActual||0; document.getElementById('vPresupuesto').value=v.presupuestoAnual||0; document.getElementById('vResponsable').value=v.responsable||''; document.getElementById('vPeriodicidad').value=v.periodicidadKm||5000; document.getElementById('vEstado').value=v.estado||'Activo'; switchTab('vehiculos'); }
+    async function markValidated(id){ const r=state.intervenciones.find(x=>x.idIntervencion===id); if(!r) return; r.estadoControl='Validado'; r.actualizadoEn=nowISO(); try{ if(state.graphReady && r._index!==undefined) await updateRow(state.config.tableIntervenciones,COLUMNS.intervenciones,r._index,r); await audit('VALIDAR','MANTENIMIENTO',id,'Registro validado desde la plataforma'); refreshAll(); toast('Registro validado.'); }catch(e){toast('No se pudo validar: '+e.message,'danger')} }
+    function showIntervention(id){ const r=state.intervenciones.find(x=>x.idIntervencion===id), det=state.detalle.filter(d=>d.idIntervencion===id); if(!r) return; document.getElementById('recordModalTitle').textContent=`Intervención ${id}`; document.getElementById('recordModalBody').innerHTML=`<div class="row g-3"><div class="col-md-3"><strong>Fecha:</strong><br>${r.fecha}</div><div class="col-md-3"><strong>Vehículo:</strong><br>${r.placa}</div><div class="col-md-3"><strong>Kilometraje:</strong><br>${Number(r.kilometraje||0).toLocaleString('es-EC')}</div><div class="col-md-3"><strong>Costo:</strong><br>${money(r.costoTotal)}</div><div class="col-12"><strong>Descripción técnica:</strong><div class="p-2 bg-light rounded border">${r.descripcion||''}</div></div><div class="col-12"><strong>Detalle:</strong><div class="table-responsive"><table class="table table-sm"><thead><tr><th>Categoría</th><th>Ítem</th><th>Cantidad</th><th>Costo total</th><th>Vida útil</th><th>Próximo cambio</th></tr></thead><tbody>${det.map(d=>`<tr><td>${d.categoria}</td><td>${d.item}</td><td>${d.cantidad}</td><td>${money(d.costoTotal)}</td><td>${Number(d.vidaUtilKm||0).toLocaleString('es-EC')}</td><td>${Number(d.proximoCambioKm||0).toLocaleString('es-EC')}</td></tr>`).join('')}</tbody></table></div></div></div>`; new bootstrap.Modal(document.getElementById('recordModal')).show(); }
+
+    function buildAlerts(){
+      const alerts=[];
+      state.vehiculos.forEach(v=>{ const diff=num(v.proximoMantenimientoKm)-num(v.kmActual); if(num(v.proximoMantenimientoKm)>0 && diff<=0) alerts.push({level:'critical',title:`Mantenimiento vencido: ${v.placa}`,text:`El vehículo superó el kilometraje programado (${Number(v.proximoMantenimientoKm).toLocaleString('es-EC')} km).`}); else if(diff>0 && diff<=500) alerts.push({level:'warning',title:`Mantenimiento próximo: ${v.placa}`,text:`Faltan ${Number(diff).toLocaleString('es-EC')} km para el mantenimiento preventivo.`}); });
+      state.intervenciones.forEach((r,i)=>{ state.intervenciones.slice(i+1).forEach(s=>{ if(r.idVehiculo===s.idVehiculo && r.fecha===s.fecha && Math.abs(num(r.kilometraje)-num(s.kilometraje))<=50) alerts.push({level:'critical',title:`Posible duplicidad: ${r.placa}`,text:`Registros ${r.idIntervencion} y ${s.idIntervencion} tienen fecha y kilometraje similares.`}); if(r.documento && s.documento && norm(r.documento)===norm(s.documento)) alerts.push({level:'critical',title:`Documento repetido: ${r.documento}`,text:`El documento consta en ${r.idIntervencion} y ${s.idIntervencion}.`}); }); });
+      const grouped={}; state.detalle.forEach(d=>{ const k=d.idVehiculo+'|'+norm(d.item); grouped[k]=(grouped[k]||[]).concat(d); }); Object.values(grouped).forEach(list=>{ if(list.length>1){ const sorted=list.sort((a,b)=>num(a.proximoCambioKm)-num(b.proximoCambioKm)); for(let i=1;i<sorted.length;i++){ const prev=sorted[i-1], cur=sorted[i]; if(num(cur.proximoCambioKm) && num(cur.proximoCambioKm)<num(prev.proximoCambioKm)){ alerts.push({level:'warning',title:`Repuesto recurrente: ${cur.placa}`,text:`${cur.item} aparece nuevamente antes de la vida útil estimada.`}); } } } });
+      if(alerts.length===0) alerts.push({level:'ok',title:'Sin alertas críticas',text:'No se detectan duplicidades, mantenimientos vencidos ni recurrencias relevantes con la información actual.'}); return alerts;
+    }
+    function renderAlerts(){ const cls={critical:'alert-item alert-critical',warning:'alert-item',ok:'alert-item alert-good',info:'alert-item alert-info-l'}; document.getElementById('alertsContainer').innerHTML=buildAlerts().map(a=>`<div class="${cls[a.level]||'alert-item'}"><strong>${a.title}</strong><p class="mb-0 small-muted">${a.text}</p></div>`).join(''); }
+    function renderRecommendations(){
+      const rec=[]; const byVeh=sumBy(state.intervenciones,'placa','costoTotal'); Object.entries(byVeh).forEach(([placa,costo])=>{ const v=state.vehiculos.find(x=>x.placa===placa); if(v && num(v.presupuestoAnual) && costo>num(v.presupuestoAnual)*0.75) rec.push(['Presupuesto en riesgo',`${placa} ya consume ${Math.round(costo/num(v.presupuestoAnual)*100)}% del presupuesto anual.`, 'fa-sack-dollar']); });
+      const parts=countBy(state.detalle,'item',5); Object.entries(parts).forEach(([item,count])=>{ if(count>=2) rec.push(['Patrón de consumo',`${item} registra ${count} usos. Revisar calidad, proveedor, garantía o condiciones de operación.`, 'fa-repeat']); });
+      state.vehiculos.forEach(v=>{ if(num(v.kmActual) && num(v.proximoMantenimientoKm) && num(v.proximoMantenimientoKm)-num(v.kmActual)<=500) rec.push(['Programación preventiva',`Planificar mantenimiento de ${v.placa} antes de ${Number(v.proximoMantenimientoKm).toLocaleString('es-EC')} km.`, 'fa-calendar-check']); });
+      if(rec.length===0) rec.push(['Gestión estable','No se identifican patrones críticos con los datos actuales. Mantener alimentación mensual de kilometraje y evidencias.', 'fa-circle-check']);
+      document.getElementById('recommendations').innerHTML=rec.slice(0,6).map(r=>`<div class="col-md-6 col-xl-4"><div class="p-3 bg-white border rounded-4 h-100"><div class="kpi-icon mb-2"><i class="fa-solid ${r[2]}"></i></div><strong>${r[0]}</strong><p class="small-muted mb-0">${r[1]}</p></div></div>`).join('');
+    }
+    function aiSearch(){ const q=norm(document.getElementById('aiQuery').value); if(!q) return; const tokens=q.split(/\s+/).filter(t=>t.length>2); const results=state.intervenciones.filter(r=>{ const blob=norm(Object.values(r).join(' ')+' '+state.detalle.filter(d=>d.idIntervencion===r.idIntervencion).map(d=>Object.values(d).join(' ')).join(' ')); return tokens.every(t=>blob.includes(t)) || tokens.filter(t=>blob.includes(t)).length>=Math.ceil(tokens.length*.55); }).slice(0,12); document.getElementById('aiSearchResults').innerHTML=`<div class="alert alert-info small">Resultados relevantes: <strong>${results.length}</strong>. La búsqueda usa coincidencia semántica local por tokens, sin enviar datos a servicios externos.</div>`+results.map(r=>`<div class="border rounded-3 p-2 mb-2"><strong>${r.placa}</strong> · ${r.fecha} · ${r.tipoMantenimiento} · ${money(r.costoTotal)}<br><span class="small-muted">${r.descripcion}</span></div>`).join(''); }
+    function exportRows(name, data){ const ws=XLSX.utils.json_to_sheet(data); const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, name.slice(0,31)); XLSX.writeFile(wb, `${name}_${todayISO()}.xlsx`); }
+
+    function switchTab(id){ document.querySelectorAll('.tab-pane').forEach(x=>x.classList.remove('active')); document.getElementById(id).classList.add('active'); document.querySelectorAll('.side-btn').forEach(b=>b.classList.toggle('active', b.dataset.tab===id)); setTimeout(()=>Object.values(charts).forEach(c=>c.resize?.()),120); }
+
+    document.addEventListener('DOMContentLoaded', async()=>{
+      setLoading(true,'Preparando interfaz...'); loadConfig(); setupMsal(); state.vehiculos=structuredClone(demo.vehiculos); state.intervenciones=structuredClone(demo.intervenciones); state.detalle=structuredClone(demo.detalle); document.getElementById('mFecha').value=todayISO(); addLineItem(); refreshAll(); updateMode(); setLoading(false);
+      document.querySelectorAll('.side-btn').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.tab)));
+      document.getElementById('configForm').addEventListener('submit',e=>{e.preventDefault(); saveConfig();}); document.getElementById('btnSaveConfig').addEventListener('click',saveConfig);
+      document.getElementById('btnLogin').addEventListener('click',login); document.getElementById('btnLogout').addEventListener('click',logout); document.getElementById('btnSync').addEventListener('click',syncFromSharePoint);
+      document.getElementById('maintenanceForm').addEventListener('submit',saveMaintenance); document.getElementById('vehicleForm').addEventListener('submit',saveVehicle); document.getElementById('btnAddLine').addEventListener('click',()=>addLineItem());
+      ['smartSearch','filterVehiculo','filterTipo','filterEstado'].forEach(id=>document.getElementById(id)?.addEventListener('input',refreshAll));
+      document.getElementById('btnAiSearch').addEventListener('click',aiSearch);
+      document.getElementById('btnExportIntervenciones').addEventListener('click',()=>exportRows('Intervenciones', filteredInterventions())); document.getElementById('btnExportDetalle').addEventListener('click',()=>exportRows('Detalle_Repuestos_Costos', state.detalle));
+    });
+  </script>
+</body>
+</html>

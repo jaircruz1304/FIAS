@@ -934,6 +934,66 @@ async function resolveExcelPath() {
     function money(v){ return new Intl.NumberFormat('es-EC',{style:'currency',currency:'USD'}).format(Number(v||0)); }
     function num(v){ return Number(v||0); }
     function norm(s){ return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim(); }
+
+
+/**
+   * CORRECCIÓN DE FONDO: Inicializador seguro de DataTables
+   * Evita el error 'Cannot read properties of undefined (reading 'style')'
+   */
+  function initDataTable(selector, options) {
+    const tableElement = document.querySelector(selector);
+    
+    // 1. Verificación de existencia del DOM
+    if (!tableElement) {
+      console.warn(`La tabla ${selector} no existe en el DOM. Saltando inicialización.`);
+      return null;
+    }
+
+    // 2. Destruir instancia previa de forma segura (evita errores de redibujado)
+    if ($.fn.DataTable.isDataTable(selector)) {
+      $(selector).DataTable().destroy();
+    }
+
+    // 3. Inicialización con try-catch para atrapar errores de renderizado
+    try {
+      return $(selector).DataTable({
+        ...options,
+        // Añadimos esto para que no intente acceder a propiedades si la data falla
+        deferRender: true,
+        language: { url: '//cdn.datatables.net/plug-ins/1.13.8/i18n/es-ES.json' }
+      });
+    } catch (err) {
+      console.error("Error al inicializar DataTables en " + selector, err);
+      return null;
+    }
+  }
+
+  // EJEMPLO DE USO EN TU FUNCIÓN DE CARGA:
+  async function refreshAll() {
+    try {
+      const data = await loadTable('tblIntervenciones'); // Tu función que trae la data
+      
+      // SOLO inicializamos si hay datos válidos
+      if (data && Array.isArray(data)) {
+        initDataTable('#tblMantenimientos', {
+          data: data,
+          columns: [
+             { data: 'idIntervencion' },
+             { data: 'fecha' },
+             { data: 'placa' },
+             // ... tus columnas
+          ]
+        });
+      }
+    } catch (e) {
+      console.error("Fallo crítico en sincronización:", e);
+    }
+  }
+
+  // --- CORRECCIÓN DE LA PREVENCIÓN DE SEGUIMIENTO (CDN Blocking) ---
+  // Si los CDN siguen bloqueados, descarga los archivos localmente 
+  // o asegúrate de que el sitio no esté bajo políticas estrictas de privacidad (como "Tracking Prevention" de Edge).
+  // Nota: Si usas Edge, intenta agregar tu SharePoint a "Sitios de confianza".
     
     // ==========================================================================
     // CORRECCIÓN DE FONDO 1: ALGORITMO SEGURO DE CONVERSIÓN DE URL COMPARTIDA (u!)

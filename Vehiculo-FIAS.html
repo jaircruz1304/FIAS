@@ -1,0 +1,2166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ERP Enterprise de Mantenimientos Vehiculares | FIAS</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap5.min.css" />
+  <script type="text/javascript" src="https://gc.kes.v2.scr.kaspersky-labs.com/7EA5E9BB-55E1-4C31-9C21-4943DDFED2E4/main.js?attr=zhYqw458KHDdW-BOBfGTQ7mZ6TrCNzjzKfTqR_45aspK4nQpCIXHoGgtz9IExUmPeF-VxPQbV6T51VnU86IhURvXUVvJPsJ8FNcFcyK6OpOoy2IClwYCB5WTdxcTD04Eu_9nTtFnos5h8ERps6NNrQbPHTCbu9YPf61TzTB0YnQFglt7VsGpJm_TDXrTQDkx_ZInIyBVqXuGkcB2TTDmpTL5EVLyRPjOWVVnXTqcCoz8PhVVdtOP3EsFZiD3K-T7KuqE4Ov3C4CdTotmZRNK412HzKq4I12XMrXoU-O1nqBWoKojbsBQUFYxHmGQdZyTQGFH2CpjUhEBCu4_sluhEzjiMgkWNGjWkmJ9xZ-VA9AxNhCB5llpvKYiJoqnerxV" charset="UTF-8"></script><style>
+    /* ==========================================================================
+       VARIABLES Y PALETA DE COLORES INSTITUCIONAL (FIAS)
+       ========================================================================== */
+    :root {
+      --fias-primary: #1f7a38;
+      --fias-primary-2: #2fa84f;
+      --fias-dark: #12351f;
+      --fias-soft: #eef8f1;
+      --ink: #1f2937;
+      --muted: #667085;
+      --line: #e5e7eb;
+      --bg: #f5f7fb;
+      --warn: #f59e0b;
+      --danger: #dc3545;
+      --ok: #198754;
+      --info: #0d6efd;
+      --shadow: 0 14px 35px rgba(16, 24, 40, 0.10);
+      --radius: 18px;
+    }
+
+    /* ==========================================================================
+       ESTILOS GENERALES Y MAQUETACIÓN BASE
+       ========================================================================== */
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Barra de navegación superior */
+    .navbar {
+      background: linear-gradient(135deg, var(--fias-dark), var(--fias-primary));
+      box-shadow: var(--shadow);
+    }
+
+    .logo-box {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 6px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .brand-title {
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    /* Sección Hero principal */
+    .hero {
+      background: linear-gradient(135deg, #0d3b22 0%, #1f7a38 58%, #48bd69 100%);
+      color: white;
+      border-radius: 0 0 28px 28px;
+      padding: 24px 0 36px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero h1 {
+      font-size: clamp(1.5rem, 2.6vw, 2.45rem);
+      font-weight: 850;
+      margin-bottom: 0.4rem;
+    }
+
+    .hero p {
+      opacity: 0.95;
+      max-width: 1040px;
+      margin: 0;
+    }
+
+    /* Efecto contenedor cristalino */
+    .glass {
+      background: rgba(255, 255, 255, 0.14);
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      backdrop-filter: blur(8px);
+      border-radius: 16px;
+    }
+
+    /* Espacio de trabajo del ERP */
+    .workspace {
+      margin-top: -23px;
+    }
+
+    /* Tarjetas de Módulos */
+    .app-card {
+      border: 1px solid #edf0f3;
+      border-radius: var(--radius);
+      box-shadow: 0 8px 26px rgba(16, 24, 40, 0.07);
+      background: white;
+      overflow: hidden;
+    }
+
+    .app-card .card-header {
+      background: white;
+      border-bottom: 1px solid var(--line);
+      font-weight: 800;
+      padding: 1rem 1.1rem;
+    }
+
+    /* Pestañas de Navegación del Módulo */
+    .module-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      background: white;
+      border-radius: 18px;
+      padding: 10px;
+      box-shadow: var(--shadow);
+    }
+
+    .module-tab {
+      border: 0;
+      background: #f3f6f8;
+      border-radius: 14px;
+      padding: 11px 15px;
+      font-weight: 750;
+      color: #344054;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      transition: all 0.2s ease;
+    }
+
+    .module-tab:hover, 
+    .module-tab.active {
+      background: var(--fias-soft);
+      color: var(--fias-primary);
+    }
+
+    .tab-pane {
+      display: none;
+    }
+    
+    .tab-pane.active {
+      display: block;
+    }
+
+    /* Indicadores KPI */
+    .kpi-card {
+      border: 1px solid #edf0f3;
+      border-radius: 18px;
+      background: white;
+      box-shadow: 0 8px 26px rgba(16, 24, 40, 0.07);
+      height: 100%;
+    }
+
+    .kpi-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--fias-soft);
+      color: var(--fias-primary);
+      font-size: 1.35rem;
+    }
+
+    .kpi-value {
+      font-size: 2rem;
+      font-weight: 850;
+      letter-spacing: -0.03em;
+    }
+
+    .small-muted {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    /* Filtros Dinámicos */
+    .filter-bar {
+      display: grid;
+      grid-template-columns: 2fr repeat(4, minmax(150px, 1fr));
+      gap: 10px;
+    }
+
+    .form-label {
+      font-weight: 750;
+      color: #344054;
+      font-size: 0.88rem;
+    }
+    
+    .required::after {
+      content: ' *';
+      color: var(--danger);
+    }
+
+    /* Componentes de Estados y Badges */
+    .badge-soft {
+      border-radius: 999px;
+      padding: 0.42rem 0.7rem;
+      font-weight: 750;
+      background: #eef2ff;
+      color: #3444a1;
+      white-space: nowrap;
+      display: inline-block;
+    }
+
+    .status-ok { background: #e7f7ef; color: #087343; }
+    .status-warn { background: #fff5dc; color: #986500; }
+    .status-danger { background: #fde8e8; color: #b42318; }
+    .status-info { background: #e7f0ff; color: #0b4ab8; }
+    .status-dark { background: #eef0f2; color: #344054; }
+
+    /* Envolturas de Gráficos (ChartJS) */
+    .chart-wrap {
+      position: relative;
+      height: 290px;
+    }
+    
+    .chart-wrap-sm {
+      position: relative;
+      height: 230px;
+    }
+
+    .table td, 
+    .table th {
+      vertical-align: middle;
+    }
+    
+    .table thead th {
+      white-space: nowrap;
+    }
+
+    /* Pantalla de Carga Global */
+    .loading-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.93);
+      z-index: 5000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+
+    /* Contenedor de Autenticación */
+    .auth-container {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #f5fff8, #edf4ff);
+    }
+
+    /* Stepper del Modal de Mantenimiento */
+    .stepper {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .step {
+      padding: 10px;
+      border-radius: 14px;
+      background: #f3f6f8;
+      font-weight: 800;
+      color: #667085;
+      text-align: center;
+      border: 1px solid #edf0f3;
+    }
+    
+    .step.active {
+      background: var(--fias-soft);
+      color: var(--fias-primary);
+      border-color: #b7e4c7;
+    }
+    
+    .step.done {
+      background: #e7f7ef;
+      color: #087343;
+    }
+
+    .step-panel {
+      display: none;
+    }
+    
+    .step-panel.active {
+      display: block;
+    }
+
+    /* Líneas dinámicas de Repuestos / Insumos */
+    .line-item {
+      border: 1px dashed #cbd5e1;
+      border-radius: 14px;
+      padding: 12px;
+      background: #fafafa;
+      position: relative;
+    }
+    
+    .line-item .remove-line {
+      position: absolute;
+      right: 8px;
+      top: 8px;
+    }
+
+    .summary-box {
+      border-radius: 16px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      padding: 14px;
+    }
+
+    /* Alertas e Inteligencia del Negocio */
+    .alert-item {
+      border-left: 5px solid var(--warn);
+      border-radius: 14px;
+      background: #ffffff;
+      padding: 14px;
+      box-shadow: 0 4px 18px rgba(16, 24, 40, 0.06);
+    }
+    
+    .alert-critical { border-left-color: var(--danger); }
+    .alert-good { border-left-color: var(--ok); }
+    .alert-info-l { border-left-color: var(--info); }
+
+    /* Tarjetas de Inventario de Vehículos */
+    .vehicle-card {
+      border: 1px solid #edf0f3;
+      border-radius: 18px;
+      background: #ffffff;
+      box-shadow: 0 8px 26px rgba(16, 24, 40, 0.06);
+      padding: 16px;
+      height: 100%;
+    }
+
+    .progress-thin {
+      height: 7px;
+      border-radius: 999px;
+    }
+    
+    /* Consola de conexión y auditoría */
+    .codebox {
+      background: #101828;
+      color: #d0d5dd;
+      border-radius: 14px;
+      padding: 14px;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 0.86rem;
+      overflow: auto;
+      white-space: pre-wrap;
+    }
+
+    .modal-header {
+      background: linear-gradient(135deg, var(--fias-dark), var(--fias-primary));
+      color: #ffffff;
+    }
+
+    .dataTables_wrapper .dataTables_filter input {
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      padding: 0.45rem 0.7rem;
+    }
+
+    .floating-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    
+    .hidden {
+      display: none !important;
+    }
+
+
+
+    /* OCR Enterprise */
+    .ocr-dropzone {
+      border: 2px dashed #b7e4c7;
+      background: linear-gradient(180deg, #ffffff, #f7fff9);
+      border-radius: 18px;
+      padding: 22px;
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+    .ocr-dropzone.dragover {
+      border-color: var(--fias-primary);
+      background: var(--fias-soft);
+      transform: translateY(-1px);
+    }
+    .ocr-textbox {
+      min-height: 260px;
+      max-height: 460px;
+      overflow: auto;
+      white-space: pre-wrap;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 0.82rem;
+      background: #101828;
+      color: #e4e7ec;
+      border-radius: 14px;
+      padding: 12px;
+    }
+    .confidence-meter {
+      height: 8px;
+      border-radius: 999px;
+      background: #eef0f2;
+      overflow: hidden;
+    }
+    .confidence-meter span {
+      display: block;
+      height: 100%;
+      background: linear-gradient(90deg, #f59e0b, #2fa84f);
+      width: 0%;
+    }
+
+    /* Responsive Queries */
+    @media(max-width: 1200px) {
+      .filter-bar { grid-template-columns: 1fr 1fr; }
+      .chart-wrap { height: 260px; }
+    }
+    @media(max-width: 768px) {
+      .filter-bar { grid-template-columns: 1fr; }
+      .stepper { grid-template-columns: 1fr 1fr; }
+      .hero { border-radius: 0 0 18px 18px; }
+      .kpi-value { font-size: 1.55rem; }
+      .module-tab { flex: 1; justify-content: center; }
+      .chart-wrap { height: 230px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="spinner-border text-success" role="status"></div>
+    <p class="mt-3 fw-semibold" id="loadingText">Inicializando sistema...</p>
+  </div>
+
+  <div id="authContainer" class="auth-container hidden">
+    <div class="card p-4 shadow-lg border-0" style="max-width:440px; border-radius:22px">
+      <div class="text-center mb-4">
+        <img src="https://fias.org.ec/wp-content/uploads/2021/11/Logo_FIAS_web.png" height="54" width="180" alt="Logo FIAS" loading="lazy">
+        <h3 class="mt-3 text-success fw-bold">ERP de Mantenimientos</h3>
+        <p class="text-muted mb-0">Acceso requerido con cuenta corporativa Microsoft 365.</p>
+      </div>
+      <button id="loginBtn" class="btn btn-lg btn-success w-100">
+        <i class="fa-brands fa-microsoft me-2"></i>Iniciar sesión con Microsoft
+      </button>
+      <div class="mt-3 small text-muted text-center">
+        <hr>
+        Desarrollado por <a href="https://www.linkedin.com/in/jair-cruz-gallegos-65998776/" target="_blank" rel="noopener">Jair Cruz Gallegos</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="mainContent" class="hidden">
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+      <div class="container-fluid px-3 px-lg-4">
+        <div class="logo-box me-3">
+          <img src="https://fias.org.ec/wp-content/uploads/2021/11/Logo_FIAS_web.png" height="36" alt="FIAS">
+        </div>
+        <a class="navbar-brand brand-title" href="#">ERP de Mantenimientos Vehiculares</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#topNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="topNav">
+          <div class="ms-auto d-flex gap-2 mt-3 mt-lg-0">
+            <button class="btn btn-sm btn-light text-success" id="btnNewMaint">
+              <i class="fa-solid fa-plus me-1"></i> Nuevo mantenimiento
+            </button>
+            <button class="btn btn-sm btn-outline-light" id="btnSync">
+              <i class="fa-solid fa-rotate me-1"></i> Sincronizar
+            </button>
+            <button class="btn btn-sm btn-outline-light" id="logoutBtn" title="Cerrar sesión">
+              <i class="fa-solid fa-right-from-bracket"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <header class="hero">
+      <div class="container-fluid px-3 px-lg-4">
+        <div class="row align-items-end g-3">
+          <div class="col-lg-8">
+            <span class="badge bg-light text-success mb-2">
+              <i class="fa-solid fa-database me-1"></i> SharePoint + Microsoft Graph + Control Interno
+            </span>
+            <h1>Gestión integral de mantenimientos vehiculares</h1>
+            <p>Registro dinámico de mantenimientos, control de kilometraje, repuestos, mano de obra, costos, duplicidades, trazabilidad, OCR de facturas y alertas preventivas sobre el Excel institucional en SharePoint.</p>
+          </div>
+          <div class="col-lg-4">
+            <div class="glass p-3">
+              <div class="d-flex justify-content-between"><span>Modo</span><strong id="modeBadge">SharePoint API</strong></div>
+              <div class="d-flex justify-content-between"><span>Última sincronización</span><strong id="lastSync">Pendiente</strong></div>
+              <div class="d-flex justify-content-between"><span>Usuario</span><strong id="userLabel">No autenticado</strong></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="container-fluid px-3 px-lg-4 pb-5 workspace">
+      <div class="module-tabs mb-3">
+        <button class="module-tab active" data-tab="dashboard"><i class="fa-solid fa-chart-pie"></i> Dashboard</button>
+        <button class="module-tab" data-tab="mantenimientos"><i class="fa-solid fa-list-check"></i> Intervenciones</button>
+        <button class="module-tab" data-tab="vehiculos"><i class="fa-solid fa-car-side"></i> Vehículos</button>
+        <button class="module-tab" data-tab="costos"><i class="fa-solid fa-coins"></i> Repuestos y costos</button>
+        <button class="module-tab" data-tab="ocr"><i class="fa-solid fa-file-invoice"></i> OCR Facturas</button>
+        <button class="module-tab" data-tab="alertas"><i class="fa-solid fa-brain"></i> IA / Alertas Preventivas</button>
+       <button class="module-tab hidden" data-tab="conexion">
+  <i class="fa-solid fa-shield-halved"></i> Conexión
+</button>
+      </div>
+
+      <section id="dashboard" class="tab-pane active">
+        <div class="row g-3 mb-3" id="kpiCards"></div>
+        <div class="app-card mb-3">
+          <div class="card-header d-flex flex-column flex-lg-row gap-2 justify-content-between align-items-lg-center">
+            <span><i class="fa-solid fa-filter me-2 text-success"></i> Filtros dinámicos de búsqueda</span>
+            <div class="filter-bar w-100">
+              <input class="form-control form-control-sm" id="smartSearch" placeholder="Buscar por placa, proveedor, factura, repuesto, falla, fecha...">
+              <select class="form-select form-select-sm" id="filterVehiculo"><option value="">Todos los vehículos</option></select>
+              <select class="form-select form-select-sm" id="filterTipo">
+                <option value="">Todos los tipos</option>
+                <option>Preventivo</option>
+                <option>Correctivo</option>
+                <option>Predictivo</option>
+                <option>Emergente</option>
+              </select>
+              <select class="form-select form-select-sm" id="filterEstado">
+                <option value="">Todos los estados</option>
+                <option>Registrado</option>
+                <option>Validado</option>
+                <option>Observado</option>
+                <option>Cerrado</option>
+              </select>
+              <select class="form-select form-select-sm" id="filterProveedor"><option value="">Todos los proveedores</option></select>
+            </div>
+          </div>
+        </div>
+        <div class="row g-3 mb-3">
+          <div class="col-xl-6"><div class="app-card h-100"><div class="card-header">Costo consolidado por vehículo</div><div class="card-body"><div class="chart-wrap"><canvas id="chartCostVehicle"></canvas></div></div></div></div>
+          <div class="col-xl-6"><div class="app-card h-100"><div class="card-header">Distribución por tipo de mantenimiento</div><div class="card-body"><div class="chart-wrap"><canvas id="chartType"></canvas></div></div></div></div>
+          <div class="col-xl-6"><div class="app-card h-100"><div class="card-header">Repuestos / servicios más recurrentes</div><div class="card-body"><div class="chart-wrap"><canvas id="chartParts"></canvas></div></div></div></div>
+          <div class="col-xl-6"><div class="app-card h-100"><div class="card-header">Evolutivo de costos mensuales (USD)</div><div class="card-body"><div class="chart-wrap"><canvas id="chartMonthly"></canvas></div></div></div></div>
+        </div>
+      </section>
+
+      <section id="mantenimientos" class="tab-pane">
+        <div class="app-card mb-3">
+          <div class="card-header d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
+            <span><i class="fa-solid fa-list-check me-2 text-success"></i>Histórico de intervenciones técnicas</span>
+            <div class="floating-actions">
+              <button class="btn btn-success btn-sm" id="btnNewMaint2"><i class="fa-solid fa-plus me-1"></i>Registrar mantenimiento</button>
+              <button class="btn btn-outline-success btn-sm" id="btnExportIntervenciones"><i class="fa-solid fa-file-excel me-1"></i>Exportar filtrados</button>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table id="tblMantenimientos" class="table table-hover table-striped w-100">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Fecha</th>
+                    <th>Vehículo</th>
+                    <th>Km</th>
+                    <th>Tipo</th>
+                    <th>Proveedor</th>
+                    <th>Documento</th>
+                    <th>Costo</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="vehiculos" class="tab-pane">
+        <div class="d-flex flex-column flex-md-row justify-content-between gap-2 mb-3">
+          <h5 class="fw-bold mb-0"><i class="fa-solid fa-car-side text-success me-2"></i>Inventario técnico corporativo y control de kilometraje</h5>
+          <button class="btn btn-success btn-sm" id="btnNewVehicle"><i class="fa-solid fa-plus me-1"></i>Registrar nuevo vehículo</button>
+        </div>
+        <div class="row g-3 mb-3" id="vehicleCards"></div>
+        <div class="app-card">
+          <div class="card-header">Fichas técnicas e integridad métrica</div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table id="tblVehiculos" class="table table-hover table-striped w-100">
+                <thead>
+                  <tr>
+                    <th>Placa</th>
+                    <th>Tipo</th>
+                    <th>Marca/Modelo</th>
+                    <th>Km actual</th>
+                    <th>Último mant.</th>
+                    <th>Próximo km</th>
+                    <th>Presupuesto</th>
+                    <th>Responsable</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="costos" class="tab-pane">
+        <div class="app-card">
+          <div class="card-header d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
+            <span><i class="fa-solid fa-gears me-2 text-success"></i>Trazabilidad analítica de repuestos, servicios y vida útil</span>
+            <button class="btn btn-outline-success btn-sm" id="btnExportDetalle"><i class="fa-solid fa-file-excel me-1"></i>Exportar desglose</button>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table id="tblDetalle" class="table table-hover table-striped w-100">
+                <thead>
+                  <tr>
+                    <th>ID Mant.</th>
+                    <th>Vehículo</th>
+                    <th>Categoría</th>
+                    <th>Ítem / Repuesto</th>
+                    <th>Cant.</th>
+                    <th>Costo unit.</th>
+                    <th>Total</th>
+                    <th>Vida útil km</th>
+                    <th>Próximo cambio km</th>
+                    <th>Estado Alerta</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+
+      <section id="ocr" class="tab-pane">
+        <div class="row g-3">
+          <div class="col-xl-5">
+            <div class="app-card h-100">
+              <div class="card-header"><i class="fa-solid fa-cloud-arrow-up me-2 text-success"></i>Carga inteligente de factura PDF / imagen</div>
+              <div class="card-body">
+                <div class="ocr-dropzone" id="ocrDropzone">
+                  <i class="fa-solid fa-file-invoice fa-2x text-success mb-2"></i>
+                  <h6 class="fw-bold mb-1">Seleccione o arrastre una factura</h6>
+                  <p class="small-muted mb-3">PDF electrónico, PDF escaneado, PNG, JPG o WEBP. El sistema prioriza texto embebido y usa OCR visual cuando sea necesario.</p>
+                  <input type="file" id="ocrFile" class="form-control" accept="application/pdf,image/*">
+                </div>
+                <div class="mt-3 d-grid gap-2">
+                  <button class="btn btn-success" id="btnOcrAnalyze" type="button"><i class="fa-solid fa-wand-magic-sparkles me-1"></i>Analizar documento</button>
+                  <button class="btn btn-outline-success" id="btnOcrFill" type="button" disabled><i class="fa-solid fa-pen-to-square me-1"></i>Prellenar mantenimiento</button>
+                  <button class="btn btn-outline-primary" id="btnOcrPersist" type="button" disabled><i class="fa-solid fa-database me-1"></i>Registrar cola OCR en SharePoint</button>
+                </div>
+                <div class="summary-box mt-3">
+                  <div class="d-flex justify-content-between small"><strong>Estado OCR</strong><span id="ocrStatus">Pendiente</span></div>
+                  <div class="confidence-meter mt-2"><span id="ocrConfidenceBar"></span></div>
+                  <div class="small-muted mt-2" id="ocrHashLabel">Hash documental: pendiente</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-7">
+            <div class="app-card mb-3">
+              <div class="card-header"><i class="fa-solid fa-list-check me-2 text-success"></i>Campos extraídos y normalizados</div>
+              <div class="card-body" id="ocrFields">
+                <div class="alert alert-info mb-0">Cargue una factura para visualizar los campos detectados antes de registrar información en la base corporativa.</div>
+              </div>
+            </div>
+            <div class="app-card">
+              <div class="card-header"><i class="fa-solid fa-align-left me-2 text-success"></i>Texto técnico recuperado</div>
+              <div class="card-body"><div class="ocr-textbox" id="ocrRawText">Sin documento analizado.</div></div>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="app-card">
+              <div class="card-header"><i class="fa-solid fa-screwdriver-wrench me-2 text-success"></i>Detalle OCR de repuestos / mano de obra</div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-sm table-hover" id="tblOcrLines">
+                    <thead><tr><th>Tipo</th><th>Código</th><th>Descripción</th><th>Cant.</th><th>Unitario</th><th>Total/Neto</th><th>Categoría sugerida</th></tr></thead>
+                    <tbody><tr><td colspan="7" class="text-muted">Sin líneas detectadas.</td></tr></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="alertas" class="tab-pane">
+        <div class="row g-3">
+          <div class="col-xl-5">
+            <div class="app-card h-100">
+              <div class="card-header"><i class="fa-solid fa-magnifying-glass-chart me-2 text-success"></i>Búsqueda contextual inteligente</div>
+              <div class="card-body">
+                <textarea class="form-control mb-2" id="aiQuery" rows="4" placeholder="Ej.: Mantenimientos correctivos de PEI-1023, cambios de filtros recientes, costos mayores a USD 500..."></textarea>
+                <button class="btn btn-success w-100" id="btnAiSearch"><i class="fa-solid fa-brain me-1"></i>Analizar consulta</button>
+                <div class="mt-3" id="aiSearchResults"></div>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-7">
+            <div class="app-card h-100">
+              <div class="card-header"><i class="fa-solid fa-triangle-exclamation me-2 text-warning"></i>Alertas de integridad y detección de duplicidades</div>
+              <div class="card-body"><div id="alertsContainer" class="d-grid gap-2"></div></div>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="app-card">
+              <div class="card-header"><i class="fa-solid fa-lightbulb me-2 text-success"></i>Recomendaciones técnicas automatizadas</div>
+              <div class="card-body"><div id="recommendations" class="row g-3"></div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+     <section id="conexion" class="tab-pane hidden">
+        <div class="row g-3">
+          <div class="col-lg-6">
+            <div class="app-card h-100">
+              <div class="card-header"><i class="fa-brands fa-microsoft me-2 text-success"></i>Parámetros de Integración MS Graph</div>
+              <div class="card-body">
+                <p>La aplicación consume de forma síncrona el SDK de Microsoft Graph y MSAL para conectarse de manera segura a la cuenta corporativa del FIAS y actualizar las tablas del libro maestro.</p>
+                <div class="codebox" id="connectionSummary"></div>
+                <div class="alert alert-info mt-3 small mb-0">
+                  <strong>Nota técnica:</strong> Se implementó la codificación Base64URL segura para tokens compartidos de SharePoint (`u!`).
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="app-card h-100">
+              <div class="card-header"><i class="fa-solid fa-table me-2 text-success"></i>Estructuras requeridas en Excel</div>
+              <div class="card-body">
+                <div class="codebox">tblVehiculos&#10;tblIntervenciones&#10;tblDetalle&#10;tblAuditoria</div>
+                <p class="small-muted mt-3 mb-0">Asegúrese de que el archivo compartido posea estas cuatro tablas con nombres canónicos estructurados mediante formato de tabla de Excel.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="container-fluid px-3 px-lg-4 py-4 text-center border-top bg-white">
+      <div class="d-flex flex-column flex-md-row justify-content-between gap-2 text-muted small">
+        <span>FIAS · Sistema Avanzado de Control de Mantenimientos Vehiculares © 2026</span>
+        <span>Desarrollado por <a href="https://www.linkedin.com/in/jair-cruz-gallegos-65998776/" target="_blank" rel="noopener" class="text-success fw-bold">Jair Cruz Gallegos</a></span>
+      </div>
+    </footer>
+  </div>
+
+  <div class="modal fade" id="maintenanceModal" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"><i class="fa-solid fa-screwdriver-wrench me-2"></i>Formulario de Registro Técnico de Mantenimiento</h5>
+          <button class="btn-close btn-close-white" data-bs-dismiss="modal" type="button" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <div class="stepper">
+            <div class="step active" data-step="1">1. Vehículo e Integridad</div>
+            <div class="step" data-step="2">2. Diagnóstico Técnico</div>
+            <div class="step" data-step="3">3. Repuestos y Costos</div>
+            <div class="step" data-step="4">4. Validación de Control</div>
+          </div>
+          <form id="maintenanceForm">
+            <div class="step-panel active" data-step="1">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label required" for="mVehiculo">Vehículo Custodio</label>
+                  <select id="mVehiculo" class="form-select" required></select>
+                </div>
+                <div class="col-md-3">
+                  <label class="form-label required" for="mFecha">Fecha de Intervención</label>
+                  <input id="mFecha" type="date" class="form-control" required>
+                </div>
+                <div class="col-md-3">
+                  <label class="form-label required" for="mKm">Kilometraje de Ingreso</label>
+                  <input id="mKm" type="number" min="0" class="form-control" required>
+                </div>
+                <div class="col-12">
+                  <div id="vehicleContext" class="summary-box small-muted">
+                    Seleccione un vehículo custodio para recuperar dinámicamente sus alertas de kilometraje y vigencia técnica.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="step-panel" data-step="2">
+              <div class="row g-3">
+                <div class="col-md-4">
+                  <label class="form-label required" for="mTipo">Tipo de Mantenimiento</label>
+                  <select id="mTipo" class="form-select" required>
+                    <option>Preventivo</option>
+                    <option>Correctivo</option>
+                    <option>Predictivo</option>
+                    <option>Emergente</option>
+                  </select>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label" for="mProveedor">Proveedor / Taller Autorizado</label>
+                  <input id="mProveedor" class="form-control" placeholder="Nombre de la empresa o taller mecánico">
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label" for="mDocumento">Factura / Orden de Trabajo (OT)</label>
+                  <input id="mDocumento" class="form-control" placeholder="Ej.: FAC-001-002-12345">
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label" for="mEstado">Estado del Proceso de Control</label>
+                  <select id="mEstado" class="form-select">
+                    <option>Registrado</option>
+                    <option>Validado</option>
+                    <option>Observado</option>
+                    <option>Cerrado</option>
+                  </select>
+                </div>
+                <div class="col-md-8">
+                  <label class="form-label required" for="mDescripcion">Descripción Técnica General y Diagnóstico</label>
+                  <textarea id="mDescripcion" class="form-control" rows="3" placeholder="Sustente los hallazgos técnicos, fallas detectadas o justificación técnica de la intervención..." required></textarea>
+                </div>
+                <div class="col-12">
+                  <label class="form-label" for="mObservacion">Observaciones Adicionales / Validación de Control Interno</label>
+                  <textarea id="mObservacion" class="form-control" rows="2" placeholder="Notas exclusivas para el equipo administrativo o de auditoría interna..."></textarea>
+                </div>
+              </div>
+            </div>
+
+            <div class="step-panel" data-step="3">
+              <div class="d-flex justify-content-between align-items-center gap-2 mb-2">
+                <div>
+                  <strong>Desglose analítico de repuestos, mano de obra e insumos</strong>
+                  <div class="small-muted">Los subtotales técnicos y el kilometraje teórico del próximo cambio se proyectan automáticamente.</div>
+                </div>
+                <button type="button" class="btn btn-outline-success btn-sm" id="btnAddLine">
+                  <i class="fa-solid fa-plus me-1"></i>Agregar ítem de costo
+                </button>
+              </div>
+              <div id="lineItems" class="d-grid gap-2"></div>
+            </div>
+
+            <div class="step-panel" data-step="4">
+              <div class="row g-3">
+                <div class="col-lg-5">
+                  <div class="summary-box">
+                    <h6 class="fw-bold text-success"><i class="fa-solid fa-file-invoice mb-2"></i> Resumen de Registro</h6>
+                    <div id="maintenanceSummary" class="small"></div>
+                  </div>
+                </div>
+                <div class="col-lg-7">
+                  <div class="summary-box">
+                    <h6 class="fw-bold text-warning"><i class="fa-solid fa-shield-cat mb-2"></i> Alertas de Control de Calidad y Duplicidad</h6>
+                    <div id="duplicateWarnings" class="d-grid gap-2 small"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer d-flex justify-content-between">
+          <button class="btn btn-outline-secondary" id="btnPrevStep" type="button">
+            <i class="fa-solid fa-arrow-left me-1"></i>Anterior
+          </button>
+          <div class="d-flex gap-2">
+            <button class="btn btn-outline-success" id="btnNextStep" type="button">
+              Siguiente <i class="fa-solid fa-arrow-right ms-1"></i>
+            </button>
+            <button class="btn btn-success hidden" id="btnSaveMaintenance" type="button">
+              <i class="fa-solid fa-cloud-arrow-up me-1"></i>Persistir en SharePoint
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="vehicleModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"><i class="fa-solid fa-car-side me-2"></i>Ficha de Vehículo / Equipo de Campo</h5>
+          <button class="btn-close btn-close-white" data-bs-dismiss="modal" type="button" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <form id="vehicleForm" class="row g-3">
+            <input type="hidden" id="vRowIndex">
+            <input type="hidden" id="vId">
+            <div class="col-md-6">
+              <label class="form-label required" for="vPlaca">Placa / Código Interno</label>
+              <input id="vPlaca" class="form-control" required placeholder="Ej.: PEI-1023">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="vTipo">Tipo de Vehículo</label>
+              <input id="vTipo" class="form-control" placeholder="Ej.: Camioneta 4x4, Motocicleta, Generador">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="vModelo">Marca y Modelo</label>
+              <input id="vModelo" class="form-control" placeholder="Ej.: Renault Stepway 2021">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="vResponsable">Responsable Técnico / Custodio</label>
+              <input id="vResponsable" class="form-control" placeholder="Nombre completo del custodio">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label required" for="vKm">Kilometraje Actual</label>
+              <input id="vKm" type="number" min="0" class="form-control" required>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label" for="vPeriodicidad">Periodicidad Preventiva (Km)</label>
+              <input id="vPeriodicidad" type="number" min="0" class="form-control" value="5000">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label" for="vPresupuesto">Presupuesto Asignado Anual</label>
+              <input id="vPresupuesto" type="number" min="0" step="0.01" class="form-control" placeholder="USD">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="vEstado">Estado Operativo</label>
+              <select id="vEstado" class="form-select">
+                <option>Activo</option>
+                <option>Inactivo</option>
+                <option>En mantenimiento</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="vProximo">Próximo Mantenimiento Programado (Km)</label>
+              <input id="vProximo" type="number" min="0" class="form-control">
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Cancelar</button>
+          <button class="btn btn-success" id="btnSaveVehicle" type="button">
+            <i class="fa-solid fa-save me-1"></i>Guardar Cambios Vehículo
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="recordModal" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="recordModalTitle">Ficha Técnica Detallada</h5>
+          <button class="btn-close btn-close-white" data-bs-dismiss="modal" type="button" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body" id="recordModalBody"></div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Cerrar Visualizador</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+  <script src="https://alcdn.msauth.net/browser/2.32.0/js/msal-browser.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script>
+    // ==========================================================================
+    // CONFIGURACIÓN DE IDENTIDAD Y CONTROL CORPORATIVO (FIAS)
+    // ==========================================================================
+    const TENANT_ID = '5e23e4af-237d-4d97-bf6e-dca808015787';
+    const CLIENT_ID = 'c8a828c1-3a20-4876-96af-b4f30ce4abeb';
+
+    // Enlace corporativo entregado en Base64. El sistema acepta URL directa, token u! base64 y token Graph u! base64url.
+    const EXCEL_FILE_SHARED_INPUT = 'u!aHR0cHM6Ly9maWFzZWMuc2hhcmVwb2ludC5jb20vOng6L3MvRk9ORE9ERUlOVkVSU0lPTkFNQklFTlRBTFNPU1RFTklCTEUvSVFEVGtxYXJ2aExDUjc2UzVmQ05NdlVqQVhVTTU1dllwU055Wl9ZMWROUEpoOFk/ZT1pamFYWFI=';
+
+    const TABLES = {
+      vehiculos:'tblVehiculos',
+      proveedores:'tblProveedores',
+      facturas:'tblFacturas',
+      detalleFacturas:'tblDetalleFacturas',
+      intervenciones:'tblMantenimientos',
+      detalle:'tblDetalleMantenimiento',
+      auditoria:'tblAuditoriaCambios',
+      consistencias:'tblConsistencias',
+      diccionario:'tblDiccionario',
+      ocrCola:'tblOCRCola',
+      documentos:'tblDocumentos'
+    };
+
+    const COLUMNS = {
+      vehiculos: ['ID_Activo','Unidad_Activo','Tipo_Activo','Placa','Marca','Modelo','Descripcion','Año','Chasis','Motor','Propietario','Estado','Odometro_Inicial','Odometro_Ultimo','Proximo_Mantenimiento_KM','Proveedor_Principal','Fecha_Alta','Link_Carpeta_SharePoint','Observaciones'],
+      proveedores: ['ID_Proveedor','RUC','Razon_Social','Nombre_Comercial','Direccion_Matriz','Direccion_Sucursal','Agencia','Contribuyente_Especial','Obligado_Contabilidad','Contacto','Email','Estado','Observaciones'],
+      facturas: ['Factura_Nro','Clave_Acceso','RUC_Proveedor','Proveedor','Fecha_Autorizacion','Fecha_Emision','Orden_Reparacion','ID_Activo','Placa','Chasis','Motor','Km','Subtotal_Mano_Obra','Subtotal_Repuestos','Subtotal_Sin_IVA','IVA_15','Total_Factura','Forma_Pago','Estado_Validacion','Archivo_Origen','Hash_SHA256','Link_SharePoint','Fecha_Carga','Usuario_Carga','Observaciones'],
+      detalleFacturas: ['ID_Detalle_Factura','Factura_Nro','Item_Secuencia','Tipo_Item','Codigo_Item','Descripcion','Cantidad','Precio_Unitario','Descuento','Neto','Valor_Total','Categoria_Item','Cuenta_Contable','Observaciones'],
+      intervenciones: ['ID_Mantenimiento','ID_Activo','Placa','Orden_Reparacion','Factura_Nro','Fecha_Recepcion','Fecha_Facturacion_Emision','Año','Mes','Km','Km_Anterior','Delta_Km','Tipo_Mantenimiento','Categoria','Agencia','Asesor_Vendedor','Ingreso_Observacion','Cierre_Observacion','Subtotal_Mano_Obra','Subtotal_Repuestos','Subtotal_Sin_IVA','IVA','Total_Con_IVA','Total_Control','Fuente_Principal','Archivo_Origen','Hash_Documento','Estado_Registro','Validacion_Km','Validacion_Duplicado','Validacion_Cuadre_Factura','Requiere_Revision','Fecha_Carga','Usuario_Carga','Version_Registro','Link_Documento_SharePoint','Observacion_Control'],
+      detalle: ['ID_Detalle_Mant','ID_Mantenimiento','Orden_Reparacion','Factura_Nro','Item_Secuencia','Tipo_Item','Descripcion','Cantidad','Lado','Valor_Unitario','Valor_Total','Fuente','Categoria_Item','Link_Documento','Observaciones'],
+      auditoria: ['ID_Cambio','Fecha_Hora','Usuario','Tabla','ID_Registro','Campo','Valor_Anterior','Valor_Nuevo','Motivo','Documento_Soporte','Aprobado_Por','Estado','Observaciones'],
+      ocrCola: ['ID_Carga','Fecha_Hora','Usuario','Archivo_Nombre','Archivo_Hash_SHA256','Tipo_Documento','Proveedor_OCR','Confianza_Promedio','Estado_OCR','Factura_Nro_Detectada','Orden_Detectada','Placa_Detectada','Km_Detectado','Total_Detectado','JSON_Extraccion','ID_Mantenimiento_Generado','Observaciones'],
+      documentos: ['ID_Documento','Tipo_Documento','Archivo_Origen','Fuente','Hash_SHA256','Fecha_Documento','Registros_Extraidos','Estado','Link_SharePoint','Observaciones']
+    };
+
+    const loginRequest = { scopes:['User.Read','Files.ReadWrite','Files.ReadWrite.All','Sites.ReadWrite.All'] };
+
+    const catalogosVidaUtil = {
+      'Lubricación y filtros': 5000,
+      'Sistema de frenos': 20000,
+      'Suspensión y dirección': 30000,
+      'Llantas, alineación y balanceo': 40000,
+      'Sistema eléctrico/electrónico': 20000,
+      'Transmisión': 40000,
+      'Motor y refrigeración': 30000,
+      'Sistema hidráulico': 25000,
+      'Diagnóstico': 0,
+      'Mano de obra': 0,
+      'Otros': 0
+    };
+
+    let state = { vehiculos:[], proveedores:[], facturas:[], detalleFacturas:[], intervenciones:[], detalle:[], auditoria:[], ocrCola:[], documentos:[], token:null, account:null, sessionId:null, connected:false, tableHeaders:{}, ocrLast:null };
+    let tables = {}, charts = {}, msalInstance = null, currentStep = 1, maintenanceModalInstance = null;
+
+
+    // Variable para almacenar la ruta oficial del archivo
+let canonicalItemPath = '';
+
+async function resolveExcelPath() {
+  setLoading(true, 'Resolviendo ubicación del archivo corporativo...');
+  
+  // 1. Consultamos el endpoint /shares solo para extraer los metadatos de SharePoint
+  const shareUrl = `/shares/${cleanShareId(EXCEL_FILE_SHARED_INPUT)}/driveItem?$select=id,parentReference`;
+  const itemData = await graphFetch(shareUrl);
+  
+  if (!itemData || !itemData.parentReference) {
+    throw new Error('No se pudo resolver la ruta canónica en SharePoint.');
+  }
+  
+  // 2. Construimos la ruta soportada por AAD para la API de Excel
+  canonicalItemPath = `/drives/${itemData.parentReference.driveId}/items/${itemData.id}`;
+}
+    // Helper Métricas e Integridad
+    function todayISO(){ return new Date().toISOString().slice(0,10); }
+    function nowISO(){ return new Date().toISOString(); }
+    function money(v){ return new Intl.NumberFormat('es-EC',{style:'currency',currency:'USD'}).format(Number(v||0)); }
+    function num(v){ return Number(v||0); }
+    function norm(s){ return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim(); }
+
+    // Normalización robusta de fechas devueltas por Excel/SharePoint.
+    // Microsoft Graph puede devolver una celda de fecha como texto ISO, texto dd/mm/aaaa
+    // o número serial de Excel. Esto evita errores como: (r.fecha || '').slice is not a function.
+    function toISODate(value){
+      if(value === null || value === undefined || value === '') return '';
+      if(value instanceof Date && !isNaN(value)) return value.toISOString().slice(0,10);
+      if(typeof value === 'number' && isFinite(value)){
+        // Serial de Excel: días transcurridos desde 1899-12-30.
+        const date = new Date(Math.round((value - 25569) * 86400 * 1000));
+        return isNaN(date) ? String(value) : date.toISOString().slice(0,10);
+      }
+      const s = String(value).trim();
+      if(!s) return '';
+      if(/^\d{4}-\d{2}-\d{2}/.test(s)) return s.slice(0,10);
+      const m = s.match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})$/);
+      if(m){
+        const dd = m[1].padStart(2,'0');
+        const mm = m[2].padStart(2,'0');
+        return `${m[3]}-${mm}-${dd}`;
+      }
+      const parsed = new Date(s);
+      if(!isNaN(parsed)) return parsed.toISOString().slice(0,10);
+      return s;
+    }
+
+    function monthKey(value){
+      const iso = toISODate(value);
+      return /^\d{4}-\d{2}/.test(iso) ? iso.slice(0,7) : '';
+    }
+
+    function displayDate(value){
+      const iso = toISODate(value);
+      const m = iso.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+      return m ? `${m[3]}/${m[2]}/${m[1]}` : iso;
+    }
+
+
+/**
+   * CORRECCIÓN DE FONDO: Inicializador seguro de DataTables
+   * Evita el error 'Cannot read properties of undefined (reading 'style')'
+   */
+  function initDataTable(selector, options = {}) {
+    const tableElement = document.querySelector(selector);
+    
+    // 1. Verificación de existencia del DOM
+    if (!tableElement) {
+      console.warn(`La tabla ${selector} no existe en el DOM. Saltando inicialización.`);
+      return null;
+    }
+
+    // 2. Validación de consistencia entre <th> del HTML y columnas JS.
+    //    DataTables lanza "Cannot read properties of undefined (reading 'style')"
+    //    cuando recibe más/menos columnas JS que encabezados visibles.
+    const headerCount = tableElement.querySelectorAll('thead th').length;
+    const columnCount = Array.isArray(options.columns) ? options.columns.length : headerCount;
+    if (headerCount !== columnCount) {
+      console.error(`Inconsistencia DataTables en ${selector}: HTML tiene ${headerCount} columnas y JS define ${columnCount}.`);
+      return null;
+    }
+
+    // 3. Destruir instancia previa de forma segura para evitar redibujados sobre DOM viejo.
+    try {
+      if ($.fn.DataTable.isDataTable(tableElement)) {
+        $(tableElement).DataTable().clear().destroy();
+        const tbody = tableElement.querySelector('tbody');
+        if (tbody) tbody.innerHTML = '';
+      }
+    } catch (err) {
+      console.warn(`No se pudo destruir la instancia previa de ${selector}. Se reinicializará.`, err);
+    }
+
+    // 4. Inicialización con try-catch para atrapar errores de renderizado.
+    try {
+      return $(tableElement).DataTable({
+        ...options,
+        deferRender: true,
+        language: options.language || DATATABLES_ES
+      });
+    } catch (err) {
+      console.error("Error al inicializar DataTables en " + selector, err);
+      return null;
+    }
+  }
+
+  // EJEMPLO DE USO EN TU FUNCIÓN DE CARGA (deshabilitado para no sobrescribir refreshAll real):
+  async function refreshAllEjemploNoUsar() {
+    try {
+      const data = await loadTable('tblIntervenciones'); // Tu función que trae la data
+      
+      // SOLO inicializamos si hay datos válidos
+      if (data && Array.isArray(data)) {
+        initDataTable('#tblMantenimientos', {
+          data: data,
+          columns: [
+             { data: 'idIntervencion' },
+             { data: 'fecha' },
+             { data: 'placa' },
+             // ... tus columnas
+          ]
+        });
+      }
+    } catch (e) {
+      console.error("Fallo crítico en sincronización:", e);
+    }
+  }
+
+  // --- CORRECCIÓN DE LA PREVENCIÓN DE SEGUIMIENTO (CDN Blocking) ---
+  // Si los CDN siguen bloqueados, descarga los archivos localmente 
+  // o asegúrate de que el sitio no esté bajo políticas estrictas de privacidad (como "Tracking Prevention" de Edge).
+  // Nota: Si usas Edge, intenta agregar tu SharePoint a "Sitios de confianza".
+    
+    // ==========================================================================
+    // CONVERSIÓN SEGURA DE ENLACES SHAREPOINT: URL directa, u!base64 y u!base64url
+    // ==========================================================================
+    function base64UrlEncodeUnicode(value){
+      const base64 = btoa(unescape(encodeURIComponent(value)));
+      return base64.replace(/=+$/, '').replace(/\//g, '_').replace(/\+/g, '-');
+    }
+
+    function base64ToText(value){
+      const payload = String(value || '').replace(/^u!/i, '').trim();
+      const normalized = payload.replace(/-/g, '+').replace(/_/g, '/');
+      const padded = normalized + '='.repeat((4 - normalized.length % 4) % 4);
+      return decodeURIComponent(escape(atob(padded)));
+    }
+
+    function decodeSharedInput(input){
+      const raw = String(input || '').trim();
+      if(!raw) return '';
+      if(/^https?:\/\//i.test(raw)) return raw;
+      if(/^u!/i.test(raw)){
+        try{
+          const decoded = base64ToText(raw);
+          if(/^https?:\/\//i.test(decoded)) return decoded;
+        }catch(e){
+          console.warn('El token u! no representa texto URL; se usará como token Graph ya normalizado.', e);
+        }
+      }
+      return raw;
+    }
+
+    function cleanShareId(input) {
+      if (!input) return '';
+      const decoded = decodeSharedInput(input);
+      if(/^u!/i.test(decoded) && !decoded.includes('=')) return decoded;
+      if(!/^https?:\/\//i.test(decoded)) return decoded;
+      return 'u!' + base64UrlEncodeUnicode(decoded);
+    }
+
+    function setupMsal(){
+      if(!window.msal){
+        throw new Error('No se cargó la librería MSAL desde el CDN. Revise la red.');
+      }
+      msalInstance = new msal.PublicClientApplication({
+        auth:{ clientId:CLIENT_ID, authority:`https://login.microsoftonline.com/${TENANT_ID}`, redirectUri:window.location.origin },
+        cache:{ cacheLocation:'sessionStorage', storeAuthStateInCookie:false }
+      });
+    }
+
+   // Reemplaza esto:
+// function driveItemPath(){ return `/shares/${cleanShareId(EXCEL_FILE_SHARED_INPUT)}/driveItem`; }
+
+// Por esto:
+function driveItemPath() { 
+  return canonicalItemPath; 
+}
+    function tableBasePath(tableName){ return `${driveItemPath()}/workbook/tables/${encodeURIComponent(tableName)}`; }
+
+    async function getGraphToken(){
+      const account = state.account || msalInstance.getAllAccounts()[0];
+      if(!account) throw new Error('No existe cuenta autenticada. Inicie sesión.');
+      try{
+        const result = await msalInstance.acquireTokenSilent({...loginRequest, account});
+        state.token = result.accessToken; state.account = result.account || account;
+        return result.accessToken;
+      }catch(error){
+        if(error instanceof msal.InteractionRequiredAuthError){
+          const result = await msalInstance.acquireTokenPopup({...loginRequest, account});
+          state.token = result.accessToken; state.account = result.account || account;
+          return result.accessToken;
+        }
+        throw error;
+      }
+    }
+
+    // ==========================================================================
+    // CORRECCIÓN DE FONDO 3: RETRY LOOP PARA CONCURRENCIA Y BLOQUEOS DE EXCEL
+    // ==========================================================================
+    async function graphFetch(path, options={}){
+      let attempts = 0;
+      const maxAttempts = 3;
+      
+      while (attempts < maxAttempts) {
+        try {
+          const token = await getGraphToken();
+          const headers = { Authorization:`Bearer ${token}`, 'Content-Type':'application/json', ...(options.headers||{}) };
+          if(state.sessionId) headers['Workbook-Session-Id'] = state.sessionId;
+          
+          const res = await fetch(`https://graph.microsoft.com/v1.0${path}`, {...options, headers});
+          
+          // Control de bloqueos por concurrencia (Archivo abierto por otro usuario o sesión retenida)
+          if (res.status === 423 || res.status === 409) {
+            attempts++;
+            console.warn(`Excel Bloqueado (HTTP ${res.status}). Reintentando intento ${attempts}/${maxAttempts} en 2.5s...`);
+            await new Promise(resolve => setTimeout(resolve, 2500));
+            continue;
+          }
+          
+          if(!res.ok){ 
+            const txt = await res.text().catch(()=>res.statusText); 
+            throw new Error(`Graph ${res.status}: ${txt}`); 
+          }
+          if(res.status===204) return null;
+          return await res.json();
+        } catch (error) {
+          if (attempts >= maxAttempts - 1) throw error;
+          attempts++;
+          await new Promise(resolve => setTimeout(resolve, 2000));
+        }
+      }
+    }
+
+    async function createWorkbookSession(){ 
+      const res = await graphFetch(`${driveItemPath()}/workbook/createSession`, {method:'POST', body:JSON.stringify({persistChanges:true})}); 
+      state.sessionId = res?.id || null; 
+    }
+
+    async function getTableHeaders(tableName, fallbackColumns=[]){
+      try{
+        const headerData = await graphFetch(`${tableBasePath(tableName)}/range`);
+        const headers = Array.isArray(headerData?.values?.[0]) ? headerData.values[0].map(h=>String(h||'').trim()).filter(Boolean) : [];
+        state.tableHeaders[tableName] = headers.length ? headers : fallbackColumns;
+      }catch(e){
+        console.warn('Fallo al recuperar encabezados de '+tableName, e);
+        state.tableHeaders[tableName] = fallbackColumns;
+      }
+      return state.tableHeaders[tableName];
+    }
+
+    async function loadTable(tableName, columns){
+      const headers = await getTableHeaders(tableName, columns);
+      const data = await graphFetch(`${tableBasePath(tableName)}/rows`);
+      if (!data || !data.value) {
+        console.warn(`La tabla ${tableName} está vacía o no es accesible.`);
+        return [];
+      }
+      return (data.value||[]).map((row, rowPos)=>{
+        const values = Array.isArray(row.values?.[0]) ? row.values[0] : [];
+        const raw={_index: row.index ?? rowPos};
+        headers.forEach((header,i)=>raw[header]=values[i] ?? '');
+        columns.forEach((col,i)=>{ if(raw[col]===undefined) raw[col]=values[i] ?? ''; });
+        return normalizeLoadedRow(tableName, raw);
+      });
+    }
+
+    function normalizeLoadedRow(tableName, r){
+      const table = String(tableName || '');
+      if(table === TABLES.vehiculos){
+        const marcaModelo = [r.Marca, r.Modelo].filter(Boolean).join(' ').trim() || r.Descripcion || '';
+        return {...r, idVehiculo:r.ID_Activo||'', placa:r.Placa||'', tipoVehiculo:r.Tipo_Activo||'', marca:r.Marca||'', modelo:r.Modelo||'', marcaModelo, kmActual:num(r.Odometro_Ultimo), kmUltimoMantenimiento:num(r.Odometro_Ultimo), proximoMantenimientoKm:num(r.Proximo_Mantenimiento_KM), presupuestoAnual:num(r.Presupuesto_Anual), responsable:r.Unidad_Activo||'', periodicidadKm:num(r.Periodicidad_KM)||5000, estado:r.Estado||'Activo', actualizadoEn:r.Fecha_Alta||''};
+      }
+      if(table === TABLES.intervenciones){
+        const fecha = toISODate(r.Fecha_Facturacion_Emision || r.Fecha_Recepcion);
+        const documento = r.Factura_Nro || r.Orden_Reparacion || '';
+        const descripcion = [r.Ingreso_Observacion, r.Cierre_Observacion].filter(Boolean).join(' | ');
+        return {...r, idIntervencion:r.ID_Mantenimiento||'', fecha, idVehiculo:r.ID_Activo||'', placa:r.Placa||'', kilometraje:num(r.Km), tipoMantenimiento:r.Tipo_Mantenimiento||'', proveedor:r.Agencia||r.Fuente_Principal||'', documento, factura:r.Factura_Nro||'', orden:r.Orden_Reparacion||'', descripcion, costoTotal:num(r.Total_Con_IVA || r.Total_Control || r.Subtotal_Sin_IVA), estadoControl:r.Estado_Registro||'Registrado', observacion:r.Observacion_Control||'', creadoPor:r.Usuario_Carga||'', creadoEn:r.Fecha_Carga||'', actualizadoEn:r.Fecha_Carga||''};
+      }
+      if(table === TABLES.detalle){
+        const categoria = r.Categoria_Item || classifyItem(r.Descripcion, r.Tipo_Item);
+        const vida = catalogosVidaUtil[categoria] ?? 0;
+        const parent = state.intervenciones.find(x=>x.idIntervencion === r.ID_Mantenimiento);
+        const proximo = parent ? num(parent.kilometraje) + vida : 0;
+        return {...r, idDetalle:r.ID_Detalle_Mant||'', idIntervencion:r.ID_Mantenimiento||'', idVehiculo:parent?.idVehiculo||'', placa:parent?.placa||'', categoria, item:r.Descripcion||'', cantidad:num(r.Cantidad), costoUnitario:num(r.Valor_Unitario), costoTotal:num(r.Valor_Total), vidaUtilKm:vida, proximoCambioKm:proximo, garantia:'', observacion:r.Observaciones||''};
+      }
+      if(table === TABLES.auditoria){
+        return {...r, idAuditoria:r.ID_Cambio||'', fechaHora:r.Fecha_Hora||'', usuario:r.Usuario||'', accion:r.Campo||'', tabla:r.Tabla||'', registroId:r.ID_Registro||'', detalle:r.Motivo||'', resultado:r.Estado||''};
+      }
+      if(table === TABLES.ocrCola){
+        return {...r, idCarga:r.ID_Carga||'', fechaHora:r.Fecha_Hora||'', usuario:r.Usuario||'', archivoNombre:r.Archivo_Nombre||'', hash:r.Archivo_Hash_SHA256||'', estado:r.Estado_OCR||'', factura:r.Factura_Nro_Detectada||'', orden:r.Orden_Detectada||'', placa:r.Placa_Detectada||'', km:num(r.Km_Detectado), total:num(r.Total_Detectado)};
+      }
+      return r;
+    }
+
+    function buildExcelObject(tableName, obj){
+      const table = String(tableName || '');
+      if(table === TABLES.vehiculos){
+        const mm = String(obj.marcaModelo || '').trim();
+        const marca = obj.marca || mm.split(' ')[0] || '';
+        const modelo = obj.modelo || mm.replace(marca,'').trim();
+        return {...obj, ID_Activo:obj.idVehiculo||obj.ID_Activo||nextVehicleId(), Unidad_Activo:obj.responsable||obj.Unidad_Activo||'', Tipo_Activo:obj.tipoVehiculo||obj.Tipo_Activo||'', Placa:obj.placa||obj.Placa||'', Marca:marca, Modelo:modelo, Descripcion:mm, Estado:obj.estado||obj.Estado||'Activo', Odometro_Inicial:obj.Odometro_Inicial||obj.kmActual||0, Odometro_Ultimo:obj.kmActual||obj.Odometro_Ultimo||0, Proximo_Mantenimiento_KM:obj.proximoMantenimientoKm||obj.Proximo_Mantenimiento_KM||0, Proveedor_Principal:obj.proveedor||obj.Proveedor_Principal||'', Fecha_Alta:obj.actualizadoEn||todayISO(), Observaciones:obj.observacion||obj.Observaciones||''};
+      }
+      if(table === TABLES.intervenciones){
+        const fecha = toISODate(obj.fecha || obj.Fecha_Facturacion_Emision || todayISO());
+        const prev = findPreviousKm(obj.idVehiculo, obj.idIntervencion);
+        const km = num(obj.kilometraje || obj.Km);
+        const subtotalSin = num(obj.subtotalSinIva || obj.Subtotal_Sin_IVA || (obj.costoTotal ? num(obj.costoTotal)/1.15 : 0));
+        const iva = num(obj.iva || obj.IVA || Math.max(0, num(obj.costoTotal) - subtotalSin));
+        return {...obj, ID_Mantenimiento:obj.idIntervencion||obj.ID_Mantenimiento||nextMaintId(), ID_Activo:obj.idVehiculo||obj.ID_Activo||'', Placa:obj.placa||obj.Placa||'', Orden_Reparacion:obj.orden||obj.Orden_Reparacion||'', Factura_Nro:obj.factura||obj.Factura_Nro||obj.documento||'', Fecha_Recepcion:fecha, Fecha_Facturacion_Emision:fecha, Año:fecha.slice(0,4), Mes:fecha.slice(5,7), Km:km, Km_Anterior:prev, Delta_Km:km && prev ? km-prev : '', Tipo_Mantenimiento:obj.tipoMantenimiento||obj.Tipo_Mantenimiento||'Preventivo', Categoria:obj.categoria||obj.Categoria||inferMaintenanceCategory(obj.descripcion), Agencia:obj.proveedor||obj.Agencia||'', Asesor_Vendedor:obj.asesor||obj.Asesor_Vendedor||'', Ingreso_Observacion:obj.descripcion||obj.Ingreso_Observacion||'', Cierre_Observacion:obj.observacion||obj.Cierre_Observacion||'', Subtotal_Mano_Obra:num(obj.subtotalManoObra||obj.Subtotal_Mano_Obra), Subtotal_Repuestos:num(obj.subtotalRepuestos||obj.Subtotal_Repuestos), Subtotal_Sin_IVA:subtotalSin, IVA:iva, Total_Con_IVA:num(obj.costoTotal||obj.Total_Con_IVA), Total_Control:num(obj.costoTotal||obj.Total_Control), Fuente_Principal:obj.fuente||obj.Fuente_Principal||'HTML Enterprise', Archivo_Origen:obj.archivoOrigen||obj.Archivo_Origen||'', Hash_Documento:obj.hashDocumento||obj.Hash_Documento||'', Estado_Registro:obj.estadoControl||obj.Estado_Registro||'Registrado', Validacion_Km:obj.Validacion_Km||'Pendiente', Validacion_Duplicado:obj.Validacion_Duplicado||'Pendiente', Validacion_Cuadre_Factura:obj.Validacion_Cuadre_Factura||'Pendiente', Requiere_Revision:obj.requiereRevision||obj.Requiere_Revision||'', Fecha_Carga:obj.creadoEn||obj.Fecha_Carga||nowISO(), Usuario_Carga:obj.creadoPor||obj.Usuario_Carga||state.account?.username||'usuario', Version_Registro:obj.Version_Registro||1, Link_Documento_SharePoint:obj.linkDocumento||obj.Link_Documento_SharePoint||'', Observacion_Control:obj.observacion||obj.Observacion_Control||''};
+      }
+      if(table === TABLES.detalle){
+        return {...obj, ID_Detalle_Mant:obj.idDetalle||obj.ID_Detalle_Mant||nextDetailId(), ID_Mantenimiento:obj.idIntervencion||obj.ID_Mantenimiento||'', Orden_Reparacion:obj.orden||obj.Orden_Reparacion||'', Factura_Nro:obj.factura||obj.Factura_Nro||'', Item_Secuencia:obj.itemSecuencia||obj.Item_Secuencia||'', Tipo_Item:obj.tipoItem||obj.Tipo_Item||inferTipoItem(obj.categoria), Descripcion:obj.item||obj.Descripcion||'', Cantidad:num(obj.cantidad||obj.Cantidad), Lado:obj.lado||obj.Lado||'', Valor_Unitario:num(obj.costoUnitario||obj.Valor_Unitario), Valor_Total:num(obj.costoTotal||obj.Valor_Total), Fuente:obj.fuente||obj.Fuente||'HTML Enterprise', Categoria_Item:obj.categoria||obj.Categoria_Item||classifyItem(obj.item, obj.tipoItem), Link_Documento:obj.linkDocumento||obj.Link_Documento||'', Observaciones:obj.observacion||obj.Observaciones||''};
+      }
+      if(table === TABLES.auditoria){
+        return {...obj, ID_Cambio:obj.idAuditoria||obj.ID_Cambio||nextAuditId(), Fecha_Hora:obj.fechaHora||obj.Fecha_Hora||nowISO(), Usuario:obj.usuario||obj.Usuario||state.account?.username||'usuario', Tabla:obj.tabla||obj.Tabla||'', ID_Registro:obj.registroId||obj.ID_Registro||'', Campo:obj.accion||obj.Campo||'', Valor_Anterior:obj.valorAnterior||'', Valor_Nuevo:obj.valorNuevo||'', Motivo:obj.detalle||obj.Motivo||'', Documento_Soporte:obj.documentoSoporte||'', Aprobado_Por:obj.aprobadoPor||'', Estado:obj.resultado||obj.Estado||'OK', Observaciones:obj.observaciones||obj.Observaciones||''};
+      }
+      if(table === TABLES.ocrCola){
+        return {...obj, ID_Carga:obj.idCarga||obj.ID_Carga||nextOcrId(), Fecha_Hora:obj.fechaHora||obj.Fecha_Hora||nowISO(), Usuario:obj.usuario||obj.Usuario||state.account?.username||'usuario', Archivo_Nombre:obj.archivoNombre||'', Archivo_Hash_SHA256:obj.hash||'', Tipo_Documento:obj.tipoDocumento||'Factura', Proveedor_OCR:obj.proveedorOcr||'Browser OCR/PDF.js + Tesseract.js', Confianza_Promedio:obj.confianza||0, Estado_OCR:obj.estado||'Extraído', Factura_Nro_Detectada:obj.factura||'', Orden_Detectada:obj.orden||'', Placa_Detectada:obj.placa||'', Km_Detectado:obj.km||'', Total_Detectado:obj.total||'', JSON_Extraccion:obj.jsonExtraccion||'', ID_Mantenimiento_Generado:obj.idMantenimientoGenerado||'', Observaciones:obj.observaciones||''};
+      }
+      return obj;
+    }
+
+    async function addRows(tableName, columns, objects){
+      const headers = state.tableHeaders[tableName]?.length ? state.tableHeaders[tableName] : await getTableHeaders(tableName, columns);
+      const values = objects.map(obj=>{ const excelObj = buildExcelObject(tableName, obj); return headers.map(c=>excelObj[c] ?? obj[c] ?? ''); });
+      try{
+        return await graphFetch(`${tableBasePath(tableName)}/rows/add`, {method:'POST', body:JSON.stringify({values})});
+      }catch(e){
+        return await graphFetch(`${tableBasePath(tableName)}/rows`, {method:'POST', body:JSON.stringify({values})});
+      }
+    }
+
+    async function updateRow(tableName, columns, rowIndex, object){
+      const headers = state.tableHeaders[tableName]?.length ? state.tableHeaders[tableName] : await getTableHeaders(tableName, columns);
+      const excelObj = buildExcelObject(tableName, object);
+      const values=[headers.map(c=>excelObj[c] ?? object[c] ?? '')];
+      return await graphFetch(`${tableBasePath(tableName)}/rows/itemAt(index=${Number(rowIndex)})`, {method:'PATCH', body:JSON.stringify({values})});
+    }
+
+    async function audit(action, table, registroId, detalle, resultado='OK'){
+      const rec={idAuditoria:nextAuditId(),fechaHora:nowISO(),usuario:state.account?.username || 'usuario',accion:action,tabla:table,registroId:registroId,detalle:detalle,resultado:resultado};
+      state.auditoria.push(rec);
+      try{ await addRows(TABLES.auditoria, COLUMNS.auditoria, [rec]); }catch(e){ console.warn('Fallo de auditoría', e); }
+    }
+
+    function showLogin(message=''){
+      document.getElementById('mainContent').classList.add('hidden');
+      document.getElementById('authContainer').classList.remove('hidden');
+      setLoading(false);
+      if(message) toast(message,'warning');
+    }
+
+    async function handleAuth(){
+      try{
+        setLoading(true,'Autenticando contra Microsoft 365 Corporativo...');
+        await msalInstance.initialize();
+        const accounts = msalInstance.getAllAccounts();
+        if(accounts.length > 0){
+          state.account = accounts[0];
+          state.token = await getGraphToken();
+          await afterLogin();
+        }else{
+          showLogin();
+        }
+      }catch(e){
+        showLogin('Su sesión corporativa expiró. Inicie sesión nuevamente.');
+      }finally{ setLoading(false); }
+    }
+
+    async function login(){
+      try{
+        setLoading(true,'Abriendo pasarela segura Microsoft...');
+        const result = await msalInstance.loginPopup(loginRequest);
+        state.account = result.account;
+        state.token = result.accessToken;
+        await afterLogin();
+      }catch(e){
+        showLogin('Autenticación denegada: '+e.message);
+      }
+    }
+
+  async function afterLogin(){
+  document.getElementById('authContainer').classList.add('hidden');
+  document.getElementById('mainContent').classList.remove('hidden');
+  document.getElementById('userLabel').textContent = state.account?.username || 'Conectado';
+  
+  try {
+    // NUEVO: Resolver la ruta corporativa primero
+    await resolveExcelPath(); 
+    
+    await createWorkbookSession();
+    await syncFromSharePoint();
+  } catch (e) {
+    showFatalError('Fallo inicializando la conexión: ' + e.message);
+  }
+  
+  document.getElementById('connectionSummary').textContent = `TENANT_ID: ${TENANT_ID}\nCLIENT_ID: ${CLIENT_ID}\nSHARE_TOKEN: ${cleanShareId(EXCEL_FILE_SHARED_INPUT)}\nURL_DECODIFICADA: ${decodeSharedInput(EXCEL_FILE_SHARED_INPUT)}\nESTRUCTURAS: Mapeadas de forma dinámica.`;
+}
+
+    async function logout(){
+      try{
+        await msalInstance.logoutPopup({account:state.account, postLogoutRedirectUri:window.location.origin, mainWindowRedirectUri:window.location.origin});
+      }catch(e){
+        console.warn('Cierre de sesión local');
+      }finally{
+        state.account=null; state.token=null; state.connected=false;
+        showLogin();
+      }
+    }
+
+    async function syncFromSharePoint(showToast=true){
+      try{
+        setLoading(true,'Descargando matrices desde SharePoint...');
+        state.vehiculos = await loadTable(TABLES.vehiculos, COLUMNS.vehiculos);
+        try{ state.proveedores = await loadTable(TABLES.proveedores, COLUMNS.proveedores); }catch(e){ state.proveedores=[]; console.warn(e); }
+        try{ state.facturas = await loadTable(TABLES.facturas, COLUMNS.facturas); }catch(e){ state.facturas=[]; console.warn(e); }
+        state.intervenciones = await loadTable(TABLES.intervenciones, COLUMNS.intervenciones);
+        state.detalle = await loadTable(TABLES.detalle, COLUMNS.detalle);
+        try{ state.detalleFacturas = await loadTable(TABLES.detalleFacturas, COLUMNS.detalleFacturas); }catch(e){ state.detalleFacturas=[]; console.warn(e); }
+        try{ state.auditoria = await loadTable(TABLES.auditoria, COLUMNS.auditoria); }catch(e){ state.auditoria=[]; }
+        try{ state.ocrCola = await loadTable(TABLES.ocrCola, COLUMNS.ocrCola); }catch(e){ state.ocrCola=[]; console.warn(e); }
+        try{ state.documentos = await loadTable(TABLES.documentos, COLUMNS.documentos); }catch(e){ state.documentos=[]; console.warn(e); }
+        state.connected=true;
+        document.getElementById('lastSync').textContent = new Date().toLocaleString('es-EC');
+        refreshAll();
+        if(showToast) toast('Sincronización bidireccional exitosa.');
+        return true;
+      }catch(e){
+        state.connected=false;
+        console.error('Fallo de consistencia con las tablas formales de Excel de SharePoint:', e);
+        if(showToast) showFatalError('Fallo de consistencia con las tablas formales de Excel de SharePoint: '+e.message);
+        return false;
+      }finally{ setLoading(false); }
+    }
+
+    function showFatalError(message){
+      document.getElementById('mainContent').classList.remove('hidden');
+      toast(message,'danger');
+      document.getElementById('kpiCards').innerHTML = `<div class="col-12"><div class="alert alert-danger"><strong>Error de Integridad de Datos:</strong> ${escapeHtml(message)}</div></div>`;
+    }
+
+    function filteredInterventions(){
+      const q=norm(document.getElementById('smartSearch')?.value||'');
+      const veh=document.getElementById('filterVehiculo')?.value||'';
+      const tipo=document.getElementById('filterTipo')?.value||'';
+      const estado=document.getElementById('filterEstado')?.value||'';
+      const prov=document.getElementById('filterProveedor')?.value||'';
+      return state.intervenciones.filter(r=>{
+        const detailBlob = state.detalle.filter(d=>d.idIntervencion===r.idIntervencion).map(d=>`${d.item} ${d.categoria}`).join(' ');
+        const blob=norm(Object.values(r).join(' ')+' '+detailBlob);
+        return (!q || q.split(/\s+/).every(t=>blob.includes(t))) && (!veh || r.placa===veh || r.idVehiculo===veh) && (!tipo || r.tipoMantenimiento===tipo) && (!estado || r.estadoControl===estado) && (!prov || r.proveedor===prov);
+      });
+    }
+
+    function refreshAll(){ populateSelectors(); renderKpis(); renderVehicleCards(); renderTables(); renderCharts(); renderAlerts(); renderRecommendations(); updateMaintenancePreview(); }
+    
+    function populateSelectors(){
+      const plates=[...new Set(state.vehiculos.map(v=>v.placa).filter(Boolean))].sort();
+      const providers=[...new Set(state.intervenciones.map(v=>v.proveedor).filter(Boolean))].sort();
+      document.getElementById('filterVehiculo').innerHTML='<option value="">Todos los vehículos</option>'+plates.map(p=>`<option>${escapeHtml(p)}</option>`).join('');
+      document.getElementById('filterProveedor').innerHTML='<option value="">Todos los proveedores</option>'+providers.map(p=>`<option>${escapeHtml(p)}</option>`).join('');
+      document.getElementById('mVehiculo').innerHTML='<option value="">Seleccione vehículo custodio...</option>'+state.vehiculos.map(v=>`<option value="${escapeHtml(v.idVehiculo)}">${escapeHtml(v.placa)} · ${escapeHtml(v.marcaModelo||'')}</option>`).join('');
+    }
+
+
+
+    function classifyItem(description='', tipo=''){
+      const s = norm(description + ' ' + tipo);
+      if(s.includes('aceite') || s.includes('filtro') || s.includes('arandela') || s.includes('tapon')) return 'Lubricación y filtros';
+      if(s.includes('freno') || s.includes('pastilla') || s.includes('disco')) return 'Sistema de frenos';
+      if(s.includes('llanta') || s.includes('alineacion') || s.includes('balanceo') || s.includes('enllant')) return 'Llantas, alineación y balanceo';
+      if(s.includes('bateria') || s.includes('lampara') || s.includes('electr')) return 'Sistema eléctrico/electrónico';
+      if(s.includes('transf') || s.includes('gear') || s.includes('transmision')) return 'Transmisión';
+      if(s.includes('refrigerante') || s.includes('motor') || s.includes('bujia') || s.includes('combustible')) return 'Motor y refrigeración';
+      if(s.includes('servicio') || s.includes('mano') || s.includes('lavada') || s.includes('limpieza') || s.includes('insumos')) return 'Mano de obra';
+      return 'Otros';
+    }
+
+    function inferTipoItem(categoria=''){
+      const c = norm(categoria);
+      if(c.includes('mano') || c.includes('diagnostico')) return 'M';
+      if(c.includes('lavada') || c.includes('servicio')) return 'S';
+      return 'R';
+    }
+
+    function inferMaintenanceCategory(description=''){
+      const s = norm(description);
+      if(s.includes('correct') || s.includes('reemplazo') || s.includes('cambio de neumatic') || s.includes('parabrisas')) return 'Correctivo';
+      if(s.includes('emerg')) return 'Emergente';
+      return 'Preventivo programado';
+    }
+
+    function findPreviousKm(idVehiculo, excludeId=''){
+      const list = state.intervenciones.filter(x=>x.idVehiculo===idVehiculo && x.idIntervencion!==excludeId && num(x.kilometraje)>0).sort((a,b)=>num(b.kilometraje)-num(a.kilometraje));
+      return list[0]?.kilometraje || 0;
+    }
+
+    function nextVehicleId(){ return 'ACT-'+String(state.vehiculos.length+1).padStart(4,'0'); }
+    function nextOcrId(){ return 'OCR-'+new Date().toISOString().replace(/[-:.TZ]/g,'').slice(0,14)+'-'+String((state.ocrCola?.length||0)+1).padStart(3,'0'); }
+
+    function renderKpis(){
+      const data=filteredInterventions();
+      const totalCost=data.reduce((a,b)=>a+num(b.costoTotal),0);
+      const budget=state.vehiculos.reduce((a,b)=>a+num(b.presupuestoAnual),0);
+      const alerts=buildAlerts().filter(a=>a.level!=='ok').length;
+      const percentBudget=budget?Math.round(totalCost/budget*100):0;
+      const cards=[
+        ['fa-car-side','Flota de Vehículos',state.vehiculos.length,'Registrados activos'],
+        ['fa-screwdriver-wrench','Intervenciones',data.length,'Bajo filtros actuales'],
+        ['fa-sack-dollar','Costo Acumulado',money(totalCost),`${percentBudget}% de absorción presupuestaria`],
+        ['fa-bell','Alertas Preventivas',alerts,'Integridad o Duplicación']
+      ];
+      document.getElementById('kpiCards').innerHTML=cards.map(c=>`<div class="col-sm-6 col-xl-3"><div class="kpi-card p-3"><div class="d-flex justify-content-between align-items-start"><div><div class="small-muted text-uppercase fw-bold">${c[1]}</div><div class="kpi-value">${c[2]}</div><div class="small-muted">${c[3]}</div></div><div class="kpi-icon"><i class="fa-solid ${c[0]}"></i></div></div></div></div>`).join('');
+    }
+
+    function renderVehicleCards(){
+      document.getElementById('vehicleCards').innerHTML = state.vehiculos.slice(0,8).map(v=>{
+        const diff=num(v.proximoMantenimientoKm)-num(v.kmActual);
+        const pct = num(v.proximoMantenimientoKm) && num(v.periodicidadKm) ? Math.min(100, Math.max(0, Math.round((num(v.periodicidadKm)-diff)/num(v.periodicidadKm)*100))) : 0;
+        const cls = diff<=0 && num(v.proximoMantenimientoKm)>0 ? 'bg-danger' : diff<=500 ? 'bg-warning' : 'bg-success';
+        return `<div class="col-md-6 col-xl-3"><div class="vehicle-card"><div class="d-flex justify-content-between"><div><h6 class="fw-bold mb-1">${escapeHtml(v.placa)}</h6><div class="small-muted">${escapeHtml(v.marcaModelo||v.tipoVehiculo||'')}</div></div>${badgeEstado(v.estado)}</div><hr><div class="d-flex justify-content-between small"><span>Km actual</span><strong>${Number(v.kmActual||0).toLocaleString('es-EC')}</strong></div><div class="d-flex justify-content-between small"><span>Próximo</span><strong>${Number(v.proximoMantenimientoKm||0).toLocaleString('es-EC')}</strong></div><div class="progress progress-thin mt-2"><div class="progress-bar ${cls}" style="width:${pct}%"></div></div><div class="d-flex gap-2 mt-3"><button class="btn btn-sm btn-success flex-fill" onclick="openMaintenanceForVehicle('${escapeHtml(v.idVehiculo)}')"><i class="fa-solid fa-plus me-1"></i>Mant.</button><button class="btn btn-sm btn-outline-primary flex-fill" onclick="editVehicle('${escapeHtml(v.idVehiculo)}')"><i class="fa-solid fa-pen me-1"></i>Editar</button></div></div></div>`;
+      }).join('') || '<div class="col-12"><div class="alert alert-warning">No existen fichas de vehículos cargadas.</div></div>';
+    }
+
+    const DATATABLES_ES = {
+      decimal: ',',
+      thousands: '.',
+      emptyTable: 'No hay información disponible en la tabla',
+      info: 'Mostrando _START_ a _END_ de _TOTAL_ registros',
+      infoEmpty: 'Mostrando 0 a 0 de 0 registros',
+      infoFiltered: '(filtrado de _MAX_ registros totales)',
+      lengthMenu: 'Mostrar _MENU_ registros',
+      loadingRecords: 'Cargando...',
+      processing: 'Procesando...',
+      search: 'Buscar:',
+      zeroRecords: 'No se encontraron registros coincidentes',
+      paginate: { first: 'Primero', last: 'Último', next: 'Siguiente', previous: 'Anterior' },
+      aria: { sortAscending: ': activar para ordenar ascendente', sortDescending: ': activar para ordenar descendente' }
+    };
+
+    function dtOptions(){ return {destroy:true,pageLength:10,responsive:true,language:DATATABLES_ES}; }
+    
+    function renderTables(){
+      const ints=filteredInterventions();
+      tables.mant=initDataTable('#tblMantenimientos',{...dtOptions(),data:ints,columns:[
+        {data:'idIntervencion'},
+        {data:'fecha',render:d=>displayDate(d)},
+        {data:'placa'},
+        {data:'kilometraje',render:d=>Number(d||0).toLocaleString('es-EC')},
+        {data:'tipoMantenimiento',render:d=>badgeTipo(d)},
+        {data:'proveedor'},
+        {data:'documento'},
+        {data:'costoTotal',render:d=>money(d)},
+        {data:'estadoControl',render:d=>badgeEstado(d)},
+        {data:null,orderable:false,render:r=>`<button class="btn btn-sm btn-outline-success" onclick="showIntervention('${escapeHtml(r.idIntervencion)}')"><i class="fa-solid fa-eye"></i></button> <button class="btn btn-sm btn-outline-primary" onclick="markValidated('${escapeHtml(r.idIntervencion)}')"><i class="fa-solid fa-check"></i></button>`}
+      ]});
+      
+      tables.veh=initDataTable('#tblVehiculos',{...dtOptions(),data:state.vehiculos,columns:[
+        {data:'placa'},
+        {data:'tipoVehiculo'},
+        {data:'marcaModelo'},
+        {data:'kmActual',render:d=>Number(d||0).toLocaleString('es-EC')},
+        {data:'kmUltimoMantenimiento',render:d=>Number(d||0).toLocaleString('es-EC')},
+        {data:'proximoMantenimientoKm',render:d=>Number(d||0).toLocaleString('es-EC')},
+        {data:'presupuestoAnual',render:d=>money(d)},
+        {data:'responsable'},
+        {data:'estado',render:d=>badgeEstado(d)},
+        {data:null,orderable:false,render:r=>`<button class="btn btn-sm btn-outline-primary" onclick="editVehicle('${escapeHtml(r.idVehiculo)}')"><i class="fa-solid fa-pen"></i></button>`}
+      ]});
+      
+      const vehFiltro=document.getElementById('filterVehiculo')?.value || '';
+      const det=state.detalle.filter(d=>!vehFiltro || d.placa===vehFiltro || d.idVehiculo===vehFiltro);
+      tables.det=initDataTable('#tblDetalle',{...dtOptions(),data:det,columns:[
+        {data:'idIntervencion'},
+        {data:'placa'},
+        {data:'categoria'},
+        {data:'item',render:d=>escapeHtml(d)},
+        {data:'cantidad'},
+        {data:'costoUnitario',render:d=>money(d)},
+        {data:'costoTotal',render:d=>money(d)},
+        {data:'vidaUtilKm',render:d=>Number(d||0).toLocaleString('es-EC')},
+        {data:'proximoCambioKm',render:d=>Number(d||0).toLocaleString('es-EC')},
+        {data:null,render:r=>partAlertBadge(r)}
+      ]});
+    }
+
+    function badgeTipo(d){ const x=norm(d); const cls=x.includes('prevent')?'status-ok':x.includes('correct')?'status-warn':x.includes('emerg')?'status-danger':'status-info'; return `<span class="badge-soft ${cls}">${escapeHtml(d||'N/A')}</span>`; }
+    function badgeEstado(d){ const x=norm(d); let cls='status-dark'; if(x.includes('valid')||x.includes('cerr')||x.includes('activo')) cls='status-ok'; if(x.includes('observ')||x.includes('mantenimiento')) cls='status-warn'; if(x.includes('venc')||x.includes('inactivo')) cls='status-danger'; if(x.includes('registr')) cls='status-info'; return `<span class="badge-soft ${cls}">${escapeHtml(d||'N/A')}</span>`; }
+    function partAlertBadge(r){ const v=state.vehiculos.find(x=>x.idVehiculo===r.idVehiculo); if(!v || !num(r.proximoCambioKm)) return '<span class="badge-soft status-dark">Sin métrica</span>'; const diff=num(r.proximoCambioKm)-num(v.kmActual); if(diff<=0) return '<span class="badge-soft status-danger">Vida Útil Vencida</span>'; if(diff<=500) return '<span class="badge-soft status-warn">Próximo a agotar</span>'; return '<span class="badge-soft status-ok">Vigente</span>'; }
+
+    function renderCharts(){
+      const data=filteredInterventions();
+      const byVehicle=sumBy(data,'placa','costoTotal');
+      const byType=countBy(data,'tipoMantenimiento');
+      const parts=countBy(state.detalle,'item',8);
+      const monthKeys=[...new Set(data.map(r=>monthKey(r.fecha)).filter(Boolean))].sort();
+      const byMonth=sumBy(data.map(r=>({...r,month:monthKey(r.fecha)})).filter(r=>r.month),'month','costoTotal');
+      drawBar('chartCostVehicle', Object.keys(byVehicle), Object.values(byVehicle), 'Costo acumulado USD');
+      drawDoughnut('chartType', Object.keys(byType), Object.values(byType));
+      drawBar('chartParts', Object.keys(parts), Object.values(parts), 'Frecuencia');
+      drawLine('chartMonthly', monthKeys, monthKeys.map(k=>byMonth[k]||0), 'Costo mensual USD');
+    }
+
+    function sumBy(arr,key,val){ return arr.reduce((a,b)=>{const k=b[key]||'N/A'; a[k]=(a[k]||0)+num(b[val]); return a;},{}); }
+    function countBy(arr,key,limit=null){ const o=arr.reduce((a,b)=>{const k=b[key]||'N/A'; a[k]=(a[k]||0)+1; return a;},{}); return Object.fromEntries(Object.entries(o).sort((a,b)=>b[1]-a[1]).slice(0,limit||999)); }
+    function baseChart(id,type,labels,data,label){ const el=document.getElementById(id); if(!el) return; if(charts[id]) charts[id].destroy(); charts[id]=new Chart(el,{type,data:{labels,datasets:[{label,data,borderWidth:2,tension:.35,backgroundColor:type==='doughnut'?['#1f7a38','#2fa84f','#f59e0b','#dc3545','#0d6efd']:['rgba(31, 122, 56, 0.8)'],borderColor:['#1f7a38']}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:type==='doughnut'}}}}); }
+    function drawBar(id,labels,data,label){ baseChart(id,'bar',labels,data,label); }
+    function drawLine(id,labels,data,label){ baseChart(id,'line',labels,data,label); }
+    function drawDoughnut(id,labels,data){ baseChart(id,'doughnut',labels,data,''); }
+
+    function openMaintenanceModal(){
+      document.getElementById('maintenanceForm').reset();
+      document.getElementById('mFecha').value=todayISO();
+      document.getElementById('lineItems').innerHTML='';
+      addLineItem();
+      setStep(1);
+      updateMaintenancePreview();
+      maintenanceModalInstance = maintenanceModalInstance || new bootstrap.Modal(document.getElementById('maintenanceModal'));
+      maintenanceModalInstance.show();
+    }
+
+    function openMaintenanceForVehicle(idVehiculo){
+      openMaintenanceModal();
+      document.getElementById('mVehiculo').value=idVehiculo;
+      const veh=state.vehiculos.find(v=>v.idVehiculo===idVehiculo);
+      if(veh) document.getElementById('mKm').value=veh.kmActual || 0;
+      updateMaintenancePreview();
+    }
+
+    function setStep(step){ currentStep=Math.max(1,Math.min(4,step)); document.querySelectorAll('.step').forEach(el=>{ const s=Number(el.dataset.step); el.classList.toggle('active',s===currentStep); el.classList.toggle('done',s<currentStep); }); document.querySelectorAll('.step-panel').forEach(el=>el.classList.toggle('active',Number(el.dataset.step)===currentStep)); document.getElementById('btnPrevStep').disabled=currentStep===1; document.getElementById('btnNextStep').classList.toggle('hidden',currentStep===4); document.getElementById('btnSaveMaintenance').classList.toggle('hidden',currentStep!==4); if(currentStep===4) updateMaintenancePreview(); }
+    
+    function validateCurrentStep(){
+      if(currentStep===1){
+        const idVeh=document.getElementById('mVehiculo').value;
+        const km=num(document.getElementById('mKm').value);
+        if(!idVeh) return toast('Seleccione el vehículo custodio.','warning'), false;
+        if(!document.getElementById('mFecha').value || !document.getElementById('mKm').value) return toast('Ingrese fecha y kilometraje válido.','warning'), false;
+        const veh=state.vehiculos.find(v=>v.idVehiculo===idVeh);
+        if(veh && km < num(veh.kmActual)) return toast(`Control de integridad: El kilometraje ingresado (${km.toLocaleString('es-EC')}) no puede ser inferior al kilometraje real actual (${Number(veh.kmActual||0).toLocaleString('es-EC')} km).`, 'danger'), false;
+      }
+      if(currentStep===2){ if(!document.getElementById('mDescripcion').value.trim()) return toast('Justifique técnicamente el diagnóstico o falla.','warning'), false; }
+      if(currentStep===3){ if(collectLineItems(false).length===0) return toast('Agregue al menos una línea de costo desglosada.','warning'), false; }
+      return true;
+    }
+
+    function addLineItem(pref={}){
+      const id='li_'+Date.now()+Math.floor(Math.random()*1000);
+      const catOptions = Object.keys(catalogosVidaUtil).map(cat=>`<option>${escapeHtml(cat)}</option>`).join('');
+      const selectedCat = pref.categoria || 'Lubricación y filtros';
+      const defaultLife = pref.vidaUtilKm ?? catalogosVidaUtil[selectedCat] ?? 0;
+      
+      const html=`<div class="line-item" id="${id}">
+        <button type="button" class="btn btn-sm btn-outline-danger remove-line" onclick="document.getElementById('${id}').remove();updateMaintenancePreview();" title="Eliminar ítem"><i class="fa-solid fa-trash"></i></button>
+        <div class="row g-2 pe-5">
+          <div class="col-md-3">
+            <label class="form-label required" for="cat_${id}">Familia técnica</label>
+            <select class="form-select li-cat" id="cat_${id}">${catOptions}</select>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label required" for="item_${id}">Repuesto / Servicio / Mano de Obra</label>
+            <input class="form-control li-item" id="item_${id}" placeholder="Describa el ítem..." value="${escapeHtml(pref.item||'')}">
+          </div>
+          <div class="col-md-1">
+            <label class="form-label required" for="cant_${id}">Cant.</label>
+            <input class="form-control li-cant" id="cant_${id}" type="number" min="0" step="0.01" value="${pref.cantidad||1}">
+          </div>
+          <div class="col-md-2">
+            <label class="form-label required" for="cost_${id}">Costo Unit.</label>
+            <input class="form-control li-costo" id="cost_${id}" type="number" min="0" step="0.01" value="${pref.costoUnitario||''}">
+          </div>
+          <div class="col-md-2">
+            <label class="form-label" for="vida_${id}">Vida Útil (Km)</label>
+            <input class="form-control li-vida" id="vida_${id}" type="number" min="0" value="${defaultLife}">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label" for="gar_${id}">Garantía técnica otorgada</label>
+            <input class="form-control li-garantia" id="gar_${id}" placeholder="Ej.: 6 meses o N/A" value="${escapeHtml(pref.garantia||'Por verificar')}">
+          </div>
+          <div class="col-md-8">
+            <label class="form-label" for="obs_${id}">Detalle de marca, código o justificación del cambio</label>
+            <input class="form-control li-obs" id="obs_${id}" placeholder="Observación técnica del ítem..." value="${escapeHtml(pref.observacion||'')}">
+          </div>
+          <div class="col-12 small-muted subtotal-line">Subtotal: ${money(0)}</div>
+        </div>
+      </div>`;
+      
+      document.getElementById('lineItems').insertAdjacentHTML('beforeend',html);
+      const el=document.getElementById(id);
+      el.querySelector('.li-cat').value=selectedCat;
+      el.querySelector('.li-cat').addEventListener('change',ev=>{
+        const life = catalogosVidaUtil[ev.target.value] ?? 0;
+        const lifeEl = el.querySelector('.li-vida');
+        if(!lifeEl.dataset.manual) lifeEl.value = life;
+        updateMaintenancePreview();
+      });
+      el.querySelector('.li-vida').addEventListener('input',ev=>{ ev.target.dataset.manual='1'; updateMaintenancePreview(); });
+      el.querySelectorAll('input,select').forEach(x=>x.addEventListener('input',updateMaintenancePreview));
+      updateMaintenancePreview();
+    }
+
+    function collectLineItems(requireMeta=true){
+      const idVeh=document.getElementById('mVehiculo').value; 
+      const veh=state.vehiculos.find(v=>v.idVehiculo===idVeh) || {}; 
+      const km=num(document.getElementById('mKm').value); 
+      const idMant = requireMeta ? nextMaintId() : 'TEMP';
+      
+      return [...document.querySelectorAll('#lineItems .line-item')].map((el,i)=>{
+        const cat=el.querySelector('.li-cat').value, item=el.querySelector('.li-item').value.trim(), cantidad=num(el.querySelector('.li-cant').value), costoUnitario=num(el.querySelector('.li-costo').value), vidaUtilKm=num(el.querySelector('.li-vida').value), costoTotal=+(cantidad*costoUnitario).toFixed(2);
+        const subtotalEl=el.querySelector('.subtotal-line'); if(subtotalEl) subtotalEl.textContent=`Subtotal: ${money(costoTotal)}${vidaUtilKm?` · Próximo cambio teórico a los: ${(km+vidaUtilKm).toLocaleString('es-EC')} km`:''}`;
+        return {idDetalle:'DET-'+Date.now()+'-'+(i+1),idIntervencion:idMant,idVehiculo:idVeh,placa:veh.placa||'',categoria:cat,item,cantidad,costoUnitario,costoTotal,vidaUtilKm,proximoCambioKm:vidaUtilKm?km+vidaUtilKm:'',garantia:el.querySelector('.li-garantia').value.trim(),observacion:el.querySelector('.li-obs').value.trim()};
+      }).filter(x=>x.item && x.cantidad>0);
+    }
+
+    function nextSequentialId(prefix, rows, field, width=5){
+      const year=new Date().getFullYear();
+      const max=rows.reduce((m,r)=>{
+        const raw=String(r[field]||'');
+        const match=raw.match(/(\d+)$/);
+        return match ? Math.max(m, Number(match[1])) : m;
+      },0);
+      return `${prefix}-${year}-${String(max+1).padStart(width,'0')}`;
+    }
+    
+    function nextMaintId(){ return nextSequentialId('MAN', state.intervenciones, 'idIntervencion', 5); }
+    function nextDetailId(offset=1){ return 'DET-'+String(state.detalle.length+offset).padStart(5,'0'); }
+    function nextAuditId(){ return 'AUD-'+String(state.auditoria.length+1).padStart(5,'0'); }
+
+    function updateVehicleContext(){
+      const idVeh=document.getElementById('mVehiculo').value; const veh=state.vehiculos.find(v=>v.idVehiculo===idVeh); const km=num(document.getElementById('mKm').value||0);
+      if(!veh){ document.getElementById('vehicleContext').textContent='Seleccione un vehículo para recuperar dinámicamente sus alertas de kilometraje y vigencia técnica.'; return; }
+      const diff=num(veh.proximoMantenimientoKm)-km;
+      const kmInput=document.getElementById('mKm');
+      if(kmInput && !kmInput.value) kmInput.value = veh.kmActual || 0;
+      if(kmInput) kmInput.min = veh.kmActual || 0;
+      const lastRecords = state.intervenciones.filter(i=>i.idVehiculo===idVeh).sort((a,b)=>String(toISODate(b.fecha)||'').localeCompare(String(toISODate(a.fecha)||''))).slice(0,3);
+      document.getElementById('vehicleContext').innerHTML=`<div class="row g-2"><div class="col-md-3"><strong>Placa:</strong><br>${escapeHtml(veh.placa)}</div><div class="col-md-3"><strong>Km actual matriz:</strong><br>${Number(veh.kmActual||0).toLocaleString('es-EC')}</div><div class="col-md-3"><strong>Última intervención:</strong><br>${Number(veh.kmUltimoMantenimiento||0).toLocaleString('es-EC')}</div><div class="col-md-3"><strong>Próximo Preventivo:</strong><br>${Number(veh.proximoMantenimientoKm||0).toLocaleString('es-EC')} ${diff<=0&&num(veh.proximoMantenimientoKm)>0?'<span class="badge-soft status-danger ms-1">Métricas Vencidas</span>':diff<=500&&diff>0?'<span class="badge-soft status-warn ms-1">Próximo</span>':''}</div></div>${lastRecords.length?`<hr class="my-2"><strong>Historial de Control Interno Reciente:</strong><div class="small-muted">${lastRecords.map(r=>`${escapeHtml(displayDate(r.fecha))} · ${escapeHtml(r.tipoMantenimiento)} · ${money(r.costoTotal)}`).join('<br>')}</div>`:''}`;
+    }
+
+    function updateMaintenancePreview(){
+      updateVehicleContext();
+      const items=collectLineItems(false); const total=items.reduce((a,b)=>a+num(b.costoTotal),0); const idVeh=document.getElementById('mVehiculo')?.value; const veh=state.vehiculos.find(v=>v.idVehiculo===idVeh)||{};
+      const mant={fecha:document.getElementById('mFecha')?.value,idVehiculo:idVeh,placa:veh.placa,kilometraje:num(document.getElementById('mKm')?.value),tipoMantenimiento:document.getElementById('mTipo')?.value,proveedor:document.getElementById('mProveedor')?.value,documento:document.getElementById('mDocumento')?.value,costoTotal:total};
+      const warnings=detectDuplicate(mant,items);
+      const sum=document.getElementById('maintenanceSummary'); if(sum) sum.innerHTML=`<div><strong>ID Proyectado:</strong> ${nextMaintId()}</div><div><strong>Placa Vehículo:</strong> ${escapeHtml(veh.placa||'No seleccionado')}</div><div><strong>Fecha Emisión:</strong> ${escapeHtml(displayDate(mant.fecha)||'N/A')}</div><div><strong>Métrica Km:</strong> ${Number(mant.kilometraje||0).toLocaleString('es-EC')} km</div><div><strong>Esquema Técnico:</strong> ${escapeHtml(mant.tipoMantenimiento||'N/A')}</div><div><strong>Líneas desglosadas:</strong> ${items.length}</div><div><strong>Presupuesto Total:</strong> ${money(total)}</div>`;
+      const box=document.getElementById('duplicateWarnings'); if(box) box.innerHTML=warnings.length ? warnings.map(w=>`<div class="alert alert-warning mb-0"><i class="fa-solid fa-triangle-exclamation me-1"></i>${escapeHtml(w)}</div>`).join('') : '<div class="alert alert-success mb-0"><i class="fa-solid fa-circle-check me-1"></i>Ninguna regla de alerta de control interno infringida. Registro íntegro.</div>';
+    }
+
+    function detectDuplicate(newMant, items){
+      const errors=[];
+      if(newMant.documento && state.intervenciones.some(r=>norm(r.documento)===norm(newMant.documento) && r.idVehiculo===newMant.idVehiculo)) errors.push('Alerta de Control: Existe un documento o factura idéntica registrada para este vehículo.');
+      if(state.intervenciones.some(r=>r.idVehiculo===newMant.idVehiculo && toISODate(r.fecha)===toISODate(newMant.fecha) && Math.abs(num(r.kilometraje)-num(newMant.kilometraje))<=50)) errors.push('Posible registro duplicado: Se detectó otra intervención en la misma fecha y rango métrico similar (±50 km).');
+      const repeated=items.filter(it=>state.detalle.some(d=>d.idVehiculo===newMant.idVehiculo && norm(d.item)===norm(it.item) && num(d.proximoCambioKm)>0 && num(newMant.kilometraje)<num(d.proximoCambioKm))).map(it=>it.item);
+      if(repeated.length) errors.push('Eficiencia de costos: Los siguientes repuestos/servicios aún se encuentran dentro de su vida útil vigente: '+[...new Set(repeated)].join(', '));
+      const veh=state.vehiculos.find(v=>v.idVehiculo===newMant.idVehiculo); if(veh && num(newMant.kilometraje)<num(veh.kmUltimoMantenimiento)) errors.push('Inconsistencia métrica: El kilometraje ingresado es inferior a la última marca registrada en la hoja de control.');
+      return errors;
+    }
+
+    // ==========================================================================
+    // CORRECCIÓN DE FONDO 2: TRANSACCIONALIDAD INTEGRAL Y MITIGACIÓN DE HUÉRFANOS
+    // ==========================================================================
+    async function saveMaintenance(){
+      if(!validateCurrentStep()) return;
+      const idVeh=document.getElementById('mVehiculo').value; 
+      const veh=state.vehiculos.find(v=>v.idVehiculo===idVeh); 
+      if(!veh) return toast('Vehículo custodio inválido.','warning');
+      
+      const km=num(document.getElementById('mKm').value); 
+      const idMant=nextMaintId(); 
+      let items=collectLineItems(true); 
+      items=items.map((it,i)=>({...it,idIntervencion:idMant,idVehiculo:idVeh,placa:veh.placa,orden:document.getElementById('mDocumento').value.trim(),factura:document.getElementById('mDocumento').value.trim(),itemSecuencia:i+1,idDetalle:nextDetailId(i+1)})); 
+      if(items.length===0) return toast('Debe estructurar el desglose analítico antes de guardar.','warning');
+      
+      const costoTotal=items.reduce((a,b)=>a+num(b.costoTotal),0);
+      const docVal=document.getElementById('mDocumento').value.trim();
+      const mant={idIntervencion:idMant,fecha:document.getElementById('mFecha').value,idVehiculo:idVeh,placa:veh.placa,kilometraje:km,tipoMantenimiento:document.getElementById('mTipo').value,proveedor:document.getElementById('mProveedor').value.trim(),documento:docVal,orden:/^A\d+/i.test(docVal)?docVal:'',factura:/^\d{3}-\d{3}-\d+/i.test(docVal)?docVal:docVal,descripcion:document.getElementById('mDescripcion').value.trim(),costoTotal:+costoTotal.toFixed(2),estadoControl:document.getElementById('mEstado').value,observacion:document.getElementById('mObservacion').value.trim(),creadoPor:state.account?.username||'usuario',creadoEn:nowISO(),actualizadoEn:nowISO()};
+      
+      const warnings=detectDuplicate(mant,items); 
+      if(warnings.length && !confirm('Infracciones de control interno detectadas:\n\n- '+warnings.join('\n- ')+'\n\n¿Posee autorización del Administrador para forzar la persistencia?')) return;
+      
+      let mainInterventionSaved = false;
+      try{
+        setLoading(true,'Sincronizando intervención estructural en SharePoint...');
+        
+        // Fase 1: Intentar registrar cabecera de la intervención
+        await addRows(TABLES.intervenciones, COLUMNS.intervenciones, [mant]);
+        mainInterventionSaved = true;
+        
+        // Fase 2: Intentar registrar el desglose de costos correlativos
+        await addRows(TABLES.detalle, COLUMNS.detalle, items);
+        
+        // Fase 3: Transaccionar actualización métrica del vehículo custodio
+        if(km>=num(veh.kmActual)){ 
+          veh.kmActual=km; 
+          veh.kmUltimoMantenimiento=km; 
+          if(norm(mant.tipoMantenimiento).includes('prevent') && num(veh.periodicidadKm)) veh.proximoMantenimientoKm=km+num(veh.periodicidadKm); 
+          veh.actualizadoEn=nowISO(); 
+          if(veh._index!==undefined) await updateRow(TABLES.vehiculos,COLUMNS.vehiculos,veh._index,veh); 
+        }
+        
+        await audit('CREAR','MANTENIMIENTO',idMant,`Registro transaccionado con éxito: ${mant.placa} / Costo: ${money(mant.costoTotal)}`);
+        bootstrap.Modal.getInstance(document.getElementById('maintenanceModal')).hide();
+        const refreshed = await syncFromSharePoint(false);
+        if(refreshed) toast('Mantenimiento e ítems guardados transaccionalmente.');
+        else toast('Mantenimiento guardado en SharePoint, pero el dashboard no pudo refrescarse automáticamente. Use Sincronizar para recargar la vista.', 'warning');
+      }catch(e){ 
+        console.error("Excepción crítica en la sincronización:", e);
+        if (mainInterventionSaved) {
+          toast(`Fallo transaccional crítico: Cabecera guardada [${idMant}], pero falló el desglose de repuestos. Se requiere revisión manual en el Excel corporativo para mitigar registros huérfanos. Error: ` + e.message, 'danger');
+        } else {
+          toast('Error al guardar en SharePoint: ' + e.message, 'danger');
+        }
+      } finally{ setLoading(false); }
+    }
+
+    function openVehicleModal(){ document.getElementById('vehicleForm').reset(); document.getElementById('vId').value=''; document.getElementById('vRowIndex').value=''; document.getElementById('vPeriodicidad').value=5000; new bootstrap.Modal(document.getElementById('vehicleModal')).show(); }
+    
+    function editVehicle(id){ 
+      const v=state.vehiculos.find(x=>x.idVehiculo===id); 
+      if(!v) return; 
+      document.getElementById('vId').value=v.idVehiculo||''; 
+      document.getElementById('vRowIndex').value=v._index??''; 
+      document.getElementById('vPlaca').value=v.placa||''; 
+      document.getElementById('vTipo').value=v.tipoVehiculo||''; 
+      document.getElementById('vModelo').value=v.marcaModelo||''; 
+      document.getElementById('vResponsable').value=v.responsable||''; 
+      document.getElementById('vKm').value=v.kmActual||0; 
+      document.getElementById('vPeriodicidad').value=v.periodicidadKm||5000; 
+      document.getElementById('vPresupuesto').value=v.presupuestoAnual||0; 
+      document.getElementById('vEstado').value=v.estado||'Activo'; 
+      document.getElementById('vProximo').value=v.proximoMantenimientoKm||0; 
+      new bootstrap.Modal(document.getElementById('vehicleModal')).show(); 
+    }
+
+    async function saveVehicle(){
+      const id=document.getElementById('vId').value; const rowIndex=document.getElementById('vRowIndex').value; const existing=state.vehiculos.find(v=>v.idVehiculo===id); const plate=document.getElementById('vPlaca').value.trim().toUpperCase();
+      if(!plate) return toast('Ingrese una placa corporativa válida.','warning'); if(!existing && state.vehiculos.some(v=>norm(v.placa)===norm(plate))) return toast('Infracción de Clave Única: Ya existe un vehículo registrado con esa placa.','warning');
+      const km=num(document.getElementById('vKm').value), periodicidad=num(document.getElementById('vPeriodicidad').value||0);
+      const rec={idVehiculo:existing?.idVehiculo || 'VEH-'+String(state.vehiculos.length+1).padStart(3,'0'),placa:plate,tipoVehiculo:document.getElementById('vTipo').value.trim(),marcaModelo:document.getElementById('vModelo').value.trim(),kmActual:km,kmUltimoMantenimiento:existing?.kmUltimoMantenimiento||0,proximoMantenimientoKm:num(document.getElementById('vProximo').value)||km+periodicidad,presupuestoAnual:num(document.getElementById('vPresupuesto').value),responsable:document.getElementById('vResponsable').value.trim(),periodicidadKm:periodicidad,estado:document.getElementById('vEstado').value,actualizadoEn:nowISO()};
+      try{ setLoading(true,'Actualizando padrón de flota en SharePoint...'); if(existing){ Object.assign(existing,rec); if(rowIndex!=='') await updateRow(TABLES.vehiculos,COLUMNS.vehiculos,rowIndex,existing); await audit('ACTUALIZAR','VEHICULO',existing.idVehiculo,'Ficha técnica actualizada'); } else { await addRows(TABLES.vehiculos,COLUMNS.vehiculos,[rec]); await audit('CREAR','VEHICULO',rec.idVehiculo,'Nueva alta de vehículo realizada'); } bootstrap.Modal.getInstance(document.getElementById('vehicleModal')).hide(); const refreshed = await syncFromSharePoint(false); if(refreshed) toast('Ficha de vehículo sincronizada.'); else toast('Ficha de vehículo guardada, pero el dashboard no pudo refrescarse automáticamente. Use Sincronizar para recargar la vista.', 'warning'); } catch(e){ toast('Error al procesar vehículo: '+e.message,'danger'); } finally{ setLoading(false); }
+    }
+
+    async function markValidated(id){ const r=state.intervenciones.find(x=>x.idIntervencion===id); if(!r) return; r.estadoControl='Validado'; r.actualizadoEn=nowISO(); try{ if(r._index!==undefined) await updateRow(TABLES.intervenciones,COLUMNS.intervenciones,r._index,r); await audit('VALIDAR','MANTENIMIENTO',id,'Aprobación técnica de control otorgada'); const refreshed = await syncFromSharePoint(false); if(refreshed) toast('Registro marcado como Validado.'); else toast('Registro validado, pero el dashboard no pudo refrescarse automáticamente. Use Sincronizar para recargar la vista.', 'warning'); }catch(e){ toast('No se pudo validar el registro: '+e.message,'danger'); } }
+    
+    function showIntervention(id){ const r=state.intervenciones.find(x=>x.idIntervencion===id), det=state.detalle.filter(d=>d.idIntervencion===id); if(!r) return; document.getElementById('recordModalTitle').textContent=`Ficha Técnica Analítica - ${id}`; document.getElementById('recordModalBody').innerHTML=`<div class="row g-3"><div class="col-md-3"><strong>Fecha Control:</strong><br>${escapeHtml(displayDate(r.fecha))}</div><div class="col-md-3"><strong>Vehículo Custodio:</strong><br>${escapeHtml(r.placa)}</div><div class="col-md-3"><strong>Kilometraje Marcado:</strong><br>${Number(r.kilometraje||0).toLocaleString('es-EC')} km</div><div class="col-md-3"><strong>Costo Absorción:</strong><br>${money(r.costoTotal)}</div><div class="col-md-4"><strong>Proveedor Técnico:</strong><br>${escapeHtml(r.proveedor||'N/A')}</div><div class="col-md-4"><strong>Documento de Soporte:</strong><br>${escapeHtml(r.documento||'N/A')}</div><div class="col-md-4"><strong>Estado Control:</strong><br>${badgeEstado(r.estadoControl)}</div><div class="col-12"><strong>Descripción y Justificación Técnica:</strong><div class="p-2 bg-light rounded border">${escapeHtml(r.descripcion||'')}</div></div><div class="col-12"><strong>Desglose de Costos e Insumos Asociados:</strong><div class="table-responsive"><table class="table table-sm table-bordered"><thead><tr class="bg-light"><th>Familia Técnica</th><th>Ítem / Repuesto</th><th>Cant.</th><th>Costo Total</th><th>Vida útil</th><th>Próximo Cambio Teórico</th></tr></thead><tbody>${det.map(d=>`<tr><td>${escapeHtml(d.categoria)}</td><td>${escapeHtml(d.item)}</td><td>${escapeHtml(d.cantidad)}</td><td>${money(d.costoTotal)}</td><td>${Number(d.vidaUtilKm||0).toLocaleString('es-EC')} km</td><td>${Number(d.proximoCambioKm||0).toLocaleString('es-EC')} km</td></tr>`).join('')}</tbody></table></div></div></div>`; new bootstrap.Modal(document.getElementById('recordModal')).show(); }
+
+    function buildAlerts(){
+      const alerts=[];
+      state.vehiculos.forEach(v=>{ const diff=num(v.proximoMantenimientoKm)-num(v.kmActual); if(num(v.proximoMantenimientoKm)>0 && diff<=0) alerts.push({level:'critical',title:`Planificación Vencida: ${v.placa}`,text:`El vehículo sobrepasó la marca programada (${Number(v.proximoMantenimientoKm).toLocaleString('es-EC')} km) sin registrar mantenimiento preventivo.`}); else if(diff>0 && diff<=500) alerts.push({level:'warning',title:`Mantenimiento Preventivo Próximo: ${v.placa}`,text:`Rango de seguridad alcanzado. Faltan ${Number(diff).toLocaleString('es-EC')} km para la intervención técnica.`}); });
+      state.intervenciones.forEach((r,i)=>{ state.intervenciones.slice(i+1).forEach(s=>{ if(r.idVehiculo===s.idVehiculo && toISODate(r.fecha)===toISODate(s.fecha) && Math.abs(num(r.kilometraje)-num(s.kilometraje))<=50) alerts.push({level:'critical',title:`Duplicidad Crítica de Registro: ${r.placa}`,text:`Las intervenciones corporativas ${r.idIntervencion} y ${s.idIntervencion} comparten métricas idénticas de fecha y kilometraje.`}); if(r.documento && s.documento && norm(r.documento)===norm(s.documento)) alerts.push({level:'critical',title:`Factura/Documento Duplicado: ${r.documento}`,text:`La clave documental consta de forma redundante en las órdenes de control ${r.idIntervencion} y ${s.idIntervencion}.`}); }); });
+      const partGroups={}; state.detalle.forEach(d=>{ const k=`${d.idVehiculo}|${norm(d.item)}`; partGroups[k]=(partGroups[k]||[]).concat(d); }); Object.values(partGroups).forEach(list=>{ if(list.length>=3) alerts.push({level:'warning',title:`Patrón de Falla Recurrente: ${list[0].placa}`,text:`El repuesto o servicio "${list[0].item}" reporta ${list.length} sustituciones en el histórico. Analizar calidad de insumos.`}); });
+      if(!alerts.length) alerts.push({level:'ok',title:'Integridad de Flota Estable',text:'No se identificaron duplicidades documentales, marcas vencidas ni patrones anómalos en el control interno.'}); return alerts;
+    }
+    
+    function renderAlerts(){ const alerts=buildAlerts(); document.getElementById('alertsContainer').innerHTML=alerts.map(a=>`<div class="alert-item ${a.level==='critical'?'alert-critical':a.level==='ok'?'alert-good':'alert-info-l'}"><strong>${escapeHtml(a.title)}</strong><div class="small-muted">${escapeHtml(a.text)}</div></div>`).join(''); }
+    
+    function renderRecommendations(){
+      const rec=[]; state.vehiculos.forEach(v=>{ const diff=num(v.proximoMantenimientoKm)-num(v.kmActual); if(num(v.proximoMantenimientoKm)>0 && diff<=500) rec.push(['Programar preventivo inmediato',`Asignar turno y taller autorizado para ${v.placa} antes de superar los ${Number(v.proximoMantenimientoKm).toLocaleString('es-EC')} km.`, 'fa-calendar-check']); });
+      const highCost=[...state.intervenciones].sort((a,b)=>num(b.costoTotal)-num(a.costoTotal)).slice(0,3); if(highCost.length) rec.push(['Validación de Costo Elevado',`Intervención de alto impacto financiero identificada en el vehículo ${highCost[0].placa} por un valor de ${money(highCost[0].costoTotal)}. Auditar orden física.`, 'fa-sack-dollar']);
+      const recurrent=countBy(state.detalle,'item',3); Object.entries(recurrent).forEach(([item,count])=>{ if(count>=2) rec.push(['Análisis de Proveeduría',`El ítem "${item}" reporta un consumo de ${count} unidades. Evaluar garantía con el taller prestador del servicio.`, 'fa-repeat']); });
+      document.getElementById('recommendations').innerHTML=(rec.length?rec:[['Operación Óptima','Los indicadores de control interno se mantienen bajo umbrales normales.', 'fa-circle-check']]).map(r=>`<div class="col-md-4"><div class="summary-box h-100"><i class="fa-solid ${r[2]} text-success fa-lg mb-2"></i><h6 class="fw-bold text-dark">${escapeHtml(r[0])}</h6><div class="small-muted">${escapeHtml(r[1])}</div></div></div>`).join('');
+    }
+
+    function runAiSearch(){
+      const q=norm(document.getElementById('aiQuery').value); if(!q) return toast('Escriba los criterios de búsqueda analítica.','warning');
+      const terms=q.split(/\s+/).filter(Boolean); const results=state.intervenciones.filter(r=>{ const blob=norm(Object.values(r).join(' ')+' '+state.detalle.filter(d=>d.idIntervencion===r.idIntervencion).map(d=>Object.values(d).join(' ')).join(' ')); return terms.every(t=>blob.includes(t)); });
+      document.getElementById('aiSearchResults').innerHTML=`<div class="alert alert-info">Análisis finalizado: Se recuperaron <strong>${results.length}</strong> coincidencias.</div>`+results.slice(0,8).map(r=>`<div class="summary-box mb-2"><strong>${escapeHtml(r.placa)} · Fecha: ${escapeHtml(displayDate(r.fecha))}</strong><div class="small-muted">${escapeHtml(r.tipoMantenimiento)} · Proveedor: ${escapeHtml(r.proveedor||'N/A')} · Costo: ${money(r.costoTotal)}</div><button class="btn btn-sm btn-outline-success mt-2" onclick="showIntervention('${escapeHtml(r.idIntervencion)}')">Ver análisis de la orden</button></div>`).join('');
+    }
+
+
+
+    async function sha256Hex(arrayBuffer){
+      const digest = await crypto.subtle.digest('SHA-256', arrayBuffer);
+      return Array.from(new Uint8Array(digest)).map(b=>b.toString(16).padStart(2,'0')).join('');
+    }
+
+    function parseMoneyEC(value){
+      if(value === null || value === undefined) return 0;
+      let s = String(value).trim().replace(/\s/g,'');
+      if(!s) return 0;
+      if(s.includes(',') && s.includes('.')) s = s.replace(/\./g,'').replace(',', '.');
+      else if(s.includes(',')) s = s.replace(',', '.');
+      const n = Number(s.replace(/[^0-9.-]/g,''));
+      return isFinite(n) ? n : 0;
+    }
+
+    function pick(rx, text, group=1){
+      const m = String(text||'').match(rx);
+      return m ? String(m[group]||'').trim() : '';
+    }
+
+    function parseFacturaText(text){
+      const compact = String(text || '').replace(/\r/g,'').replace(/[ \t]+/g,' ').replace(/\n{2,}/g,'\n');
+      const result = {
+        proveedor: pick(/\b(CASABACA\s*S\.A\.)/i, compact) || pick(/Raz[oó]n\s+Social[^\n]*\n?\s*([^\n]+)/i, compact),
+        rucProveedor: pick(/R\.U\.C\.?:?\s*(\d{13})/i, compact) || pick(/\b(\d{13})\b/, compact),
+        factura: pick(/No\.\s*(\d{3}-\d{3}-\d{9})/i, compact) || pick(/No\.\s*(\d{3}-\d{3}-\d+)/i, compact),
+        claveAcceso: pick(/CLAVE\s+DE\s+ACCESO\s*([0-9]{35,60})/i, compact) || pick(/\b(\d{49})\b/, compact),
+        fechaEmision: toISODate(pick(/Fecha\s+Emisi[oó]n:?\s*(\d{1,2}\/\d{1,2}\/\d{4})/i, compact) || pick(/Fecha\s+Emisi[oó]n:?\s*(\d{1,2}-\d{1,2}-\d{4})/i, compact)),
+        fechaAutorizacion: pick(/FECHA\s+Y\s+HORA\s+DE\s+AUTORIZACI[ÓO]N\s*(\d{1,2}\/\d{1,2}\/\d{4}\s+\d{1,2}:\d{2})/i, compact),
+        orden: pick(/Orden\s+reparaci[oó]n:?\s*([A-Z0-9-]+)/i, compact),
+        placa: pick(/Placa:?\s*([A-Z]{2,4}\d{3,4})/i, compact).toUpperCase(),
+        vehiculo: pick(/Veh[ií]culo:?\s*([^\n]+?)(?:Placa|Chasis|Km|$)/i, compact),
+        chasis: pick(/Chasis:?\s*([A-Z0-9]+)/i, compact),
+        motor: pick(/Motor:?\s*([A-Z0-9]+)/i, compact),
+        km: parseMoneyEC(pick(/Km:?\s*([\d.,]+)/i, compact)),
+        subtotalManoObra: parseMoneyEC(pick(/SUBTOTAL\s+MANO\s+DE\s+OBRA\s*([\d.,]+)/i, compact)),
+        subtotalRepuestos: parseMoneyEC(pick(/SUBTOTAL\s+REPUESTOS\s*([\d.,]+)/i, compact)),
+        subtotalSinIva: parseMoneyEC(pick(/SUBTOTAL\s+SIN\s+IMPUESTOS\s*([\d.,]+)/i, compact)),
+        iva: parseMoneyEC(pick(/IVA\s*15%\s*([\d.,]+)/i, compact)),
+        total: parseMoneyEC(pick(/TOTAL\s+FACTURA\s*([\d.,]+)/i, compact)),
+        observacion: pick(/Observacion:?\s*([^\n]+)/i, compact)
+      };
+      if(!result.total) result.total = parseMoneyEC(pick(/Formas\s+de\s+Pago[\s\S]*?([\d.,]+)\s*$/i, compact));
+      result.items = parseFacturaLines(compact).map((line, idx)=>({...line, secuencia:idx+1, categoria:classifyItem(line.descripcion, line.tipo)}));
+      return result;
+    }
+
+    function parseFacturaLines(text){
+      const lines = String(text || '').split('\n').map(x=>x.trim()).filter(Boolean);
+      const out=[];
+      for(const line of lines){
+        if(!/^(R|M|S)\s+/i.test(line)) continue;
+        const m = line.match(/^(R|M|S)\s+(\S+)\s+(.+?)\s+([\d]+(?:[.,]\d+)?)\s+([\d]+(?:[.,]\d+)?)\s+([\d]+(?:[.,]\d+)?)\s+([\d]+(?:[.,]\d+)?)\s+([\d]+(?:[.,]\d+)?)$/i);
+        if(m){
+          out.push({tipo:m[1].toUpperCase(), codigo:m[2], descripcion:m[3].trim(), cantidad:parseMoneyEC(m[4]), unitario:parseMoneyEC(m[5]), total:parseMoneyEC(m[8]) || parseMoneyEC(m[6])});
+        }
+      }
+      return out;
+    }
+
+    async function extractPdfText(file){
+      if(!window.pdfjsLib) return '';
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      const buffer = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({data:buffer}).promise;
+      let text='';
+      for(let p=1; p<=Math.min(pdf.numPages, 3); p++){
+        const page = await pdf.getPage(p);
+        const content = await page.getTextContent();
+        text += content.items.map(item=>item.str).join(' ') + '\n';
+      }
+      return text.trim();
+    }
+
+    async function extractImageOcr(file){
+      if(!window.Tesseract) throw new Error('No se cargó Tesseract.js desde CDN.');
+      const res = await Tesseract.recognize(file, 'spa+eng', { logger: m=>{ if(m.status) updateOcrStatus(`${m.status} ${m.progress?Math.round(m.progress*100)+'%':''}`); } });
+      return {text:res?.data?.text || '', confidence:res?.data?.confidence || 0};
+    }
+
+    async function analyzeOcrDocument(){
+      const file = document.getElementById('ocrFile')?.files?.[0];
+      if(!file) return toast('Seleccione un PDF o imagen para analizar.','warning');
+      try{
+        setLoading(true,'Analizando factura y extrayendo datos...');
+        updateOcrStatus('Calculando hash documental...');
+        const buffer = await file.arrayBuffer();
+        const hash = await sha256Hex(buffer);
+        let text='', confidence=96;
+        if(file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')){
+          updateOcrStatus('Leyendo texto embebido del PDF...');
+          text = await extractPdfText(new File([buffer], file.name, {type:file.type}));
+          if(!text || text.length < 80){
+            throw new Error('El PDF no contiene texto embebido suficiente. Para PDFs escaneados, convierta la primera página a imagen o use el conector Azure Document Intelligence en fase backend.');
+          }
+        }else{
+          const ocr = await extractImageOcr(file);
+          text = ocr.text;
+          confidence = ocr.confidence;
+        }
+        const parsed = parseFacturaText(text);
+        parsed.archivoNombre = file.name;
+        parsed.hash = hash;
+        parsed.confianza = Math.round(confidence);
+        state.ocrLast = {file, text, parsed};
+        renderOcrResult(parsed, text);
+        updateOcrStatus('Documento analizado', confidence, hash);
+        document.getElementById('btnOcrFill').disabled = false;
+        document.getElementById('btnOcrPersist').disabled = false;
+        toast('OCR finalizado. Revise los campos antes de registrar.');
+      }catch(e){
+        console.error(e);
+        updateOcrStatus('Error OCR');
+        toast('No fue posible procesar el documento: '+e.message,'danger');
+      }finally{ setLoading(false); }
+    }
+
+    function updateOcrStatus(text, confidence=null, hash=''){
+      const status = document.getElementById('ocrStatus');
+      if(status) status.textContent = text;
+      if(confidence !== null){
+        const bar = document.getElementById('ocrConfidenceBar');
+        if(bar) bar.style.width = Math.max(0, Math.min(100, Number(confidence)||0)) + '%';
+      }
+      if(hash){
+        const label = document.getElementById('ocrHashLabel');
+        if(label) label.textContent = 'Hash documental: ' + hash;
+      }
+    }
+
+    function renderOcrResult(parsed, text){
+      document.getElementById('ocrRawText').textContent = text || 'Sin texto recuperado.';
+      const rows = [
+        ['Proveedor', parsed.proveedor], ['RUC proveedor', parsed.rucProveedor], ['Factura', parsed.factura], ['Orden reparación', parsed.orden], ['Fecha emisión', displayDate(parsed.fechaEmision)], ['Placa', parsed.placa], ['Vehículo', parsed.vehiculo], ['Chasis', parsed.chasis], ['Motor', parsed.motor], ['Kilometraje', parsed.km ? Number(parsed.km).toLocaleString('es-EC') : ''], ['Subtotal mano de obra', money(parsed.subtotalManoObra)], ['Subtotal repuestos', money(parsed.subtotalRepuestos)], ['Subtotal sin IVA', money(parsed.subtotalSinIva)], ['IVA', money(parsed.iva)], ['Total factura', money(parsed.total)]
+      ];
+      document.getElementById('ocrFields').innerHTML = `<div class="row g-2">${rows.map(r=>`<div class="col-md-6"><div class="summary-box h-100"><div class="small-muted fw-bold text-uppercase">${escapeHtml(r[0])}</div><div class="fw-semibold">${escapeHtml(r[1]||'No detectado')}</div></div></div>`).join('')}</div>`;
+      const tbody = document.querySelector('#tblOcrLines tbody');
+      tbody.innerHTML = parsed.items?.length ? parsed.items.map(i=>`<tr><td>${escapeHtml(i.tipo)}</td><td>${escapeHtml(i.codigo)}</td><td>${escapeHtml(i.descripcion)}</td><td>${escapeHtml(i.cantidad)}</td><td>${money(i.unitario)}</td><td>${money(i.total)}</td><td>${escapeHtml(i.categoria)}</td></tr>`).join('') : '<tr><td colspan="7" class="text-muted">No se detectaron líneas con estructura tabular. Puede registrar manualmente desde el formulario.</td></tr>';
+    }
+
+    function fillMaintenanceFromOcr(){
+      const p = state.ocrLast?.parsed;
+      if(!p) return toast('No existe OCR disponible para prellenar.','warning');
+      openMaintenanceModal();
+      setTimeout(()=>{
+        const veh = state.vehiculos.find(v=>norm(v.placa)===norm(p.placa));
+        if(veh) document.getElementById('mVehiculo').value = veh.idVehiculo;
+        document.getElementById('mFecha').value = p.fechaEmision || todayISO();
+        document.getElementById('mKm').value = p.km || '';
+        document.getElementById('mTipo').value = 'Preventivo';
+        document.getElementById('mProveedor').value = p.proveedor || 'CASABACA S.A.';
+        document.getElementById('mDocumento').value = p.factura || p.orden || '';
+        document.getElementById('mDescripcion').value = p.observacion || `Registro generado desde OCR de factura ${p.factura || ''} / orden ${p.orden || ''}`;
+        document.getElementById('mObservacion').value = `Fuente OCR: ${p.archivoNombre || ''}. Hash: ${p.hash || ''}`;
+        const lineItems = document.getElementById('lineItems');
+        lineItems.innerHTML = '';
+        (p.items || []).forEach(item=>{
+          addLineItem({categoria:item.categoria, item:item.descripcion, cantidad:item.cantidad, costoUnitario:item.unitario, costoTotal:item.total});
+        });
+        updateVehicleContext();
+        updateMaintenancePreview();
+      }, 250);
+    }
+
+    async function persistOcrQueue(){
+      const p = state.ocrLast?.parsed;
+      if(!p) return toast('No existe OCR disponible para registrar.','warning');
+      try{
+        setLoading(true,'Registrando cola OCR en SharePoint...');
+        const rec = {idCarga:nextOcrId(), fechaHora:nowISO(), usuario:state.account?.username||'usuario', archivoNombre:p.archivoNombre||'', hash:p.hash||'', tipoDocumento:'Factura', proveedorOcr:'PDF.js/Tesseract.js Browser', confianza:p.confianza||0, estado:'Extraído', factura:p.factura||'', orden:p.orden||'', placa:p.placa||'', km:p.km||'', total:p.total||'', jsonExtraccion:JSON.stringify(p).slice(0,30000), idMantenimientoGenerado:'', observaciones:'Registro OCR pendiente de validación administrativa'};
+        await addRows(TABLES.ocrCola, COLUMNS.ocrCola, [rec]);
+        await audit('OCR','tblOCRCola',rec.idCarga,`Documento ${rec.archivoNombre} procesado por OCR`, 'OK');
+        await syncFromSharePoint(false);
+        toast('Cola OCR registrada en SharePoint.');
+      }catch(e){
+        toast('No se pudo registrar OCR en SharePoint: '+e.message,'danger');
+      }finally{ setLoading(false); }
+    }
+
+    function exportArray(rows, name){ const ws=XLSX.utils.json_to_sheet(rows); const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,name.substring(0,31)); XLSX.writeFile(wb,`${name}.xlsx`); }
+    function switchTab(tab){ document.querySelectorAll('.module-tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab)); document.querySelectorAll('.tab-pane').forEach(p=>p.classList.toggle('active',p.id===tab)); setTimeout(()=>{Object.values(charts).forEach(c=>c?.resize?.());},80); }
+    function toast(msg, type='success'){
+      let container = document.getElementById('toastContainerApp');
+      if(!container){
+        container = document.createElement('div');
+        container.id = 'toastContainerApp';
+        container.style.cssText = 'position:fixed;right:18px;bottom:18px;z-index:6000;width:min(460px,calc(100vw - 36px));display:flex;flex-direction:column;gap:10px;pointer-events:none;';
+        document.body.appendChild(container);
+      }
+
+      // Evita repetir el mismo mensaje si ya está visible.
+      const visibleSame = Array.from(container.children).some(x => x.dataset.msg === String(msg));
+      if(visibleSame) return;
+
+      const el = document.createElement('div');
+      el.className = `alert alert-${type} shadow mb-0`;
+      el.dataset.msg = String(msg);
+      el.style.cssText = 'font-weight:700;border-radius:12px;pointer-events:auto;';
+      el.innerHTML = msg;
+      container.appendChild(el);
+      setTimeout(()=>el.remove(),5200);
+    }
+    function escapeHtml(s){ return String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c])); }
+    function setLoading(show, text='Procesando...'){ document.getElementById('loadingOverlay').style.display = show ? 'flex':'none'; document.getElementById('loadingText').textContent = text; }
+
+    document.addEventListener('DOMContentLoaded',()=>{
+      try{
+        setupMsal();
+      }catch(e){
+        document.getElementById('authContainer').classList.remove('hidden');
+        setLoading(false);
+        toast('Fallo crítico al inicializar SDK MSAL: '+e.message,'danger');
+        return;
+      }
+      document.getElementById('loginBtn').addEventListener('click',login);
+      document.getElementById('logoutBtn').addEventListener('click',logout);
+      document.getElementById('btnSync').addEventListener('click',syncFromSharePoint);
+      document.getElementById('btnNewMaint').addEventListener('click',openMaintenanceModal);
+      document.getElementById('btnNewMaint2').addEventListener('click',openMaintenanceModal);
+      document.getElementById('btnNewVehicle').addEventListener('click',openVehicleModal);
+      document.getElementById('btnAddLine').addEventListener('click',()=>addLineItem());
+      document.getElementById('btnNextStep').addEventListener('click',()=>{ if(validateCurrentStep()) setStep(currentStep+1); });
+      document.getElementById('btnPrevStep').addEventListener('click',()=>setStep(currentStep-1));
+      document.getElementById('btnSaveMaintenance').addEventListener('click',saveMaintenance);
+      document.getElementById('btnSaveVehicle').addEventListener('click',saveVehicle);
+      document.getElementById('btnAiSearch').addEventListener('click',runAiSearch);
+      document.getElementById('btnOcrAnalyze')?.addEventListener('click',analyzeOcrDocument);
+      document.getElementById('btnOcrFill')?.addEventListener('click',fillMaintenanceFromOcr);
+      document.getElementById('btnOcrPersist')?.addEventListener('click',persistOcrQueue);
+      const dz=document.getElementById('ocrDropzone');
+      if(dz){
+        ['dragenter','dragover'].forEach(evt=>dz.addEventListener(evt,e=>{e.preventDefault(); dz.classList.add('dragover');}));
+        ['dragleave','drop'].forEach(evt=>dz.addEventListener(evt,e=>{e.preventDefault(); dz.classList.remove('dragover');}));
+        dz.addEventListener('drop',e=>{ const f=e.dataTransfer?.files?.[0]; if(f){ const input=document.getElementById('ocrFile'); const dt=new DataTransfer(); dt.items.add(f); input.files=dt.files; } });
+      }
+      
+      ['smartSearch','filterVehiculo','filterTipo','filterEstado','filterProveedor'].forEach(id=>{
+        document.getElementById(id)?.addEventListener('input',refreshAll);
+        document.getElementById(id)?.addEventListener('change',refreshAll);
+      });
+      ['mVehiculo','mFecha','mKm','mTipo','mProveedor','mDocumento','mEstado','mDescripcion','mObservacion'].forEach(id=>document.getElementById(id)?.addEventListener('input',updateMaintenancePreview));
+      document.querySelectorAll('.module-tab').forEach(btn=>btn.addEventListener('click',()=>switchTab(btn.dataset.tab)));
+      document.getElementById('btnExportIntervenciones').addEventListener('click',()=>exportArray(filteredInterventions(),'Mantenimientos_FIAS_Filtrados'));
+      document.getElementById('btnExportDetalle').addEventListener('click',()=>exportArray(state.detalle,'Desglose_Costos_Repuestos_FIAS'));
+      handleAuth();
+    });
+  </script>
+</body>
+</html>

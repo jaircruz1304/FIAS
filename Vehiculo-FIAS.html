@@ -108,7 +108,21 @@
     .alert-list{display:grid;gap:10px}.alert-item{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:flex-start;padding:13px;border:1px solid var(--gray-200);border-left:5px solid var(--gray-400);border-radius:16px;background:#fff}.alert-item h4{margin:0 0 4px;font-size:.95rem}.alert-item p{margin:0;color:var(--gray-600)}.alert-high{border-left-color:#ef4444}.alert-med{border-left-color:#f59e0b}.alert-low{border-left-color:#39b864}.alert-icon{width:36px;height:36px;border-radius:12px;display:grid;place-items:center;background:#f6f8fb}.summary-text{line-height:1.65;color:#344054}.summary-text strong{color:var(--green-800)}
     .split-form{display:grid;grid-template-columns:1fr 1fr;gap:14px}.line-items{display:grid;gap:10px}.line-item{display:grid;grid-template-columns:1.2fr 2fr .7fr .8fr auto;gap:10px;padding:12px;background:#fbfcfd;border:1px dashed #d0d5dd;border-radius:14px;align-items:end}
     .empty-state{text-align:center;padding:42px 20px;color:var(--gray-600);border:1px dashed #d0d5dd;border-radius:16px;background:#fbfcfd}.empty-state .bi{font-size:2rem;color:var(--green-700)}
-    .console{background:#0c111d;color:#d0d5dd;border-radius:18px;padding:14px;font-family:"Cascadia Code",Consolas,monospace;font-size:.86rem;white-space:pre-wrap;overflow:auto;max-height:260px}.nl-box{display:flex;gap:10px}.nl-box input{flex:1}.doc-drop{border:2px dashed #b7e4c7;border-radius:20px;background:#f7fffa;padding:26px;text-align:center;cursor:pointer}.doc-drop:hover{background:#eefbf2}.ocr-preview{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.preview-cell{background:#fbfcfd;border:1px solid var(--gray-200);border-radius:12px;padding:10px}.preview-cell span{display:block;font-size:.73rem;text-transform:uppercase;letter-spacing:.08em;color:var(--gray-600);font-weight:900}.preview-cell strong{font-size:1rem}
+    .console{background:#0c111d;color:#d0d5dd;border-radius:18px;padding:14px;font-family:"Cascadia Code",Consolas,monospace;font-size:.86rem;white-space:pre-wrap;overflow:auto;max-height:260px}.nl-box{display:flex;gap:10px}.nl-box input{flex:1}
+    .ocr-upload-card{display:grid;gap:14px}
+    .doc-drop{display:flex;width:100%;min-height:192px;align-items:center;justify-content:center;flex-direction:column;gap:10px;border:2px dashed #9eddb1;border-radius:22px;background:linear-gradient(180deg,#f7fffa 0%,#ffffff 100%);padding:24px;text-align:center;cursor:pointer;box-sizing:border-box;position:relative;overflow:hidden;transition:.18s ease;border-color:#9eddb1}
+    .doc-drop::before{content:"";position:absolute;inset:auto -40px -70px auto;width:150px;height:150px;border-radius:999px;background:rgba(57,184,100,.10);pointer-events:none}
+    .doc-drop:hover{background:#eefbf2;border-color:var(--green-600);transform:translateY(-1px);box-shadow:0 14px 30px rgba(16,24,40,.08)}
+    .upload-icon{width:58px;height:58px;border-radius:18px;display:grid;place-items:center;background:var(--green-100);color:var(--green-800);font-size:1.85rem;box-shadow:inset 0 0 0 1px rgba(57,184,100,.14)}
+    .doc-drop strong{display:block;font-size:1.05rem;font-weight:950;color:var(--gray-950);line-height:1.2}
+    .doc-drop .muted{display:block;max-width:430px;line-height:1.45;font-size:.9rem}
+    .upload-button{display:inline-flex;align-items:center;gap:8px;margin-top:4px;border:1px solid #b7e4c7;border-radius:999px;background:#fff;color:var(--green-800);padding:8px 13px;font-weight:900;font-size:.84rem;box-shadow:0 6px 14px rgba(16,24,40,.06)}
+    .ocr-help{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+    .ocr-help .mini-step{border:1px solid var(--gray-200);border-radius:14px;background:#fbfcfd;padding:10px;display:flex;gap:8px;align-items:flex-start;font-size:.82rem;color:#344054;line-height:1.35}
+    .ocr-help .mini-step i{color:var(--green-700);font-size:1rem;margin-top:1px}
+    .ocr-status{background:#0c111d;color:#d0d5dd;border-radius:16px;padding:13px 14px;font-family:"Cascadia Code",Consolas,monospace;font-size:.84rem;white-space:pre-wrap;overflow:auto;max-height:220px;min-height:48px;border:1px solid rgba(255,255,255,.06)}
+    .ocr-status::before{content:"Estado: ";color:#86efac;font-weight:900}
+    .ocr-preview{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.preview-cell{background:#fbfcfd;border:1px solid var(--gray-200);border-radius:12px;padding:10px}.preview-cell span{display:block;font-size:.73rem;text-transform:uppercase;letter-spacing:.08em;color:var(--gray-600);font-weight:900}.preview-cell strong{font-size:1rem}
     .drawer{position:fixed;inset:0;background:rgba(16,24,40,.42);z-index:60;display:none;align-items:flex-end;justify-content:center;padding:20px}.drawer.open{display:flex}.drawer-panel{width:min(1100px,100%);max-height:92vh;background:#fff;border-radius:26px;box-shadow:var(--shadow);overflow:auto}.drawer-head{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:18px 20px;background:linear-gradient(135deg,var(--green-950),var(--green-700));color:#fff}.drawer-body{padding:20px}.drawer-foot{display:flex;justify-content:space-between;gap:10px;padding:16px 20px;border-top:1px solid var(--gray-200);background:#fff;position:sticky;bottom:0}
     .loading{position:fixed;inset:0;z-index:80;background:rgba(255,255,255,.88);display:none;align-items:center;justify-content:center;flex-direction:column;gap:12px;backdrop-filter:blur(4px)}.loading.open{display:flex}.spinner{width:44px;height:44px;border:4px solid #d9f1df;border-top-color:var(--green-700);border-radius:50%;animation:spin 1s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
     .toast-zone{position:fixed;right:18px;bottom:18px;display:grid;gap:10px;z-index:100}.toast{background:#fff;border:1px solid var(--gray-200);border-left:5px solid var(--green-500);border-radius:14px;box-shadow:var(--shadow-soft);padding:12px 14px;min-width:min(360px,90vw)}.toast.danger{border-left-color:#ef4444}.toast.warn{border-left-color:#f59e0b}.toast h4{margin:0 0 3px;font-size:.95rem}.toast p{margin:0;color:var(--gray-600)}
@@ -141,7 +155,9 @@
     @media(max-width:1320px){.maintenance-gallery{grid-template-columns:repeat(2,1fr)}.detail-grid{grid-template-columns:repeat(2,1fr)}.grid-kpi{grid-template-columns:repeat(3,1fr)}.hero-grid{grid-template-columns:1fr}.span-8,.span-7,.span-6,.span-5,.span-4,.span-3{grid-column:span 12}.risk-grid{grid-template-columns:repeat(2,1fr)}.filters{grid-template-columns:1fr 1fr}.split-form{grid-template-columns:1fr}.ocr-preview{grid-template-columns:1fr}}
     @media(max-width:900px){.risk-explain{grid-template-columns:1fr}.exec-grid{grid-template-columns:1fr}.maintenance-gallery{grid-template-columns:1fr}.obs-grid{grid-template-columns:1fr}.detail-modal{padding:0}.detail-dialog{max-height:100vh;border-radius:0}.app-shell{grid-template-columns:1fr}.sidebar{position:relative;height:auto}.main{padding:18px}.topbar{align-items:flex-start;flex-direction:column}.actions{justify-content:flex-start}.grid-kpi{grid-template-columns:1fr 1fr}.risk-grid{grid-template-columns:1fr}.filters{grid-template-columns:1fr}.line-item{grid-template-columns:1fr}.nl-box{flex-direction:column}.hero-panel{padding:18px}}
     @media(max-width:560px){.grid-kpi{grid-template-columns:1fr}.connection-row{flex-direction:column}.card-head{flex-direction:column;align-items:flex-start}.drawer{padding:0}.drawer-panel{border-radius:22px 22px 0 0}}
-  </style>
+  
+    @media(max-width:760px){.ocr-help{grid-template-columns:1fr}.doc-drop{min-height:170px;padding:20px}.upload-icon{width:52px;height:52px}.doc-drop strong{font-size:1rem}}
+</style>
 </head>
 <body>
   <div class="loading" id="loading"><div class="spinner"></div><strong id="loadingText">Inicializando plataforma...</strong></div>
@@ -289,10 +305,20 @@
         <div class="section-grid">
           <article class="card span-5">
             <div class="card-head"><div><h3>Carga inteligente de facturas</h3><p>PDF o imagen. Extrae proveedor, factura, orden, placa, km, total y detalle base.</p></div></div>
-            <div class="card-body">
-              <label class="doc-drop" for="ocrInput"><i class="bi bi-cloud-arrow-up" style="font-size:2rem;color:var(--green-700)"></i><br><strong>Cargar factura PDF o imagen</strong><br><span class="muted">El archivo se procesa en el navegador y se registra en la cola OCR.</span></label>
+            <div class="card-body ocr-upload-card">
+              <label class="doc-drop" for="ocrInput" aria-label="Cargar factura PDF o imagen para pre-registro automático">
+                <span class="upload-icon"><i class="bi bi-cloud-arrow-up"></i></span>
+                <strong>Cargar factura PDF o imagen</strong>
+                <span class="muted">Arrastre o seleccione una factura. El sistema extrae proveedor, factura, orden, placa, kilometraje, totales e ítems para generar un pre-registro validable.</span>
+                <span class="upload-button"><i class="bi bi-folder2-open"></i> Seleccionar documento</span>
+              </label>
               <input id="ocrInput" type="file" accept="application/pdf,image/*" class="hidden" />
-              <div class="console mt-2" id="ocrConsole">Esperando documento...</div>
+              <div class="ocr-help">
+                <div class="mini-step"><i class="bi bi-file-earmark-arrow-up"></i><span>1. Cargue la factura.</span></div>
+                <div class="mini-step"><i class="bi bi-magic"></i><span>2. Revise el pre-registro.</span></div>
+                <div class="mini-step"><i class="bi bi-check2-circle"></i><span>3. Valide y guarde.</span></div>
+              </div>
+              <div class="ocr-status" id="ocrConsole">Esperando documento...</div>
             </div>
           </article>
           <article class="card span-7">

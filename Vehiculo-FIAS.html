@@ -7,7 +7,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
   <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap5.min.css" />
-  <script type="text/javascript" src="https://gc.kes.v2.scr.kaspersky-labs.com/7EA5E9BB-55E1-4C31-9C21-4943DDFED2E4/main.js?attr=zhYqw458KHDdW-BOBfGTQ7mZ6TrCNzjzKfTqR_45aspK4nQpCIXHoGgtz9IExUmPeF-VxPQbV6T51VnU86IhURvXUVvJPsJ8FNcFcyK6OpOoy2IClwYCB5WTdxcTD04Eu_9nTtFnos5h8ERps6NNrQbPHTCbu9YPf61TzTB0YnQFglt7VsGpJm_TDXrTQDkx_ZInIyBVqXuGkcB2TTDmpTL5EVLyRPjOWVVnXTqcCoz8PhVVdtOP3EsFZiD3K-T7KuqE4Ov3C4CdTotmZRNK412HzKq4I12XMrXoU-O1nqBWoKojbsBQUFYxHmGQdZyTQGFH2CpjUhEBCu4_sluhEzjiMgkWNGjWkmJ9xZ-VA9AxNhCB5llpvKYiJoqnerxV" charset="UTF-8"></script><style>
+  <style>
     /* ==========================================================================
        VARIABLES Y PALETA DE COLORES INSTITUCIONAL (FIAS)
        ========================================================================== */
@@ -421,6 +421,74 @@
     }
 
     /* Responsive Queries */
+
+
+    /* ==========================================================================
+       MÓDULO ENTERPRISE IA: riesgo, predicción, resúmenes y anomalías
+       ========================================================================== */
+    .insight-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(160px, 1fr));
+      gap: 10px;
+    }
+
+    .insight-card {
+      border: 1px solid #edf0f3;
+      border-radius: 16px;
+      background: #ffffff;
+      padding: 14px;
+      box-shadow: 0 4px 18px rgba(16, 24, 40, 0.055);
+      height: 100%;
+    }
+
+    .insight-value {
+      font-size: 1.65rem;
+      line-height: 1.1;
+      font-weight: 850;
+      letter-spacing: -0.03em;
+    }
+
+    .risk-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      display: inline-block;
+      margin-right: 6px;
+      vertical-align: middle;
+      background: #198754;
+    }
+
+    .risk-mid { background: #f59e0b; }
+    .risk-high { background: #dc3545; }
+
+    .nl-chip {
+      border: 1px solid #d7f0de;
+      background: #f2fbf4;
+      color: #176432;
+      border-radius: 999px;
+      padding: .35rem .65rem;
+      font-size: .82rem;
+      font-weight: 750;
+      cursor: pointer;
+      display: inline-block;
+      margin: 0 .25rem .35rem 0;
+    }
+
+    .executive-summary {
+      border-radius: 18px;
+      border: 1px solid #d8eadf;
+      background: linear-gradient(135deg, #ffffff, #f2fbf4);
+      padding: 16px;
+    }
+
+    @media(max-width: 992px) {
+      .insight-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media(max-width: 576px) {
+      .insight-grid { grid-template-columns: 1fr; }
+    }
+
     @media(max-width: 1200px) {
       .filter-bar { grid-template-columns: 1fr 1fr; }
       .chart-wrap { height: 260px; }
@@ -705,24 +773,81 @@
 
       <section id="alertas" class="tab-pane">
         <div class="row g-3">
+          <div class="col-12">
+            <div class="app-card">
+              <div class="card-header d-flex flex-column flex-lg-row justify-content-between gap-2 align-items-lg-center">
+                <span><i class="fa-solid fa-wand-magic-sparkles me-2 text-success"></i>Centro de Inteligencia Vehicular Enterprise</span>
+                <span class="small-muted">Reglas locales de IA analítica, validación y predicción sobre datos SharePoint</span>
+              </div>
+              <div class="card-body">
+                <div id="executiveSummary" class="executive-summary mb-3"></div>
+                <div class="insight-grid" id="aiInsightCards"></div>
+              </div>
+            </div>
+          </div>
+
           <div class="col-xl-5">
             <div class="app-card h-100">
-              <div class="card-header"><i class="fa-solid fa-magnifying-glass-chart me-2 text-success"></i>Búsqueda contextual inteligente</div>
+              <div class="card-header"><i class="fa-solid fa-comments me-2 text-success"></i>Consultas en lenguaje natural</div>
               <div class="card-body">
-                <textarea class="form-control mb-2" id="aiQuery" rows="4" placeholder="Ej.: Mantenimientos correctivos de PEI-1023, cambios de filtros recientes, costos mayores a USD 500..."></textarea>
+                <textarea class="form-control mb-2" id="aiQuery" rows="4" placeholder="Ej.: ¿Qué vehículos tienen mantenimiento vencido? ¿Cuál fue el costo promedio del último trimestre? ¿Qué facturas están duplicadas?"></textarea>
+                <div class="mb-2">
+                  <span class="nl-chip" data-query="¿Qué vehículos tienen mantenimiento vencido?">Mantenimientos vencidos</span>
+                  <span class="nl-chip" data-query="¿Cuál fue el costo promedio del último trimestre?">Costo promedio último trimestre</span>
+                  <span class="nl-chip" data-query="¿Qué vehículos tienen riesgo alto?">Riesgo alto</span>
+                  <span class="nl-chip" data-query="¿Existen facturas o registros duplicados?">Duplicados</span>
+                  <span class="nl-chip" data-query="¿Qué costos son anómalos?">Costos anómalos</span>
+                </div>
                 <button class="btn btn-success w-100" id="btnAiSearch"><i class="fa-solid fa-brain me-1"></i>Analizar consulta</button>
                 <div class="mt-3" id="aiSearchResults"></div>
               </div>
             </div>
           </div>
+
           <div class="col-xl-7">
             <div class="app-card h-100">
-              <div class="card-header"><i class="fa-solid fa-triangle-exclamation me-2 text-warning"></i>Alertas de integridad y detección de duplicidades</div>
+              <div class="card-header"><i class="fa-solid fa-triangle-exclamation me-2 text-warning"></i>Alertas de integridad, duplicidad e inconsistencias</div>
               <div class="card-body"><div id="alertsContainer" class="d-grid gap-2"></div></div>
             </div>
           </div>
-          <div class="col-12">
-            <div class="app-card">
+
+          <div class="col-xl-6">
+            <div class="app-card h-100">
+              <div class="card-header"><i class="fa-solid fa-shield-heart me-2 text-success"></i>Clasificación automática de riesgo por vehículo</div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-sm table-hover align-middle" id="tblRiskAI">
+                    <thead><tr><th>Vehículo</th><th>Riesgo</th><th>Puntaje</th><th>Motivos principales</th></tr></thead>
+                    <tbody></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xl-6">
+            <div class="app-card h-100">
+              <div class="card-header"><i class="fa-solid fa-calendar-days me-2 text-success"></i>Predicción de próximos mantenimientos</div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-sm table-hover align-middle" id="tblPredictionsAI">
+                    <thead><tr><th>Vehículo</th><th>Km próximo</th><th>Fecha estimada</th><th>Base analítica</th></tr></thead>
+                    <tbody></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xl-6">
+            <div class="app-card h-100">
+              <div class="card-header"><i class="fa-solid fa-chart-line me-2 text-danger"></i>Análisis de costos anómalos</div>
+              <div class="card-body"><div id="costAnomalies" class="d-grid gap-2"></div></div>
+            </div>
+          </div>
+
+          <div class="col-xl-6">
+            <div class="app-card h-100">
               <div class="card-header"><i class="fa-solid fa-lightbulb me-2 text-success"></i>Recomendaciones técnicas automatizadas</div>
               <div class="card-body"><div id="recommendations" class="row g-3"></div></div>
             </div>
@@ -1499,7 +1624,7 @@ function driveItemPath() {
       });
     }
 
-    function refreshAll(){ populateSelectors(); renderKpis(); renderVehicleCards(); renderTables(); renderCharts(); renderAlerts(); renderRecommendations(); updateMaintenancePreview(); }
+    function refreshAll(){ populateSelectors(); renderKpis(); renderVehicleCards(); renderTables(); renderCharts(); renderAlerts(); renderRecommendations(); renderEnterpriseAI(); updateMaintenancePreview(); }
     
     function populateSelectors(){
       const plates=[...new Set(state.vehiculos.map(v=>v.placa).filter(Boolean))].sort();
@@ -1898,7 +2023,7 @@ function driveItemPath() {
       if(!alerts.length) alerts.push({level:'ok',title:'Integridad de Flota Estable',text:'No se identificaron duplicidades documentales, marcas vencidas ni patrones anómalos en el control interno.'}); return alerts;
     }
     
-    function renderAlerts(){ const alerts=buildAlerts(); document.getElementById('alertsContainer').innerHTML=alerts.map(a=>`<div class="alert-item ${a.level==='critical'?'alert-critical':a.level==='ok'?'alert-good':'alert-info-l'}"><strong>${escapeHtml(a.title)}</strong><div class="small-muted">${escapeHtml(a.text)}</div></div>`).join(''); }
+    function renderAlerts(){ const alerts=enterpriseAlerts(); document.getElementById('alertsContainer').innerHTML=alerts.map(a=>`<div class="alert-item ${a.level==='critical'?'alert-critical':a.level==='ok'?'alert-good':a.level==='warning'?'alert-info-l':'alert-info-l'}"><strong>${escapeHtml(a.title)}</strong><div class="small-muted">${escapeHtml(a.text)}</div></div>`).join(''); }
     
     function renderRecommendations(){
       const rec=[]; state.vehiculos.forEach(v=>{ const diff=num(v.proximoMantenimientoKm)-num(v.kmActual); if(num(v.proximoMantenimientoKm)>0 && diff<=500) rec.push(['Programar preventivo inmediato',`Asignar turno y taller autorizado para ${v.placa} antes de superar los ${Number(v.proximoMantenimientoKm).toLocaleString('es-EC')} km.`, 'fa-calendar-check']); });
@@ -1907,12 +2032,353 @@ function driveItemPath() {
       document.getElementById('recommendations').innerHTML=(rec.length?rec:[['Operación Óptima','Los indicadores de control interno se mantienen bajo umbrales normales.', 'fa-circle-check']]).map(r=>`<div class="col-md-4"><div class="summary-box h-100"><i class="fa-solid ${r[2]} text-success fa-lg mb-2"></i><h6 class="fw-bold text-dark">${escapeHtml(r[0])}</h6><div class="small-muted">${escapeHtml(r[1])}</div></div></div>`).join('');
     }
 
-    function runAiSearch(){
-      const q=norm(document.getElementById('aiQuery').value); if(!q) return toast('Escriba los criterios de búsqueda analítica.','warning');
-      const terms=q.split(/\s+/).filter(Boolean); const results=state.intervenciones.filter(r=>{ const blob=norm(Object.values(r).join(' ')+' '+state.detalle.filter(d=>d.idIntervencion===r.idIntervencion).map(d=>Object.values(d).join(' ')).join(' ')); return terms.every(t=>blob.includes(t)); });
-      document.getElementById('aiSearchResults').innerHTML=`<div class="alert alert-info">Análisis finalizado: Se recuperaron <strong>${results.length}</strong> coincidencias.</div>`+results.slice(0,8).map(r=>`<div class="summary-box mb-2"><strong>${escapeHtml(r.placa)} · Fecha: ${escapeHtml(displayDate(r.fecha))}</strong><div class="small-muted">${escapeHtml(r.tipoMantenimiento)} · Proveedor: ${escapeHtml(r.proveedor||'N/A')} · Costo: ${money(r.costoTotal)}</div><button class="btn btn-sm btn-outline-success mt-2" onclick="showIntervention('${escapeHtml(r.idIntervencion)}')">Ver análisis de la orden</button></div>`).join('');
+
+
+    // ==========================================================================
+    // MOTOR ENTERPRISE DE IA ANALÍTICA LOCAL
+    // Reglas determinísticas: duplicidad, inconsistencias, predicción, riesgo,
+    // anomalías de costos y lenguaje natural sin exponer datos a servicios externos.
+    // ==========================================================================
+    const AI_RULES = {
+      kmWarningWindow: 500,
+      kmCriticalWindow: 0,
+      maxKmJumpShortPeriod: 20000,
+      shortPeriodDays: 60,
+      overdueDaysWithoutMaintenance: 180,
+      invoiceFormat: /^\d{3}-\d{3}-\d{9}$/,
+      costAnomalyStd: 1.75,
+      costAnomalyRatio: 1.45
+    };
+
+    function parseDateSafe(value){
+      const iso = toISODate(value);
+      const d = iso ? new Date(`${iso}T00:00:00`) : null;
+      return d && !isNaN(d) ? d : null;
     }
 
+    function daysBetween(a,b){
+      const da = parseDateSafe(a), db = parseDateSafe(b);
+      if(!da || !db) return 0;
+      return Math.max(0, Math.round((db - da) / 86400000));
+    }
+
+    function addDays(date, days){
+      const d = new Date(date || new Date());
+      d.setDate(d.getDate() + Math.max(0, Math.round(days || 0)));
+      return d.toISOString().slice(0,10);
+    }
+
+    function average(arr){
+      const nums = arr.map(num).filter(v=>isFinite(v));
+      return nums.length ? nums.reduce((a,b)=>a+b,0) / nums.length : 0;
+    }
+
+    function stdDev(arr){
+      const nums = arr.map(num).filter(v=>isFinite(v));
+      if(nums.length < 2) return 0;
+      const m = average(nums);
+      return Math.sqrt(nums.reduce((a,b)=>a + Math.pow(b-m,2),0) / (nums.length - 1));
+    }
+
+    function vehicleMaints(vOrId){
+      const id = typeof vOrId === 'string' ? vOrId : (vOrId?.idVehiculo || vOrId?.ID_Activo || '');
+      const placa = typeof vOrId === 'string' ? '' : (vOrId?.placa || vOrId?.Placa || '');
+      return state.intervenciones
+        .filter(r => (id && r.idVehiculo === id) || (placa && r.placa === placa))
+        .sort((a,b)=>String(toISODate(a.fecha)||'').localeCompare(String(toISODate(b.fecha)||'')));
+    }
+
+    function lastMaintenance(vOrId){
+      const rows = vehicleMaints(vOrId);
+      return rows.length ? rows[rows.length-1] : null;
+    }
+
+    function recentMaints(vOrId, days=365){
+      const today = todayISO();
+      return vehicleMaints(vOrId).filter(r=>daysBetween(r.fecha, today) <= days);
+    }
+
+    function predictNextMaintenance(v){
+      const hist = vehicleMaints(v).filter(r=>parseDateSafe(r.fecha) && num(r.kilometraje) > 0);
+      const currentKm = num(v.kmActual || v.Odometro_Ultimo);
+      const nextKm = num(v.proximoMantenimientoKm || v.Proximo_Mantenimiento_KM || (currentKm + (num(v.periodicidadKm)||5000)));
+      let kmPerDay = 0;
+      let basis = 'Estimación por periodicidad estándar';
+
+      if(hist.length >= 2){
+        const first = hist[0], last = hist[hist.length-1];
+        const d = Math.max(1, daysBetween(first.fecha, last.fecha));
+        const kmDelta = Math.max(0, num(last.kilometraje) - num(first.kilometraje));
+        kmPerDay = kmDelta / d;
+        basis = `Histórico real: ${hist.length} registros, promedio ${Math.round(kmPerDay*30).toLocaleString('es-EC')} km/mes`;
+      }
+
+      if(!kmPerDay || !isFinite(kmPerDay)){
+        kmPerDay = Math.max(1, (num(v.periodicidadKm)||5000) / 180);
+      }
+
+      const remainingKm = Math.max(0, nextKm - currentKm);
+      const estimatedDate = remainingKm === 0 ? todayISO() : addDays(new Date(), remainingKm / kmPerDay);
+      return {placa:v.placa, idVehiculo:v.idVehiculo, currentKm, nextKm, remainingKm, estimatedDate, kmPerDay, basis};
+    }
+
+    function detectDuplicateAdvanced(){
+      const alerts=[];
+      const rows=state.intervenciones || [];
+      rows.forEach((a,i)=>{
+        rows.slice(i+1).forEach(b=>{
+          let score=0, reasons=[];
+          if(a.factura && b.factura && norm(a.factura)===norm(b.factura)){ score+=45; reasons.push('misma factura'); }
+          if(a.orden && b.orden && norm(a.orden)===norm(b.orden)){ score+=30; reasons.push('misma orden de reparación'); }
+          if(a.idVehiculo && a.idVehiculo===b.idVehiculo){ score+=20; reasons.push('mismo vehículo'); }
+          if(toISODate(a.fecha) && toISODate(a.fecha)===toISODate(b.fecha)){ score+=20; reasons.push('misma fecha'); }
+          if(a.proveedor && b.proveedor && norm(a.proveedor)===norm(b.proveedor)){ score+=10; reasons.push('mismo proveedor'); }
+          if(num(a.kilometraje) && num(b.kilometraje) && Math.abs(num(a.kilometraje)-num(b.kilometraje))<=50){ score+=15; reasons.push('km similar ±50'); }
+          if(score >= 50){
+            alerts.push({level:score>=80?'critical':'warning', title:`Posible duplicidad ${score}%: ${a.placa || b.placa}`, text:`Registros ${a.idIntervencion} y ${b.idIntervencion}: ${reasons.join(', ')}. Revisar antes de consolidar.`});
+          }
+        });
+      });
+      return alerts;
+    }
+
+    function detectDataInconsistencies(){
+      const alerts=[];
+      const today = todayISO();
+      state.intervenciones.forEach(r=>{
+        if(parseDateSafe(r.fecha) && toISODate(r.fecha) > today){
+          alerts.push({level:'warning', title:`Fecha futura: ${r.idIntervencion}`, text:`La intervención de ${r.placa} registra fecha ${displayDate(r.fecha)}, posterior a la fecha actual.`});
+        }
+        if(r.factura && !AI_RULES.invoiceFormat.test(String(r.factura).trim())){
+          alerts.push({level:'warning', title:`Formato de factura no estándar: ${r.factura}`, text:`El documento del registro ${r.idIntervencion} no cumple el patrón 000-000-000000000. Validar contra comprobante SRI.`});
+        }
+        if(num(r.costoTotal) > 0 && !r.factura && !r.orden){
+          alerts.push({level:'warning', title:`Soporte documental pendiente: ${r.idIntervencion}`, text:`El mantenimiento de ${r.placa} tiene costo registrado pero no cuenta con factura u orden asociada.`});
+        }
+      });
+
+      state.vehiculos.forEach(v=>{
+        const rows = vehicleMaints(v);
+        for(let i=1;i<rows.length;i++){
+          const prev=rows[i-1], cur=rows[i];
+          const kmDelta=num(cur.kilometraje)-num(prev.kilometraje);
+          const d=daysBetween(prev.fecha, cur.fecha);
+          if(kmDelta < 0){
+            alerts.push({level:'critical', title:`Decremento de kilometraje: ${cur.placa}`, text:`El registro ${cur.idIntervencion} (${num(cur.kilometraje).toLocaleString('es-EC')} km) es menor que el anterior ${prev.idIntervencion} (${num(prev.kilometraje).toLocaleString('es-EC')} km).`});
+          }
+          if(d>0 && d<=AI_RULES.shortPeriodDays && kmDelta>AI_RULES.maxKmJumpShortPeriod){
+            alerts.push({level:'warning', title:`Variación de km atípica: ${cur.placa}`, text:`Incremento de ${kmDelta.toLocaleString('es-EC')} km en ${d} días entre ${prev.idIntervencion} y ${cur.idIntervencion}.`});
+          }
+        }
+      });
+      return alerts;
+    }
+
+    function detectCostAnomalies(){
+      const rows = (state.intervenciones || []).filter(r=>num(r.costoTotal)>0);
+      const byKey={};
+      rows.forEach(r=>{
+        const k = `${r.placa || 'N/A'}|${r.tipoMantenimiento || 'N/A'}`;
+        (byKey[k] ||= []).push(r);
+      });
+      const overallMean = average(rows.map(r=>r.costoTotal));
+      const overallStd = stdDev(rows.map(r=>r.costoTotal));
+      const anomalies=[];
+      rows.forEach(r=>{
+        const k = `${r.placa || 'N/A'}|${r.tipoMantenimiento || 'N/A'}`;
+        const group = byKey[k] || [];
+        const mean = group.length >= 3 ? average(group.map(x=>x.costoTotal)) : overallMean;
+        const sd = group.length >= 3 ? stdDev(group.map(x=>x.costoTotal)) : overallStd;
+        const threshold = Math.max(mean * AI_RULES.costAnomalyRatio, mean + (sd * AI_RULES.costAnomalyStd));
+        if(group.length >= 2 && num(r.costoTotal) > threshold && num(r.costoTotal) > 0){
+          anomalies.push({record:r, mean, threshold, level:num(r.costoTotal)>threshold*1.25?'critical':'warning'});
+        }
+      });
+      return anomalies.sort((a,b)=>num(b.record.costoTotal)-num(a.record.costoTotal)).slice(0,10);
+    }
+
+    function preventiveAlerts(){
+      const alerts=[];
+      state.vehiculos.forEach(v=>{
+        const pred = predictNextMaintenance(v);
+        const last = lastMaintenance(v);
+        if(pred.remainingKm <= 0 && num(pred.nextKm)>0){
+          alerts.push({level:'critical', title:`Mantenimiento vencido: ${v.placa}`, text:`Superó o alcanzó el kilometraje programado (${pred.nextKm.toLocaleString('es-EC')} km). Registrar intervención preventiva.`});
+        }else if(pred.remainingKm <= AI_RULES.kmWarningWindow && num(pred.nextKm)>0){
+          alerts.push({level:'warning', title:`Mantenimiento próximo: ${v.placa}`, text:`Faltan ${pred.remainingKm.toLocaleString('es-EC')} km. Fecha estimada: ${displayDate(pred.estimatedDate)}.`});
+        }
+        if(last && daysBetween(last.fecha, todayISO()) >= AI_RULES.overdueDaysWithoutMaintenance){
+          alerts.push({level:'warning', title:`Control por tiempo: ${v.placa}`, text:`Han transcurrido ${daysBetween(last.fecha, todayISO())} días desde el último mantenimiento registrado (${displayDate(last.fecha)}).`});
+        }
+      });
+      return alerts;
+    }
+
+    function riskForVehicle(v){
+      const reasons=[];
+      let score=0;
+      const currentYear = new Date().getFullYear();
+      const age = num(v.Año || v.anio || v.anioFabricacion || 0) ? currentYear - num(v.Año || v.anio || v.anioFabricacion) : 0;
+      const pred = predictNextMaintenance(v);
+      const rows = vehicleMaints(v);
+      const recent = recentMaints(v, 365);
+      const corrective = recent.filter(r=>norm(r.tipoMantenimiento).includes('correct') || norm(r.categoria).includes('correct')).length;
+      const totalCost = rows.reduce((a,b)=>a+num(b.costoTotal),0);
+      const budget = num(v.presupuestoAnual);
+      const anomalies = detectCostAnomalies().filter(a=>a.record.idVehiculo===v.idVehiculo || a.record.placa===v.placa).length;
+      const inconsist = detectDataInconsistencies().filter(a=>norm(a.title+' '+a.text).includes(norm(v.placa))).length;
+
+      if(pred.remainingKm <= 0 && num(pred.nextKm)>0){ score+=35; reasons.push('mantenimiento vencido por km'); }
+      else if(pred.remainingKm <= AI_RULES.kmWarningWindow && num(pred.nextKm)>0){ score+=18; reasons.push('próximo a mantenimiento'); }
+      if(age >= 7){ score+=15; reasons.push(`antigüedad ${age} años`); }
+      else if(age >= 5){ score+=8; reasons.push(`antigüedad ${age} años`); }
+      if(corrective >= 3){ score+=18; reasons.push(`${corrective} correctivos en 12 meses`); }
+      else if(corrective >= 1){ score+=7; reasons.push(`${corrective} correctivo(s) reciente(s)`); }
+      if(budget && totalCost > budget){ score+=15; reasons.push('costos superan presupuesto anual'); }
+      else if(budget && totalCost > budget*0.75){ score+=8; reasons.push('consumo presupuestario elevado'); }
+      if(anomalies){ score+=12; reasons.push('costos anómalos detectados'); }
+      if(inconsist){ score+=10; reasons.push('inconsistencias de datos'); }
+      if(!rows.length){ score+=10; reasons.push('sin historial suficiente'); }
+
+      score = Math.min(100, Math.round(score));
+      const level = score >= 65 ? 'Alto' : score >= 35 ? 'Medio' : 'Bajo';
+      return {vehiculo:v, score, level, reasons:reasons.length?reasons:['sin alertas críticas']};
+    }
+
+    function riskBadge(level){
+      const cls = level === 'Alto' ? 'status-danger' : level === 'Medio' ? 'status-warn' : 'status-ok';
+      const dot = level === 'Alto' ? 'risk-high' : level === 'Medio' ? 'risk-mid' : '';
+      return `<span class="badge-soft ${cls}"><span class="risk-dot ${dot}"></span>${escapeHtml(level)}</span>`;
+    }
+
+    function enterpriseAlerts(){
+      const map=new Map();
+      const all=[...buildAlerts(), ...detectDuplicateAdvanced(), ...detectDataInconsistencies(), ...preventiveAlerts()];
+      all.forEach(a=>{
+        const key=norm(`${a.level}|${a.title}|${a.text}`);
+        if(!map.has(key)) map.set(key,a);
+      });
+      return [...map.values()].slice(0,40);
+    }
+
+    function generateExecutiveSummary(){
+      const totalVehicles=state.vehiculos.length;
+      const risks=state.vehiculos.map(riskForVehicle);
+      const high=risks.filter(r=>r.level==='Alto').length;
+      const mid=risks.filter(r=>r.level==='Medio').length;
+      const overdue=preventiveAlerts().filter(a=>norm(a.title).includes('vencido')).length;
+      const anomalies=detectCostAnomalies().length;
+      const totalCost=state.intervenciones.reduce((a,b)=>a+num(b.costoTotal),0);
+      const avgCost=state.intervenciones.length ? totalCost/state.intervenciones.length : 0;
+      const last3=lastMonthsInterventions(3);
+      const last3Avg=last3.length ? average(last3.map(r=>r.costoTotal)) : 0;
+      const trend = last3Avg > avgCost*1.15 ? 'al alza' : last3Avg < avgCost*0.85 ? 'a la baja' : 'estable';
+      const strategic = high ? 'priorizar vehículos de riesgo alto y validar soportes documentales antes de nuevos desembolsos' : overdue ? 'programar mantenimientos vencidos o próximos' : 'mantener la periodicidad preventiva y revisar únicamente alertas menores';
+      return {totalVehicles, high, mid, overdue, anomalies, totalCost, avgCost, last3Avg, trend, strategic};
+    }
+
+    function renderEnterpriseAI(){
+      renderExecutiveSummary();
+      renderRiskAI();
+      renderPredictionsAI();
+      renderCostAnomalies();
+    }
+
+    function renderExecutiveSummary(){
+      const box=document.getElementById('executiveSummary');
+      const cards=document.getElementById('aiInsightCards');
+      if(!box || !cards) return;
+      const sm=generateExecutiveSummary();
+      box.innerHTML=`<h5 class="fw-bold text-success mb-2"><i class="fa-solid fa-file-signature me-2"></i>Resumen ejecutivo inteligente</h5>
+        <p class="mb-1">El parque vehicular registra <strong>${sm.totalVehicles}</strong> activo(s), con <strong>${sm.high}</strong> en riesgo alto y <strong>${sm.mid}</strong> en riesgo medio. El costo acumulado asciende a <strong>${money(sm.totalCost)}</strong>, con tendencia de costos <strong>${escapeHtml(sm.trend)}</strong> frente al promedio histórico.</p>
+        <p class="mb-0"><strong>Recomendación gerencial:</strong> ${escapeHtml(sm.strategic)}.</p>`;
+      cards.innerHTML=[
+        ['Vehículos controlados',sm.totalVehicles,'fa-car-side','Base de activos sincronizada'],
+        ['Riesgo alto',sm.high,'fa-shield-halved','Priorización operativa'],
+        ['Mantenimientos vencidos',sm.overdue,'fa-calendar-xmark','Atención requerida'],
+        ['Costos anómalos',sm.anomalies,'fa-chart-line','Control presupuestario']
+      ].map(c=>`<div class="insight-card"><div class="small-muted fw-bold text-uppercase"><i class="fa-solid ${c[2]} me-1 text-success"></i>${escapeHtml(c[0])}</div><div class="insight-value">${escapeHtml(c[1])}</div><div class="small-muted">${escapeHtml(c[3])}</div></div>`).join('');
+    }
+
+    function renderRiskAI(){
+      const tbody=document.querySelector('#tblRiskAI tbody');
+      if(!tbody) return;
+      const rows=state.vehiculos.map(riskForVehicle).sort((a,b)=>b.score-a.score);
+      tbody.innerHTML=rows.map(r=>`<tr><td><strong>${escapeHtml(r.vehiculo.placa||'N/A')}</strong><div class="small-muted">${escapeHtml(r.vehiculo.marcaModelo||r.vehiculo.tipoVehiculo||'')}</div></td><td>${riskBadge(r.level)}</td><td><strong>${r.score}/100</strong></td><td class="small-muted">${escapeHtml(r.reasons.slice(0,3).join('; '))}</td></tr>`).join('') || '<tr><td colspan="4" class="text-muted">Sin vehículos para analizar.</td></tr>';
+    }
+
+    function renderPredictionsAI(){
+      const tbody=document.querySelector('#tblPredictionsAI tbody');
+      if(!tbody) return;
+      const rows=state.vehiculos.map(predictNextMaintenance).sort((a,b)=>a.remainingKm-b.remainingKm);
+      tbody.innerHTML=rows.map(p=>`<tr><td><strong>${escapeHtml(p.placa||'N/A')}</strong><div class="small-muted">Actual: ${p.currentKm.toLocaleString('es-EC')} km</div></td><td>${p.nextKm.toLocaleString('es-EC')} km<br><span class="small-muted">faltan ${p.remainingKm.toLocaleString('es-EC')} km</span></td><td>${displayDate(p.estimatedDate)}</td><td class="small-muted">${escapeHtml(p.basis)}</td></tr>`).join('') || '<tr><td colspan="4" class="text-muted">Sin datos para predicción.</td></tr>';
+    }
+
+    function renderCostAnomalies(){
+      const box=document.getElementById('costAnomalies');
+      if(!box) return;
+      const anomalies=detectCostAnomalies();
+      box.innerHTML=anomalies.length ? anomalies.map(a=>`<div class="alert-item ${a.level==='critical'?'alert-critical':'alert-info-l'}"><strong>${escapeHtml(a.record.placa)} · ${money(a.record.costoTotal)}</strong><div class="small-muted">Registro ${escapeHtml(a.record.idIntervencion)} supera el umbral estimado ${money(a.threshold)}. Promedio de referencia: ${money(a.mean)}. Validar factura, alcance y autorización.</div></div>`).join('') : '<div class="alert alert-success mb-0"><i class="fa-solid fa-circle-check me-1"></i>No se detectan sobrecostos significativos frente a los patrones históricos.</div>';
+    }
+
+    function lastMonthsInterventions(months){
+      const now=new Date();
+      const start=new Date(now.getFullYear(), now.getMonth() - (months-1), 1);
+      return state.intervenciones.filter(r=>{ const d=parseDateSafe(r.fecha); return d && d>=start && d<=now; });
+    }
+
+    function renderNaturalAnswer(title, html){
+      const box=document.getElementById('aiSearchResults');
+      if(box) box.innerHTML=`<div class="summary-box"><h6 class="fw-bold text-success mb-2"><i class="fa-solid fa-robot me-1"></i>${escapeHtml(title)}</h6>${html}</div>`;
+    }
+
+    function runAiSearch(){
+      const raw=(document.getElementById('aiQuery')?.value || '').trim();
+      const q=norm(raw);
+      if(!q) return toast('Escriba una consulta en lenguaje natural o seleccione una pregunta sugerida.','warning');
+
+      if(q.includes('vencid') || q.includes('proximo') || q.includes('próximo') || q.includes('requiere atencion') || q.includes('requiere atención')){
+        const rows=state.vehiculos.map(v=>({v, p:predictNextMaintenance(v)})).filter(x=>x.p.remainingKm<=AI_RULES.kmWarningWindow || x.p.estimatedDate<=addDays(new Date(),30));
+        return renderNaturalAnswer('Vehículos con mantenimiento vencido o próximo', rows.length ? `<div class="table-responsive"><table class="table table-sm"><thead><tr><th>Vehículo</th><th>Km faltante</th><th>Fecha estimada</th><th>Acción</th></tr></thead><tbody>${rows.map(x=>`<tr><td><strong>${escapeHtml(x.v.placa)}</strong></td><td>${x.p.remainingKm.toLocaleString('es-EC')} km</td><td>${displayDate(x.p.estimatedDate)}</td><td>Programar mantenimiento preventivo</td></tr>`).join('')}</tbody></table></div>` : '<div class="alert alert-success mb-0">No existen vencimientos dentro del umbral configurado.</div>');
+      }
+
+      if(q.includes('promedio') && (q.includes('trimestre') || q.includes('ultimos 3') || q.includes('últimos 3'))){
+        const rows=lastMonthsInterventions(3);
+        const avg=rows.length ? average(rows.map(r=>r.costoTotal)) : 0;
+        const total=rows.reduce((a,b)=>a+num(b.costoTotal),0);
+        return renderNaturalAnswer('Costo promedio del último trimestre', `<p class="mb-1">Se analizaron <strong>${rows.length}</strong> mantenimiento(s) del último trimestre.</p><p class="mb-0">Promedio: <strong>${money(avg)}</strong> · Total acumulado: <strong>${money(total)}</strong>.</p>`);
+      }
+
+      if(q.includes('riesgo alto') || (q.includes('riesgo') && q.includes('alto'))){
+        const rows=state.vehiculos.map(riskForVehicle).filter(r=>r.level==='Alto').sort((a,b)=>b.score-a.score);
+        return renderNaturalAnswer('Vehículos clasificados con riesgo alto', rows.length ? rows.map(r=>`<div class="alert-item alert-critical mb-2"><strong>${escapeHtml(r.vehiculo.placa)} · ${r.score}/100</strong><div class="small-muted">${escapeHtml(r.reasons.join('; '))}</div></div>`).join('') : '<div class="alert alert-success mb-0">No se identifican vehículos en riesgo alto.</div>');
+      }
+
+      if(q.includes('duplic')){
+        const rows=detectDuplicateAdvanced();
+        return renderNaturalAnswer('Resultado de detección de duplicados', rows.length ? rows.map(a=>`<div class="alert-item ${a.level==='critical'?'alert-critical':'alert-info-l'} mb-2"><strong>${escapeHtml(a.title)}</strong><div class="small-muted">${escapeHtml(a.text)}</div></div>`).join('') : '<div class="alert alert-success mb-0">No se identifican duplicidades con las reglas actuales.</div>');
+      }
+
+      if(q.includes('anom') || q.includes('sobrecosto') || q.includes('costos')){
+        const anomalies=detectCostAnomalies();
+        if(q.includes('anom') || q.includes('sobrecosto')){
+          return renderNaturalAnswer('Costos anómalos detectados', anomalies.length ? anomalies.map(a=>`<div class="alert-item ${a.level==='critical'?'alert-critical':'alert-info-l'} mb-2"><strong>${escapeHtml(a.record.placa)} · ${money(a.record.costoTotal)}</strong><div class="small-muted">Registro ${escapeHtml(a.record.idIntervencion)} supera el umbral ${money(a.threshold)}.</div></div>`).join('') : '<div class="alert alert-success mb-0">No se detectan costos anómalos.</div>');
+        }
+      }
+
+      if(q.includes('resumen') || q.includes('ejecutivo') || q.includes('situacion') || q.includes('situación')){
+        const sm=generateExecutiveSummary();
+        return renderNaturalAnswer('Resumen ejecutivo de la flota', `<p>Vehículos: <strong>${sm.totalVehicles}</strong>. Riesgo alto: <strong>${sm.high}</strong>. Riesgo medio: <strong>${sm.mid}</strong>. Costo acumulado: <strong>${money(sm.totalCost)}</strong>. Tendencia: <strong>${escapeHtml(sm.trend)}</strong>.</p><p class="mb-0"><strong>Recomendación:</strong> ${escapeHtml(sm.strategic)}.</p>`);
+      }
+
+      const terms=q.split(/\s+/).filter(t=>t.length>2);
+      const results=state.intervenciones.filter(r=>{
+        const detailBlob=state.detalle.filter(d=>d.idIntervencion===r.idIntervencion).map(d=>Object.values(d).join(' ')).join(' ');
+        const blob=norm(Object.values(r).join(' ')+' '+detailBlob);
+        return terms.every(t=>blob.includes(t));
+      });
+      renderNaturalAnswer('Búsqueda contextual en mantenimientos', `<div class="alert alert-info">Se recuperaron <strong>${results.length}</strong> coincidencias.</div>${results.slice(0,8).map(r=>`<div class="summary-box mb-2"><strong>${escapeHtml(r.placa)} · ${escapeHtml(displayDate(r.fecha))}</strong><div class="small-muted">${escapeHtml(r.tipoMantenimiento)} · Proveedor: ${escapeHtml(r.proveedor||'N/A')} · Costo: ${money(r.costoTotal)}</div><button class="btn btn-sm btn-outline-success mt-2" onclick="showIntervention('${escapeHtml(r.idIntervencion)}')">Ver análisis de la orden</button></div>`).join('')}`);
+    }
 
 
     async function sha256Hex(arrayBuffer){

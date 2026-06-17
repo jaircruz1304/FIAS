@@ -1048,6 +1048,10 @@ function driveItemPath() {
     async function loadTable(tableName, columns){
       const headers = await getTableHeaders(tableName, columns);
       const data = await graphFetch(`${tableBasePath(tableName)}/rows`);
+      if (!data || !data.value) {
+    console.warn(`La tabla ${tableName} está vacía o no es accesible.`);
+    return [];
+  }
       return (data.value||[]).map((row, rowPos)=>{
         const values = Array.isArray(row.values?.[0]) ? row.values[0] : [];
         const obj={_index: row.index ?? rowPos};

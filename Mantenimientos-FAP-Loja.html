@@ -7,7 +7,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
   <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap5.min.css" />
-  <script type="text/javascript" src="https://gc.kes.v2.scr.kaspersky-labs.com/7EA5E9BB-55E1-4C31-9C21-4943DDFED2E4/main.js?attr=UqGXwoId-9siIGxFg-FV0Ma2TBomx75FFnpiGTjVXQ2u_CDyWwgwOBdGA76wLwjepnXuY7aiAT9d3eQREJSQuB2EvAS22bCileBAtiAK5ZoDDmP8aUrozIxkYR3jtbgvTaxyjQLBRTcD7MCaMrYvZK_7igq1juAECkzCeZVPXvNXzfeLWOqiKTN-kns6taNmBfJufZcJMccPYIPVUvauekgKi-PrDEYqsLd4x6FtuF1xe51ZuAG7ChKN2lDdsFoQR21GFIKght_Xj6keEQabn_eQppkAz12u0cuWqNbeQ1nJYwZTVzF8Y2zC0t8jV6iD9IyYjFzjgUjK-3jTNY_G8AlxskXFUzoyH436Wcl-H70ViSU5f13AD633ZXE2Ljyd" charset="UTF-8"></script><style>
+  <style>
     :root{
       --fias-primary:#1f7a38;
       --fias-primary-2:#2fa84f;
@@ -287,7 +287,7 @@
   <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
   <script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://alcdn.msauth.net/browser/2.38.3/js/msal-browser.min.js"></script>
+  <script src="https://alcdn.msauth.net/browser/2.32.0/js/msal-browser.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <script>
     // ===============================================================
@@ -337,9 +337,12 @@
     function escapeHtml(s){ return String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c])); }
 
     function setupMsal(){
+      if(!window.msal){
+        throw new Error('No se cargó la librería MSAL desde el CDN. Verifique conexión a internet o políticas del navegador.');
+      }
       msalInstance = new msal.PublicClientApplication({
-        // Redirect URI alineado al HTML funcional compartido: conserva ruta y archivo publicados en SharePoint/servidor.
-        auth:{ clientId:CLIENT_ID, authority:`https://login.microsoftonline.com/${TENANT_ID}`, redirectUri:window.location.origin + window.location.pathname },
+        // Misma estrategia del dashboard funcional: usar el origen como Redirect URI.
+        auth:{ clientId:CLIENT_ID, authority:`https://login.microsoftonline.com/${TENANT_ID}`, redirectUri:window.location.origin },
         cache:{ cacheLocation:'sessionStorage', storeAuthStateInCookie:false }
       });
     }
@@ -361,8 +364,9 @@
         return result.accessToken;
       }catch(error){
         if(error instanceof msal.InteractionRequiredAuthError){
-          await msalInstance.acquireTokenRedirect({...loginRequest, account});
-          throw new Error('Se requiere interacción para renovar permisos. Complete el inicio de sesión.');
+          const result = await msalInstance.acquireTokenPopup({...loginRequest, account});
+          state.token = result.accessToken; state.account = result.account || account;
+          return result.accessToken;
         }
         throw error;
       }
@@ -425,35 +429,41 @@
       try{ await addRows(TABLES.auditoria, COLUMNS.auditoria, [rec]); }catch(e){ console.warn('No se pudo auditar', e); }
     }
 
+    function showLogin(message=''){
+      document.getElementById('mainContent').classList.add('hidden');
+      document.getElementById('authContainer').classList.remove('hidden');
+      setLoading(false);
+      if(message) toast(message,'warning');
+    }
+
     async function handleAuth(){
       try{
         setLoading(true,'Verificando sesión Microsoft 365...');
         await msalInstance.initialize();
-        const redirectResponse = await msalInstance.handleRedirectPromise();
-        if(redirectResponse?.account){
-          state.account = redirectResponse.account;
-          state.token = redirectResponse.accessToken || null;
-          await afterLogin();
-          return;
-        }
         const accounts = msalInstance.getAllAccounts();
-        if(accounts.length){
+        if(accounts.length > 0){
           state.account = accounts[0];
           state.token = await getGraphToken();
           await afterLogin();
         }else{
-          document.getElementById('authContainer').classList.remove('hidden');
+          showLogin();
         }
       }catch(e){
         console.warn('Error en autenticación:', e);
-        document.getElementById('authContainer').classList.remove('hidden');
+        showLogin('No se detectó una sesión activa. Inicie sesión con Microsoft 365.');
       }finally{ setLoading(false); }
     }
     async function login(){
       try{
-        setLoading(true,'Redirigiendo a Microsoft 365...');
-        await msalInstance.loginRedirect(loginRequest);
-      }catch(e){ toast('No fue posible iniciar sesión: '+e.message,'danger'); setLoading(false); }
+        setLoading(true,'Abriendo inicio de sesión Microsoft 365...');
+        const result = await msalInstance.loginPopup(loginRequest);
+        state.account = result.account;
+        state.token = result.accessToken;
+        await afterLogin();
+      }catch(e){
+        console.error('Error en login:', e);
+        showLogin('No fue posible iniciar sesión: '+e.message);
+      }
     }
     async function afterLogin(){
       document.getElementById('authContainer').classList.add('hidden');
@@ -463,7 +473,16 @@
       await syncFromSharePoint();
       document.getElementById('connectionSummary').textContent = `TENANT_ID: ${TENANT_ID}\nCLIENT_ID: ${CLIENT_ID}\nEXCEL_FILE_ID: ${cleanShareId(EXCEL_FILE_ID)}\nTABLAS: ${Object.values(TABLES).join(', ')}`;
     }
-    async function logout(){ await msalInstance.logoutRedirect({account:state.account, postLogoutRedirectUri:window.location.origin + window.location.pathname}); }
+    async function logout(){
+      try{
+        await msalInstance.logoutPopup({account:state.account, postLogoutRedirectUri:window.location.origin, mainWindowRedirectUri:window.location.origin});
+      }catch(e){
+        console.warn('Error al cerrar sesión', e);
+      }finally{
+        state.account=null; state.token=null; state.connected=false;
+        showLogin();
+      }
+    }
 
     async function syncFromSharePoint(){
       try{
@@ -735,7 +754,15 @@
     function switchTab(tab){ document.querySelectorAll('.module-tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab)); document.querySelectorAll('.tab-pane').forEach(p=>p.classList.toggle('active',p.id===tab)); setTimeout(()=>{Object.values(charts).forEach(c=>c?.resize?.());},80); }
 
     document.addEventListener('DOMContentLoaded',()=>{
-      setupMsal();
+      try{
+        setupMsal();
+      }catch(e){
+        console.error(e);
+        document.getElementById('authContainer').classList.remove('hidden');
+        setLoading(false);
+        toast('Error inicializando Microsoft 365: '+e.message,'danger');
+        return;
+      }
       document.getElementById('loginBtn').addEventListener('click',login);
       document.getElementById('logoutBtn').addEventListener('click',logout);
       document.getElementById('btnSync').addEventListener('click',syncFromSharePoint);

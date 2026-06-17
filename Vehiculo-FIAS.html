@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://cdn.jsdelivr.net" />
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
-  <style>
+  <script type="text/javascript" src="https://gc.kes.v2.scr.kaspersky-labs.com/7EA5E9BB-55E1-4C31-9C21-4943DDFED2E4/main.js?attr=ru3kgDdtaSebDHk6t6S6eu1oFJWMIPrqPAbVlPdN1aD3vYhFFNWyCXTDH-g3wn63J0Feb9i-m5-pHgo6FzVaUkPj5-SyMq22vqoshRoaqQbGSEO_8ohfAUl5TfgSacO9Xs_e7QMqZxtQSVXzyBPTSmA6xlBk-4xUv4WUa3bTIJXHfAF6StIERu_AnzKH0e2QOpCGmozaIhlPa8anPIKWNIjuf7L4N0Nv89ixNQIwSy2wyNw1rbmz0n91job4VzlrYwPNK8kYOobQ8px6ebqfMM1Idw_IIn2Bze3emsbR3D-HLhZdNGfrYADTp70nh7OaU0nuOheZZl4UPu831esgfS0aJqh9GGIYN6AQ7sfQfdOENdq4Ebl8WMtNJtJ6lJyB" charset="UTF-8"></script><style>
     :root{
       --green-950:#06281d;
       --green-900:#0b3b2a;
@@ -462,6 +462,7 @@
       account: null,
       token: null,
       sessionId: null,
+      syncInProgress: false,
       driveItemPath: '',
       headers: {},
       rows: {},
@@ -581,20 +582,45 @@
       }
     }
 
+    function shouldAttachWorkbookSession(path, options={}){
+      if(options.workbookSession === false) return false;
+      if(!state.sessionId) return false;
+      if(!String(path).includes('/workbook/')) return false;
+      if(String(path).includes('/workbook/createSession')) return false;
+      return true;
+    }
+
+    function sanitizeGraphOptions(options={}){
+      const clean = Object.assign({}, options);
+      delete clean.workbookSession;
+      return clean;
+    }
+
     async function graph(path, options={}){
       let attempt = 0;
+      const cleanOptions = sanitizeGraphOptions(options);
       while(attempt < 3){
         const token = await acquireToken();
-        const headers = Object.assign({ Authorization: `Bearer ${token}`, 'Content-Type':'application/json' }, options.headers || {});
-        if(state.sessionId) headers['Workbook-Session-Id'] = state.sessionId;
-        const res = await fetch(`https://graph.microsoft.com/v1.0${path}`, Object.assign({}, options, { headers }));
+        const headers = Object.assign({ Authorization: `Bearer ${token}`, 'Content-Type':'application/json' }, cleanOptions.headers || {});
+        if(shouldAttachWorkbookSession(path, options)) headers['Workbook-Session-Id'] = state.sessionId;
+        const res = await fetch(`https://graph.microsoft.com/v1.0${path}`, Object.assign({}, cleanOptions, { headers }));
         if(res.status === 423 || res.status === 409 || res.status === 429){
           attempt += 1;
-          await new Promise(resolve => setTimeout(resolve, 1200 * attempt));
+          await new Promise(resolve => setTimeout(resolve, 1400 * attempt));
           continue;
         }
         if(!res.ok){
           const text = await res.text().catch(()=>res.statusText);
+          const isWorkbookCall = String(path).includes('/workbook/');
+          const mayBeInvalidSession = isWorkbookCall && state.sessionId && (res.status === 400 || res.status === 404) && /session|Workbook-Session|badRequestUncategorized|mal formada|incorrecta/i.test(text);
+          if(mayBeInvalidSession){
+            console.warn('Sesión de Excel inválida o no aceptada. Se limpiará y se reintentará sin sesión.', text);
+            state.sessionId = '';
+            if($('sessionState')) $('sessionState').textContent = 'Sesión reiniciada';
+            attempt += 1;
+            await new Promise(resolve => setTimeout(resolve, 800));
+            continue;
+          }
           throw new Error(`Graph ${res.status}: ${text}`);
         }
         if(res.status === 204) return null;
@@ -606,8 +632,9 @@
 
     async function graphRaw(path, options={}){
       const token = await acquireToken();
-      const headers = Object.assign({ Authorization: `Bearer ${token}` }, options.headers || {});
-      const res = await fetch(`https://graph.microsoft.com/v1.0${path}`, Object.assign({}, options, { headers }));
+      const cleanOptions = sanitizeGraphOptions(options);
+      const headers = Object.assign({ Authorization: `Bearer ${token}` }, cleanOptions.headers || {});
+      const res = await fetch(`https://graph.microsoft.com/v1.0${path}`, Object.assign({}, cleanOptions, { headers }));
       if(!res.ok){
         const text = await res.text().catch(()=>res.statusText);
         throw new Error(`Graph ${res.status}: ${text}`);
@@ -617,27 +644,45 @@
 
     async function resolveDriveItem(){
       const token = shareId(CONFIG.shareTokenOrUrl);
-      const item = await graph(`/shares/${token}/driveItem?$select=id,name,parentReference,webUrl`);
+      const item = await graph(`/shares/${token}/driveItem?$select=id,name,parentReference,webUrl`, { workbookSession:false });
       if(!item || !item.id || !item.parentReference || !item.parentReference.driveId) throw new Error('No se pudo resolver el archivo Excel compartido.');
       state.driveItemPath = `/drives/${item.parentReference.driveId}/items/${item.id}`;
       if($('adminConsole')) $('adminConsole').textContent = `Archivo: ${item.name}\nDriveId: ${item.parentReference.driveId}\nItemId: ${item.id}\nWebUrl: ${item.webUrl || 'N/D'}\nShareToken: ${token}`;
       return item;
     }
 
+    async function closeWorkbookSession(){
+      if(!state.sessionId || !state.driveItemPath) return;
+      const oldSessionId = state.sessionId;
+      try{
+        const token = await acquireToken();
+        await fetch(`https://graph.microsoft.com/v1.0${state.driveItemPath}/workbook/closeSession`, {
+          method:'POST',
+          headers:{ Authorization:`Bearer ${token}`, 'Content-Type':'application/json', 'Workbook-Session-Id': oldSessionId }
+        });
+      }catch(err){
+        console.warn('No se pudo cerrar la sesión anterior de Excel. Se continuará con una sesión nueva.', err);
+      }finally{
+        state.sessionId = '';
+      }
+    }
+
     async function createSession(){
       try{
-        const res = await graph(`${state.driveItemPath}/workbook/createSession`, { method:'POST', body: JSON.stringify({ persistChanges: true }) });
+        // Importante: createSession nunca debe enviarse con un Workbook-Session-Id anterior.
+        state.sessionId = '';
+        const res = await graph(`${state.driveItemPath}/workbook/createSession`, { method:'POST', body: JSON.stringify({ persistChanges: true }), workbookSession:false });
         state.sessionId = res && res.id ? res.id : '';
         state.workbookApiAvailable = true;
         state.binaryMode = false;
-        $('sessionState').textContent = state.sessionId ? 'Persistente' : 'Sin sesión';
+        if($('sessionState')) $('sessionState').textContent = state.sessionId ? 'Persistente' : 'Sin sesión';
       }catch(err){
         const msg = String(err && err.message ? err.message : err);
-        if(msg.includes('unsupportedWorkbook') || msg.includes('FileCorruptTryRepair') || msg.includes('Graph 501')){
+        if(msg.includes('unsupportedWorkbook') || msg.includes('FileCorruptTryRepair') || msg.includes('Graph 501') || msg.includes('badRequestUncategorized')){
           state.sessionId = '';
           state.workbookApiAvailable = false;
           state.binaryMode = true;
-          $('sessionState').textContent = 'Modo binario XLSX';
+          if($('sessionState')) $('sessionState').textContent = 'Modo binario XLSX';
           toast('Workbook API no disponible', 'El Excel será leído por descarga binaria XLSX. Recomendado: subir la versión Graph-Compatible.', 'warn');
           return;
         }
@@ -750,8 +795,19 @@
 
     async function syncAll(){
       if(!state.account) return login();
+      if(state.syncInProgress){
+        toast('Sincronización en curso', 'Espere a que termine el proceso actual antes de volver a sincronizar.', 'warn');
+        return;
+      }
+      state.syncInProgress = true;
+      if($('btnSync')) $('btnSync').disabled = true;
       showLoading('Conectando con Excel en SharePoint...');
       try{
+        // Se limpia la sesión anterior y la copia binaria local para evitar errores 400 al resincronizar.
+        await closeWorkbookSession();
+        state.binaryWorkbook = null;
+        state.workbookApiAvailable = true;
+        state.binaryMode = false;
         await resolveDriveItem();
         await createSession();
         const ordered = Object.values(CONFIG.tables);
@@ -766,8 +822,19 @@
         updateConnectionUi();
         renderAll();
         toast('Sincronización completada', state.binaryMode ? 'Datos leídos por modo binario XLSX debido a limitación del Workbook API.' : 'Las tablas del Excel Enterprise fueron leídas correctamente.');
-      }catch(err){ state.connected = false; updateConnectionUi(); toast('Error de sincronización', err.message, 'danger'); }
-      finally{ hideLoading(); }
+      }catch(err){ state.connected = false; updateConnectionUi(); toast('Error de sincronización', friendlyGraphError(err), 'danger'); }
+      finally{ state.syncInProgress = false; if($('btnSync')) $('btnSync').disabled = false; hideLoading(); }
+    }
+
+    function friendlyGraphError(err){
+      const msg = String(err && err.message ? err.message : err);
+      if(msg.includes('Graph 400') && (msg.includes('badRequestUncategorized') || msg.includes('mal formada') || msg.includes('incorrecta'))){
+        return 'Microsoft Graph rechazó la solicitud por una sesión anterior o una petición de Excel no aceptada. Se corrigió el manejo de resincronización: cierre la sesión de la página, vuelva a entrar y use esta versión actualizada.';
+      }
+      if(msg.includes('unsupportedWorkbook') || msg.includes('FileCorruptTryRepair')){
+        return 'El archivo Excel contiene características no compatibles con la API de libro. Use el Excel Graph-Compatible o permita el modo binario XLSX.';
+      }
+      return msg;
     }
 
     function updateConnectionUi(){

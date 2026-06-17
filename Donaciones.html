@@ -462,8 +462,8 @@
     // Fuente pública del Excel en OneDrive/SharePoint.
     // No existen registros de donaciones embebidos en este HTML. Toda la información proviene del Excel.
     const DIRECT_EXCEL_URL = "https://fiasec-my.sharepoint.com/:x:/g/personal/jcruzg_fias_org_ec/IQAWjBvkE6TPTG6b5vhBTZxcAaAldunzyoWrEzM5q5mVINo?e=YRRr8R&download=1";
-    const CORS_PROXY_PREFIX = "https://corsproxy.io/?";
-    const EXCEL_URL = `${CORS_PROXY_PREFIX}${encodeURIComponent(DIRECT_EXCEL_URL)}`;
+    const CORS_PROXY_PREFIX = "";
+    const EXCEL_URL = `${encodeURIComponent(DIRECT_EXCEL_URL)}`;
 
     // Encabezados esperados del Excel. Esto es configuración de lectura, no datos de donaciones.
     const EXPECTED_HEADERS = [

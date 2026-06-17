@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://cdn.jsdelivr.net" />
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
-  <script type="text/javascript" src="https://gc.kes.v2.scr.kaspersky-labs.com/7EA5E9BB-55E1-4C31-9C21-4943DDFED2E4/main.js?attr=ru3kgDdtaSebDHk6t6S6eu1oFJWMIPrqPAbVlPdN1aD3vYhFFNWyCXTDH-g3wn63J0Feb9i-m5-pHgo6FzVaUkPj5-SyMq22vqoshRoaqQbGSEO_8ohfAUl5TfgSacO9Xs_e7QMqZxtQSVXzyBPTSmA6xlBk-4xUv4WUa3bTIJXHfAF6StIERu_AnzKH0e2QOpCGmozaIhlPa8anPIKWNIjuf7L4N0Nv89ixNQIwSy2wyNw1rbmz0n91job4VzlrYwPNK8kYOobQ8px6ebqfMM1Idw_IIn2Bze3emsbR3D-HLhZdNGfrYADTp70nh7OaU0nuOheZZl4UPu831esgfS0aJqh9GGIYN6AQ7sfQfdOENdq4Ebl8WMtNJtJ6lJyB" charset="UTF-8"></script><style>
+  <style>
     :root{
       --green-950:#06281d;
       --green-900:#0b3b2a;
@@ -64,6 +64,8 @@
     .btn-primary{background:linear-gradient(135deg,var(--green-700),var(--green-500));color:#fff;box-shadow:0 8px 18px rgba(31,122,56,.25)}
     .btn-dark{background:var(--gray-950);color:#fff}
     .btn-ghost{background:#fff;color:var(--gray-800);border:1px solid var(--gray-200)}
+    .session-chip{display:inline-flex;align-items:center;gap:8px;border:1px solid #b7e4c7;background:linear-gradient(180deg,#f7fffa,#ffffff);color:var(--green-800);border-radius:999px;padding:9px 12px;font-size:.88rem;font-weight:900;box-shadow:var(--shadow-soft)}
+    .session-chip i{font-size:1rem}.session-chip span{max-width:230px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
     .btn-warning{background:#fff7df;color:#986500;border:1px solid #fbdc85}
     .btn-danger{background:#ffebeb;color:var(--red-700);border:1px solid #ffc8c8}
     .btn-sm{padding:7px 10px;font-size:.86rem;border-radius:10px}
@@ -195,9 +197,11 @@
           <p>Plataforma construida sobre la información real del mantenimiento vehicular FIAS: vehículos, intervenciones, detalle técnico, facturas electrónicas, consistencias, documentos, OCR y bitácora de cambios.</p>
         </div>
         <div class="actions">
-          <button class="btn btn-ghost" id="btnLogin"><i class="bi bi-microsoft"></i> Iniciar sesión</button>
+          <button class="btn btn-ghost hidden" id="btnLogin"><i class="bi bi-microsoft"></i> Iniciar sesión</button>
+          <span class="session-chip hidden" id="sessionChip"><i class="bi bi-person-check"></i><span id="sessionChipText">Sesión activa</span></span>
           <button class="btn btn-primary" id="btnSync"><i class="bi bi-arrow-repeat"></i> Sincronizar</button>
           <button class="btn btn-dark" id="btnNew"><i class="bi bi-plus-circle"></i> Nuevo registro</button>
+          <button class="btn btn-ghost hidden" id="btnLogout"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</button>
         </div>
       </div>
 
@@ -551,6 +555,21 @@
       updateConnectionUi();
     }
 
+    async function ensureActiveAccount(){
+      if(state.account) return state.account;
+      if(state.msal){
+        const accounts = state.msal.getAllAccounts();
+        if(accounts && accounts.length){
+          state.account = accounts[0];
+          try{ await acquireToken(); }catch(err){ console.warn('No fue posible renovar el token de la sesión existente.', err); }
+          updateConnectionUi();
+          return state.account;
+        }
+      }
+      updateConnectionUi();
+      return null;
+    }
+
     async function login(){
       showLoading('Autenticando con Microsoft 365...');
       try{
@@ -561,6 +580,40 @@
         await syncAll();
       }catch(err){ toast('No fue posible iniciar sesión', err.message, 'danger'); }
       finally{ hideLoading(); }
+    }
+
+    async function logout(){
+      showLoading('Cerrando sesión activa...');
+      const account = state.account || (state.msal && state.msal.getAllAccounts()[0]);
+      try{
+        await closeWorkbookSession();
+      }catch(err){
+        console.warn('No se pudo cerrar la sesión de Excel antes de salir.', err);
+      }
+      try{
+        state.connected = false;
+        state.sessionId = '';
+        state.token = null;
+        state.account = null;
+        state.rows = {};
+        state.headers = {};
+        state.binaryWorkbook = null;
+        updateConnectionUi();
+        renderAll();
+        if(state.msal && account){
+          await state.msal.logoutPopup({
+            account,
+            postLogoutRedirectUri: window.location.origin + window.location.pathname,
+            mainWindowRedirectUri: window.location.origin + window.location.pathname
+          });
+        }
+        toast('Sesión cerrada', 'La cuenta Microsoft se desvinculó de esta página.');
+      }catch(err){
+        toast('Cierre de sesión local', 'Se limpió la sesión de la página. Si Microsoft mantiene la cuenta en el navegador, vuelva a iniciar sesión o use otra cuenta.', 'warn');
+      }finally{
+        hideLoading();
+        updateConnectionUi();
+      }
     }
 
     async function acquireToken(){
@@ -794,13 +847,15 @@
     }
 
     async function syncAll(){
-      if(!state.account) return login();
+      if(!state.account){
+        const restored = await ensureActiveAccount();
+        if(!restored) return login();
+      }
       if(state.syncInProgress){
         toast('Sincronización en curso', 'Espere a que termine el proceso actual antes de volver a sincronizar.', 'warn');
         return;
       }
       state.syncInProgress = true;
-      if($('btnSync')) $('btnSync').disabled = true;
       showLoading('Conectando con Excel en SharePoint...');
       try{
         // Se limpia la sesión anterior y la copia binaria local para evitar errores 400 al resincronizar.
@@ -823,7 +878,7 @@
         renderAll();
         toast('Sincronización completada', state.binaryMode ? 'Datos leídos por modo binario XLSX debido a limitación del Workbook API.' : 'Las tablas del Excel Enterprise fueron leídas correctamente.');
       }catch(err){ state.connected = false; updateConnectionUi(); toast('Error de sincronización', friendlyGraphError(err), 'danger'); }
-      finally{ state.syncInProgress = false; if($('btnSync')) $('btnSync').disabled = false; hideLoading(); }
+      finally{ state.syncInProgress = false; hideLoading(); }
     }
 
     function friendlyGraphError(err){
@@ -838,11 +893,46 @@
     }
 
     function updateConnectionUi(){
-      $('userName').textContent = state.account ? state.account.username : 'No autenticado';
+      const logged = !!state.account;
+      const username = state.account ? (state.account.username || state.account.name || 'Sesión activa') : '';
+
+      if($('userName')) $('userName').textContent = logged ? username : 'No autenticado';
+
       const el = $('connState');
-      el.className = 'status-dot ' + (state.connected ? 'ok' : state.account ? 'warn' : 'danger');
-      el.textContent = state.connected ? 'Conectado' : state.account ? 'Autenticado sin datos' : 'Pendiente';
-      $('sessionState').textContent = state.sessionId ? 'Persistente' : 'No iniciada';
+      if(el){
+        el.className = 'status-dot ' + (state.connected ? 'ok' : logged ? 'warn' : 'danger');
+        el.textContent = state.connected ? 'Conectado' : logged ? 'Autenticado sin datos' : 'Pendiente';
+      }
+
+      if($('sessionState')){
+        $('sessionState').textContent = state.sessionId ? 'Persistente' : (logged ? 'Cuenta autenticada' : 'No iniciada');
+      }
+
+      const loginBtn = $('btnLogin');
+      const logoutBtn = $('btnLogout');
+      const chip = $('sessionChip');
+      const chipText = $('sessionChipText');
+      const syncBtn = $('btnSync');
+
+      if(loginBtn){
+        loginBtn.classList.toggle('hidden', logged);
+        loginBtn.disabled = logged || state.syncInProgress;
+        loginBtn.setAttribute('aria-hidden', logged ? 'true' : 'false');
+      }
+      if(logoutBtn){
+        logoutBtn.classList.toggle('hidden', !logged);
+        logoutBtn.disabled = state.syncInProgress;
+        logoutBtn.setAttribute('aria-hidden', logged ? 'false' : 'true');
+      }
+      if(chip){
+        chip.classList.toggle('hidden', !logged);
+        chip.setAttribute('aria-hidden', logged ? 'false' : 'true');
+      }
+      if(chipText) chipText.textContent = logged ? username : 'Sin sesión';
+      if(syncBtn){
+        syncBtn.disabled = state.syncInProgress;
+        syncBtn.innerHTML = state.syncInProgress ? '<i class="bi bi-hourglass-split"></i> Sincronizando...' : '<i class="bi bi-arrow-repeat"></i> Sincronizar';
+      }
     }
 
     function data(tableKey){ return state.rows[CONFIG.tables[tableKey]] || []; }
@@ -1833,6 +1923,7 @@
     function bindEvents(){
       $$('.nav-button').forEach(btn => btn.addEventListener('click', () => { $$('.nav-button').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); $$('.module').forEach(m=>m.classList.remove('active')); $(btn.dataset.module).classList.add('active'); }));
       $('btnLogin').addEventListener('click', login);
+      if($('btnLogout')) $('btnLogout').addEventListener('click', logout);
       $('btnSync').addEventListener('click', syncAll);
       $('btnNew').addEventListener('click', openDrawer);
       $('btnNew2').addEventListener('click', openDrawer);
@@ -1860,7 +1951,7 @@
       renderSchema();
       renderAll();
       try{ await setupMsal(); if(state.account) await syncAll(); }
-      catch(err){ toast('Modo sin conexión inicial', err.message, 'warn'); }
+      catch(err){ state.account = null; state.connected = false; updateConnectionUi(); toast('Modo sin conexión inicial', err.message, 'warn'); }
     }
 
     document.addEventListener('DOMContentLoaded', init);

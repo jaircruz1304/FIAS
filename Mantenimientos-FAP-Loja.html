@@ -7,7 +7,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
   <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap5.min.css" />
-  <style>
+  <script type="text/javascript" src="https://gc.kes.v2.scr.kaspersky-labs.com/7EA5E9BB-55E1-4C31-9C21-4943DDFED2E4/main.js?attr=UqGXwoId-9siIGxFg-FV0Ma2TBomx75FFnpiGTjVXQ2u_CDyWwgwOBdGA76wLwjepnXuY7aiAT9d3eQREJSQuB2EvAS22bCileBAtiAK5ZoDDmP8aUrozIxkYR3jtbgvTaxyjQLBRTcD7MCaMrYvZK_7igq1juAECkzCeZVPXvNXzfeLWOqiKTN-kns6taNmBfJufZcJMccPYIPVUvauekgKi-PrDEYqsLd4x6FtuF1xe51ZuAG7ChKN2lDdsFoQR21GFIKght_Xj6keEQabn_eQppkAz12u0cuWqNbeQ1nJYwZTVzF8Y2zC0t8jV6iD9IyYjFzjgUjK-3jTNY_G8AlxskXFUzoyH436Wcl-H70ViSU5f13AD633ZXE2Ljyd" charset="UTF-8"></script><style>
     :root{
       --fias-primary:#1f7a38;
       --fias-primary-2:#2fa84f;
@@ -306,8 +306,25 @@
       auditoria: ['idAuditoria','fechaHora','usuario','accion','tabla','registroId','detalle','resultado']
     };
 
-    let state = { vehiculos:[], intervenciones:[], detalle:[], auditoria:[], token:null, account:null, sessionId:null, connected:false };
-    let tables = {}, charts = {}, msalInstance = null, currentStep = 1;
+    const loginRequest = { scopes:['User.Read','Files.ReadWrite','Files.ReadWrite.All','Sites.ReadWrite.All'] };
+
+    // Catálogo técnico referencial: se usa para proponer automáticamente vida útil por familia de repuesto/servicio.
+    const catalogosVidaUtil = {
+      'Lubricación y filtros': 5000,
+      'Sistema de frenos': 20000,
+      'Suspensión y dirección': 30000,
+      'Llantas, alineación y balanceo': 40000,
+      'Sistema eléctrico/electrónico': 20000,
+      'Transmisión': 40000,
+      'Motor y refrigeración': 30000,
+      'Sistema hidráulico': 25000,
+      'Diagnóstico': 0,
+      'Mano de obra': 0,
+      'Otros': 0
+    };
+
+    let state = { vehiculos:[], intervenciones:[], detalle:[], auditoria:[], token:null, account:null, sessionId:null, connected:false, tableHeaders:{} };
+    let tables = {}, charts = {}, msalInstance = null, currentStep = 1, maintenanceModalInstance = null;
 
     function todayISO(){ return new Date().toISOString().slice(0,10); }
     function nowISO(){ return new Date().toISOString(); }
@@ -321,14 +338,38 @@
 
     function setupMsal(){
       msalInstance = new msal.PublicClientApplication({
-        auth:{ clientId:CLIENT_ID, authority:`https://login.microsoftonline.com/${TENANT_ID}`, redirectUri:window.location.origin },
+        // Redirect URI alineado al HTML funcional compartido: conserva ruta y archivo publicados en SharePoint/servidor.
+        auth:{ clientId:CLIENT_ID, authority:`https://login.microsoftonline.com/${TENANT_ID}`, redirectUri:window.location.origin + window.location.pathname },
         cache:{ cacheLocation:'sessionStorage', storeAuthStateInCookie:false }
       });
     }
     function driveItemPath(){ return `/shares/${encodeURIComponent(cleanShareId(EXCEL_FILE_ID))}/driveItem`; }
+    function tableBasePath(tableName){ return `${driveItemPath()}/workbook/tables/${encodeURIComponent(tableName)}`; }
+    function getFallbackColumns(tableName){
+      if(tableName===TABLES.vehiculos) return COLUMNS.vehiculos;
+      if(tableName===TABLES.intervenciones) return COLUMNS.intervenciones;
+      if(tableName===TABLES.detalle) return COLUMNS.detalle;
+      if(tableName===TABLES.auditoria) return COLUMNS.auditoria;
+      return [];
+    }
+    async function getGraphToken(){
+      const account = state.account || msalInstance.getAllAccounts()[0];
+      if(!account) throw new Error('No existe cuenta autenticada. Inicie sesión nuevamente.');
+      try{
+        const result = await msalInstance.acquireTokenSilent({...loginRequest, account});
+        state.token = result.accessToken; state.account = result.account || account;
+        return result.accessToken;
+      }catch(error){
+        if(error instanceof msal.InteractionRequiredAuthError){
+          await msalInstance.acquireTokenRedirect({...loginRequest, account});
+          throw new Error('Se requiere interacción para renovar permisos. Complete el inicio de sesión.');
+        }
+        throw error;
+      }
+    }
     async function graphFetch(path, options={}){
-      if(!state.token) throw new Error('No existe token de Microsoft Graph. Inicie sesión nuevamente.');
-      const headers = { Authorization:`Bearer ${state.token}`, 'Content-Type':'application/json', ...(options.headers||{}) };
+      const token = await getGraphToken();
+      const headers = { Authorization:`Bearer ${token}`, 'Content-Type':'application/json', ...(options.headers||{}) };
       if(state.sessionId) headers['Workbook-Session-Id']=state.sessionId;
       const res = await fetch(`https://graph.microsoft.com/v1.0${path}`, {...options, headers});
       if(!res.ok){ const txt = await res.text().catch(()=>res.statusText); throw new Error(`Graph ${res.status}: ${txt}`); }
@@ -336,18 +377,50 @@
       return await res.json();
     }
     async function createWorkbookSession(){ const res = await graphFetch(`${driveItemPath()}/workbook/createSession`, {method:'POST', body:JSON.stringify({persistChanges:true})}); state.sessionId = res?.id || null; }
-    async function loadTable(tableName, columns){
-      const data = await graphFetch(`${driveItemPath()}/workbook/tables/${encodeURIComponent(tableName)}/rows`);
-      return (data.value||[]).map(row=>{ const values = Array.isArray(row.values?.[0]) ? row.values[0] : []; const obj={_index:row.index}; columns.forEach((col,i)=>obj[col]=values[i] ?? ''); return obj; });
+    async function getTableHeaders(tableName, fallbackColumns=[]){
+      try{
+        const headerData = await graphFetch(`${tableBasePath(tableName)}/range`);
+        const headers = Array.isArray(headerData?.values?.[0]) ? headerData.values[0].map(h=>String(h||'').trim()).filter(Boolean) : [];
+        state.tableHeaders[tableName] = headers.length ? headers : fallbackColumns;
+      }catch(e){
+        console.warn('No se pudieron leer encabezados de '+tableName+', se usa esquema base.', e);
+        state.tableHeaders[tableName] = fallbackColumns;
+      }
+      return state.tableHeaders[tableName];
     }
-    async function addRows(tableName, columns, objects){ const values = objects.map(obj=>columns.map(c=>obj[c] ?? '')); return await graphFetch(`${driveItemPath()}/workbook/tables/${encodeURIComponent(tableName)}/rows/add`, {method:'POST', body:JSON.stringify({values})}); }
+    async function loadTable(tableName, columns){
+      const headers = await getTableHeaders(tableName, columns);
+      const data = await graphFetch(`${tableBasePath(tableName)}/rows`);
+      return (data.value||[]).map((row, rowPos)=>{
+        const values = Array.isArray(row.values?.[0]) ? row.values[0] : [];
+        const obj={_index: row.index ?? rowPos};
+        headers.forEach((header,i)=>obj[header]=values[i] ?? '');
+        // Garantiza claves canónicas aunque el Excel mantenga el mismo orden pero haya títulos levemente distintos.
+        columns.forEach((col,i)=>{ if(obj[col]===undefined) obj[col]=values[i] ?? ''; });
+        return obj;
+      });
+    }
+    async function addRows(tableName, columns, objects){
+      const headers = state.tableHeaders[tableName]?.length ? state.tableHeaders[tableName] : await getTableHeaders(tableName, columns);
+      const values = objects.map(obj=>headers.map(c=>obj[c] ?? ''));
+      try{
+        return await graphFetch(`${tableBasePath(tableName)}/rows/add`, {method:'POST', body:JSON.stringify({values})});
+      }catch(e){
+        console.warn('rows/add falló; intentando endpoint rows estándar.', e);
+        return await graphFetch(`${tableBasePath(tableName)}/rows`, {method:'POST', body:JSON.stringify({values})});
+      }
+    }
     async function updateRow(tableName, columns, rowIndex, object){
-      const values=[columns.map(c=>object[c] ?? '')];
-      try{ return await graphFetch(`${driveItemPath()}/workbook/tables/${encodeURIComponent(tableName)}/rows/$/itemAt(index=${rowIndex})`, {method:'PATCH', body:JSON.stringify({values})}); }
-      catch(e){ return await graphFetch(`${driveItemPath()}/workbook/tables/${encodeURIComponent(tableName)}/rows/${rowIndex}`, {method:'PATCH', body:JSON.stringify({index:rowIndex, values})}); }
+      const headers = state.tableHeaders[tableName]?.length ? state.tableHeaders[tableName] : await getTableHeaders(tableName, columns);
+      const values=[headers.map(c=>object[c] ?? '')];
+      return await graphFetch(`${tableBasePath(tableName)}/rows/itemAt(index=${Number(rowIndex)})`, {method:'PATCH', body:JSON.stringify({values})});
+    }
+    function findRowIndexByKey(rows, key, value){
+      const idx = rows.findIndex(r=>String(r[key]||'')===String(value||''));
+      return idx>=0 ? (rows[idx]._index ?? idx) : -1;
     }
     async function audit(action, table, registroId, detalle, resultado='OK'){
-      const rec={idAuditoria:'AUD-'+Date.now(),fechaHora:nowISO(),usuario:state.account?.username || 'usuario',accion:action,tabla:table,registroId:registroId,detalle:detalle,resultado:resultado};
+      const rec={idAuditoria:nextAuditId(),fechaHora:nowISO(),usuario:state.account?.username || 'usuario',accion:action,tabla:table,registroId:registroId,detalle:detalle,resultado:resultado};
       state.auditoria.push(rec);
       try{ await addRows(TABLES.auditoria, COLUMNS.auditoria, [rec]); }catch(e){ console.warn('No se pudo auditar', e); }
     }
@@ -356,24 +429,31 @@
       try{
         setLoading(true,'Verificando sesión Microsoft 365...');
         await msalInstance.initialize();
+        const redirectResponse = await msalInstance.handleRedirectPromise();
+        if(redirectResponse?.account){
+          state.account = redirectResponse.account;
+          state.token = redirectResponse.accessToken || null;
+          await afterLogin();
+          return;
+        }
         const accounts = msalInstance.getAllAccounts();
         if(accounts.length){
-          const response = await msalInstance.acquireTokenSilent({scopes:['Files.ReadWrite','Files.ReadWrite.All','Sites.ReadWrite.All'], account:accounts[0]});
-          state.token=response.accessToken; state.account=response.account; await afterLogin();
+          state.account = accounts[0];
+          state.token = await getGraphToken();
+          await afterLogin();
         }else{
           document.getElementById('authContainer').classList.remove('hidden');
         }
       }catch(e){
-        console.warn(e); document.getElementById('authContainer').classList.remove('hidden');
+        console.warn('Error en autenticación:', e);
+        document.getElementById('authContainer').classList.remove('hidden');
       }finally{ setLoading(false); }
     }
     async function login(){
       try{
-        setLoading(true,'Iniciando sesión con Microsoft...');
-        const response = await msalInstance.loginPopup({scopes:['Files.ReadWrite','Files.ReadWrite.All','Sites.ReadWrite.All']});
-        state.token=response.accessToken; state.account=response.account; await afterLogin();
-      }catch(e){ toast('No fue posible iniciar sesión: '+e.message,'danger'); }
-      finally{ setLoading(false); }
+        setLoading(true,'Redirigiendo a Microsoft 365...');
+        await msalInstance.loginRedirect(loginRequest);
+      }catch(e){ toast('No fue posible iniciar sesión: '+e.message,'danger'); setLoading(false); }
     }
     async function afterLogin(){
       document.getElementById('authContainer').classList.add('hidden');
@@ -383,7 +463,7 @@
       await syncFromSharePoint();
       document.getElementById('connectionSummary').textContent = `TENANT_ID: ${TENANT_ID}\nCLIENT_ID: ${CLIENT_ID}\nEXCEL_FILE_ID: ${cleanShareId(EXCEL_FILE_ID)}\nTABLAS: ${Object.values(TABLES).join(', ')}`;
     }
-    async function logout(){ await msalInstance.logoutPopup({postLogoutRedirectUri:window.location.origin, mainWindowRedirectUri:window.location.origin}); }
+    async function logout(){ await msalInstance.logoutRedirect({account:state.account, postLogoutRedirectUri:window.location.origin + window.location.pathname}); }
 
     async function syncFromSharePoint(){
       try{
@@ -447,7 +527,7 @@
         const diff=num(v.proximoMantenimientoKm)-num(v.kmActual);
         const pct = num(v.proximoMantenimientoKm) && num(v.periodicidadKm) ? Math.min(100, Math.max(0, Math.round((num(v.periodicidadKm)-diff)/num(v.periodicidadKm)*100))) : 0;
         const cls = diff<=0 && num(v.proximoMantenimientoKm)>0 ? 'bg-danger' : diff<=500 ? 'bg-warning' : 'bg-success';
-        return `<div class="col-md-6 col-xl-3"><div class="vehicle-card"><div class="d-flex justify-content-between"><div><h6 class="fw-bold mb-1">${escapeHtml(v.placa)}</h6><div class="small-muted">${escapeHtml(v.marcaModelo||v.tipoVehiculo||'')}</div></div>${badgeEstado(v.estado)}</div><hr><div class="d-flex justify-content-between small"><span>Km actual</span><strong>${Number(v.kmActual||0).toLocaleString('es-EC')}</strong></div><div class="d-flex justify-content-between small"><span>Próximo</span><strong>${Number(v.proximoMantenimientoKm||0).toLocaleString('es-EC')}</strong></div><div class="progress progress-thin mt-2"><div class="progress-bar ${cls}" style="width:${pct}%"></div></div><button class="btn btn-sm btn-outline-primary w-100 mt-3" onclick="editVehicle('${escapeHtml(v.idVehiculo)}')"><i class="fa-solid fa-pen me-1"></i>Editar</button></div></div>`;
+        return `<div class="col-md-6 col-xl-3"><div class="vehicle-card"><div class="d-flex justify-content-between"><div><h6 class="fw-bold mb-1">${escapeHtml(v.placa)}</h6><div class="small-muted">${escapeHtml(v.marcaModelo||v.tipoVehiculo||'')}</div></div>${badgeEstado(v.estado)}</div><hr><div class="d-flex justify-content-between small"><span>Km actual</span><strong>${Number(v.kmActual||0).toLocaleString('es-EC')}</strong></div><div class="d-flex justify-content-between small"><span>Próximo</span><strong>${Number(v.proximoMantenimientoKm||0).toLocaleString('es-EC')}</strong></div><div class="progress progress-thin mt-2"><div class="progress-bar ${cls}" style="width:${pct}%"></div></div><div class="d-flex gap-2 mt-3"><button class="btn btn-sm btn-success flex-fill" onclick="openMaintenanceForVehicle('${escapeHtml(v.idVehiculo)}')"><i class="fa-solid fa-plus me-1"></i>Mant.</button><button class="btn btn-sm btn-outline-primary flex-fill" onclick="editVehicle('${escapeHtml(v.idVehiculo)}')"><i class="fa-solid fa-pen me-1"></i>Editar</button></div></div></div>`;
       }).join('') || '<div class="col-12"><div class="alert alert-warning">No existen vehículos registrados.</div></div>';
     }
     function dtOptions(){ return {destroy:true,pageLength:10,responsive:true,language:{url:'https://cdn.datatables.net/plug-ins/1.13.8/i18n/es-ES.json'}}; }
@@ -497,20 +577,58 @@
       addLineItem();
       setStep(1);
       updateMaintenancePreview();
-      new bootstrap.Modal(document.getElementById('maintenanceModal')).show();
+      maintenanceModalInstance = maintenanceModalInstance || new bootstrap.Modal(document.getElementById('maintenanceModal'));
+      maintenanceModalInstance.show();
+    }
+    function openMaintenanceForVehicle(idVehiculo){
+      openMaintenanceModal();
+      document.getElementById('mVehiculo').value=idVehiculo;
+      const veh=state.vehiculos.find(v=>v.idVehiculo===idVehiculo);
+      if(veh) document.getElementById('mKm').value=veh.kmActual || 0;
+      updateMaintenancePreview();
     }
     function setStep(step){ currentStep=Math.max(1,Math.min(4,step)); document.querySelectorAll('.step').forEach(el=>{ const s=Number(el.dataset.step); el.classList.toggle('active',s===currentStep); el.classList.toggle('done',s<currentStep); }); document.querySelectorAll('.step-panel').forEach(el=>el.classList.toggle('active',Number(el.dataset.step)===currentStep)); document.getElementById('btnPrevStep').disabled=currentStep===1; document.getElementById('btnNextStep').classList.toggle('hidden',currentStep===4); document.getElementById('btnSaveMaintenance').classList.toggle('hidden',currentStep!==4); if(currentStep===4) updateMaintenancePreview(); }
     function validateCurrentStep(){
-      if(currentStep===1){ if(!document.getElementById('mVehiculo').value) return toast('Seleccione el vehículo.','warning'), false; if(!document.getElementById('mFecha').value || !document.getElementById('mKm').value) return toast('Ingrese fecha y kilometraje.','warning'), false; }
+      if(currentStep===1){
+        const idVeh=document.getElementById('mVehiculo').value;
+        const km=num(document.getElementById('mKm').value);
+        if(!idVeh) return toast('Seleccione el vehículo.','warning'), false;
+        if(!document.getElementById('mFecha').value || !document.getElementById('mKm').value) return toast('Ingrese fecha y kilometraje.','warning'), false;
+        const veh=state.vehiculos.find(v=>v.idVehiculo===idVeh);
+        if(veh && km < num(veh.kmActual)) return toast(`Control de integridad: el kilometraje ingresado (${km.toLocaleString('es-EC')}) no puede ser inferior al kilometraje actual del vehículo (${Number(veh.kmActual||0).toLocaleString('es-EC')} km).`, 'danger'), false;
+      }
       if(currentStep===2){ if(!document.getElementById('mDescripcion').value.trim()) return toast('Ingrese la descripción técnica del mantenimiento.','warning'), false; }
       if(currentStep===3){ if(collectLineItems(false).length===0) return toast('Agregue al menos un repuesto, servicio, insumo o mano de obra.','warning'), false; }
       return true;
     }
     function addLineItem(pref={}){
       const id='li_'+Date.now()+Math.floor(Math.random()*1000);
-      const html=`<div class="line-item" id="${id}"><button type="button" class="btn btn-sm btn-outline-danger remove-line" onclick="document.getElementById('${id}').remove();updateMaintenancePreview();"><i class="fa-solid fa-trash"></i></button><div class="row g-2 pe-5"><div class="col-md-3"><label class="form-label">Categoría</label><select class="form-select li-cat"><option>Repuesto</option><option>Insumo</option><option>Mano de obra</option><option>Servicio externo</option></select></div><div class="col-md-4"><label class="form-label required">Ítem / actividad</label><input class="form-control li-item" placeholder="Filtro, aceite, cambio de frenos..." value="${escapeHtml(pref.item||'')}"></div><div class="col-md-1"><label class="form-label">Cant.</label><input class="form-control li-cant" type="number" min="0" step="0.01" value="${pref.cantidad||1}"></div><div class="col-md-2"><label class="form-label">Costo unit.</label><input class="form-control li-costo" type="number" min="0" step="0.01" value="${pref.costoUnitario||''}"></div><div class="col-md-2"><label class="form-label">Vida útil km</label><input class="form-control li-vida" type="number" min="0" value="${pref.vidaUtilKm||''}"></div><div class="col-md-4"><label class="form-label">Garantía</label><input class="form-control li-garantia" placeholder="30 días, 6 meses..." value="${escapeHtml(pref.garantia||'')}"></div><div class="col-md-8"><label class="form-label">Observación técnica</label><input class="form-control li-obs" placeholder="Sustento, serial, marca, recomendación" value="${escapeHtml(pref.observacion||'')}"></div><div class="col-12 small-muted subtotal-line">Subtotal: ${money(0)}</div></div></div>`;
+      const catOptions = Object.keys(catalogosVidaUtil).map(cat=>`<option>${escapeHtml(cat)}</option>`).join('');
+      const selectedCat = pref.categoria || 'Lubricación y filtros';
+      const defaultLife = pref.vidaUtilKm ?? catalogosVidaUtil[selectedCat] ?? 0;
+      const html=`<div class="line-item" id="${id}">
+        <button type="button" class="btn btn-sm btn-outline-danger remove-line" onclick="document.getElementById('${id}').remove();updateMaintenancePreview();"><i class="fa-solid fa-trash"></i></button>
+        <div class="row g-2 pe-5">
+          <div class="col-md-3"><label class="form-label required">Familia técnica</label><select class="form-select li-cat">${catOptions}</select></div>
+          <div class="col-md-4"><label class="form-label required">Repuesto / servicio / mano de obra</label><input class="form-control li-item" placeholder="Ej.: Filtro de aceite, pastillas de freno, diagnóstico..." value="${escapeHtml(pref.item||'')}"></div>
+          <div class="col-md-1"><label class="form-label required">Cant.</label><input class="form-control li-cant" type="number" min="0" step="0.01" value="${pref.cantidad||1}"></div>
+          <div class="col-md-2"><label class="form-label required">Costo unit.</label><input class="form-control li-costo" type="number" min="0" step="0.01" value="${pref.costoUnitario||''}"></div>
+          <div class="col-md-2"><label class="form-label">Vida útil km</label><input class="form-control li-vida" type="number" min="0" value="${defaultLife}"></div>
+          <div class="col-md-4"><label class="form-label">Garantía</label><input class="form-control li-garantia" placeholder="30 días, 6 meses, N/A" value="${escapeHtml(pref.garantia||'Por verificar')}"></div>
+          <div class="col-md-8"><label class="form-label">Observación técnica</label><input class="form-control li-obs" placeholder="Sustento, marca, serial, recomendación o motivo del cambio" value="${escapeHtml(pref.observacion||'')}"></div>
+          <div class="col-12 small-muted subtotal-line">Subtotal: ${money(0)}</div>
+        </div>
+      </div>`;
       document.getElementById('lineItems').insertAdjacentHTML('beforeend',html);
-      const el=document.getElementById(id); el.querySelector('.li-cat').value=pref.categoria||'Repuesto';
+      const el=document.getElementById(id);
+      el.querySelector('.li-cat').value=selectedCat;
+      el.querySelector('.li-cat').addEventListener('change',ev=>{
+        const life = catalogosVidaUtil[ev.target.value] ?? 0;
+        const lifeEl = el.querySelector('.li-vida');
+        if(!lifeEl.dataset.manual) lifeEl.value = life;
+        updateMaintenancePreview();
+      });
+      el.querySelector('.li-vida').addEventListener('input',ev=>{ ev.target.dataset.manual='1'; updateMaintenancePreview(); });
       el.querySelectorAll('input,select').forEach(x=>x.addEventListener('input',updateMaintenancePreview));
       updateMaintenancePreview();
     }
@@ -522,12 +640,27 @@
         return {idDetalle:'DET-'+Date.now()+'-'+(i+1),idIntervencion:idMant,idVehiculo:idVeh,placa:veh.placa||'',categoria:cat,item,cantidad,costoUnitario,costoTotal,vidaUtilKm,proximoCambioKm:vidaUtilKm?km+vidaUtilKm:'',garantia:el.querySelector('.li-garantia').value.trim(),observacion:el.querySelector('.li-obs').value.trim()};
       }).filter(x=>x.item && x.cantidad>0);
     }
-    function nextMaintId(){ return `MAN-${new Date().getFullYear()}-${String(state.intervenciones.length+1).padStart(5,'0')}`; }
+    function nextSequentialId(prefix, rows, field, width=5){
+      const year=new Date().getFullYear();
+      const max=rows.reduce((m,r)=>{
+        const raw=String(r[field]||'');
+        const match=raw.match(/(\d+)$/);
+        return match ? Math.max(m, Number(match[1])) : m;
+      },0);
+      return `${prefix}-${year}-${String(max+1).padStart(width,'0')}`;
+    }
+    function nextMaintId(){ return nextSequentialId('MAN', state.intervenciones, 'idIntervencion', 5); }
+    function nextDetailId(offset=1){ return 'DET-'+String(state.detalle.length+offset).padStart(5,'0'); }
+    function nextAuditId(){ return 'AUD-'+String(state.auditoria.length+1).padStart(5,'0'); }
     function updateVehicleContext(){
       const idVeh=document.getElementById('mVehiculo').value; const veh=state.vehiculos.find(v=>v.idVehiculo===idVeh); const km=num(document.getElementById('mKm').value||0);
       if(!veh){ document.getElementById('vehicleContext').textContent='Seleccione un vehículo para visualizar kilometraje actual, último mantenimiento y próximo mantenimiento.'; return; }
       const diff=num(veh.proximoMantenimientoKm)-km;
-      document.getElementById('vehicleContext').innerHTML=`<div class="row g-2"><div class="col-md-3"><strong>Placa:</strong><br>${escapeHtml(veh.placa)}</div><div class="col-md-3"><strong>Km actual:</strong><br>${Number(veh.kmActual||0).toLocaleString('es-EC')}</div><div class="col-md-3"><strong>Último mant.:</strong><br>${Number(veh.kmUltimoMantenimiento||0).toLocaleString('es-EC')}</div><div class="col-md-3"><strong>Próximo preventivo:</strong><br>${Number(veh.proximoMantenimientoKm||0).toLocaleString('es-EC')} ${diff<=0&&num(veh.proximoMantenimientoKm)>0?'<span class="badge-soft status-danger ms-1">vencido</span>':diff<=500&&diff>0?'<span class="badge-soft status-warn ms-1">próximo</span>':''}</div></div>`;
+      const kmInput=document.getElementById('mKm');
+      if(kmInput && !kmInput.value) kmInput.value = veh.kmActual || 0;
+      if(kmInput) kmInput.min = veh.kmActual || 0;
+      const lastRecords = state.intervenciones.filter(i=>i.idVehiculo===idVeh).sort((a,b)=>String(b.fecha||'').localeCompare(String(a.fecha||''))).slice(0,3);
+      document.getElementById('vehicleContext').innerHTML=`<div class="row g-2"><div class="col-md-3"><strong>Placa:</strong><br>${escapeHtml(veh.placa)}</div><div class="col-md-3"><strong>Km actual:</strong><br>${Number(veh.kmActual||0).toLocaleString('es-EC')}</div><div class="col-md-3"><strong>Último mant.:</strong><br>${Number(veh.kmUltimoMantenimiento||0).toLocaleString('es-EC')}</div><div class="col-md-3"><strong>Próximo preventivo:</strong><br>${Number(veh.proximoMantenimientoKm||0).toLocaleString('es-EC')} ${diff<=0&&num(veh.proximoMantenimientoKm)>0?'<span class="badge-soft status-danger ms-1">vencido</span>':diff<=500&&diff>0?'<span class="badge-soft status-warn ms-1">próximo</span>':''}</div></div>${lastRecords.length?`<hr class="my-2"><strong>Últimas intervenciones:</strong><div class="small-muted">${lastRecords.map(r=>`${escapeHtml(r.fecha)} · ${escapeHtml(r.tipoMantenimiento)} · ${money(r.costoTotal)}`).join('<br>')}</div>`:''}`;
     }
     function updateMaintenancePreview(){
       updateVehicleContext();
@@ -549,7 +682,7 @@
     async function saveMaintenance(){
       if(!validateCurrentStep()) return;
       const idVeh=document.getElementById('mVehiculo').value; const veh=state.vehiculos.find(v=>v.idVehiculo===idVeh); if(!veh) return toast('Seleccione un vehículo válido.','warning');
-      const km=num(document.getElementById('mKm').value); const idMant=nextMaintId(); let items=collectLineItems(true); items=items.map((it,i)=>({...it,idIntervencion:idMant,idDetalle:'DET-'+Date.now()+'-'+(i+1)})); if(items.length===0) return toast('Debe registrar al menos un ítem.','warning');
+      const km=num(document.getElementById('mKm').value); const idMant=nextMaintId(); let items=collectLineItems(true); items=items.map((it,i)=>({...it,idIntervencion:idMant,idDetalle:nextDetailId(i+1)})); if(items.length===0) return toast('Debe registrar al menos un ítem.','warning');
       const costoTotal=items.reduce((a,b)=>a+num(b.costoTotal),0);
       const mant={idIntervencion:idMant,fecha:document.getElementById('mFecha').value,idVehiculo:idVeh,placa:veh.placa,kilometraje:km,tipoMantenimiento:document.getElementById('mTipo').value,proveedor:document.getElementById('mProveedor').value.trim(),documento:document.getElementById('mDocumento').value.trim(),descripcion:document.getElementById('mDescripcion').value.trim(),costoTotal:+costoTotal.toFixed(2),estadoControl:document.getElementById('mEstado').value,observacion:document.getElementById('mObservacion').value.trim(),creadoPor:state.account?.username||'usuario',creadoEn:nowISO(),actualizadoEn:nowISO()};
       const warnings=detectDuplicate(mant,items); if(warnings.length && !confirm('Alertas detectadas:\n\n- '+warnings.join('\n- ')+'\n\n¿Desea guardar de todas formas?')) return;
@@ -615,7 +748,10 @@
       document.getElementById('btnSaveMaintenance').addEventListener('click',saveMaintenance);
       document.getElementById('btnSaveVehicle').addEventListener('click',saveVehicle);
       document.getElementById('btnAiSearch').addEventListener('click',runAiSearch);
-      ['smartSearch','filterVehiculo','filterTipo','filterEstado','filterProveedor'].forEach(id=>document.getElementById(id)?.addEventListener('input',refreshAll));
+      ['smartSearch','filterVehiculo','filterTipo','filterEstado','filterProveedor'].forEach(id=>{
+        document.getElementById(id)?.addEventListener('input',refreshAll);
+        document.getElementById(id)?.addEventListener('change',refreshAll);
+      });
       ['mVehiculo','mFecha','mKm','mTipo','mProveedor','mDocumento','mEstado','mDescripcion','mObservacion'].forEach(id=>document.getElementById(id)?.addEventListener('input',updateMaintenancePreview));
       document.querySelectorAll('.module-tab').forEach(btn=>btn.addEventListener('click',()=>switchTab(btn.dataset.tab)));
       document.getElementById('btnExportIntervenciones').addEventListener('click',()=>exportArray(filteredInterventions(),'Mantenimientos_filtrados'));

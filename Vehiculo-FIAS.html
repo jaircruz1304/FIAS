@@ -114,6 +114,22 @@
     .toast-zone{position:fixed;right:18px;bottom:18px;display:grid;gap:10px;z-index:100}.toast{background:#fff;border:1px solid var(--gray-200);border-left:5px solid var(--green-500);border-radius:14px;box-shadow:var(--shadow-soft);padding:12px 14px;min-width:min(360px,90vw)}.toast.danger{border-left-color:#ef4444}.toast.warn{border-left-color:#f59e0b}.toast h4{margin:0 0 3px;font-size:.95rem}.toast p{margin:0;color:var(--gray-600)}
     .hidden{display:none!important}.text-right{text-align:right}.mt-1{margin-top:8px}.mt-2{margin-top:14px}.mt-3{margin-top:20px}.mb-0{margin-bottom:0}.w-100{width:100%}.flex{display:flex}.gap-2{gap:10px}.wrap{flex-wrap:wrap}.justify-between{justify-content:space-between}.align-center{align-items:center}
 
+
+    /* Ajustes de usabilidad: priorización vehicular, resumen ejecutivo ampliado y filtros */
+    .risk-explain{display:grid;grid-template-columns:1.1fr .9fr;gap:14px;margin-bottom:14px;padding:14px;border:1px solid #b7e4c7;border-radius:18px;background:linear-gradient(180deg,#f7fffa,#ffffff)}
+    .risk-explain h4{margin:0 0 6px;font-size:1rem;font-weight:950;color:var(--green-800)}
+    .risk-explain p{margin:0;color:#344054;line-height:1.55}
+    .risk-explain ul{margin:4px 0 0 18px;color:#344054;line-height:1.55;padding:0}
+    .exec-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:12px}
+    .exec-metric{border:1px solid var(--gray-200);border-radius:14px;background:#fbfcfd;padding:12px}
+    .exec-metric span{display:block;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--gray-600);font-weight:900}
+    .exec-metric strong{display:block;margin-top:4px;font-size:1.1rem;color:var(--green-800)}
+    .exec-section{border:1px solid var(--gray-200);border-radius:16px;background:#fff;padding:12px;margin-top:10px}
+    .exec-section h4{margin:0 0 6px;font-size:.95rem;color:var(--gray-950);font-weight:950}
+    .exec-section p{margin:0;color:#344054;line-height:1.6}
+    .exec-section ul{margin:6px 0 0 18px;padding:0;color:#344054;line-height:1.55}
+    .filter-action-row{display:flex;justify-content:flex-end;gap:8px;margin:-4px 0 12px;flex-wrap:wrap}
+
     /* Componentes enriquecidos para búsqueda y detalle de mantenimientos */
     .search-tools{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:10px 0 14px;flex-wrap:wrap}
     .search-insight{display:flex;align-items:center;gap:8px;color:var(--gray-600);font-size:.9rem;line-height:1.35}.search-insight strong{color:var(--green-800)}
@@ -123,7 +139,7 @@
     .detail-modal{position:fixed;inset:0;background:rgba(16,24,40,.56);z-index:80;display:none;align-items:center;justify-content:center;padding:18px}.detail-modal.open{display:flex}.detail-dialog{width:min(1180px,100%);max-height:92vh;background:#fff;border-radius:26px;box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column}.detail-head{background:linear-gradient(135deg,var(--green-950),var(--green-700));color:#fff;padding:18px 20px;display:flex;justify-content:space-between;gap:14px;align-items:flex-start}.detail-title{margin:0;font-size:1.25rem;font-weight:950;letter-spacing:-.03em}.detail-subtitle{margin:4px 0 0;opacity:.86}.detail-body{padding:18px;overflow:auto}.detail-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.detail-cell{border:1px solid var(--gray-200);border-radius:14px;background:#fbfcfd;padding:10px}.detail-cell span{display:block;color:var(--gray-600);font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;font-weight:900}.detail-cell strong{display:block;margin-top:4px;font-size:1rem;word-break:break-word}.detail-section{margin-top:16px}.detail-section h4{margin:0 0 8px;font-size:1rem;font-weight:950;color:var(--gray-950)}.obs-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.obs-box{border:1px solid var(--gray-200);border-radius:14px;background:#fff;padding:12px;min-height:82px}.obs-box h5{margin:0 0 6px;font-size:.82rem;text-transform:uppercase;letter-spacing:.08em;color:var(--gray-600)}.obs-box p{margin:0;line-height:1.55;color:#344054}.detail-foot{padding:14px 18px;border-top:1px solid var(--gray-200);background:#fff;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}.sum-row{display:flex;justify-content:flex-end;gap:14px;margin-top:10px;color:var(--gray-600)}.sum-row strong{color:var(--gray-950)}
 
     @media(max-width:1320px){.maintenance-gallery{grid-template-columns:repeat(2,1fr)}.detail-grid{grid-template-columns:repeat(2,1fr)}.grid-kpi{grid-template-columns:repeat(3,1fr)}.hero-grid{grid-template-columns:1fr}.span-8,.span-7,.span-6,.span-5,.span-4,.span-3{grid-column:span 12}.risk-grid{grid-template-columns:repeat(2,1fr)}.filters{grid-template-columns:1fr 1fr}.split-form{grid-template-columns:1fr}.ocr-preview{grid-template-columns:1fr}}
-    @media(max-width:900px){.maintenance-gallery{grid-template-columns:1fr}.obs-grid{grid-template-columns:1fr}.detail-modal{padding:0}.detail-dialog{max-height:100vh;border-radius:0}.app-shell{grid-template-columns:1fr}.sidebar{position:relative;height:auto}.main{padding:18px}.topbar{align-items:flex-start;flex-direction:column}.actions{justify-content:flex-start}.grid-kpi{grid-template-columns:1fr 1fr}.risk-grid{grid-template-columns:1fr}.filters{grid-template-columns:1fr}.line-item{grid-template-columns:1fr}.nl-box{flex-direction:column}.hero-panel{padding:18px}}
+    @media(max-width:900px){.risk-explain{grid-template-columns:1fr}.exec-grid{grid-template-columns:1fr}.maintenance-gallery{grid-template-columns:1fr}.obs-grid{grid-template-columns:1fr}.detail-modal{padding:0}.detail-dialog{max-height:100vh;border-radius:0}.app-shell{grid-template-columns:1fr}.sidebar{position:relative;height:auto}.main{padding:18px}.topbar{align-items:flex-start;flex-direction:column}.actions{justify-content:flex-start}.grid-kpi{grid-template-columns:1fr 1fr}.risk-grid{grid-template-columns:1fr}.filters{grid-template-columns:1fr}.line-item{grid-template-columns:1fr}.nl-box{flex-direction:column}.hero-panel{padding:18px}}
     @media(max-width:560px){.grid-kpi{grid-template-columns:1fr}.connection-row{flex-direction:column}.card-head{flex-direction:column;align-items:flex-start}.drawer{padding:0}.drawer-panel{border-radius:22px 22px 0 0}}
   </style>
 </head>
@@ -135,16 +151,16 @@
     <aside class="sidebar">
       <div class="brand">
         <div class="brand-mark">FIAS</div>
-        <div><h1>Plataforma Integral de Mantenimientos</h1><small>Base SharePoint · IA preventiva · Control interno</small></div>
+        <div><h1>Plataforma Integral de Mantenimientos</h1><small>Base SharePoint · Control preventivo · Trazabilidad</small></div>
       </div>
       <div class="nav-group">Centro de operación</div>
       <button class="nav-button active" data-module="executive"><i class="bi bi-speedometer2"></i> Visor ejecutivo</button>
       <button class="nav-button" data-module="maintenance"><i class="bi bi-wrench-adjustable-circle"></i> Mantenimientos</button>
-      <button class="nav-button" data-module="fleet"><i class="bi bi-truck-front"></i> Activos y riesgo</button>
+      <button class="nav-button" data-module="fleet"><i class="bi bi-truck-front"></i> Vehículos y prioridad</button>
       <button class="nav-button" data-module="integrity"><i class="bi bi-shield-check"></i> Integridad y auditoría</button>
       <button class="nav-button" data-module="ocr"><i class="bi bi-file-earmark-text"></i> OCR documental</button>
-      <button class="nav-button" data-module="assistant"><i class="bi bi-stars"></i> Analítica inteligente</button>
-      <button class="nav-button" data-module="admin"><i class="bi bi-diagram-3"></i> Conexión y estructura</button>
+      <button class="nav-button" data-module="assistant"><i class="bi bi-stars"></i> Análisis y recomendaciones</button>
+      <button class="nav-button" data-module="admin"><i class="bi bi-journal-check"></i> Bitácora de cambios</button>
       <div class="sidebar-card">
         <div class="muted">Libro maestro</div>
         <strong>Excel SharePoint FIAS</strong>
@@ -160,7 +176,7 @@
       <div class="topbar">
         <div class="page-title">
           <h2>Comando técnico del parque vehicular FIAS</h2>
-          <p>Plataforma construida sobre la base real del archivo enterprise: activos, mantenimientos, detalle técnico, facturas electrónicas, consistencias, documentos, OCR y bitácora de cambios.</p>
+          <p>Plataforma construida sobre la información real del mantenimiento vehicular FIAS: vehículos, intervenciones, detalle técnico, facturas electrónicas, consistencias, documentos, OCR y bitácora de cambios.</p>
         </div>
         <div class="actions">
           <button class="btn btn-ghost" id="btnLogin"><i class="bi bi-microsoft"></i> Iniciar sesión</button>
@@ -172,7 +188,7 @@
       <div class="hero-grid">
         <section class="hero-panel">
           <h3>Gestión inteligente del ciclo de vida vehicular, con validación preventiva y trazabilidad institucional.</h3>
-          <p>El sistema no replica un tablero genérico: usa las tablas canónicas del Excel centralizado para leer, analizar, validar, registrar y auditar mantenimientos en SharePoint.</p>
+          <p>El sistema consulta el Excel centralizado del FIAS para visualizar, validar, registrar y auditar mantenimientos, facturas y soportes documentales desde una interfaz operativa más intuitiva.</p>
         </section>
         <section class="connection-panel">
           <div class="connection-row"><span>Estado</span><strong id="connState" class="status-dot warn">Pendiente</strong></div>
@@ -207,8 +223,8 @@
       <section id="maintenance" class="module">
         <div class="card">
           <div class="card-head">
-            <div><h3>Registro estructurado de mantenimientos</h3><p>Tabla vinculada a <span class="mono">tblMantenimientos</span>, con filtros, análisis y acciones de control.</p></div>
-            <div class="flex gap-2 wrap"><button class="btn btn-sm btn-primary" id="btnNew2"><i class="bi bi-plus"></i> Registrar</button><button class="btn btn-sm btn-ghost" id="btnExportMaint"><i class="bi bi-download"></i> Exportar CSV</button></div>
+            <div><h3>Registro estructurado de mantenimientos</h3><p>Consulta operativa con filtros, tarjetas visuales, detalle técnico y acciones de control.</p></div>
+            <div class="flex gap-2 wrap"><button class="btn btn-sm btn-primary" id="btnNew2"><i class="bi bi-plus"></i> Registrar</button><button class="btn btn-sm btn-ghost" id="btnResetFilters"><i class="bi bi-arrow-counterclockwise"></i> Resetear filtros</button><button class="btn btn-sm btn-ghost" id="btnExportMaint"><i class="bi bi-download"></i> Exportar CSV</button></div>
           </div>
           <div class="card-body">
             <div class="filters">
@@ -220,7 +236,7 @@
               <div class="field"><label>Hasta</label><input type="date" id="filterTo"></div>
             </div>
             <div class="search-tools">
-              <div class="search-insight" id="searchInsight"><i class="bi bi-search-heart"></i> Ingrese una palabra clave para filtrar por cabecera, observaciones, repuestos, mano de obra o factura.</div>
+              <div class="search-insight" id="searchInsight"><i class="bi bi-search-heart"></i> Ingrese una palabra clave para filtrar y resaltar coincidencias en cabecera, observaciones, repuestos, mano de obra o factura.</div>
               <div class="quick-chips" id="quickChips">
                 <button class="quick-chip" type="button" data-term="aceite filtro">Aceite / filtros</button>
                 <button class="quick-chip" type="button" data-term="frenos pastillas">Frenos</button>
@@ -237,8 +253,24 @@
       <section id="fleet" class="module">
         <div class="section-grid">
           <article class="card span-12">
-            <div class="card-head"><div><h3>Clasificación automática de riesgo por activo</h3><p>Calculada con antigüedad, costos acumulados, frecuencia de fallas, vencimiento por kilometraje/tiempo y consistencias abiertas.</p></div></div>
-            <div class="card-body"><div class="risk-grid" id="riskGrid"></div></div>
+            <div class="card-head"><div><h3>Priorización preventiva por vehículo</h3><p>Sirve para saber qué vehículo debe atenderse primero y por qué.</p></div></div>
+            <div class="card-body">
+              <div class="risk-explain">
+                <div>
+                  <h4>¿Qué aporta este módulo?</h4>
+                  <p>No reemplaza una evaluación mecánica. Su aporte es administrativo y preventivo: combina kilometraje, historial, costos, frecuencia de mantenimientos correctivos y consistencias pendientes para ordenar la atención de la flota.</p>
+                </div>
+                <div>
+                  <h4>Lectura práctica</h4>
+                  <ul>
+                    <li><strong>Bajo:</strong> vehículo con mantenimiento vigente y sin señales relevantes.</li>
+                    <li><strong>Medio:</strong> requiere seguimiento por cercanía de mantenimiento, costos o hallazgos.</li>
+                    <li><strong>Alto:</strong> debe priorizarse por vencimiento, reincidencia, costo elevado o inconsistencias abiertas.</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="risk-grid" id="riskGrid"></div>
+            </div>
           </article>
           <article class="card span-6"><div class="card-head"><div><h3>Costo por vehículo</h3><p>Control presupuestario por placa.</p></div></div><div class="card-body"><div class="chart-box"><canvas id="chartCostVehicle"></canvas></div></div></article>
           <article class="card span-6"><div class="card-head"><div><h3>Proyección de mantenimiento</h3><p>Predicción basada en historial de kilometraje.</p></div></div><div class="card-body"><div class="table-wrap"><table class="data-table"><thead><tr><th>Placa</th><th>Km actual</th><th>Próximo km</th><th>Km restantes</th><th>Fecha estimada</th><th>Prioridad</th></tr></thead><tbody id="predictionBody"></tbody></table></div></div></article>
@@ -273,17 +305,14 @@
 
       <section id="assistant" class="module">
         <div class="section-grid">
-          <article class="card span-6"><div class="card-head"><div><h3>Consultas en lenguaje natural</h3><p>Ejemplos: “vehículos con mantenimiento vencido”, “costo promedio último trimestre”, “duplicados”.</p></div></div><div class="card-body"><div class="nl-box"><input id="nlQuestion" placeholder="Escriba una pregunta sobre la flota..." /><button class="btn btn-primary" id="btnAsk"><i class="bi bi-send"></i> Analizar</button></div><div class="console mt-2" id="nlAnswer">La respuesta aparecerá aquí.</div></div></article>
-          <article class="card span-6"><div class="card-head"><div><h3>Recomendaciones técnicas</h3><p>Acciones sugeridas por reincidencia, desgaste, costo y riesgo.</p></div></div><div class="card-body"><div class="alert-list" id="recommendationList"></div></div></article>
-          <article class="card span-12"><div class="card-head"><div><h3>Análisis de costos anómalos</h3><p>Valores desviados frente al promedio histórico del vehículo y categoría.</p></div></div><div class="card-body"><div class="table-wrap"><table class="data-table"><thead><tr><th>Fecha</th><th>Placa</th><th>Orden</th><th>Categoría</th><th class="num">Total</th><th>Promedio referencia</th><th>Lectura</th></tr></thead><tbody id="costAnomalyBody"></tbody></table></div></div></article>
+          <article class="card span-5"><div class="card-head"><div><h3>Recomendaciones técnicas</h3><p>Acciones sugeridas por reincidencia, desgaste, costo, vencimiento e inconsistencias.</p></div></div><div class="card-body"><div class="alert-list" id="recommendationList"></div></div></article>
+          <article class="card span-7"><div class="card-head"><div><h3>Análisis de costos anómalos</h3><p>Valores desviados frente al promedio histórico del vehículo y categoría.</p></div></div><div class="card-body"><div class="table-wrap"><table class="data-table"><thead><tr><th>Fecha</th><th>Placa</th><th>Orden</th><th>Categoría</th><th class="num">Total</th><th>Promedio referencia</th><th>Lectura</th></tr></thead><tbody id="costAnomalyBody"></tbody></table></div></div></article>
         </div>
       </section>
 
       <section id="admin" class="module">
         <div class="section-grid">
-          <article class="card span-6"><div class="card-head"><div><h3>Integración Microsoft Graph</h3><p>Resolución canónica del archivo Excel compartido.</p></div></div><div class="card-body"><div class="console" id="adminConsole">Sin conexión.</div></div></article>
-          <article class="card span-6"><div class="card-head"><div><h3>Tablas canónicas del modelo</h3><p>El HTML se alinea al Excel Enterprise, no a una estructura genérica.</p></div></div><div class="card-body"><div class="table-wrap"><table class="data-table"><thead><tr><th>Módulo</th><th>Tabla Excel</th><th>Uso operativo</th></tr></thead><tbody id="schemaBody"></tbody></table></div></div></article>
-          <article class="card span-12"><div class="card-head"><div><h3>Auditoría de cambios</h3><p>Bitácora <span class="mono">tblAuditoriaCambios</span>.</p></div></div><div class="card-body"><div class="table-wrap"><table class="data-table"><thead><tr><th>ID</th><th>Fecha</th><th>Usuario</th><th>Tabla</th><th>Registro</th><th>Campo/Acción</th><th>Motivo</th><th>Estado</th></tr></thead><tbody id="auditBody"></tbody></table></div></div></article>
+          <article class="card span-12"><div class="card-head"><div><h3>Auditoría de cambios</h3><p>Bitácora institucional de modificaciones, validaciones y registros realizados en la plataforma.</p></div></div><div class="card-body"><div class="table-wrap"><table class="data-table"><thead><tr><th>ID</th><th>Fecha</th><th>Usuario</th><th>Tabla</th><th>Registro</th><th>Campo/Acción</th><th>Motivo</th><th>Estado</th></tr></thead><tbody id="auditBody"></tbody></table></div></div></article>
         </div>
       </section>
     </main>
@@ -565,7 +594,7 @@
       const item = await graph(`/shares/${token}/driveItem?$select=id,name,parentReference,webUrl`);
       if(!item || !item.id || !item.parentReference || !item.parentReference.driveId) throw new Error('No se pudo resolver el archivo Excel compartido.');
       state.driveItemPath = `/drives/${item.parentReference.driveId}/items/${item.id}`;
-      $('adminConsole').textContent = `Archivo: ${item.name}\nDriveId: ${item.parentReference.driveId}\nItemId: ${item.id}\nWebUrl: ${item.webUrl || 'N/D'}\nShareToken: ${token}`;
+      if($('adminConsole')) $('adminConsole').textContent = `Archivo: ${item.name}\nDriveId: ${item.parentReference.driveId}\nItemId: ${item.id}\nWebUrl: ${item.webUrl || 'N/D'}\nShareToken: ${token}`;
       return item;
     }
 
@@ -886,7 +915,7 @@
         return `<tr class="interactive-row" data-id="${escapeHtml(r.ID_Mantenimiento)}"><td><button class="btn btn-sm btn-primary btn-view-maint" type="button" data-id="${escapeHtml(r.ID_Mantenimiento)}"><i class="bi bi-eye"></i> Ver ${detailCount ? '('+detailCount+')' : ''}</button></td><td class="mono">${highlight(r.ID_Mantenimiento)}</td><td>${formatDate(r.Fecha_Facturacion_Emision || r.Fecha_Recepcion)}</td><td><strong>${highlight(r.Placa)}</strong></td><td class="mono">${highlight(r.Orden_Reparacion)}</td><td class="mono">${highlight(r.Factura_Nro || '—')}</td><td class="num">${integer(r.Km)}</td><td>${pill(r.Tipo_Mantenimiento, typePill(r.Tipo_Mantenimiento))}</td><td>${highlight(r.Agencia || '')}</td><td class="num"><strong>${money(r.Total_Control || r.Total_Con_IVA || r.Subtotal_Sin_IVA)}</strong></td><td>${pill(r.Estado_Registro, statusPill(r.Estado_Registro))}</td><td>${control}</td></tr>`;
       }).join('') || `<tr><td colspan="12"><div class="empty-state"><i class="bi bi-inbox"></i><br>No existen registros con los filtros aplicados. Pruebe con términos como aceite, filtro, frenos, llanta, orden o factura.</div></td></tr>`;
       $$('.btn-view-maint', body).forEach(btn => btn.addEventListener('click', e => { e.stopPropagation(); openMaintenanceDetail(btn.dataset.id); }));
-      $$('.interactive-row', body).forEach(row => row.addEventListener('click', () => openMaintenanceDetail(row.dataset.id))); 
+      $$('.interactive-row', body).forEach(row => row.addEventListener('dblclick', () => openMaintenanceDetail(row.dataset.id)));
     }
 
     function renderMaintenanceCards(rows){
@@ -1056,19 +1085,80 @@
     }
 
     function renderExecutiveSummary(){
-      const total = maint().reduce((s,r)=>s+numberValue(r.Total_Control || r.Total_Con_IVA || r.Subtotal_Sin_IVA),0);
+      const ms = maint();
+      const vs = vehicles();
+      const total = ms.reduce((s,r)=>s+numberValue(r.Total_Control || r.Total_Con_IVA || r.Subtotal_Sin_IVA),0);
+      const partsTotal = details().reduce((s,d)=>s+numberValue(d.Valor_Total),0);
+      const invoiceTotal = invoices().reduce((s,f)=>s+numberValue(f.Total_Factura),0);
       const risks = computeRiskAll();
       const riskHigh = risks.filter(r=>r.level==='Alto');
       const riskMedium = risks.filter(r=>r.level==='Medio');
+      const due = risks.filter(r=>r.kmRemaining <= 0);
+      const near = risks.filter(r=>r.kmRemaining > 0 && r.kmRemaining <= 500);
       const dups = buildDuplicateAlerts();
       const incs = buildInconsistencies();
-      const last = maint().slice().sort((a,b)=>toIsoDate(b.Fecha_Facturacion_Emision || b.Fecha_Recepcion).localeCompare(toIsoDate(a.Fecha_Facturacion_Emision || a.Fecha_Recepcion)))[0];
-      const avg = maint().length ? total / maint().length : 0;
+      const openMatrix = consistencies().filter(c=>normalizeText(c.Estado)!=='cerrado').length;
+      const last = ms.slice().sort((a,b)=>toIsoDate(b.Fecha_Facturacion_Emision || b.Fecha_Recepcion).localeCompare(toIsoDate(a.Fecha_Facturacion_Emision || a.Fecha_Recepcion)))[0];
+      const avg = ms.length ? total / ms.length : 0;
+      const byType = countGroup(ms, r => r.Tipo_Mantenimiento || r.Categoria || 'Sin clasificar');
+      const dominantType = Object.entries(byType).sort((a,b)=>b[1]-a[1])[0] || ['Sin datos',0];
+      const byVehicleCost = {};
+      ms.forEach(r => { const p = r.Placa || 'Sin placa'; byVehicleCost[p] = (byVehicleCost[p] || 0) + numberValue(r.Total_Control || r.Total_Con_IVA || r.Subtotal_Sin_IVA); });
+      const topVehicle = Object.entries(byVehicleCost).sort((a,b)=>b[1]-a[1])[0] || ['Sin datos',0];
+      const months = [...new Set(ms.map(r=>monthKey(r.Fecha_Facturacion_Emision || r.Fecha_Recepcion)).filter(Boolean))].sort();
+      const lastMonth = months[months.length-1];
+      const previousMonth = months[months.length-2];
+      const monthTotal = (m) => ms.filter(r=>monthKey(r.Fecha_Facturacion_Emision || r.Fecha_Recepcion)===m).reduce((s,r)=>s+numberValue(r.Total_Control || r.Total_Con_IVA || r.Subtotal_Sin_IVA),0);
+      const trendText = lastMonth ? `${lastMonth}: ${money(monthTotal(lastMonth))}${previousMonth ? `; mes anterior ${previousMonth}: ${money(monthTotal(previousMonth))}` : ''}` : 'Sin datos mensuales suficientes';
+      const recent = ms.slice().sort((a,b)=>toIsoDate(b.Fecha_Facturacion_Emision || b.Fecha_Recepcion).localeCompare(toIsoDate(a.Fecha_Facturacion_Emision || a.Fecha_Recepcion))).slice(0,3);
+      const freqItems = countGroup(details(), d => {
+        const t = normalizeText(d.Descripcion || d.Item || '');
+        if(t.includes('filtro')) return 'Filtros';
+        if(t.includes('aceite') || t.includes('lubric')) return 'Aceites/lubricantes';
+        if(t.includes('freno') || t.includes('pastilla')) return 'Frenos';
+        if(t.includes('llanta') || t.includes('aline') || t.includes('balance')) return 'Llantas/alineación';
+        if(t.includes('lavada') || t.includes('limpieza') || t.includes('higien')) return 'Limpieza/higienización';
+        return 'Otros';
+      });
+      const topItems = Object.entries(freqItems).sort((a,b)=>b[1]-a[1]).slice(0,4);
       $('executiveSummary').innerHTML = `
-        <p>El parque vehicular registra <strong>${vehicles().length}</strong> activo(s), <strong>${maint().length}</strong> intervenciones técnicas y un costo acumulado de <strong>${money(total)}</strong>, con promedio histórico de <strong>${money(avg)}</strong> por mantenimiento.</p>
-        <p>El motor preventivo clasifica <strong>${riskHigh.length}</strong> activo(s) en riesgo alto y <strong>${riskMedium.length}</strong> en riesgo medio. ${riskHigh.length ? 'La prioridad inmediata corresponde a: <strong>'+riskHigh.map(r=>escapeHtml(r.plate)).join(', ')+'</strong>.' : 'No se identifica riesgo alto con la información actual.'}</p>
-        <p>En integridad de datos se detectan <strong>${dups.length}</strong> posible(s) duplicidad(es) y <strong>${incs.length}</strong> inconsistencia(s) automática(s). La matriz institucional mantiene <strong>${consistencies().filter(c=>normalizeText(c.Estado)!=='cerrado').length}</strong> hallazgo(s) abierto(s).</p>
-        <p>Última intervención registrada: <strong>${last ? escapeHtml(last.Placa)+' · '+escapeHtml(last.Orden_Reparacion)+' · '+formatDate(last.Fecha_Facturacion_Emision || last.Fecha_Recepcion) : 'sin registros'}</strong>. Recomendación: validar soportes pendientes, cerrar consistencias y programar mantenimientos por kilometraje antes del vencimiento operativo.</p>`;
+        <div class="exec-grid">
+          <div class="exec-metric"><span>Vehículos</span><strong>${integer(vs.length)}</strong></div>
+          <div class="exec-metric"><span>Mantenimientos</span><strong>${integer(ms.length)}</strong></div>
+          <div class="exec-metric"><span>Costo acumulado</span><strong>${money(total)}</strong></div>
+          <div class="exec-metric"><span>Promedio por registro</span><strong>${money(avg)}</strong></div>
+          <div class="exec-metric"><span>Facturas cargadas</span><strong>${integer(invoices().length)}</strong></div>
+          <div class="exec-metric"><span>Alertas abiertas</span><strong>${integer(dups.length + incs.length + openMatrix)}</strong></div>
+        </div>
+        <div class="exec-section">
+          <h4>Lectura gerencial</h4>
+          <p>La base registra <strong>${integer(vs.length)}</strong> vehículo(s) y <strong>${integer(ms.length)}</strong> intervención(es), con un costo acumulado de <strong>${money(total)}</strong>. La categoría con mayor frecuencia es <strong>${escapeHtml(dominantType[0])}</strong> (${integer(dominantType[1])} registro(s)). El vehículo con mayor concentración de gasto es <strong>${escapeHtml(topVehicle[0])}</strong>, con <strong>${money(topVehicle[1])}</strong>.</p>
+        </div>
+        <div class="exec-section">
+          <h4>Estado preventivo y prioridad</h4>
+          <p>El sistema clasifica <strong>${integer(riskHigh.length)}</strong> vehículo(s) en prioridad alta y <strong>${integer(riskMedium.length)}</strong> en prioridad media. ${due.length ? `Existen <strong>${integer(due.length)}</strong> vehículo(s) con mantenimiento vencido por kilometraje: <strong>${due.map(r=>escapeHtml(r.plate)).join(', ')}</strong>.` : 'No se identifican vehículos vencidos por kilometraje con la información actual.'} ${near.length ? `Además, <strong>${integer(near.length)}</strong> vehículo(s) están próximos al umbral preventivo.` : ''}</p>
+        </div>
+        <div class="exec-section">
+          <h4>Control financiero y documental</h4>
+          <p>El total consolidado de facturas cargadas asciende a <strong>${money(invoiceTotal)}</strong>; el detalle técnico registrado suma <strong>${money(partsTotal)}</strong>. La diferencia entre totales puede originarse en IVA, descuentos, facturas pendientes de mapeo o registros históricos cargados desde órdenes de servicio.</p>
+        </div>
+        <div class="exec-section">
+          <h4>Integridad de datos</h4>
+          <p>Se identifican <strong>${integer(dups.length)}</strong> posible(s) duplicidad(es), <strong>${integer(incs.length)}</strong> inconsistencia(s) automática(s) y <strong>${integer(openMatrix)}</strong> hallazgo(s) abierto(s) en matriz institucional. Antes de emitir reportes finales, se recomienda cerrar observaciones de factura, kilometraje y soporte documental.</p>
+        </div>
+        <div class="exec-section">
+          <h4>Tendencia y últimos movimientos</h4>
+          <p><strong>${escapeHtml(trendText)}</strong>. Última intervención: <strong>${last ? escapeHtml(last.Placa)+' · '+escapeHtml(last.Orden_Reparacion)+' · '+formatDate(last.Fecha_Facturacion_Emision || last.Fecha_Recepcion)+' · '+money(last.Total_Control || last.Total_Con_IVA || last.Subtotal_Sin_IVA) : 'sin registros'}</strong>.</p>
+          <ul>${recent.map(r=>`<li>${formatDate(r.Fecha_Facturacion_Emision || r.Fecha_Recepcion)} · <strong>${escapeHtml(r.Placa)}</strong> · ${escapeHtml(r.Orden_Reparacion || 'S/O')} · ${money(r.Total_Control || r.Total_Con_IVA || r.Subtotal_Sin_IVA)}</li>`).join('') || '<li>No existen movimientos recientes.</li>'}</ul>
+        </div>
+        <div class="exec-section">
+          <h4>Patrones técnicos recurrentes</h4>
+          <ul>${topItems.map(x=>`<li><strong>${escapeHtml(x[0])}</strong>: ${integer(x[1])} ocurrencia(s)</li>`).join('') || '<li>Sin detalle técnico suficiente para identificar patrones.</li>'}</ul>
+        </div>
+        <div class="exec-section">
+          <h4>Recomendación ejecutiva</h4>
+          <p>Priorizar los vehículos en nivel alto, validar los registros duplicados antes de consolidar pagos, revisar facturas con diferencias entre subtotal/IVA/total y programar los mantenimientos próximos antes de que superen el umbral de kilometraje.</p>
+        </div>`;
     }
 
     function renderRecommendations(){
@@ -1104,6 +1194,7 @@
     }
 
     function renderSchema(){
+      if(!$('schemaBody')) return;
       $('schemaBody').innerHTML = TABLE_META.map(x => `<tr><td><strong>${escapeHtml(x[0])}</strong></td><td class="mono">${escapeHtml(x[1])}</td><td>${escapeHtml(x[2])}</td></tr>`).join('');
     }
 
@@ -1620,6 +1711,17 @@
       return 'Interpretación general: la consulta no coincide con un patrón específico. Puede preguntar por vencidos, riesgo, duplicados, facturas, costos o promedio del último trimestre.';
     }
 
+
+    function resetFilters(){
+      ['filterText','filterFrom','filterTo'].forEach(id => { if($(id)) $(id).value = ''; });
+      ['filterVehicle','filterType','filterStatus'].forEach(id => { if($(id)) $(id).selectedIndex = 0; });
+      $$('.quick-chip').forEach(c=>c.classList.remove('active'));
+      renderMaintenanceTable();
+      renderKpis();
+      renderCharts();
+      toast('Filtros restablecidos', 'Se muestra nuevamente la base completa de mantenimientos.');
+    }
+
     function exportCsv(){
       const rows = filteredMaintenance();
       const headers = ['ID_Mantenimiento','Fecha_Facturacion_Emision','Placa','Orden_Reparacion','Factura_Nro','Km','Tipo_Mantenimiento','Agencia','Total_Control','Estado_Registro'];
@@ -1646,6 +1748,7 @@
       $('btnValidateForm').addEventListener('click', validateForm);
       $('btnSaveForm').addEventListener('click', saveForm);
       $('btnExportMaint').addEventListener('click', exportCsv);
+      if($('btnResetFilters')) $('btnResetFilters').addEventListener('click', resetFilters);
       $('btnCloseDetailModal').addEventListener('click', closeMaintenanceDetail);
       $('maintenanceDetailModal').addEventListener('click', e => { if(e.target.id === 'maintenanceDetailModal') closeMaintenanceDetail(); });
       $('btnModalNewFromDetail').addEventListener('click', () => { closeMaintenanceDetail(); openDrawer(); });
@@ -1655,8 +1758,8 @@
       ['filterText','filterVehicle','filterType','filterStatus','filterFrom','filterTo'].forEach(id => $(id).addEventListener('input', () => { if(id === 'filterText' && !$('filterText').value.trim()) $$('.quick-chip').forEach(c=>c.classList.remove('active')); renderMaintenanceTable(); renderKpis(); }));
       $('ocrInput').addEventListener('change', e => handleOcr(e.target.files[0]));
       $('btnUseOcr').addEventListener('click', useOcrInForm);
-      $('btnAsk').addEventListener('click', () => { $('nlAnswer').textContent = answerQuestion($('nlQuestion').value); });
-      $('nlQuestion').addEventListener('keydown', e => { if(e.key === 'Enter'){ e.preventDefault(); $('btnAsk').click(); } });
+      if($('btnAsk')) $('btnAsk').addEventListener('click', () => { $('nlAnswer').textContent = answerQuestion($('nlQuestion').value); });
+      if($('nlQuestion')) $('nlQuestion').addEventListener('keydown', e => { if(e.key === 'Enter'){ e.preventDefault(); $('btnAsk').click(); } });
     }
 
     async function init(){

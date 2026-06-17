@@ -304,6 +304,7 @@
   <script src="https://alcdn.msauth.net/browser/2.32.0/js/msal-browser.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script>
   (() => {
     'use strict';
@@ -340,6 +341,20 @@
       ['Documentos','tblDocumentos','Soportes asociados con hash SHA-256 y estado.']
     ];
 
+    const SHEET_FOR_TABLE = {
+      tblVehiculos: '02_Vehiculos',
+      tblProveedores: '07_Proveedores',
+      tblFacturas: '05_Facturas',
+      tblDetalleFacturas: '06_Detalle_Fact',
+      tblMantenimientos: '03_Mantenimientos',
+      tblDetalleMantenimiento: '04_Detalle_Mant',
+      tblAuditoriaCambios: '09_Auditoria',
+      tblConsistencias: '10_Consistencias',
+      tblDiccionario: '12_Diccionario',
+      tblOCRCola: '13_OCR_Cola',
+      tblDocumentos: '14_Documentos'
+    };
+
     const COLUMNS = {
       tblMantenimientos: ['ID_Mantenimiento','ID_Activo','Placa','Orden_Reparacion','Factura_Nro','Fecha_Recepcion','Fecha_Facturacion_Emision','Año','Mes','Km','Km_Anterior','Delta_Km','Tipo_Mantenimiento','Categoria','Agencia','Asesor_Vendedor','Ingreso_Observacion','Cierre_Observacion','Subtotal_Mano_Obra','Subtotal_Repuestos','Subtotal_Sin_IVA','IVA','Total_Con_IVA','Total_Control','Fuente_Principal','Archivo_Origen','Hash_Documento','Estado_Registro','Validacion_Km','Validacion_Duplicado','Validacion_Cuadre_Factura','Requiere_Revision','Fecha_Carga','Usuario_Carga','Version_Registro','Link_Documento_SharePoint','Observacion_Control'],
       tblDetalleMantenimiento: ['ID_Detalle_Mant','ID_Mantenimiento','Orden_Reparacion','Factura_Nro','Item_Secuencia','Tipo_Item','Descripcion','Cantidad','Lado','Valor_Unitario','Valor_Total','Fuente','Categoria_Item','Link_Documento','Observaciones'],
@@ -358,7 +373,10 @@
       charts: {},
       lastOcr: null,
       loading: false,
-      connected: false
+      connected: false,
+      workbookApiAvailable: true,
+      binaryMode: false,
+      binaryWorkbook: null
     };
 
     const $ = (id) => document.getElementById(id);
@@ -474,6 +492,18 @@
       throw new Error('Microsoft Graph no respondió luego de tres intentos.');
     }
 
+
+    async function graphRaw(path, options={}){
+      const token = await acquireToken();
+      const headers = Object.assign({ Authorization: `Bearer ${token}` }, options.headers || {});
+      const res = await fetch(`https://graph.microsoft.com/v1.0${path}`, Object.assign({}, options, { headers }));
+      if(!res.ok){
+        const text = await res.text().catch(()=>res.statusText);
+        throw new Error(`Graph ${res.status}: ${text}`);
+      }
+      return res;
+    }
+
     async function resolveDriveItem(){
       const token = shareId(CONFIG.shareTokenOrUrl);
       const item = await graph(`/shares/${token}/driveItem?$select=id,name,parentReference,webUrl`);
@@ -484,14 +514,60 @@
     }
 
     async function createSession(){
-      const res = await graph(`${state.driveItemPath}/workbook/createSession`, { method:'POST', body: JSON.stringify({ persistChanges: true }) });
-      state.sessionId = res && res.id ? res.id : '';
-      $('sessionState').textContent = state.sessionId ? 'Persistente' : 'Sin sesión';
+      try{
+        const res = await graph(`${state.driveItemPath}/workbook/createSession`, { method:'POST', body: JSON.stringify({ persistChanges: true }) });
+        state.sessionId = res && res.id ? res.id : '';
+        state.workbookApiAvailable = true;
+        state.binaryMode = false;
+        $('sessionState').textContent = state.sessionId ? 'Persistente' : 'Sin sesión';
+      }catch(err){
+        const msg = String(err && err.message ? err.message : err);
+        if(msg.includes('unsupportedWorkbook') || msg.includes('FileCorruptTryRepair') || msg.includes('Graph 501')){
+          state.sessionId = '';
+          state.workbookApiAvailable = false;
+          state.binaryMode = true;
+          $('sessionState').textContent = 'Modo binario XLSX';
+          toast('Workbook API no disponible', 'El Excel será leído por descarga binaria XLSX. Recomendado: subir la versión Graph-Compatible.', 'warn');
+          return;
+        }
+        throw err;
+      }
     }
 
     function tableBase(tableName){ return `${state.driveItemPath}/workbook/tables/${encodeURIComponent(tableName)}`; }
 
+    async function ensureBinaryWorkbook(){
+      if(!window.XLSX) throw new Error('No se cargó SheetJS/XLSX para el modo alternativo de lectura.');
+      if(state.binaryWorkbook) return state.binaryWorkbook;
+      const response = await graphRaw(`${state.driveItemPath}/content`, { method:'GET' });
+      const buffer = await response.arrayBuffer();
+      state.binaryWorkbook = XLSX.read(buffer, { type:'array', raw:true, cellDates:false });
+      return state.binaryWorkbook;
+    }
+
+    function sheetRowsFromBinary(workbook, tableName){
+      const sheetName = SHEET_FOR_TABLE[tableName] || tableName;
+      const sheet = workbook.Sheets[sheetName];
+      if(!sheet) return [];
+      return XLSX.utils.sheet_to_json(sheet, { header:1, defval:'', raw:true });
+    }
+
+    async function loadTableBinary(tableName){
+      const workbook = await ensureBinaryWorkbook();
+      const values = sheetRowsFromBinary(workbook, tableName);
+      const headers = (values[0] || []).map(h => String(h || '').trim()).filter(Boolean);
+      state.headers[tableName] = headers.length ? headers : (COLUMNS[tableName] || []);
+      const rows = values.slice(1).filter(row => row.some(cell => cell !== null && cell !== undefined && cell !== ''));
+      state.rows[tableName] = rows.map((row, i) => {
+        const obj = { _rowIndex: i };
+        state.headers[tableName].forEach((h, idx) => obj[h] = row[idx] ?? '');
+        return normalizeRow(tableName, obj);
+      });
+      return state.rows[tableName];
+    }
+
     async function loadTable(tableName){
+      if(!state.workbookApiAvailable) return loadTableBinary(tableName);
       const range = await graph(`${tableBase(tableName)}/range`);
       const values = Array.isArray(range && range.values) ? range.values : [];
       const headers = (values[0] || []).map(h => String(h || '').trim()).filter(Boolean);
@@ -511,13 +587,40 @@
       return row;
     }
 
+    async function uploadBinaryWorkbook(){
+      if(!state.binaryWorkbook) throw new Error('No existe libro binario cargado.');
+      const data = XLSX.write(state.binaryWorkbook, { bookType:'xlsx', type:'array' });
+      await graphRaw(`${state.driveItemPath}/content`, {
+        method:'PUT',
+        headers:{ 'Content-Type':'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' },
+        body:data
+      });
+    }
+
+    async function addRowBinary(tableName, object){
+      const workbook = await ensureBinaryWorkbook();
+      const sheetName = SHEET_FOR_TABLE[tableName] || tableName;
+      let rows = sheetRowsFromBinary(workbook, tableName);
+      let headers = state.headers[tableName] && state.headers[tableName].length ? state.headers[tableName] : (rows[0] || COLUMNS[tableName] || Object.keys(object));
+      headers = headers.map(h => String(h || '').trim()).filter(Boolean);
+      if(!rows.length) rows = [headers];
+      else rows[0] = headers;
+      rows.push(headers.map(h => object[h] ?? ''));
+      workbook.Sheets[sheetName] = XLSX.utils.aoa_to_sheet(rows);
+      if(!workbook.SheetNames.includes(sheetName)) workbook.SheetNames.push(sheetName);
+      await uploadBinaryWorkbook();
+      return { mode:'binary-xlsx-upload' };
+    }
+
     async function addRow(tableName, object){
+      if(!state.workbookApiAvailable) return addRowBinary(tableName, object);
       const headers = state.headers[tableName] && state.headers[tableName].length ? state.headers[tableName] : (COLUMNS[tableName] || []);
       const values = [headers.map(h => object[h] ?? '')];
       return graph(`${tableBase(tableName)}/rows/add`, { method:'POST', body: JSON.stringify({ values }) });
     }
 
     async function updateRow(tableName, rowIndex, object){
+      if(!state.workbookApiAvailable) throw new Error('La actualización puntual no está disponible en modo binario. Use la versión Graph-Compatible del Excel.');
       const headers = state.headers[tableName] || [];
       const values = [headers.map(h => object[h] ?? '')];
       return graph(`${tableBase(tableName)}/rows/itemAt(index=${Number(rowIndex)})/range`, { method:'PATCH', body: JSON.stringify({ values }) });
@@ -551,7 +654,7 @@
         $('sideLastSync').textContent = 'Última sincronización: ' + stamp;
         updateConnectionUi();
         renderAll();
-        toast('Sincronización completada', 'Las tablas del Excel Enterprise fueron leídas correctamente.');
+        toast('Sincronización completada', state.binaryMode ? 'Datos leídos por modo binario XLSX debido a limitación del Workbook API.' : 'Las tablas del Excel Enterprise fueron leídas correctamente.');
       }catch(err){ state.connected = false; updateConnectionUi(); toast('Error de sincronización', err.message, 'danger'); }
       finally{ hideLoading(); }
     }

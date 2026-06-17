@@ -113,8 +113,17 @@
     .loading{position:fixed;inset:0;z-index:80;background:rgba(255,255,255,.88);display:none;align-items:center;justify-content:center;flex-direction:column;gap:12px;backdrop-filter:blur(4px)}.loading.open{display:flex}.spinner{width:44px;height:44px;border:4px solid #d9f1df;border-top-color:var(--green-700);border-radius:50%;animation:spin 1s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
     .toast-zone{position:fixed;right:18px;bottom:18px;display:grid;gap:10px;z-index:100}.toast{background:#fff;border:1px solid var(--gray-200);border-left:5px solid var(--green-500);border-radius:14px;box-shadow:var(--shadow-soft);padding:12px 14px;min-width:min(360px,90vw)}.toast.danger{border-left-color:#ef4444}.toast.warn{border-left-color:#f59e0b}.toast h4{margin:0 0 3px;font-size:.95rem}.toast p{margin:0;color:var(--gray-600)}
     .hidden{display:none!important}.text-right{text-align:right}.mt-1{margin-top:8px}.mt-2{margin-top:14px}.mt-3{margin-top:20px}.mb-0{margin-bottom:0}.w-100{width:100%}.flex{display:flex}.gap-2{gap:10px}.wrap{flex-wrap:wrap}.justify-between{justify-content:space-between}.align-center{align-items:center}
-    @media(max-width:1320px){.grid-kpi{grid-template-columns:repeat(3,1fr)}.hero-grid{grid-template-columns:1fr}.span-8,.span-7,.span-6,.span-5,.span-4,.span-3{grid-column:span 12}.risk-grid{grid-template-columns:repeat(2,1fr)}.filters{grid-template-columns:1fr 1fr}.split-form{grid-template-columns:1fr}.ocr-preview{grid-template-columns:1fr}}
-    @media(max-width:900px){.app-shell{grid-template-columns:1fr}.sidebar{position:relative;height:auto}.main{padding:18px}.topbar{align-items:flex-start;flex-direction:column}.actions{justify-content:flex-start}.grid-kpi{grid-template-columns:1fr 1fr}.risk-grid{grid-template-columns:1fr}.filters{grid-template-columns:1fr}.line-item{grid-template-columns:1fr}.nl-box{flex-direction:column}.hero-panel{padding:18px}}
+
+    /* Componentes enriquecidos para búsqueda y detalle de mantenimientos */
+    .search-tools{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:10px 0 14px;flex-wrap:wrap}
+    .search-insight{display:flex;align-items:center;gap:8px;color:var(--gray-600);font-size:.9rem;line-height:1.35}.search-insight strong{color:var(--green-800)}
+    .quick-chips{display:flex;gap:8px;flex-wrap:wrap}.quick-chip{border:1px solid var(--gray-200);background:#fff;border-radius:999px;padding:7px 10px;font-size:.82rem;font-weight:850;color:#344054;cursor:pointer}.quick-chip:hover,.quick-chip.active{background:var(--green-100);border-color:#b7e4c7;color:var(--green-800)}
+    mark.hit{background:#fff2a8;color:#1f2937;border-radius:5px;padding:0 .14em;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+    .maintenance-gallery{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:10px 0 14px}.maint-card{border:1px solid var(--gray-200);background:linear-gradient(180deg,#fff,#fbfcfd);border-radius:18px;padding:14px;box-shadow:var(--shadow-soft);display:flex;flex-direction:column;gap:10px}.maint-card:hover{border-color:#b7e4c7;box-shadow:0 12px 30px rgba(31,122,56,.12)}.maint-card-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.maint-title{font-weight:950;letter-spacing:-.02em}.maint-sub{color:var(--gray-600);font-size:.86rem;margin-top:2px}.maint-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.mini-metric{border:1px solid var(--gray-200);border-radius:12px;background:#fff;padding:8px}.mini-metric span{display:block;color:var(--gray-600);font-size:.68rem;text-transform:uppercase;letter-spacing:.07em;font-weight:900}.mini-metric strong{font-size:.95rem}.item-snippets{display:flex;gap:6px;flex-wrap:wrap;min-height:28px}.item-chip{display:inline-flex;max-width:100%;border-radius:999px;background:#f3f6f8;color:#344054;padding:5px 8px;font-size:.76rem;font-weight:750;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.interactive-row{cursor:pointer}.interactive-row:hover td{background:#f6fff8!important}
+    .detail-modal{position:fixed;inset:0;background:rgba(16,24,40,.56);z-index:80;display:none;align-items:center;justify-content:center;padding:18px}.detail-modal.open{display:flex}.detail-dialog{width:min(1180px,100%);max-height:92vh;background:#fff;border-radius:26px;box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column}.detail-head{background:linear-gradient(135deg,var(--green-950),var(--green-700));color:#fff;padding:18px 20px;display:flex;justify-content:space-between;gap:14px;align-items:flex-start}.detail-title{margin:0;font-size:1.25rem;font-weight:950;letter-spacing:-.03em}.detail-subtitle{margin:4px 0 0;opacity:.86}.detail-body{padding:18px;overflow:auto}.detail-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.detail-cell{border:1px solid var(--gray-200);border-radius:14px;background:#fbfcfd;padding:10px}.detail-cell span{display:block;color:var(--gray-600);font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;font-weight:900}.detail-cell strong{display:block;margin-top:4px;font-size:1rem;word-break:break-word}.detail-section{margin-top:16px}.detail-section h4{margin:0 0 8px;font-size:1rem;font-weight:950;color:var(--gray-950)}.obs-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.obs-box{border:1px solid var(--gray-200);border-radius:14px;background:#fff;padding:12px;min-height:82px}.obs-box h5{margin:0 0 6px;font-size:.82rem;text-transform:uppercase;letter-spacing:.08em;color:var(--gray-600)}.obs-box p{margin:0;line-height:1.55;color:#344054}.detail-foot{padding:14px 18px;border-top:1px solid var(--gray-200);background:#fff;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}.sum-row{display:flex;justify-content:flex-end;gap:14px;margin-top:10px;color:var(--gray-600)}.sum-row strong{color:var(--gray-950)}
+
+    @media(max-width:1320px){.maintenance-gallery{grid-template-columns:repeat(2,1fr)}.detail-grid{grid-template-columns:repeat(2,1fr)}.grid-kpi{grid-template-columns:repeat(3,1fr)}.hero-grid{grid-template-columns:1fr}.span-8,.span-7,.span-6,.span-5,.span-4,.span-3{grid-column:span 12}.risk-grid{grid-template-columns:repeat(2,1fr)}.filters{grid-template-columns:1fr 1fr}.split-form{grid-template-columns:1fr}.ocr-preview{grid-template-columns:1fr}}
+    @media(max-width:900px){.maintenance-gallery{grid-template-columns:1fr}.obs-grid{grid-template-columns:1fr}.detail-modal{padding:0}.detail-dialog{max-height:100vh;border-radius:0}.app-shell{grid-template-columns:1fr}.sidebar{position:relative;height:auto}.main{padding:18px}.topbar{align-items:flex-start;flex-direction:column}.actions{justify-content:flex-start}.grid-kpi{grid-template-columns:1fr 1fr}.risk-grid{grid-template-columns:1fr}.filters{grid-template-columns:1fr}.line-item{grid-template-columns:1fr}.nl-box{flex-direction:column}.hero-panel{padding:18px}}
     @media(max-width:560px){.grid-kpi{grid-template-columns:1fr}.connection-row{flex-direction:column}.card-head{flex-direction:column;align-items:flex-start}.drawer{padding:0}.drawer-panel{border-radius:22px 22px 0 0}}
   </style>
 </head>
@@ -210,7 +219,17 @@
               <div class="field"><label>Desde</label><input type="date" id="filterFrom"></div>
               <div class="field"><label>Hasta</label><input type="date" id="filterTo"></div>
             </div>
-            <div class="table-wrap"><table class="data-table" id="maintTable"><thead><tr><th>ID</th><th>Fecha</th><th>Placa</th><th>Orden</th><th>Factura</th><th>Km</th><th>Tipo</th><th>Proveedor/Agencia</th><th class="num">Total</th><th>Estado</th><th>Control</th></tr></thead><tbody></tbody></table></div>
+            <div class="search-tools">
+              <div class="search-insight" id="searchInsight"><i class="bi bi-search-heart"></i> Ingrese una palabra clave para filtrar por cabecera, observaciones, repuestos, mano de obra o factura.</div>
+              <div class="quick-chips" id="quickChips">
+                <button class="quick-chip" type="button" data-term="aceite filtro">Aceite / filtros</button>
+                <button class="quick-chip" type="button" data-term="frenos pastillas">Frenos</button>
+                <button class="quick-chip" type="button" data-term="llanta alineacion balanceo">Llantas / alineación</button>
+                <button class="quick-chip" type="button" data-term="mantenimiento vencido revision">Revisión</button>
+              </div>
+            </div>
+            <div class="maintenance-gallery" id="maintCards"></div>
+            <div class="table-wrap"><table class="data-table" id="maintTable"><thead><tr><th>Detalle</th><th>ID</th><th>Fecha</th><th>Placa</th><th>Orden</th><th>Factura</th><th>Km</th><th>Tipo</th><th>Proveedor/Agencia</th><th class="num">Total</th><th>Estado</th><th>Control</th></tr></thead><tbody></tbody></table></div>
           </div>
         </div>
       </section>
@@ -300,6 +319,25 @@
     </div>
   </div>
 
+
+
+  <div class="detail-modal" id="maintenanceDetailModal" aria-hidden="true">
+    <div class="detail-dialog" role="dialog" aria-modal="true" aria-labelledby="maintenanceDetailTitle">
+      <div class="detail-head">
+        <div>
+          <h3 class="detail-title" id="maintenanceDetailTitle">Detalle de mantenimiento</h3>
+          <p class="detail-subtitle" id="maintenanceDetailSubtitle">Seleccione un registro para visualizar su trazabilidad técnica.</p>
+        </div>
+        <button class="btn btn-sm btn-ghost" id="btnCloseDetailModal" type="button"><i class="bi bi-x-lg"></i> Cerrar</button>
+      </div>
+      <div class="detail-body" id="maintenanceDetailBody"></div>
+      <div class="detail-foot">
+        <span class="muted"><i class="bi bi-info-circle"></i> Vista enriquecida basada en cabecera, detalle técnico, factura y validaciones.</span>
+        <button class="btn btn-primary" id="btnModalNewFromDetail" type="button"><i class="bi bi-plus-circle"></i> Registrar nuevo</button>
+      </div>
+    </div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
   <script src="https://alcdn.msauth.net/browser/2.32.0/js/msal-browser.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
@@ -358,6 +396,8 @@
     const COLUMNS = {
       tblMantenimientos: ['ID_Mantenimiento','ID_Activo','Placa','Orden_Reparacion','Factura_Nro','Fecha_Recepcion','Fecha_Facturacion_Emision','Año','Mes','Km','Km_Anterior','Delta_Km','Tipo_Mantenimiento','Categoria','Agencia','Asesor_Vendedor','Ingreso_Observacion','Cierre_Observacion','Subtotal_Mano_Obra','Subtotal_Repuestos','Subtotal_Sin_IVA','IVA','Total_Con_IVA','Total_Control','Fuente_Principal','Archivo_Origen','Hash_Documento','Estado_Registro','Validacion_Km','Validacion_Duplicado','Validacion_Cuadre_Factura','Requiere_Revision','Fecha_Carga','Usuario_Carga','Version_Registro','Link_Documento_SharePoint','Observacion_Control'],
       tblDetalleMantenimiento: ['ID_Detalle_Mant','ID_Mantenimiento','Orden_Reparacion','Factura_Nro','Item_Secuencia','Tipo_Item','Descripcion','Cantidad','Lado','Valor_Unitario','Valor_Total','Fuente','Categoria_Item','Link_Documento','Observaciones'],
+      tblFacturas: ['Factura_Nro','Clave_Acceso','RUC_Proveedor','Proveedor','Fecha_Autorizacion','Fecha_Emision','Orden_Reparacion','ID_Activo','Placa','Chasis','Motor','Km','Subtotal_Mano_Obra','Subtotal_Repuestos','Subtotal_Sin_IVA','IVA_15','Total_Factura','Forma_Pago','Estado_Validacion','Archivo_Origen','Hash_SHA256','Link_SharePoint','Fecha_Carga','Usuario_Carga','Observaciones'],
+      tblDetalleFacturas: ['ID_Detalle_Factura','Factura_Nro','Item_Secuencia','Tipo_Item','Codigo_Item','Descripcion','Cantidad','Precio_Unitario','Descuento','Neto','Valor_Total','Categoria_Item','Cuenta_Contable','Observaciones'],
       tblOCRCola: ['ID_Carga','Fecha_Hora','Usuario','Archivo_Nombre','Archivo_Hash_SHA256','Tipo_Documento','Proveedor_OCR','Confianza_Promedio','Estado_OCR','Factura_Nro_Detectada','Orden_Detectada','Placa_Detectada','Km_Detectado','Total_Detectado','JSON_Extraccion','ID_Mantenimiento_Generado','Observaciones'],
       tblAuditoriaCambios: ['ID_Cambio','Fecha_Hora','Usuario','Tabla','ID_Registro','Campo','Valor_Anterior','Valor_Nuevo','Motivo','Documento_Soporte','Aprobado_Por','Estado','Observaciones']
     };
@@ -393,7 +433,23 @@
     }
     function escapeHtml(value){ return String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch])); }
     function normalizeText(value){ return String(value ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim(); }
-    function numberValue(value){ if(value === null || value === undefined || value === '') return 0; if(typeof value === 'number') return isFinite(value) ? value : 0; const v = String(value).replace(/\./g,'').replace(',','.').replace(/[^0-9.-]/g,''); return Number(v) || 0; }
+    function numberValue(value){
+      if(value === null || value === undefined || value === '') return 0;
+      if(typeof value === 'number') return isFinite(value) ? value : 0;
+      let s = String(value).trim().replace(/\s+/g,'').replace(/[^0-9,.-]/g,'');
+      if(!s) return 0;
+      const hasComma = s.includes(','), hasDot = s.includes('.');
+      if(hasComma && hasDot){
+        if(s.lastIndexOf(',') > s.lastIndexOf('.')) s = s.replace(/\./g,'').replace(',', '.');
+        else s = s.replace(/,/g,'');
+      }else if(hasComma){
+        s = s.replace(',', '.');
+      }else if(hasDot){
+        const parts = s.split('.');
+        if(parts.length === 2 && parts[1].length === 3 && parts[0].length <= 3) s = parts.join('');
+      }
+      return Number(s) || 0;
+    }
     function money(value){ return new Intl.NumberFormat('es-EC',{style:'currency',currency:'USD'}).format(numberValue(value)); }
     function integer(value){ return new Intl.NumberFormat('es-EC',{maximumFractionDigits:0}).format(numberValue(value)); }
     function nowIso(){ return new Date().toISOString(); }
@@ -701,8 +757,74 @@
       $('fVehicle').innerHTML = '<option value="">Seleccione...</option>' + vehicles().map(v=>`<option value="${escapeHtml(v.ID_Activo)}">${escapeHtml(v.Placa)} · ${escapeHtml(v.Marca || '')} ${escapeHtml(v.Modelo || '')}</option>`).join('');
     }
 
+    function searchTokens(){
+      return normalizeText($('filterText') ? $('filterText').value : '').split(/\s+/).map(t=>t.trim()).filter(Boolean);
+    }
+
+    function semanticTerms(token){
+      const map = {
+        aceite:['aceite','lubricante','10w30','15w40','75w80','75w90'], filtro:['filtro','cabina','aire','combustible','aceite'], filtros:['filtro','cabina','aire','combustible','aceite'],
+        freno:['freno','frenos','pastilla','pastillas','liquido de frenos','limpifrenos'], frenos:['freno','pastilla','pastillas','liquido de frenos','limpifrenos'],
+        llanta:['llanta','llantas','neumatico','neumaticos','alineacion','balanceo','enllantaje'], neumatico:['llanta','neumatico','alineacion','balanceo','enllantaje'], alineacion:['alineacion','camber','caster','balanceo'],
+        bateria:['bateria','bosch'], factura:['factura','clave acceso','autorizacion','subtotal','iva'], orden:['orden','orden reparacion'], proveedor:['proveedor','agencia','casabaca'],
+        lavado:['lavada','limpieza','higienizador','air refresh','cortesia'], mantenimiento:['mantenimiento','servicio','mmnt','mant'], revision:['revision','observado','requiere revision','pendiente','validacion']
+      };
+      return [token, ...(map[token] || [])];
+    }
+
+    function maintenanceDetailsFor(r){
+      return details().filter(d =>
+        (d.ID_Mantenimiento && d.ID_Mantenimiento === r.ID_Mantenimiento) ||
+        (r.Orden_Reparacion && d.Orden_Reparacion === r.Orden_Reparacion) ||
+        (r.Factura_Nro && d.Factura_Nro === r.Factura_Nro) ||
+        (r.Placa && d.Placa === r.Placa && String(d.ID_Mantenimiento || '').includes(String(r.ID_Mantenimiento || '')))
+      );
+    }
+
+    function invoiceFor(r){
+      return invoices().find(f =>
+        (r.Factura_Nro && f.Factura_Nro === r.Factura_Nro) ||
+        (r.Orden_Reparacion && f.Orden_Reparacion === r.Orden_Reparacion)
+      ) || {};
+    }
+
+    function invoiceDetailsFor(r){
+      const inv = invoiceFor(r);
+      return data('invoiceDetail').filter(d =>
+        (r.Factura_Nro && d.Factura_Nro === r.Factura_Nro) ||
+        (inv.Factura_Nro && d.Factura_Nro === inv.Factura_Nro)
+      );
+    }
+
+    function maintenanceSearchBlob(r){
+      const det = maintenanceDetailsFor(r).map(d => [d.Tipo_Item,d.Descripcion,d.Categoria_Item,d.Observaciones,d.Fuente,d.Valor_Total].join(' ')).join(' ');
+      const inv = invoiceFor(r);
+      const invDet = invoiceDetailsFor(r).map(d => [d.Tipo_Item,d.Codigo_Item,d.Descripcion,d.Categoria_Item,d.Observaciones,d.Valor_Total].join(' ')).join(' ');
+      return normalizeText([
+        r.ID_Mantenimiento,r.ID_Activo,r.Placa,r.Orden_Reparacion,r.Factura_Nro,r.Fecha_Recepcion,r.Fecha_Facturacion_Emision,r.Km,r.Tipo_Mantenimiento,r.Categoria,r.Agencia,r.Asesor_Vendedor,
+        r.Ingreso_Observacion,r.Cierre_Observacion,r.Estado_Registro,r.Validacion_Km,r.Validacion_Duplicado,r.Validacion_Cuadre_Factura,r.Observacion_Control,r.Total_Control,
+        inv.Proveedor,inv.RUC_Proveedor,inv.Clave_Acceso,inv.Forma_Pago,inv.Observaciones,det,invDet
+      ].join(' '));
+    }
+
+    function matchesSearch(r, tokens){
+      if(!tokens.length) return true;
+      const blob = maintenanceSearchBlob(r);
+      return tokens.every(t => semanticTerms(t).some(term => blob.includes(normalizeText(term))));
+    }
+
+    function searchScore(r, tokens){
+      if(!tokens.length) return 0;
+      const blob = maintenanceSearchBlob(r);
+      let score = 0;
+      tokens.forEach(t => semanticTerms(t).forEach(term => { if(blob.includes(normalizeText(term))) score += term === t ? 3 : 1; }));
+      if(tokens.some(t => normalizeText(r.Placa).includes(t))) score += 8;
+      if(tokens.some(t => normalizeText(r.Orden_Reparacion).includes(t) || normalizeText(r.Factura_Nro).includes(t))) score += 10;
+      return score;
+    }
+
     function filteredMaintenance(){
-      const q = normalizeText($('filterText').value);
+      const tokens = searchTokens();
       const veh = $('filterVehicle').value;
       const type = $('filterType').value;
       const status = $('filterStatus').value;
@@ -710,10 +832,24 @@
       const to = $('filterTo').value;
       return maint().filter(r => {
         const date = toIsoDate(r.Fecha_Facturacion_Emision || r.Fecha_Recepcion);
-        const blob = normalizeText([r.ID_Mantenimiento,r.Placa,r.Orden_Reparacion,r.Factura_Nro,r.Tipo_Mantenimiento,r.Categoria,r.Agencia,r.Asesor_Vendedor,r.Ingreso_Observacion,r.Cierre_Observacion,r.Estado_Registro].join(' '));
-        return (!q || q.split(/\s+/).every(t => blob.includes(t))) && (!veh || r.Placa === veh || r.ID_Activo === veh) && (!type || r.Tipo_Mantenimiento === type) && (!status || r.Estado_Registro === status) && (!from || date >= from) && (!to || date <= to);
-      }).sort((a,b)=>toIsoDate(b.Fecha_Facturacion_Emision || b.Fecha_Recepcion).localeCompare(toIsoDate(a.Fecha_Facturacion_Emision || a.Fecha_Recepcion)));
+        return matchesSearch(r, tokens) && (!veh || r.Placa === veh || r.ID_Activo === veh) && (!type || r.Tipo_Mantenimiento === type) && (!status || r.Estado_Registro === status) && (!from || date >= from) && (!to || date <= to);
+      }).sort((a,b)=>{
+        const score = searchScore(b,tokens) - searchScore(a,tokens);
+        if(score) return score;
+        return toIsoDate(b.Fecha_Facturacion_Emision || b.Fecha_Recepcion).localeCompare(toIsoDate(a.Fecha_Facturacion_Emision || a.Fecha_Recepcion));
+      });
     }
+
+    function highlight(value){
+      let html = escapeHtml(value || '—');
+      searchTokens().flatMap(semanticTerms).filter(t=>t.length>1).slice(0,16).forEach(term => {
+        const safe = escapeRegExp(term);
+        if(!safe) return;
+        html = html.replace(new RegExp(`(${safe})`, 'gi'), '<mark class="hit">$1</mark>');
+      });
+      return html;
+    }
+    function escapeRegExp(s){ return String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
 
     function renderKpis(){
       const ms = maint();
@@ -736,10 +872,38 @@
 
     function renderMaintenanceTable(){
       const rows = filteredMaintenance();
-      $('maintTable').querySelector('tbody').innerHTML = rows.map(r => {
+      const tokens = searchTokens();
+      const total = maint().length;
+      const showing = rows.length;
+      $('searchInsight').innerHTML = tokens.length
+        ? `<i class="bi bi-stars"></i> Se encontraron <strong>${showing}</strong> de <strong>${total}</strong> mantenimientos relacionados con: <strong>${escapeHtml(tokens.join(' + '))}</strong>. También se buscaron coincidencias similares en repuestos, observaciones y facturas.`
+        : `<i class="bi bi-search-heart"></i> Mostrando <strong>${showing}</strong> mantenimiento(s). Busque por repuesto, servicio, placa, orden, factura, proveedor u observación técnica.`;
+      renderMaintenanceCards(rows);
+      const body = $('maintTable').querySelector('tbody');
+      body.innerHTML = rows.map(r => {
         const control = rowControlStatus(r);
-        return `<tr><td class="mono">${escapeHtml(r.ID_Mantenimiento)}</td><td>${formatDate(r.Fecha_Facturacion_Emision || r.Fecha_Recepcion)}</td><td><strong>${escapeHtml(r.Placa)}</strong></td><td class="mono">${escapeHtml(r.Orden_Reparacion)}</td><td class="mono">${escapeHtml(r.Factura_Nro || '—')}</td><td class="num">${integer(r.Km)}</td><td>${pill(r.Tipo_Mantenimiento, typePill(r.Tipo_Mantenimiento))}</td><td>${escapeHtml(r.Agencia || '')}</td><td class="num"><strong>${money(r.Total_Control || r.Total_Con_IVA || r.Subtotal_Sin_IVA)}</strong></td><td>${pill(r.Estado_Registro, statusPill(r.Estado_Registro))}</td><td>${control}</td></tr>`;
-      }).join('') || `<tr><td colspan="11"><div class="empty-state"><i class="bi bi-inbox"></i><br>No existen registros con los filtros aplicados.</div></td></tr>`;
+        const detailCount = maintenanceDetailsFor(r).length || invoiceDetailsFor(r).length;
+        return `<tr class="interactive-row" data-id="${escapeHtml(r.ID_Mantenimiento)}"><td><button class="btn btn-sm btn-primary btn-view-maint" type="button" data-id="${escapeHtml(r.ID_Mantenimiento)}"><i class="bi bi-eye"></i> Ver ${detailCount ? '('+detailCount+')' : ''}</button></td><td class="mono">${highlight(r.ID_Mantenimiento)}</td><td>${formatDate(r.Fecha_Facturacion_Emision || r.Fecha_Recepcion)}</td><td><strong>${highlight(r.Placa)}</strong></td><td class="mono">${highlight(r.Orden_Reparacion)}</td><td class="mono">${highlight(r.Factura_Nro || '—')}</td><td class="num">${integer(r.Km)}</td><td>${pill(r.Tipo_Mantenimiento, typePill(r.Tipo_Mantenimiento))}</td><td>${highlight(r.Agencia || '')}</td><td class="num"><strong>${money(r.Total_Control || r.Total_Con_IVA || r.Subtotal_Sin_IVA)}</strong></td><td>${pill(r.Estado_Registro, statusPill(r.Estado_Registro))}</td><td>${control}</td></tr>`;
+      }).join('') || `<tr><td colspan="12"><div class="empty-state"><i class="bi bi-inbox"></i><br>No existen registros con los filtros aplicados. Pruebe con términos como aceite, filtro, frenos, llanta, orden o factura.</div></td></tr>`;
+      $$('.btn-view-maint', body).forEach(btn => btn.addEventListener('click', e => { e.stopPropagation(); openMaintenanceDetail(btn.dataset.id); }));
+      $$('.interactive-row', body).forEach(row => row.addEventListener('click', () => openMaintenanceDetail(row.dataset.id))); 
+    }
+
+    function renderMaintenanceCards(rows){
+      const selected = rows.slice(0, 9);
+      $('maintCards').innerHTML = selected.map(r => {
+        const det = maintenanceDetailsFor(r);
+        const invDet = invoiceDetailsFor(r);
+        const all = det.length ? det : invDet;
+        const snippets = all.slice(0, 4).map(d => `<span class="item-chip" title="${escapeHtml(d.Descripcion || '')}">${highlight(d.Descripcion || d.Categoria_Item || 'Ítem')}</span>`).join('') || '<span class="item-chip">Sin detalle cargado</span>';
+        return `<article class="maint-card">
+          <div class="maint-card-head"><div><div class="maint-title">${highlight(r.Placa || 'N/D')} · ${highlight(r.Orden_Reparacion || 'Sin orden')}</div><div class="maint-sub">${formatDate(r.Fecha_Facturacion_Emision || r.Fecha_Recepcion)} · ${highlight(r.Factura_Nro || 'Sin factura')}</div></div>${pill(r.Tipo_Mantenimiento || r.Categoria, typePill(r.Tipo_Mantenimiento || r.Categoria))}</div>
+          <div class="maint-metrics"><div class="mini-metric"><span>Km</span><strong>${integer(r.Km)}</strong></div><div class="mini-metric"><span>Total</span><strong>${money(r.Total_Control || r.Total_Con_IVA || r.Subtotal_Sin_IVA)}</strong></div><div class="mini-metric"><span>Detalle</span><strong>${all.length}</strong></div></div>
+          <div class="item-snippets">${snippets}</div>
+          <button class="btn btn-sm btn-ghost btn-view-maint-card" type="button" data-id="${escapeHtml(r.ID_Mantenimiento)}"><i class="bi bi-layout-text-window"></i> Abrir ficha detallada</button>
+        </article>`;
+      }).join('') || `<div class="empty-state" style="grid-column:1/-1"><i class="bi bi-search"></i><br>No hay tarjetas para mostrar con los filtros aplicados.</div>`;
+      $$('.btn-view-maint-card', $('maintCards')).forEach(btn => btn.addEventListener('click', () => openMaintenanceDetail(btn.dataset.id)));
     }
 
     function typePill(value){ const x = normalizeText(value); if(x.includes('prevent')) return 'pill-ok'; if(x.includes('correct')||x.includes('emerg')) return 'pill-warn'; if(x.includes('neumatic')) return 'pill-info'; return 'pill-neutral'; }
@@ -990,8 +1154,20 @@
       pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
       const buffer = await file.arrayBuffer();
       const pdf = await pdfjsLib.getDocument({data: buffer}).promise;
+      let extractedText = '';
+      const pages = Math.min(pdf.numPages || 1, 2);
+      for(let pageNumber = 1; pageNumber <= pages; pageNumber++){
+        const page = await pdf.getPage(pageNumber);
+        try{
+          const txt = await page.getTextContent();
+          const pageText = (txt.items || []).map(item => item.str || '').join('\n');
+          if(pageText.trim()) extractedText += '\n' + pageText;
+        }catch(e){ console.warn('No se pudo leer texto vectorial del PDF', e); }
+      }
+      if(extractedText.replace(/\s+/g,'').length > 120) return extractedText;
+
       const page = await pdf.getPage(1);
-      const viewport = page.getViewport({scale: 2});
+      const viewport = page.getViewport({scale: 2.4});
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
       canvas.width = viewport.width;
@@ -1002,19 +1178,180 @@
     }
 
     function extractInvoiceData(text){
-      const clean = String(text || '').replace(/\s+/g,' ').trim();
-      const get = (regex) => { const m = clean.match(regex); return m ? m[1].trim() : ''; };
-      const factura = get(/No\.\s*(\d{3}-\d{3}-\d{9})/i) || get(/(\d{3}-\d{3}-\d{9})/);
-      const ruc = get(/R\.U\.C\.?:?\s*(\d{13})/i) || get(/RUC\s*\/?\s*CI:?\s*(\d{10,13})/i);
-      const clave = get(/CLAVE\s+DE\s+ACCESO\s*(\d{35,60})/i) || get(/(\d{49})/);
-      const fecha = get(/Fecha\s+Emisi[oó]n:?\s*(\d{1,2}\/\d{1,2}\/\d{4})/i) || get(/(\d{1,2}\/\d{1,2}\/\d{4})/);
-      const orden = get(/Orden\s+reparaci[oó]n:?\s*([A-Z0-9-]+)/i) || get(/Orden\s+reparacion:?\s*([A-Z0-9-]+)/i);
-      const placa = get(/Placa:?\s*([A-Z]{3,4}\d{3,4})/i);
-      const km = get(/Km:?\s*([0-9.,]+)/i);
-      const total = get(/TOTAL\s+FACTURA\s*([0-9.,]+)/i) || get(/Formas\s+de\s+Pago.*?([0-9]+[.,][0-9]{2})/i);
-      const proveedor = clean.match(/CASABACA\s+S\.A\./i) ? 'CASABACA S.A.' : get(/Raz[oó]n\s+Social.*?([A-ZÁÉÍÓÚÑ\s\.]{5,40})/i);
-      const iva = get(/IVA\s+15%\s*([0-9.,]+)/i);
-      return { proveedor, ruc, claveAcceso: clave, factura, fechaEmision: toIsoDate(fecha), orden, placa: placa.toUpperCase(), km: numberValue(km), total: numberValue(total), iva: numberValue(iva), confianza: text ? 82 : 0 };
+      const raw = String(text || '').replace(/\r/g,'\n');
+      const clean = raw.replace(/[ \t]+/g,' ').replace(/\n{2,}/g,'\n').trim();
+      const flat = clean.replace(/\s+/g,' ').trim();
+      const lines = clean.split('\n').map(x=>x.trim()).filter(Boolean);
+      const first = (...patterns) => {
+        for(const p of patterns){ const m = flat.match(p); if(m) return (m[1] || '').trim(); }
+        return '';
+      };
+      const accessKey = first(/CLAVE\s+DE\s+ACCESO\s*(\d{35,60})/i, /(\d{49})/);
+      const accessDate = dateFromAccessKey(accessKey);
+      const invoiceNo = first(/No\.?\s*(\d{3}-\d{3}-\d{9})/i, /(\d{3}-\d{3}-\d{9})/);
+      const supplierRuc = first(/R\.U\.C\.?:?\s*(\d{13})/i) || (accessKey ? accessKey.slice(10,23) : '');
+      const customerRuc = first(/RUC\s*\/\s*CI:?\s*(\d{10,13})/i) || detectCustomerRuc(lines, supplierRuc);
+      const authDate = first(/FECHA\s+Y\s+HORA\s+DE\s+AUTORIZACI[OÓ]N\s*([0-9\/:-]{8,20}(?:\s+[0-9:]{4,8})?)/i);
+      const issueDate = first(/Fecha\s+Emisi[oó]n:?\s*([0-9]{1,4}[\/\-][0-9]{1,2}[\/\-][0-9]{2,4})/i) || accessDate || first(/(\d{1,2}\/\d{1,2}\/\d{4})/);
+      const order = getLabelValue(lines, /Orden\s+reparaci[oó]n/i) || first(/Orden\s+reparaci[oó]n:?\s*([A-Z0-9.-]+)/i);
+      const plate = (getLabelValue(lines, /Placa/i) || first(/Placa:?\s*([A-Z]{3,4}\d{3,4})/i)).toUpperCase();
+      const km = getLabelValue(lines, /^Km$/i) || first(/\bKm:?\s*([0-9.,]+)/i);
+      const vehicleName = getLabelValue(lines, /Vehiculo|Vehículo/i) || first(/Veh[ií]culo:?\s*([A-Z0-9 .-]{5,60})/i);
+      const chassis = getLabelValue(lines, /Chasis/i) || first(/Chasis:?\s*([A-Z0-9-]{8,30})/i);
+      const motor = getLabelValue(lines, /Motor/i) || first(/Motor:?\s*([A-Z0-9-]{5,30})/i);
+      const advisor = getLabelValue(lines, /Nombre\s+vendedor/i) || first(/Nombre\s+vendedor:?\s*([A-ZÁÉÍÓÚÑ\s.]{3,60})/i);
+      const agency = getLabelValue(lines, /^Agencia$/i) || first(/Agencia:?\s*([A-ZÁÉÍÓÚÑ\s.]{3,30})/i);
+      const observation = getLabelValue(lines, /Observaci[oó]n/i) || first(/Observaci[oó]n:?\s*(.*?)(?:Mail:|Gran\s+Contribuyente|SUBTOTAL|$)/i);
+      const supplier = /CASABACA\s+S\.A\./i.test(flat) ? 'CASABACA S.A.' : (first(/Raz[oó]n\s+Social.*?([A-ZÁÉÍÓÚÑ\s.]{5,60})/i) || '');
+      let items = parseInvoiceItems(lines);
+      if(!items.length) items = parseInvoiceItemsFlat(flat);
+      const subtotalLaborDetected = getSummaryValue(lines, /SUBTOTAL\s+MANO\s+DE\s+OBRA/i);
+      const subtotalPartsDetected = getSummaryValue(lines, /SUBTOTAL\s+REPUESTOS/i);
+      const subtotalNoTaxDetected = getSummaryValue(lines, /SUBTOTAL\s+SIN\s+IMPUESTOS/i) || getSummaryValue(lines, /SUBTOTAL\s+15%/i);
+      const ivaDetected = getSummaryValue(lines, /IVA\s*15%/i);
+      const totalDetected = getSummaryValue(lines, /TOTAL\s+FACTURA/i) || getSummaryValue(lines, /OTROS\s+CON\s+UTILIZACION\s+DEL\s+SISTEMA\s+FINANCIERO/i);
+      const partsFromItems = round2(items.filter(x=>x.tipo === 'R').reduce((a,b)=>a + numberValue(b.neto || b.valorTotal), 0));
+      const laborFromItems = round2(items.filter(x=>x.tipo !== 'R').reduce((a,b)=>a + numberValue(b.neto || b.valorTotal), 0));
+      const subtotalParts = subtotalPartsDetected || partsFromItems;
+      const subtotalLabor = subtotalLaborDetected || laborFromItems;
+      const subtotalSinIva = subtotalNoTaxDetected || round2(subtotalParts + subtotalLabor);
+      const iva = ivaDetected || round2(subtotalSinIva * 0.15);
+      const total = totalDetected || round2(subtotalSinIva + iva);
+      const category = inferInvoiceCategory(items, observation);
+      const maintenanceType = inferMaintenanceType(items, category, observation);
+      const confidenceBase = 45 + (invoiceNo?10:0) + (order?10:0) + (plate?10:0) + (items.length?15:0) + (total?10:0);
+      return {
+        proveedor: supplier, ruc: supplierRuc, rucCliente: customerRuc, claveAcceso: accessKey,
+        factura: invoiceNo, fechaAutorizacion: toIsoDate(authDate), fechaEmision: toIsoDate(issueDate),
+        orden: order, placa: plate, km: numberValue(km), vehiculo: vehicleName, chasis: chassis, motor,
+        agencia: agency, vendedor: advisor, observacion: observation,
+        subtotalManoObra: round2(subtotalLabor), subtotalRepuestos: round2(subtotalParts), subtotalSinIva: round2(subtotalSinIva), iva: round2(iva), total: round2(total),
+        formaPago: first(/Formas\s+de\s+Pago\s*(.*?)\s*(?:SUBTOTAL\s+0%|En\s+cumplimiento|$)/i) || 'OTROS CON UTILIZACION DEL SISTEMA FINANCIERO',
+        items, tipoMantenimiento: maintenanceType, categoria: category,
+        confianza: Math.min(99, confidenceBase)
+      };
+    }
+
+    function round2(n){ return Math.round((numberValue(n) + Number.EPSILON) * 100) / 100; }
+
+    function dateFromAccessKey(key){
+      const k = String(key || '').replace(/\D/g,'');
+      if(k.length < 8) return '';
+      const dd = k.slice(0,2), mm = k.slice(2,4), yyyy = k.slice(4,8);
+      if(/^\d{4}$/.test(yyyy) && Number(mm) >= 1 && Number(mm) <= 12 && Number(dd) >= 1 && Number(dd) <= 31) return `${yyyy}-${mm}-${dd}`;
+      return '';
+    }
+
+    function getLabelValue(lines, labelRegex){
+      for(let i=0;i<lines.length;i++){
+        const line = lines[i];
+        if(labelRegex.test(line)){
+          const inline = line.replace(labelRegex, '').replace(/^\s*:?\s*/, '').trim();
+          if(inline && !/^(RUC\s*\/\s*CI|Fecha\s+Emisi|Gu[ií]a\s+Remisi[oó]n|AMBIENTE|EMISI[OÓ]N)$/i.test(inline)) return inline;
+          for(let j=i+1;j<Math.min(lines.length, i+7);j++){
+            const candidate = lines[j].trim();
+            if(!candidate) continue;
+            if(/^(No\.|AMBIENTE|EMISI[OÓ]N|Propietario|Tel\. cliente|Vehiculo|Vehículo|Placa|Chasis|Km|Motor|Nombre vendedor|Provincia cliente|Ciudad cliente|Dir\. cliente|Mail|Gran Contribuyente|SUBTOTAL)/i.test(candidate)) break;
+            return candidate;
+          }
+        }
+      }
+      return '';
+    }
+
+    function detectCustomerRuc(lines, supplierRuc){
+      const rucs = lines.map(x=>(x.match(/\b\d{10,13}\b/) || [])[0]).filter(Boolean);
+      return rucs.find(x => x !== supplierRuc && x.length >= 10) || '';
+    }
+
+    function getSummaryValue(lines, labelRegex){
+      for(let i=0;i<lines.length;i++){
+        if(labelRegex.test(lines[i])){
+          const sameLineNumbers = moneyMatches(lines[i]);
+          if(sameLineNumbers.length) return numberValue(sameLineNumbers.at(-1));
+          const block = lines.slice(i+1, Math.min(lines.length, i+8)).filter(x=>!isSummaryLabel(x));
+          const nums = block.flatMap(moneyMatches);
+          if(nums.length) return numberValue(nums[0]);
+        }
+      }
+      return 0;
+    }
+
+    function isSummaryLabel(line){
+      return /^(SUBTOTAL|TOTAL\s+FACTURA|DESCUENTO|SUMAN|IVA|Formas\s+de\s+Pago|OTROS\s+CON)/i.test(String(line || '').trim());
+    }
+
+    function moneyMatches(text){ return String(text || '').match(/\d{1,3}(?:[.,]\d{3})*[.,]\d{2}|\d+[.,]\d{2}/g) || []; }
+    function isNumericToken(text){ return /^-?\d+(?:[.,]\d+)?$/.test(String(text || '').trim()); }
+    function isMoneyToken(text){ return /^-?\d+(?:[.,]\d{2})$/.test(String(text || '').trim()); }
+
+    function parseInvoiceItems(lines){
+      const start = findItemsStart(lines);
+      if(start < 0) return [];
+      const end = lines.findIndex((l,idx)=>idx>start && /Orden\s+reparaci[oó]n/i.test(l));
+      const segment = lines.slice(start, end > start ? end : lines.length);
+      const items = [];
+      let i = 0;
+      while(i < segment.length){
+        const code = segment[i++];
+        if(!code || /^(SUBTOTAL|TOTAL|Orden|Propietario)$/i.test(code)) break;
+        if(i >= segment.length || !isNumericToken(segment[i])) { continue; }
+        const qty = numberValue(segment[i++]);
+        const descParts = [];
+        while(i < segment.length && !/^[RMS]$/i.test(segment[i])) descParts.push(segment[i++]);
+        if(!descParts.length || i >= segment.length) continue;
+        const tipo = segment[i++].toUpperCase();
+        const values = [];
+        while(i < segment.length && values.length < 4 && isMoneyToken(segment[i])) values.push(numberValue(segment[i++]));
+        if(values.length < 4) continue;
+        const [precio, descuento, neto, total] = values;
+        const descripcion = descParts.join(' ').replace(/\s+/g,' ').trim();
+        items.push({tipo, codigo: code, descripcion, cantidad: qty, precioUnitario: precio, descuento, neto, valorTotal: total, categoria: classifyItem(descripcion)});
+      }
+      return items;
+    }
+
+    function findItemsStart(lines){
+      const idx = lines.findIndex((l,i)=>/^TOTAL$/i.test(l) && lines.slice(Math.max(0,i-8), i).some(x=>/REPUESTOS\s*\/\s*MANO\s+DE\s+OBRA/i.test(x)));
+      if(idx >= 0) return idx + 1;
+      const alt = lines.findIndex(l=>/REPUESTOS\s*\/\s*MANO\s+DE\s+OBRA/i.test(l));
+      if(alt >= 0){
+        const totalIdx = lines.findIndex((l,i)=>i>alt && /^TOTAL$/i.test(l));
+        return totalIdx >= 0 ? totalIdx + 1 : alt + 1;
+      }
+      return -1;
+    }
+
+    function parseInvoiceItemsFlat(flat){
+      const rows = [];
+      const rx = /\b([RMS])\s+([A-Z0-9.\-]+)\s+(.+?)\s+(\d+(?:[.,]\d+)?)\s+(\d+(?:[.,]\d{2}))\s+(\d+(?:[.,]\d{2}))\s+(\d+(?:[.,]\d{2}))\s+(\d+(?:[.,]\d{2}))/gi;
+      let m;
+      while((m = rx.exec(flat))){
+        const [,tipo,codigo,descripcion,cantidad,precio,total,descuento,neto] = m;
+        rows.push({tipo:tipo.toUpperCase(), codigo, descripcion:descripcion.trim(), cantidad:numberValue(cantidad), precioUnitario:numberValue(precio), descuento:numberValue(descuento), neto:numberValue(neto), valorTotal:numberValue(total), categoria:classifyItem(descripcion)});
+      }
+      return rows;
+    }
+
+    function inferInvoiceCategory(items, observation=''){
+      const text = normalizeText([observation, ...items.map(x=>x.descripcion)].join(' '));
+      const service = items.map(x=>x.descripcion).find(d => /servicio\s+(a\s+los\s+)?\d{1,3}[.,]?\d{3}\s*km/i.test(d));
+      if(service){
+        const m = service.match(/(\d{1,3}[.,]?\d{3})\s*KM/i);
+        return m ? `Mantenimiento ${m[1].replace(',', '.')} km` : 'Mantenimiento programado por kilometraje';
+      }
+      if(text.includes('venta de materiales')) return 'Venta de materiales / repuestos';
+      if(text.includes('llanta') || text.includes('neumatic')) return 'Neumáticos';
+      if(text.includes('parabrisas')) return 'Cristales / parabrisas';
+      return 'Mantenimiento por factura electrónica';
+    }
+
+    function inferMaintenanceType(items, category='', observation=''){
+      const t = normalizeText([category, observation, ...items.map(x=>x.descripcion)].join(' '));
+      if(t.includes('servicio a los') || t.includes('mantenimiento') || /\d{1,3}[.,]?\d{3}\s*km/.test(t)) return 'Preventivo';
+      if(t.includes('llanta') || t.includes('neumatic')) return 'Neumáticos';
+      if(t.includes('venta de materiales')) return 'Repuestos/Materiales';
+      return 'Correctivo';
     }
 
     function buildOcrRecord(e){
@@ -1026,27 +1363,47 @@
     }
 
     function renderOcrPreview(e){
-      const data = [['Proveedor',e.proveedor],['RUC',e.ruc],['Factura',e.factura],['Clave acceso',e.claveAcceso],['Fecha emisión',formatDate(e.fechaEmision)],['Orden',e.orden],['Placa',e.placa],['Kilometraje',integer(e.km)],['Total',money(e.total)],['Hash SHA-256',(e.hash || '').slice(0,22)+'...']];
-      $('ocrPreview').innerHTML = data.map(x=>`<div class="preview-cell"><span>${escapeHtml(x[0])}</span><strong>${escapeHtml(x[1] || 'No detectado')}</strong></div>`).join('');
+      const data = [
+        ['Proveedor', e.proveedor], ['Agencia', e.agencia], ['RUC proveedor', e.ruc], ['Factura', e.factura], ['Clave acceso', e.claveAcceso],
+        ['Fecha emisión', formatDate(e.fechaEmision)], ['Orden', e.orden], ['Placa', e.placa], ['Kilometraje', integer(e.km)], ['Asesor', e.vendedor],
+        ['Subtotal mano de obra', money(e.subtotalManoObra)], ['Subtotal repuestos', money(e.subtotalRepuestos)], ['IVA', money(e.iva)], ['Total', money(e.total)], ['Ítems detectados', (e.items || []).length], ['Hash SHA-256', (e.hash || '').slice(0,22)+'...']
+      ];
+      const itemRows = (e.items || []).map((it,i)=>`<tr><td>${i+1}</td><td>${escapeHtml(itemTypeLabel(it.tipo))}</td><td class="mono">${escapeHtml(it.codigo)}</td><td>${escapeHtml(it.descripcion)}</td><td class="num">${numberValue(it.cantidad)}</td><td class="num">${money(it.precioUnitario)}</td><td class="num">${money(it.descuento)}</td><td class="num"><strong>${money(it.neto || it.valorTotal)}</strong></td></tr>`).join('');
+      $('ocrPreview').innerHTML = data.map(x=>`<div class="preview-cell"><span>${escapeHtml(x[0])}</span><strong>${escapeHtml(x[1] || 'No detectado')}</strong></div>`).join('') + `
+        <div style="grid-column:1/-1;margin-top:12px">
+          <div class="flex justify-between align-center wrap mb-2"><strong>Pre-mapeo de detalle para registro</strong><span class="muted">Revise cantidades, precios y detalles antes de guardar.</span></div>
+          <div class="table-wrap"><table class="data-table"><thead><tr><th>#</th><th>Tipo</th><th>Código</th><th>Descripción</th><th class="num">Cant.</th><th class="num">P. Unit.</th><th class="num">Desc.</th><th class="num">Neto</th></tr></thead><tbody>${itemRows || '<tr><td colspan="8"><div class="empty-state">No se detectaron ítems de factura.</div></td></tr>'}</tbody></table></div>
+        </div>`;
     }
+
+    function itemTypeLabel(tipo){ return tipo === 'R' ? 'Repuesto' : tipo === 'S' ? 'Servicio' : 'Mano de obra'; }
 
     function useOcrInForm(){
       if(!state.lastOcr){ toast('Sin OCR disponible','Primero cargue y procese una factura.','warn'); return; }
       openDrawer();
       const e = state.lastOcr;
-      const v = vehicles().find(x => x.Placa === e.placa);
+      const v = vehicles().find(x => x.Placa === e.placa || (e.chasis && x.Chasis === e.chasis));
       if(v) $('fVehicle').value = v.ID_Activo;
       $('fDate').value = e.fechaEmision || todayIso();
       $('fInvoiceDate').value = e.fechaEmision || todayIso();
       $('fKm').value = e.km || '';
       $('fOrder').value = e.orden || '';
       $('fInvoice').value = e.factura || '';
-      $('fAgency').value = e.proveedor || '';
-      $('fTotal').value = e.total || '';
-      $('fIva').value = e.iva || '';
-      $('fCategory').value = 'Mantenimiento por factura OCR';
-      $('fIngress').value = 'Registro generado desde OCR documental. Validar detalle técnico antes de guardar.';
+      $('fType').value = e.tipoMantenimiento || 'Preventivo';
+      $('fCategory').value = e.categoria || 'Mantenimiento por factura electrónica';
+      $('fAgency').value = [e.proveedor, e.agencia].filter(Boolean).join(' / ');
+      $('fAdvisor').value = e.vendedor || '';
+      $('fLabor').value = e.subtotalManoObra || 0;
+      $('fParts').value = e.subtotalRepuestos || 0;
+      $('fIva').value = e.iva || 0;
+      $('fTotal').value = e.total || 0;
+      $('fIngress').value = e.observacion || `Pre-registro generado desde factura ${e.factura || ''}.`;
+      $('fClose').value = 'Pre-registro OCR: validar cantidades, precios, descuentos, total, vehículo y soporte antes de persistir en SharePoint.';
+      $('itemLines').innerHTML = '';
+      (e.items || []).forEach(it => addItemLine({tipo: it.tipo, descripcion: it.descripcion, cantidad: it.cantidad, valor: it.cantidad ? round2((it.neto || it.valorTotal) / it.cantidad) : it.precioUnitario, codigo: it.codigo, descuento: it.descuento, neto: it.neto, valorTotal: it.valorTotal}));
+      if(!$('itemLines').children.length) addItemLine();
       validateForm();
+      toast('Pre-registro generado', 'La factura fue mapeada al formulario. Solo valide cantidades, precios o detalles antes de guardar.');
     }
 
     function openDrawer(){ $('recordDrawer').classList.add('open'); $('recordDrawer').setAttribute('aria-hidden','false'); if(!$('itemLines').children.length) addItemLine(); }
@@ -1055,7 +1412,11 @@
     function addItemLine(item={}){
       const row = document.createElement('div');
       row.className = 'line-item';
-      row.innerHTML = `<div class="field"><label>Tipo</label><select class="li-type"><option value="M">Mano de obra</option><option value="R">Repuesto</option><option value="S">Servicio</option></select></div><div class="field"><label>Descripción</label><input class="li-desc" placeholder="Filtro aceite, servicio 95.000 km..." value="${escapeHtml(item.descripcion || '')}"></div><div class="field"><label>Cant.</label><input class="li-qty" type="number" step="0.01" min="0" value="${escapeHtml(item.cantidad || 1)}"></div><div class="field"><label>Valor</label><input class="li-price" type="number" step="0.01" min="0" value="${escapeHtml(item.valor || 0)}"></div><button class="btn btn-sm btn-danger li-remove" type="button"><i class="bi bi-trash"></i></button>`;
+      row.dataset.codigo = item.codigo || '';
+      row.dataset.descuento = item.descuento || 0;
+      row.dataset.neto = item.neto || '';
+      row.dataset.valorTotal = item.valorTotal || '';
+      row.innerHTML = `<div class="field"><label>Tipo</label><select class="li-type"><option value="M">Mano de obra</option><option value="R">Repuesto</option><option value="S">Servicio</option></select></div><div class="field"><label>Descripción</label><input class="li-desc" placeholder="Filtro aceite, servicio 95.000 km..." value="${escapeHtml(item.descripcion || '')}"></div><div class="field"><label>Cant.</label><input class="li-qty" type="number" step="0.01" min="0" value="${escapeHtml(item.cantidad || 1)}"></div><div class="field"><label>Valor unit. neto</label><input class="li-price" type="number" step="0.01" min="0" value="${escapeHtml(item.valor || item.precioUnitario || 0)}"></div><button class="btn btn-sm btn-danger li-remove" type="button"><i class="bi bi-trash"></i></button>`;
       row.querySelector('.li-type').value = item.tipo || 'M';
       row.querySelector('.li-remove').addEventListener('click',()=>row.remove());
       $('itemLines').appendChild(row);
@@ -1088,7 +1449,9 @@
       return $$('.line-item', $('itemLines')).map((el,i)=>{
         const qty = numberValue(el.querySelector('.li-qty').value);
         const price = numberValue(el.querySelector('.li-price').value);
-        return { ID_Detalle_Mant: nextId('DM', state.rows[CONFIG.tables.maintenanceDetail], 'ID_Detalle_Mant', i+1), ID_Mantenimiento: id, Orden_Reparacion: order, Factura_Nro: invoice, Item_Secuencia: i+1, Tipo_Item: el.querySelector('.li-type').value, Descripcion: el.querySelector('.li-desc').value.trim(), Cantidad: qty, Lado: 'NO', Valor_Unitario: price, Valor_Total: qty * price, Fuente: 'Registro HTML Enterprise', Categoria_Item: classifyItem(el.querySelector('.li-desc').value), Link_Documento: '', Observaciones: '', ID_Activo: vehicle.ID_Activo, Placa: vehicle.Placa };
+        const total = round2(qty * price);
+        const desc = el.querySelector('.li-desc').value.trim();
+        return { ID_Detalle_Mant: nextId('DM', state.rows[CONFIG.tables.maintenanceDetail], 'ID_Detalle_Mant', i+1), ID_Mantenimiento: id, Orden_Reparacion: order, Factura_Nro: invoice, Item_Secuencia: i+1, Tipo_Item: el.querySelector('.li-type').value, Descripcion: desc, Cantidad: qty, Lado: 'NO', Valor_Unitario: price, Valor_Total: total, Fuente: state.lastOcr ? 'Factura OCR mapeada' : 'Registro HTML Enterprise', Categoria_Item: classifyItem(desc), Link_Documento: '', Observaciones: [el.dataset.codigo ? `Código factura: ${el.dataset.codigo}` : '', numberValue(el.dataset.descuento) ? `Descuento: ${money(el.dataset.descuento)}` : ''].filter(Boolean).join(' | '), ID_Activo: vehicle.ID_Activo, Placa: vehicle.Placa };
       }).filter(x=>x.Descripcion);
     }
 
@@ -1108,6 +1471,46 @@
       return warnings;
     }
 
+    function buildInvoiceRecord(e, rec, vehicle={}){
+      return {
+        Factura_Nro: e.factura || rec.Factura_Nro || '', Clave_Acceso: e.claveAcceso || '', RUC_Proveedor: e.ruc || '', Proveedor: e.proveedor || rec.Agencia || '',
+        Fecha_Autorizacion: e.fechaAutorizacion || '', Fecha_Emision: e.fechaEmision || rec.Fecha_Facturacion_Emision || '', Orden_Reparacion: e.orden || rec.Orden_Reparacion || '',
+        ID_Activo: rec.ID_Activo || vehicle.ID_Activo || '', Placa: rec.Placa || e.placa || '', Chasis: e.chasis || vehicle.Chasis || '', Motor: e.motor || vehicle.Motor || '', Km: e.km || rec.Km || '',
+        Subtotal_Mano_Obra: e.subtotalManoObra || rec.Subtotal_Mano_Obra || 0, Subtotal_Repuestos: e.subtotalRepuestos || rec.Subtotal_Repuestos || 0,
+        Subtotal_Sin_IVA: e.subtotalSinIva || rec.Subtotal_Sin_IVA || 0, IVA_15: e.iva || rec.IVA || 0, Total_Factura: e.total || rec.Total_Con_IVA || 0,
+        Forma_Pago: e.formaPago || 'OTROS CON UTILIZACION DEL SISTEMA FINANCIERO', Estado_Validacion: 'PRE_REGISTRO_VALIDADO_USUARIO', Archivo_Origen: e.archivo || rec.Archivo_Origen || '',
+        Hash_SHA256: e.hash || rec.Hash_Documento || '', Link_SharePoint: '', Fecha_Carga: nowIso(), Usuario_Carga: state.account ? state.account.username : 'usuario',
+        Observaciones: `Factura mapeada automáticamente a mantenimiento ${rec.ID_Mantenimiento}. Validar detalle contable si aplica.`
+      };
+    }
+
+    function buildInvoiceDetailRecords(e){
+      const base = state.rows[CONFIG.tables.invoiceDetail] || [];
+      return (e.items || []).map((it,i)=>({
+        ID_Detalle_Factura: nextId('DF', base, 'ID_Detalle_Factura', i+1), Factura_Nro: e.factura || '', Item_Secuencia: i+1, Tipo_Item: itemTypeLabel(it.tipo), Codigo_Item: it.codigo || '',
+        Descripcion: it.descripcion || '', Cantidad: numberValue(it.cantidad), Precio_Unitario: numberValue(it.precioUnitario), Descuento: numberValue(it.descuento), Neto: numberValue(it.neto || it.valorTotal),
+        Valor_Total: numberValue(it.valorTotal || it.neto), Categoria_Item: classifyItem(it.descripcion || ''), Cuenta_Contable: '', Observaciones: 'Detalle extraído automáticamente desde factura PDF/OCR.'
+      }));
+    }
+
+    async function persistInvoiceFromOcr(rec, vehicle){
+      const e = state.lastOcr;
+      if(!e || !e.factura) return;
+      if((state.rows[CONFIG.tables.invoices] || []).some(x => x.Factura_Nro === e.factura)){
+        await audit('FACTURA_EXISTENTE', CONFIG.tables.invoices, e.factura, `La factura ${e.factura} ya existía; no se duplicó.`, 'Validado');
+        return;
+      }
+      const inv = buildInvoiceRecord(e, rec, vehicle);
+      const det = buildInvoiceDetailRecords(e);
+      if(state.connected){
+        await addRow(CONFIG.tables.invoices, inv);
+        for(const row of det) await addRow(CONFIG.tables.invoiceDetail, row);
+      }
+      state.rows[CONFIG.tables.invoices].push(inv);
+      state.rows[CONFIG.tables.invoiceDetail].push(...det);
+      await audit('CREAR_FACTURA_OCR', CONFIG.tables.invoices, inv.Factura_Nro, `Factura ${inv.Factura_Nro} y ${det.length} ítem(s) mapeados desde OCR.`, 'Registrado');
+    }
+
     async function saveForm(){
       const warnings = validateForm();
       if(warnings.some(w=>w.level==='Alto') && !confirm('Existen alertas de nivel alto. ¿Desea guardar de todas formas para revisión?')) return;
@@ -1121,11 +1524,80 @@
         for(const line of lines) await addRow(CONFIG.tables.maintenanceDetail, line);
         state.rows[CONFIG.tables.maintenance].push(rec);
         state.rows[CONFIG.tables.maintenanceDetail].push(...lines);
+        if(state.lastOcr && state.lastOcr.factura === rec.Factura_Nro) await persistInvoiceFromOcr(rec, vehicle);
         await audit('CREAR_MANTENIMIENTO', CONFIG.tables.maintenance, rec.ID_Mantenimiento, `Registro ${rec.Orden_Reparacion} / ${rec.Factura_Nro}`, 'Registrado');
         toast('Mantenimiento registrado', 'La información fue guardada y auditada en SharePoint.');
         closeDrawer(); renderAll();
       }catch(err){ toast('No se pudo guardar', err.message, 'danger'); }
       finally{ hideLoading(); }
+    }
+
+
+    function maintenanceById(id){ return maint().find(r => String(r.ID_Mantenimiento) === String(id)) || {}; }
+    function totalOfRows(rows){ return rows.reduce((s,r)=>s+numberValue(r.Valor_Total || r.Neto || (numberValue(r.Cantidad)*numberValue(r.Valor_Unitario || r.Precio_Unitario))),0); }
+    function typeLabel(value){ const v = String(value || '').toUpperCase(); if(v === 'R') return 'Repuesto'; if(v === 'M') return 'Mano de obra'; if(v === 'S') return 'Servicio'; return value || 'Ítem'; }
+
+    function renderDetailTable(rows, source='mant'){
+      if(!rows.length) return `<div class="empty-state"><i class="bi bi-list-check"></i><br>No se encontraron ítems vinculados a este mantenimiento.</div>`;
+      const priceField = source === 'invoice' ? 'Precio_Unitario' : 'Valor_Unitario';
+      const totalField = source === 'invoice' ? 'Valor_Total' : 'Valor_Total';
+      return `<div class="table-wrap"><table class="data-table"><thead><tr><th>#</th><th>Tipo</th><th>Código</th><th>Descripción</th><th>Categoría</th><th class="num">Cant.</th><th class="num">P. Unit.</th><th class="num">Descuento</th><th class="num">Total</th></tr></thead><tbody>${rows.map((d,i)=>`<tr><td>${i+1}</td><td>${pill(typeLabel(d.Tipo_Item), d.Tipo_Item === 'R' ? 'pill-info' : d.Tipo_Item === 'M' ? 'pill-ok' : 'pill-neutral')}</td><td class="mono">${escapeHtml(d.Codigo_Item || '')}</td><td>${highlight(d.Descripcion || '')}</td><td>${escapeHtml(d.Categoria_Item || '')}</td><td class="num">${numberValue(d.Cantidad).toLocaleString('es-EC')}</td><td class="num">${money(d[priceField])}</td><td class="num">${money(d.Descuento)}</td><td class="num"><strong>${money(d[totalField] || d.Neto)}</strong></td></tr>`).join('')}</tbody></table></div><div class="sum-row"><span>Total detalle:</span><strong>${money(totalOfRows(rows))}</strong></div>`;
+    }
+
+    function validationList(r){
+      const rows = [
+        ['Kilometraje', r.Validacion_Km || 'N/D'],
+        ['Duplicidad', r.Validacion_Duplicado || 'N/D'],
+        ['Cuadre factura', r.Validacion_Cuadre_Factura || 'N/D'],
+        ['Requiere revisión', r.Requiere_Revision || 'N/D'],
+        ['Estado registro', r.Estado_Registro || 'N/D']
+      ];
+      return rows.map(([k,v])=>`<div class="detail-cell"><span>${escapeHtml(k)}</span><strong>${pill(v, statusPill(v))}</strong></div>`).join('');
+    }
+
+    function openMaintenanceDetail(id){
+      const r = maintenanceById(id);
+      if(!r.ID_Mantenimiento){ toast('Registro no encontrado', 'No se pudo abrir el detalle del mantenimiento seleccionado.', 'warn'); return; }
+      const det = maintenanceDetailsFor(r);
+      const inv = invoiceFor(r);
+      const invDet = invoiceDetailsFor(r);
+      const control = rowControlStatus(r);
+      $('maintenanceDetailTitle').textContent = `${r.Placa || 'Vehículo'} · ${r.Orden_Reparacion || r.ID_Mantenimiento}`;
+      $('maintenanceDetailSubtitle').textContent = `Factura ${r.Factura_Nro || 'sin factura'} · ${formatDate(r.Fecha_Facturacion_Emision || r.Fecha_Recepcion)} · ${integer(r.Km)} km`;
+      $('maintenanceDetailBody').innerHTML = `
+        <div class="detail-grid">
+          <div class="detail-cell"><span>ID mantenimiento</span><strong class="mono">${escapeHtml(r.ID_Mantenimiento)}</strong></div>
+          <div class="detail-cell"><span>Placa</span><strong>${highlight(r.Placa)}</strong></div>
+          <div class="detail-cell"><span>Orden reparación</span><strong class="mono">${highlight(r.Orden_Reparacion || '—')}</strong></div>
+          <div class="detail-cell"><span>Factura</span><strong class="mono">${highlight(r.Factura_Nro || '—')}</strong></div>
+          <div class="detail-cell"><span>Fecha</span><strong>${formatDate(r.Fecha_Facturacion_Emision || r.Fecha_Recepcion)}</strong></div>
+          <div class="detail-cell"><span>Kilometraje</span><strong>${integer(r.Km)} km</strong></div>
+          <div class="detail-cell"><span>Tipo / categoría</span><strong>${escapeHtml(r.Tipo_Mantenimiento || '')} · ${escapeHtml(r.Categoria || '')}</strong></div>
+          <div class="detail-cell"><span>Total control</span><strong>${money(r.Total_Control || r.Total_Con_IVA || r.Subtotal_Sin_IVA)}</strong></div>
+          <div class="detail-cell"><span>Proveedor / agencia</span><strong>${highlight(r.Agencia || inv.Proveedor || '—')}</strong></div>
+          <div class="detail-cell"><span>Asesor</span><strong>${escapeHtml(r.Asesor_Vendedor || '—')}</strong></div>
+          <div class="detail-cell"><span>Mano de obra</span><strong>${money(r.Subtotal_Mano_Obra || inv.Subtotal_Mano_Obra)}</strong></div>
+          <div class="detail-cell"><span>Repuestos</span><strong>${money(r.Subtotal_Repuestos || inv.Subtotal_Repuestos)}</strong></div>
+        </div>
+        <div class="detail-section"><h4><i class="bi bi-shield-check"></i> Validaciones de control</h4><div class="detail-grid">${validationList(r)}<div class="detail-cell"><span>Lectura general</span><strong>${control}</strong></div></div></div>
+        <div class="detail-section"><h4><i class="bi bi-chat-left-text"></i> Observaciones técnicas</h4><div class="obs-grid"><div class="obs-box"><h5>Ingreso / diagnóstico</h5><p>${highlight(r.Ingreso_Observacion || inv.Observaciones || 'Sin observación registrada.')}</p></div><div class="obs-box"><h5>Cierre / control interno</h5><p>${highlight(r.Cierre_Observacion || r.Observacion_Control || 'Sin cierre registrado.')}</p></div></div></div>
+        <div class="detail-section"><h4><i class="bi bi-tools"></i> Qué se realizó en el mantenimiento</h4>${renderDetailTable(det.length ? det : invDet, det.length ? 'mant' : 'invoice')}</div>
+        <div class="detail-section"><h4><i class="bi bi-receipt"></i> Soporte de factura electrónica</h4>
+          <div class="detail-grid">
+            <div class="detail-cell"><span>Proveedor</span><strong>${escapeHtml(inv.Proveedor || r.Agencia || '—')}</strong></div>
+            <div class="detail-cell"><span>RUC proveedor</span><strong class="mono">${escapeHtml(inv.RUC_Proveedor || '—')}</strong></div>
+            <div class="detail-cell"><span>Clave de acceso</span><strong class="mono">${escapeHtml(inv.Clave_Acceso || '—')}</strong></div>
+            <div class="detail-cell"><span>IVA / Total factura</span><strong>${money(inv.IVA_15 || r.IVA)} · ${money(inv.Total_Factura || r.Total_Con_IVA)}</strong></div>
+          </div>
+          <div class="mt-3">${renderDetailTable(invDet, 'invoice')}</div>
+        </div>`;
+      $('maintenanceDetailModal').classList.add('open');
+      $('maintenanceDetailModal').setAttribute('aria-hidden', 'false');
+    }
+
+    function closeMaintenanceDetail(){
+      $('maintenanceDetailModal').classList.remove('open');
+      $('maintenanceDetailModal').setAttribute('aria-hidden', 'true');
     }
 
     function answerQuestion(q){
@@ -1174,9 +1646,13 @@
       $('btnValidateForm').addEventListener('click', validateForm);
       $('btnSaveForm').addEventListener('click', saveForm);
       $('btnExportMaint').addEventListener('click', exportCsv);
+      $('btnCloseDetailModal').addEventListener('click', closeMaintenanceDetail);
+      $('maintenanceDetailModal').addEventListener('click', e => { if(e.target.id === 'maintenanceDetailModal') closeMaintenanceDetail(); });
+      $('btnModalNewFromDetail').addEventListener('click', () => { closeMaintenanceDetail(); openDrawer(); });
+      $$('.quick-chip').forEach(chip => chip.addEventListener('click', () => { $('filterText').value = chip.dataset.term || chip.textContent; $$('.quick-chip').forEach(c=>c.classList.remove('active')); chip.classList.add('active'); renderMaintenanceTable(); renderKpis(); }));
       $('btnRecheck').addEventListener('click', renderIntegrity);
       $('btnRefreshSummary').addEventListener('click', renderExecutiveSummary);
-      ['filterText','filterVehicle','filterType','filterStatus','filterFrom','filterTo'].forEach(id => $(id).addEventListener('input', () => { renderMaintenanceTable(); renderKpis(); }));
+      ['filterText','filterVehicle','filterType','filterStatus','filterFrom','filterTo'].forEach(id => $(id).addEventListener('input', () => { if(id === 'filterText' && !$('filterText').value.trim()) $$('.quick-chip').forEach(c=>c.classList.remove('active')); renderMaintenanceTable(); renderKpis(); }));
       $('ocrInput').addEventListener('change', e => handleOcr(e.target.files[0]));
       $('btnUseOcr').addEventListener('click', useOcrInForm);
       $('btnAsk').addEventListener('click', () => { $('nlAnswer').textContent = answerQuestion($('nlQuestion').value); });

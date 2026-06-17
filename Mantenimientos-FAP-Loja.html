@@ -910,6 +910,24 @@
     let state = { vehiculos:[], intervenciones:[], detalle:[], auditoria:[], token:null, account:null, sessionId:null, connected:false, tableHeaders:{} };
     let tables = {}, charts = {}, msalInstance = null, currentStep = 1, maintenanceModalInstance = null;
 
+
+    // Variable para almacenar la ruta oficial del archivo
+let canonicalItemPath = '';
+
+async function resolveExcelPath() {
+  setLoading(true, 'Resolviendo ubicación del archivo corporativo...');
+  
+  // 1. Consultamos el endpoint /shares solo para extraer los metadatos de SharePoint
+  const shareUrl = `/shares/${cleanShareId(EXCEL_FILE_ID)}/driveItem?$select=id,parentReference`;
+  const itemData = await graphFetch(shareUrl);
+  
+  if (!itemData || !itemData.parentReference) {
+    throw new Error('No se pudo resolver la ruta canónica en SharePoint.');
+  }
+  
+  // 2. Construimos la ruta soportada por AAD para la API de Excel
+  canonicalItemPath = `/drives/${itemData.parentReference.driveId}/items/${itemData.id}`;
+}
     // Helper Métricas e Integridad
     function todayISO(){ return new Date().toISOString().slice(0,10); }
     function nowISO(){ return new Date().toISOString(); }
@@ -947,7 +965,13 @@
       });
     }
 
-    function driveItemPath(){ return `/shares/${cleanShareId(EXCEL_FILE_ID)}/driveItem`; }
+   // Reemplaza esto:
+// function driveItemPath(){ return `/shares/${cleanShareId(EXCEL_FILE_ID)}/driveItem`; }
+
+// Por esto:
+function driveItemPath() { 
+  return canonicalItemPath; 
+}
     function tableBasePath(tableName){ return `${driveItemPath()}/workbook/tables/${encodeURIComponent(tableName)}`; }
 
     async function getGraphToken(){
@@ -1091,14 +1115,23 @@
       }
     }
 
-    async function afterLogin(){
-      document.getElementById('authContainer').classList.add('hidden');
-      document.getElementById('mainContent').classList.remove('hidden');
-      document.getElementById('userLabel').textContent = state.account?.username || 'Conectado';
-      await createWorkbookSession();
-      await syncFromSharePoint();
-      document.getElementById('connectionSummary').textContent = `TENANT_ID: ${TENANT_ID}\nCLIENT_ID: ${CLIENT_ID}\nSHARE_TOKEN: ${cleanShareId(EXCEL_FILE_ID)}\nESTRUCTURAS: Mapeadas de forma dinámica en ejecución.`;
-    }
+  async function afterLogin(){
+  document.getElementById('authContainer').classList.add('hidden');
+  document.getElementById('mainContent').classList.remove('hidden');
+  document.getElementById('userLabel').textContent = state.account?.username || 'Conectado';
+  
+  try {
+    // NUEVO: Resolver la ruta corporativa primero
+    await resolveExcelPath(); 
+    
+    await createWorkbookSession();
+    await syncFromSharePoint();
+  } catch (e) {
+    showFatalError('Fallo inicializando la conexión: ' + e.message);
+  }
+  
+  document.getElementById('connectionSummary').textContent = `TENANT_ID: ${TENANT_ID}\nCLIENT_ID: ${CLIENT_ID}\nSHARE_TOKEN: ${cleanShareId(EXCEL_FILE_ID)}\nESTRUCTURAS: Mapeadas de forma dinámica.`;
+}
 
     async function logout(){
       try{

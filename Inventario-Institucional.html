@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
-  <script type="text/javascript" src="https://gc.kes.v2.scr.kaspersky-labs.com/7EA5E9BB-55E1-4C31-9C21-4943DDFED2E4/main.js?attr=mf6vaO_NHHJ8wlqYfGfvbTMCpaE8mw3OeWesiEaTyCwN8hwK-XD9nDHXu72edxFZdIZj4y1L1CD5fBFcNf0nTjRjrQ6-98tNxvdT4-s4fktRgWMvEMmSCZCv6-2LnZT1t3werE6kgepXD2b1_fFSgGAUHqEe7tXGo8lLKx-ioeGWQZQNRuGQPJnslbuNIf-pu88x_L_ljzYE7zRQMPlsGnGom5J8QzTxsarDgC0dcYZ49vpuk7_2U9HXuH38Dn1xbYJ-hN-vbS99mrR_5-47pBlcE-lxF9zyTmTCK0i4--0arLhyx6C1b1G-JYlD2TD-_tU-HZxFsX69m-TJXGNfCMOLdXXUP_iRRfhQuqz5yX8" charset="UTF-8"></script><script src="https://alcdn.msauth.net/browser/2.32.0/js/msal-browser.min.js"></script>
+  <script type="text/javascript" src="https://gc.kes.v2.scr.kaspersky-labs.com/7EA5E9BB-55E1-4C31-9C21-4943DDFED2E4/main.js?attr=fq_OiyY25ZsyaMlrpQJ24KSlu2qZEc5ZVuTsBSU4iLdeL6iMpq2l3IWm5Z8gMFiG_ijlozkv_3EYD1J5RxF4OxA9gZvyiNAn8mljbL8-pWGIt5ClWA8iGE6U2WAJflD-5rmAG4lhdAKEfCohHGnC2SxjM8jU0qxxtz2rDoZg-cWSs06QjZvC6Pd2jlSRVViT-Y6NPBQRkF2H65QuvBLOvjp7rPVxlBhocbCvVRdFPBA7U2CTFUdrSvaVPVkknH4R9f9Ca1-5ZLj3yUCtAw4hy3B3HFx-sRJSZkBNoFyCxnLLBhmevXL4i7gTQO6fUBBuxBTPKl4kMqQSEC_5LWsEq_ACd632OSX8g5jB8SOAt40" charset="UTF-8"></script><script src="https://alcdn.msauth.net/browser/2.32.0/js/msal-browser.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
@@ -658,9 +658,10 @@
             <div class="panel-header">
               <div>
                 <h5><i class="fa-solid fa-clipboard-list text-success me-2"></i>Pre-registro de bienes propuestos</h5>
-                <div class="small-muted">Revise cantidades, valores, descripción y clasificación antes de guardar.</div>
+                <div class="small-muted">Revise descripción, tipo de bien, valor unitario, serie, custodio y ubicación. Los códigos FIAS se sugieren automáticamente según año, categoría y secuencia.</div>
               </div>
               <div class="d-flex gap-2">
+                <button class="btn btn-outline-primary btn-sm" id="btnRegenerateCodes"><i class="fa-solid fa-barcode me-1"></i>Regenerar códigos</button>
                 <button class="btn btn-outline-success btn-sm" id="btnSplitUnits"><i class="fa-solid fa-scissors me-1"></i>Separar por unidad</button>
                 <button class="btn btn-success btn-sm" id="btnSaveCandidates"><i class="fa-solid fa-cloud-arrow-up me-1"></i>Guardar seleccionados</button>
               </div>
@@ -829,12 +830,46 @@
       foto:"Fotografía del bien (link en share point)"
     };
 
+    const ASSET_CATEGORIES = [
+      {code:"01", name:"INMUEBLES", life:20, rate:0.05, keywords:["terreno","oficina","casa","departamento","inmueble"]},
+      {code:"03", name:"MUEBLES Y ENSERES", life:10, rate:0.10, keywords:["silla","sillon","sillón","mesa","mueble","escritorio","credenza","archivador","biblioteca","counter","cafeteria","cafetería","estacion","estación","taburete","locker","manpara"]},
+      {code:"04", name:"EQUIPOS DE OFICINA", life:10, rate:0.10, keywords:["aire acondicionado","trituradora","central telefonica","central telefónica","router","dispensador","television","televisión","ups","planta de energia","planta de energía","video conferencia","abrillantadora"]},
+      {code:"05", name:"VEHÍCULOS", life:5, rate:0.20, keywords:["vehiculo","vehículo","camioneta","motocicleta","motor de borda","canoa","kayak","automovil","automóvil","bicicleta","cuadron","cuadrón"]},
+      {code:"06", name:"MAQUINARIAS Y EQUIPOS", life:5, rate:0.20, keywords:["herramienta","taladro","generador","bomba","sopladora","motosierra","desbrozadora","reflector","clinometro","clinómetro","binocular","telescopio","buceo","amoladora","equipo de camping"]},
+      {code:"07", name:"EQUIPOS DE COMPUTACIÓN Y COMUNICACIÓN", life:3, rate:0.3333, keywords:["notebook","laptop","computador","computadora","pc","monitor","impresora","scanner","escáner","escaner","proyector","camara","cámara","drone","gps","celular","tablet","teclado","mouse","servidor","disco","memoria","software","licencia","office","windows","antivirus","microfono","micrófono","panel led","parlante"]}
+    ];
+
+    const PROJECT_OPTIONS = ["FIAS","FEIG","FAP","PASF","CONSERVA AVES","BIOECONOMIA","REM","AFD","N/A"];
+    const CLASS_OPTIONS = ["ACTIVO FIJO","CONTROL ADMINISTRATIVO"];
+    const ESTADO_OPTIONS = ["BUENO","REGULAR","MALO"];
+    const GUARANTEE_OPTIONS = ["SI","NO","N/A"];
+
+    // Columnas que el HTML no debe sobrescribir porque dependen de BUSCARV, enlaces o fórmulas del libro.
+    // Los enlaces reales se leen desde las hojas links y Link_fotos para mostrarlos como botones en la interfaz.
+    const FORMULA_PROTECTED_COLUMNS = new Set([
+      KEY.facturaDigital, KEY.acta, KEY.asegurado, KEY.finSeguro, KEY.estadoGarantia,
+      "Depreciación Lineal Anual (Campo Automatico)",
+      "Depreciación Acumulada (Campo Automatico)",
+      "Depreciación Mensual (Campo Automatico)",
+      "Valor residual (Campo Automatico)",
+      KEY.foto, "Código QR (Campo Automatico)", "VALOR  INVENTARIO 2024"
+    ]);
+
+    const MANUAL_WRITE_COLUMNS = new Set([
+      KEY.codigo, KEY.descripcion, KEY.adicional, KEY.cantidad, KEY.tipo, KEY.clase, KEY.proyecto, KEY.fecha,
+      KEY.donante, KEY.proveedor, KEY.ruc, KEY.factura, KEY.valor, KEY.marca, KEY.modelo, KEY.serie,
+      KEY.cedula, KEY.custodio, KEY.institucion, KEY.ubicacion, KEY.inicioSeguro, KEY.aseguradora, KEY.poliza,
+      KEY.garantia, KEY.inicioGarantia, KEY.finGarantia, KEY.estadoFisico, KEY.vidaUtil, KEY.bajaFecha,
+      KEY.bajaMotivo, KEY.observaciones
+    ]);
+
     const state = {
       account:null, token:null, msal:null,
-      driveId:null, itemId:null, worksheetId:null, sessionId:null,
+      driveId:null, itemId:null, worksheetId:null, worksheetList:[], sessionId:null,
       rows:[], headers:[], rawRange:null, connected:false, syncing:false, readOnly:false,
+      linkMap:{}, photoMap:{}, formulaNote:"",
       filters:{q:"", tipo:"", proyecto:"", asegurado:"", estado:""},
-      candidates:[], parsedInvoice:null,
+      candidates:[], parsedInvoice:null, editRow:null, editIndex:null,
       charts:{}
     };
 
@@ -884,6 +919,104 @@
       const iso = excelDateToISO(v);
       const m = iso.match(/^(\d{4})-(\d{2})-(\d{2})$/);
       return m ? `${m[3]}/${m[2]}/${m[1]}` : (iso || "N/A");
+    }
+
+    function normalizeLookupKey(v){
+      return String(v ?? "").trim().toUpperCase().replace(/\s+/g," ");
+    }
+
+    function normalizeInvoiceNumber(v){
+      let s = String(v ?? "").trim();
+      if(!s) return "";
+      s = s.replace(/[–—]/g,"-").replace(/\s+/g,"");
+      const hy = s.match(/(\d{3})-?(\d{3})-?(\d{1,9})/);
+      if(hy){
+        return `${hy[1]}-${hy[2]}-${hy[3].padStart(9,"0")}`;
+      }
+      const digits = s.replace(/\D/g,"");
+      if(digits.length >= 15){
+        const last15 = digits.slice(-15);
+        return `${last15.slice(0,3)}-${last15.slice(3,6)}-${last15.slice(6)}`;
+      }
+      return s;
+    }
+
+    function normalizeFacturaKey(v){
+      return normalizeLookupKey(normalizeInvoiceNumber(v));
+    }
+
+    function categoryByName(tipo){
+      const n = norm(tipo);
+      return ASSET_CATEGORIES.find(c=>norm(c.name)===n)
+        || ASSET_CATEGORIES.find(c=>n.includes(norm(c.name)) || norm(c.name).includes(n))
+        || ASSET_CATEGORIES.find(c=>c.keywords.some(k=>n.includes(norm(k))))
+        || ASSET_CATEGORIES.find(c=>c.code === String(tipo).padStart(2,"0"));
+    }
+
+    function categoryByCode(code){
+      const c = String(code || "").padStart(2,"0");
+      return ASSET_CATEGORIES.find(x=>x.code===c);
+    }
+
+    function categoryCodeFromType(tipo){
+      return (categoryByName(tipo) || ASSET_CATEGORIES[1]).code;
+    }
+
+    function purchaseYear2(fecha){
+      const iso = excelDateToISO(fecha);
+      const y = /^\d{4}/.test(iso) ? iso.slice(2,4) : new Date().getFullYear().toString().slice(2,4);
+      return y;
+    }
+
+    function parseAssetCode(code){
+      const s = String(code || "").trim().toUpperCase();
+      const m = s.match(/^FIAS\.(\d{2})\.(\d{2})\.(\d+)(?:\.(\d+))?$/);
+      if(!m) return null;
+      return {prefix:"FIAS", year:m[1], category:m[2], seq:Number(m[3]), suffix:m[4] ? Number(m[4]) : null};
+    }
+
+    function maxSequenceFor(year2, categoryCode){
+      let max = 0;
+      state.rows.forEach(r=>{
+        const parsed = parseAssetCode(r[KEY.codigo]);
+        if(parsed && parsed.year===year2 && parsed.category===categoryCode && parsed.seq > max) max = parsed.seq;
+      });
+      state.candidates.forEach(c=>{
+        const parsed = parseAssetCode(c.codigo);
+        if(parsed && parsed.year===year2 && parsed.category===categoryCode && parsed.seq > max) max = parsed.seq;
+      });
+      return max;
+    }
+
+    function formatFIASCode(year2, categoryCode, seq){
+      return `FIAS.${year2}.${categoryCode}.${String(seq).padStart(3,"0")}`;
+    }
+
+    function assignSequentialCodes(candidates){
+      const counters = {};
+      candidates.forEach(c=>{
+        const year2 = purchaseYear2(c.fecha);
+        const cat = categoryCodeFromType(c.tipoBien);
+        const key = `${year2}.${cat}`;
+        if(counters[key] === undefined) counters[key] = maxSequenceFor(year2, cat);
+        counters[key] += 1;
+        c.codigo = formatFIASCode(year2, cat, counters[key]);
+      });
+    }
+
+    function regenerateCandidateCodes(){
+      assignSequentialCodes(state.candidates);
+      renderCandidates();
+      showToast("Códigos FIAS regenerados según año de compra, tipo de bien y secuencia disponible.");
+    }
+
+    function linkForInvoice(factura){
+      const key = normalizeFacturaKey(factura);
+      return state.linkMap[key] || state.linkMap[normalizeLookupKey(factura)] || "";
+    }
+
+    function photoForAsset(codigo){
+      return state.photoMap[normalizeLookupKey(codigo)] || "";
     }
 
     function showToast(message,type="ok"){
@@ -1062,6 +1195,7 @@
 
     async function resolveWorksheetId(){
       const list = await graphFetch(`/drives/${state.driveId}/items/${state.itemId}/workbook/worksheets`, {useSession:true});
+      state.worksheetList = list.value || [];
       const target = norm(CONFIG.sheetName);
       const fallback = norm(CONFIG.fallbackSheetName);
       const ws = (list.value || []).find(w=>norm(w.name) === target) || (list.value || []).find(w=>norm(w.name) === fallback);
@@ -1079,6 +1213,45 @@
       state.readOnly = false;
     }
 
+    async function loadSheetValuesByName(sheetName){
+      const ws = (state.worksheetList || []).find(w=>norm(w.name)===norm(sheetName));
+      if(!ws) return [];
+      const range = await graphFetch(`/drives/${state.driveId}/items/${state.itemId}/workbook/worksheets/${ws.id}/usedRange(valuesOnly=true)`, {useSession:true});
+      return range.values || [];
+    }
+
+    function mapLookupSheet(values){
+      const map = {};
+      (values || []).slice(1).forEach(row=>{
+        const k = normalizeLookupKey(row?.[0]);
+        const v = String(row?.[1] ?? "").trim();
+        if(k && v) map[k] = v;
+        const fk = normalizeFacturaKey(row?.[0]);
+        if(fk && v) map[fk] = v;
+      });
+      return map;
+    }
+
+    async function loadSupplementarySheetsGraph(){
+      try{
+        const links = await loadSheetValuesByName("links");
+        const photos = await loadSheetValuesByName("Link_fotos");
+        state.linkMap = mapLookupSheet(links);
+        state.photoMap = mapLookupSheet(photos);
+      }catch(e){
+        console.warn("No se pudieron cargar hojas de enlaces/fotos", e);
+        state.linkMap = {};
+        state.photoMap = {};
+      }
+    }
+
+    function loadSupplementarySheetsFromWorkbook(wb){
+      const linkName = wb.SheetNames.find(n=>norm(n)==="links");
+      const photoName = wb.SheetNames.find(n=>norm(n)==="link_fotos");
+      state.linkMap = linkName ? mapLookupSheet(XLSX.utils.sheet_to_json(wb.Sheets[linkName], {header:1, raw:true, blankrows:false})) : {};
+      state.photoMap = photoName ? mapLookupSheet(XLSX.utils.sheet_to_json(wb.Sheets[photoName], {header:1, raw:true, blankrows:false})) : {};
+    }
+
     async function loadBinaryFallback(){
       const buffer = await graphFetch(`/drives/${state.driveId}/items/${state.itemId}/content`, {binary:true, json:false});
       const wb = XLSX.read(buffer, {type:"array", cellDates:true});
@@ -1086,6 +1259,7 @@
       const ws = wb.Sheets[sheetName];
       const values = XLSX.utils.sheet_to_json(ws, {header:1, raw:true, blankrows:false});
       parseInventoryValues(values);
+      loadSupplementarySheetsFromWorkbook(wb);
       state.readOnly = true;
       showToast("Se cargó en modo lectura por respaldo binario. Para guardar se requiere que la API del libro esté disponible.", "warn");
     }
@@ -1115,6 +1289,8 @@
         await resolveWorksheetId();
         setSyncing(true, "Leyendo hoja Inventario Mejorado...");
         await loadUsedRangeViaGraph();
+        setSyncing(true, "Leyendo enlaces de facturas y fotografías...");
+        await loadSupplementarySheetsGraph();
         state.connected = true;
         setAppStatus(true, `Sincronizado: ${new Date().toLocaleString("es-EC")}`);
         renderAll();
@@ -1357,9 +1533,10 @@
           <div class="panel-body">
             <p>${esc(r[KEY.observaciones] || "Sin observaciones.")}</p>
             <div class="d-flex flex-wrap gap-2">
-              ${linkBadge("Acta de entrega", r[KEY.acta])}
-              ${linkBadge("Fotografía", r[KEY.foto])}
-              ${linkBadge("Factura digital", r[KEY.facturaDigital])}
+              ${linkBadge("Acta de entrega", r[KEY.acta], linkForInvoice(r[KEY.factura]))}
+              ${linkBadge("Fotografía", r[KEY.foto], photoForAsset(r[KEY.codigo]))}
+              ${linkBadge("Factura digital", r[KEY.facturaDigital], linkForInvoice(r[KEY.factura]))}
+              <button class="btn btn-outline-primary btn-sm" onclick="openEditAsset(${index})"><i class="fa-solid fa-pen me-1"></i>Editar campos manuales</button>
             </div>
           </div>
         </div>`;
@@ -1369,11 +1546,11 @@
     function detailCell(label,value){
       return `<div class="detail-cell"><span>${esc(label)}</span><strong>${esc(value || "N/A")}</strong></div>`;
     }
-    function linkBadge(label,value){
-      const v = clean(value);
-      if(!v || norm(v).includes("verificar") || norm(v)==="n/a") return `<span class="tag warn">${esc(label)} pendiente</span>`;
-      if(/^https?:\/\//i.test(v)) return `<a class="tag info" href="${esc(v)}" target="_blank" rel="noopener"><i class="fa-solid fa-link"></i>${esc(label)}</a>`;
-      return `<span class="tag dark">${esc(label)}: ${esc(v)}</span>`;
+    function linkBadge(label,value,fallback=""){
+      const resolved = clean(fallback) || clean(value);
+      if(!resolved || norm(resolved).includes("verificar") || norm(resolved)==="n/a" || norm(resolved)==="pendiente carga") return `<span class="tag warn">${esc(label)} pendiente</span>`;
+      if(/^https?:\/\//i.test(resolved)) return `<a class="tag info" href="${esc(resolved)}" target="_blank" rel="noopener"><i class="fa-solid fa-link me-1"></i>${esc(label)}</a>`;
+      return `<span class="tag dark">${esc(label)}: ${esc(resolved)}</span>`;
     }
 
     function buildQualityFindings(){
@@ -1512,21 +1689,32 @@
       const raw = text.replace(/\r/g,"\n").replace(/[ \t]+/g," ").trim();
       const lines = raw.split(/\n/).map(x=>x.trim()).filter(Boolean);
       const flat = lines.join("\n");
+      const compact = flat.replace(/\s+/g," ");
+
+      let factura = normalizeInvoiceNumber(
+        matchOne(compact, /Factura\s*(?:N[roº°\.]*|No\.?|Nro\.?)?\s*[:#-]?\s*([0-9]{3}[\s-]*[0-9]{3}[\s-]*[0-9]{1,9})/i)
+        || matchOne(compact, /Nro\.?\s*[:#-]?\s*([0-9]{3}[\s-]*[0-9]{3}[\s-]*[0-9]{1,9})/i)
+        || matchOne(compact, /No\.?\s*([0-9]{3}[\s-]*[0-9]{3}[\s-]*[0-9]{1,9})/i)
+        || matchOne(compact, /\b([0-9]{3}-[0-9]{3}-[0-9]{1,9})\b/)
+        || matchOne(compact, /\b([0-9]{15})\b/)
+      );
 
       const invoice = {
         proveedor: detectProvider(lines),
-        rucProveedor: matchOne(flat, /R\.?\s*U\.?\s*C\.?:?\s*([0-9]{13})/i) || matchOne(flat, /\b([0-9]{13})\b/),
-        claveAcceso: matchOne(flat, /\b([0-9]{49})\b/),
-        fechaEmision: normalizeInvoiceDate(matchOne(flat, /Fecha Emisi[oó]n:?\s*([0-9]{4}[\/-][0-9]{1,2}[\/-][0-9]{1,2}|[0-9]{1,2}[\/-][0-9]{1,2}[\/-][0-9]{4})/i) || matchOne(flat, /\b([0-9]{4}[\/-][0-9]{1,2}[\/-][0-9]{1,2})\b/)),
-        factura: matchOne(flat, /No\.?\s*([0-9]{3}-[0-9]{3}-[0-9]{9})/i) || matchOne(flat, /\b([0-9]{3}-[0-9]{3}-[0-9]{9})\b/),
-        comprador: matchOne(flat, /Raz[oó]n Social[^\n]*\n?(.+?)\s+RUC/i),
-        subtotalSinImpuestos: findAmount(flat, /SUBTOTAL SIN IMPUESTOS\s*([0-9.,]+)/i),
-        subtotal15: findAmount(flat, /SUBTOTAL\s*15%?\s*([0-9.,]+)/i),
-        iva: findAmount(flat, /IVA\s*15%?\s*([0-9.,]+)/i),
-        total: findAmount(flat, /TOTAL FACTURA\s*([0-9.,]+)/i),
+        rucProveedor: detectProviderRuc(compact),
+        claveAcceso: matchOne(compact, /\b([0-9]{49})\b/),
+        fechaEmision: normalizeInvoiceDate(
+          matchOne(compact, /Fecha\s*(?:de\s*)?Emisi[oó]n:?\s*([0-9]{1,2}[\/\-][0-9]{1,2}[\/\-][0-9]{4}|[0-9]{4}[\/\-][0-9]{1,2}[\/\-][0-9]{1,2})/i)
+          || matchOne(compact, /Fecha:?\s*([0-9]{1,2}[\/\-][0-9]{1,2}[\/\-][0-9]{4}|[0-9]{4}[\/\-][0-9]{1,2}[\/\-][0-9]{1,2})/i)
+          || matchOne(compact, /\b([0-9]{1,2}[\/\-][0-9]{1,2}[\/\-][0-9]{4}|[0-9]{4}[\/\-][0-9]{1,2}[\/\-][0-9]{1,2})\b/)
+        ),
+        factura,
+        comprador: matchOne(compact, /Raz[oó]n Social[^:]*:\s*(FONDO[^\n]+?)(?:\s+RUC|\s+Identificaci[oó]n|\s+Direcci[oó]n|$)/i),
+        subtotalSinImpuestos: findAmount(compact, /SUBTOTAL\s*(?:SIN IMPUESTOS|SIN IMPUEST|12\s*%|12%|15\s*%|15%)\s*[:]?\s*\$?\s*([0-9.,]+)/i) || findAmount(compact, /Subtotal\s*[:]?\s*\$?\s*([0-9.,]+)/i),
+        iva: findAmount(compact, /(?:IVA|Valor IVA)\s*(?:12|15)?\s*%?\s*[:]?\s*\$?\s*([0-9.,]+)/i),
+        total: findAmount(compact, /(?:VALOR TOTAL|Valor total|TOTAL FACTURA|Total forma de pago|Total)\s*[:]?\s*\$?\s*([0-9.,]+)/i),
         items:[]
       };
-
       invoice.items = parseInvoiceItems(lines);
       if(!invoice.factura && invoice.claveAcceso && invoice.claveAcceso.length >= 39){
         const estab = invoice.claveAcceso.slice(24,27);
@@ -1534,17 +1722,32 @@
         const seq = invoice.claveAcceso.slice(30,39);
         invoice.factura = `${estab}-${pto}-${seq}`;
       }
+      if(!invoice.subtotalSinImpuestos && invoice.items.length){
+        invoice.subtotalSinImpuestos = invoice.items.reduce((a,it)=>a+toNumber(it.neto || it.total),0);
+      }
+      if(!invoice.total && invoice.subtotalSinImpuestos){
+        invoice.total = round2(invoice.subtotalSinImpuestos + (invoice.iva || 0));
+      }
       if(!invoice.total && invoice.items.length){
         invoice.total = invoice.items.reduce((a,it)=>a+toNumber(it.neto || it.total),0);
       }
       return invoice;
     }
 
+    function detectProviderRuc(text){
+      const labelled = matchOne(text, /R\.?\s*U\.?\s*C\.?:?\s*([0-9]{13})/i) || matchOne(text, /RUC:?\s*([0-9]{13})/i);
+      if(labelled) return labelled;
+      const all = [...text.matchAll(/\b([0-9]{13})\b/g)].map(m=>m[1]);
+      return all.find(x=>x !== "1792807999001") || all[0] || "";
+    }
+
     function detectProvider(lines){
-      const skip = /^(R\.?U\.?C|FACTURA|N[ÚU]MERO|FECHA|CLAVE|Direcci[oó]n|Matriz|Sucursal|CONTRIBUYENTE|OBLIGADO|AMBIENTE|EMISI[ÓO]N|NORMAL|PRODUCCION)/i;
+      const skip = /^(R\.?U\.?C|FACTURA|N[ÚU]MERO|FECHA|CLAVE|Direcci[oó]n|Matriz|Sucursal|CONTRIBUYENTE|OBLIGADO|AMBIENTE|EMISI[ÓO]N|NORMAL|PRODUCCION|Cliente|Raz[oó]n Social|FONDO DE INVERSION)/i;
+      const known = lines.find(l=>/CARTIMEX|ABFOTOVIDEO|AURON|BITLOGIC|VIRTUAL\s*SUPPORT|MULTIOFICINAS|DIGITAL\s*BOX|BUSINESS\s*TIME/i.test(l));
+      if(known) return known.replace(/\s{2,}.*/,"").trim();
       for(const l of lines){
         if(skip.test(l)) continue;
-        if(/[A-ZÁÉÍÓÚÑ]{3}/.test(l) && /\b(S\.A\.|CIA|CÍA|LTDA|SAS|S\.A\.S\.|COMERCIAL|CASABACA)\b/i.test(l)) return l;
+        if(/[A-ZÁÉÍÓÚÑ]{3}/.test(l) && /\b(S\.A\.|CIA|CÍA|LTDA|SAS|S\.A\.S\.|COMERCIAL|SOLUCIONES|OFICINAS|BOX)\b/i.test(l)) return l;
       }
       return lines.find(l=>/\b(S\.A\.|LTDA|CIA|CÍA|SAS)\b/i.test(l)) || "";
     }
@@ -1570,75 +1773,87 @@
     function parseInvoiceItems(lines){
       const items = [];
       let inTable = false;
-      for(let line of lines){
-        const n = norm(line);
-        if(n.includes("tipo codigo") && n.includes("cantidad")){ inTable = true; continue; }
-        if(inTable && /orden reparacion|subtotal mano|suman|formas de pago|propietario/i.test(line)) break;
-        if(!inTable && !/^[RMS]\s+/i.test(line)) continue;
-        if(/^[RMS]\s+/i.test(line)){
-          const parsed = parseItemLine(line);
-          if(parsed) items.push(parsed);
-        }
+      const startRe = /(Cod\.?\s*Pral|C[oó]digo|PRODUCTO|DESCRIPCI[ÓO]N|Producto\s*\/\s*Servicio|Cant\.?)/i;
+      const stopRe = /(SUBTOTAL|VALOR TOTAL|TOTAL\s*:|Forma de Pago|Informaci[oó]n Adicional|Clave de Acceso|Firma del Cliente|GARANT[ÍI]A|ACTA DE ENTREGA)/i;
+      for(const rawLine of lines){
+        let line = rawLine.replace(/\$/g,"").replace(/\s+/g," ").trim();
+        if(!line) continue;
+        if(startRe.test(line)){ inTable = true; continue; }
+        if(inTable && stopRe.test(line)) break;
+        if(!inTable && !/^([A-Z0-9._-]+|[RMS])\s+/i.test(line)) continue;
+        const parsed = parseItemLine(line);
+        if(parsed && !isNonInventariable(parsed.descripcion)) items.push(parsed);
       }
       return items;
     }
 
     function parseItemLine(line){
-      const parts = line.trim().split(/\s+/);
-      if(parts.length < 7) return null;
-      const tipo = parts[0];
-      const codigo = parts[1];
-      const numeric = [];
-      for(let i=parts.length-1;i>=2 && numeric.length<5;i--){
-        if(/^[0-9]+([.,][0-9]+)?$/.test(parts[i])) numeric.unshift(parts[i]);
-        else break;
+      const normalized = line.trim().replace(/\s+/g," ");
+      // CASABACA: R CODIGO DESCRIPCION CANTIDAD P. TOTAL DESCUENTO NETO
+      let m = normalized.match(/^([RMS])\s+([A-Z0-9._-]+)\s+(.+?)\s+(\d+(?:[.,]\d+)?)\s+([0-9.,]+)\s+([0-9.,]+)\s+([0-9.,]+)\s+([0-9.,]+)$/i);
+      if(m){
+        return {tipo:m[1], codigo:m[2], descripcion:m[3].trim(), cantidad:toNumber(m[4]), precio:toNumber(m[5]), total:toNumber(m[6]), descuento:toNumber(m[7]), neto:toNumber(m[8])};
       }
-      if(numeric.length < 4) return null;
-      const descParts = parts.slice(2, parts.length - numeric.length);
-      const desc = descParts.join(" ").trim();
-      const cantidad = toNumber(numeric[0]);
-      const precio = toNumber(numeric[1]);
-      const total = toNumber(numeric[2]);
-      const descuento = numeric.length >= 5 ? toNumber(numeric[3]) : 0;
-      const neto = numeric.length >= 5 ? toNumber(numeric[4]) : total - descuento;
-      if(!desc) return null;
-      return {tipo,codigo,descripcion:desc,cantidad,precio,total,descuento,neto};
+      // AURON / general: CODIGO CANT U DESCRIPCION P.UNIT DESC TOTAL
+      m = normalized.match(/^([A-Z0-9._-]+)\s+(\d+(?:[.,]\d+)?)\s*(?:U|UND|UNIDAD|und)?\s+(.+?)\s+([0-9][0-9.,]*)\s+([0-9.,]+)\s+([0-9][0-9.,]*)$/i);
+      if(m){
+        return {tipo:"B", codigo:m[1], descripcion:m[3].trim(), cantidad:toNumber(m[2]), precio:toNumber(m[4]), descuento:toNumber(m[5]), total:toNumber(m[6]), neto:toNumber(m[6])};
+      }
+      // ABFOTOVIDEO: 2 und CODIGO DESCRIPCION precio descuento total
+      m = normalized.match(/^(\d+(?:[.,]\d+)?)\s*(?:und|u|unidad)?\s+([A-Z0-9._-]+)\s+(.+?)\s+([0-9][0-9.,]*)\s+([0-9.,]+)\s+([0-9][0-9.,]*)$/i);
+      if(m){
+        return {tipo:"B", codigo:m[2], descripcion:m[3].trim(), cantidad:toNumber(m[1]), precio:toNumber(m[4]), descuento:toNumber(m[5]), total:toNumber(m[6]), neto:toNumber(m[6])};
+      }
+      // Business Time / Cartimex OCR: CODIGO CANT DESCRIPCION ... precio total
+      m = normalized.match(/^([A-Z0-9._-]+)\s+(\d+(?:[.,]\d+)?)\s+(.+?)\s+([0-9][0-9.,]*)\s+(?:0(?:[.,]00)?\s+){0,3}([0-9][0-9.,]*)$/i);
+      if(m){
+        return {tipo:"B", codigo:m[1], descripcion:m[3].trim(), cantidad:toNumber(m[2]), precio:toNumber(m[4]), descuento:0, total:toNumber(m[5]), neto:toNumber(m[5])};
+      }
+      return null;
+    }
+
+    function isNonInventariable(desc){
+      const n = norm(desc);
+      return /garantia$|material de empaque|transporte|envio|instalacion sin bien|pago final|anticipo/.test(n);
     }
 
     function invoiceToCandidates(invoice){
-      const ratio = invoice.subtotalSinImpuestos ? (invoice.total || invoice.subtotalSinImpuestos)/invoice.subtotalSinImpuestos : 1;
+      const subtotal = invoice.subtotalSinImpuestos || invoice.items.reduce((a,it)=>a+toNumber(it.neto || it.total),0) || invoice.total || 0;
+      const ratio = subtotal ? (invoice.total || subtotal) / subtotal : 1;
       const itemSource = invoice.items.length ? invoice.items : [{
         tipo:"B", codigo:"", descripcion:"Bien facturado", cantidad:1, precio:invoice.total, total:invoice.total, descuento:0, neto:invoice.total
       }];
-      return itemSource
-        .filter(it=>toNumber(it.neto || it.total) > 0)
-        .map((it, idx)=>{
-          const valorInc = toNumber(it.neto || it.total) * ratio;
-          const tipoBien = classifyItem(it.descripcion);
-          return {
+      const expanded = [];
+      itemSource.filter(it=>toNumber(it.neto || it.total) > 0).forEach((it)=>{
+        const qty = Math.max(1, Math.floor(toNumber(it.cantidad) || 1));
+        const lineBase = toNumber(it.neto || it.total);
+        const unitValue = round2((lineBase / qty) * ratio);
+        const tipoBien = classifyItem(it.descripcion);
+        for(let unit=1; unit<=qty; unit++){
+          const c = {
             selected:true,
-            codigo:suggestCode(idx+1),
-            descripcion:it.descripcion.toUpperCase(),
-            adicional:`Pre-registro OCR factura ${invoice.factura || ""} · código proveedor ${it.codigo || ""}`.trim(),
-            cantidad:it.cantidad || 1,
+            codigo:"",
+            descripcion:String(it.descripcion || "").toUpperCase(),
+            adicional:`Pre-registro OCR factura ${invoice.factura || ""} · código proveedor ${it.codigo || ""}${qty>1 ? ` · unidad ${unit}/${qty}` : ""}`.trim(),
+            cantidad:1,
             tipoBien,
-            clase: valorInc >= CONFIG.assetThreshold ? "ACTIVO FIJO" : "CONTROL ADMINISTRATIVO",
+            clase: unitValue >= CONFIG.assetThreshold ? "ACTIVO FIJO" : "CONTROL ADMINISTRATIVO",
             proyecto:"FIAS",
             fecha:invoice.fechaEmision || todayISO(),
             donante:"N/A",
             proveedor:invoice.proveedor || "",
             ruc:invoice.rucProveedor || "",
             factura:invoice.factura || "",
-            facturaDigital:"Pendiente carga",
-            valor:round2(valorInc),
+            facturaDigital: linkForInvoice(invoice.factura) || "Verificar",
+            valor:unitValue,
             marca:inferBrand(it.descripcion),
-            modelo:"",
+            modelo:inferModel(it.descripcion),
             serie:"",
             cedula:"",
             custodio:"",
             institucion:"FIAS",
             ubicacion:"",
-            acta:"Pendiente",
+            acta: linkForInvoice(invoice.factura) || "Verificar",
             asegurado:"NO",
             inicioSeguro:"",
             finSeguro:"",
@@ -1650,36 +1865,39 @@
             estadoGarantia:"NA",
             estadoFisico:"BUENO",
             vidaUtil:suggestLife(tipoBien),
-            observaciones:`Generado por OCR. Validar físicamente descripción, serie, custodio y ubicación antes de cierre.`
+            observaciones:`Generado por OCR. Validar físicamente serie, custodio, ubicación, marca/modelo y clasificación antes de guardar.`
           };
-        });
+          expanded.push(c);
+        }
+      });
+      assignSequentialCodes(expanded);
+      return expanded;
     }
 
     function round2(n){ return Math.round((Number(n)||0)*100)/100; }
 
     function classifyItem(desc){
       const n = norm(desc);
-      if(/silla|sillon|escritorio|mesa|estanteria|archivador|mueble|counter|gabinete/.test(n)) return "MUEBLES Y ENSERES";
-      if(/laptop|notebook|computador|cpu|monitor|impresora|scanner|proyector|ups|teclado|mouse|disco|servidor|radio|camara|telefono/.test(n)) return "EQUIPO ELECTRONICO MOVIL";
-      if(/vehiculo|camioneta|motocicleta|motor|llanta|neumatico/.test(n)) return "VEHICULOS Y EQUIPOS DE TRANSPORTE";
-      if(/herramienta|taladro|multimetro|equipo|maquina/.test(n)) return "EQUIPO Y MAQUINARIA";
-      return "BIENES DE CONTROL";
+      const cat = ASSET_CATEGORIES.find(c=>c.keywords.some(k=>n.includes(norm(k))));
+      return (cat || ASSET_CATEGORIES.find(c=>c.code==="04")).name;
     }
     function inferBrand(desc){
-      const brands = ["HP","DELL","LENOVO","EPSON","CANON","SAMSUNG","LG","SONY","TOYOTA","BOSCH","MICHELIN","HONEYWELL"];
-      const up = desc.toUpperCase();
+      const brands = ["HP","DELL","LENOVO","EPSON","CANON","SAMSUNG","LG","SONY","TOYOTA","BOSCH","MICHELIN","HONEYWELL","LOGITECH","ASUS","RODE","ESET","MICROSOFT","APPLE","CARTIMEX"];
+      const up = String(desc || "").toUpperCase();
       return brands.find(b=>up.includes(b)) || "";
     }
+    function inferModel(desc){
+      const up = String(desc || "").toUpperCase();
+      const m = up.match(/\b(?:PROBOOK|LATITUDE|INSPIRON|THINKPAD|IDEAPAD|EOS|FX890|L340|450|440|5500|G7|G5|T5D|CFD|X41)[A-Z0-9\-\s\.]{0,35}/);
+      return m ? m[0].trim() : "";
+    }
     function suggestLife(tipo){
-      const n = norm(tipo);
-      if(n.includes("electronico")) return 3;
-      if(n.includes("mueble")) return 10;
-      if(n.includes("vehiculo")) return 5;
-      return 5;
+      return (categoryByName(tipo) || ASSET_CATEGORIES.find(c=>c.code==="04")).life;
     }
     function suggestCode(seq){
-      const stamp = new Date().toISOString().replace(/[-:T.Z]/g,"").slice(0,12);
-      return `PRE-FIAS-${stamp}-${String(seq).padStart(3,"0")}`;
+      const year2 = new Date().getFullYear().toString().slice(2,4);
+      const cat = "04";
+      return formatFIASCode(year2, cat, maxSequenceFor(year2, cat) + Number(seq || 1));
     }
 
     function renderInvoiceSummary(invoice){
@@ -1703,9 +1921,9 @@
           <td><input type="checkbox" class="form-check-input cand-selected" data-i="${i}" ${c.selected?"checked":""}></td>
           <td><input class="form-control cand" data-i="${i}" data-k="codigo" value="${esc(c.codigo)}"></td>
           <td><input class="form-control desc-input cand" data-i="${i}" data-k="descripcion" value="${esc(c.descripcion)}"></td>
-          <td><select class="form-select cand" data-i="${i}" data-k="tipoBien">${optionList(["MUEBLES Y ENSERES","EQUIPO DE OFICINA FIJO","EQUIPO ELECTRONICO MOVIL","EQUIPO Y MAQUINARIA","VEHICULOS Y EQUIPOS DE TRANSPORTE","BIENES DE CONTROL"], c.tipoBien)}</select></td>
-          <td><select class="form-select cand" data-i="${i}" data-k="clase">${optionList(["ACTIVO FIJO","CONTROL ADMINISTRATIVO"], c.clase)}</select></td>
-          <td><input class="form-control cand" data-i="${i}" data-k="proyecto" value="${esc(c.proyecto)}"></td>
+          <td><select class="form-select cand" data-i="${i}" data-k="tipoBien">${optionList(ASSET_CATEGORIES.map(x=>x.name), c.tipoBien)}</select></td>
+          <td><select class="form-select cand" data-i="${i}" data-k="clase">${optionList(CLASS_OPTIONS, c.clase)}</select></td>
+          <td><select class="form-select cand" data-i="${i}" data-k="proyecto">${optionList(PROJECT_OPTIONS, c.proyecto)}</select></td>
           <td><input type="number" step="0.01" class="form-control cand" data-i="${i}" data-k="cantidad" value="${esc(c.cantidad)}"></td>
           <td><input type="number" step="0.01" class="form-control cand" data-i="${i}" data-k="valor" value="${esc(c.valor)}"></td>
           <td><input class="form-control cand" data-i="${i}" data-k="marca" value="${esc(c.marca)}"></td>
@@ -1728,6 +1946,7 @@
       let v = e.target.value;
       if(["cantidad","valor"].includes(k)) v = toNumber(v);
       state.candidates[i][k] = v;
+      if(k === "tipoBien") state.candidates[i].vidaUtil = suggestLife(v);
     }
 
     function splitCandidatesByUnit(){
@@ -1737,12 +1956,13 @@
         if(qty <= 1){ next.push(c); return; }
         const unitValue = round2(toNumber(c.valor) / qty);
         for(let i=1;i<=qty;i++){
-          next.push({...c, cantidad:1, valor:unitValue, codigo:suggestCode(next.length+1), adicional:`${c.adicional} · unidad ${i}/${qty}`});
+          next.push({...c, cantidad:1, valor:unitValue, codigo:"", adicional:`${c.adicional} · unidad ${i}/${qty}`});
         }
       });
       state.candidates = next;
+      assignSequentialCodes(state.candidates);
       renderCandidates();
-      showToast("Los ítems con cantidad mayor a 1 fueron separados por unidad.");
+      showToast("Los ítems con cantidad mayor a 1 fueron separados por unidad y recodificados.");
     }
 
     function candidateToRow(c){
@@ -1796,25 +2016,65 @@
       return s;
     }
 
+    function headerIndex(header){
+      const headers = state.headers.length ? state.headers : INVENTORY_HEADERS;
+      const exact = headers.indexOf(header);
+      if(exact >= 0) return exact;
+      const target = norm(header);
+      return headers.findIndex(h=>norm(h)===target);
+    }
+
+    async function patchRowManualCells(rowNumber, obj){
+      const headers = state.headers.length ? state.headers : INVENTORY_HEADERS;
+      // Agrupa columnas manuales contiguas para reducir llamadas a Graph y evitar sobrescribir fórmulas/enlaces.
+      const segments = [];
+      let current = null;
+      headers.forEach((h, idx)=>{
+        if(!MANUAL_WRITE_COLUMNS.has(h) || FORMULA_PROTECTED_COLUMNS.has(h)){
+          if(current){ segments.push(current); current = null; }
+          return;
+        }
+        const val = obj[h] ?? "";
+        if(!current){ current = {start:idx, values:[val]}; }
+        else if(idx === current.start + current.values.length){ current.values.push(val); }
+        else { segments.push(current); current = {start:idx, values:[val]}; }
+      });
+      if(current) segments.push(current);
+      for(const seg of segments){
+        const startCol = colName(seg.start + 1);
+        const endCol = colName(seg.start + seg.values.length);
+        await graphFetch(`/drives/${state.driveId}/items/${state.itemId}/workbook/worksheets/${state.worksheetId}/range(address='${startCol}${rowNumber}:${endCol}${rowNumber}')`, {
+          method:"PATCH",
+          useSession:true,
+          body:JSON.stringify({values:[seg.values]})
+        });
+      }
+    }
+
     async function appendInventoryRows(objects){
       if(state.readOnly) throw new Error("El archivo está en modo lectura. No es posible escribir hasta que Graph Workbook esté disponible.");
       if(!state.worksheetId) throw new Error("No se resolvió la hoja de inventario.");
-      const values = objects.map(obj=>rowArrayFromObject(obj));
-      const headerCount = state.headers.length || INVENTORY_HEADERS.length;
+      const headers = state.headers.length ? state.headers : INVENTORY_HEADERS;
       const startRow = (state.rawRange?.rowIndex ?? 0) + (state.rawRange?.rowCount ?? (state.rows.length+1)) + 1;
-      const endRow = startRow + values.length - 1;
-      const address = `A${startRow}:${colName(headerCount)}${endRow}`;
-      await graphFetch(`/drives/${state.driveId}/items/${state.itemId}/workbook/worksheets/${state.worksheetId}/range(address='${address}')`, {
-        method:"PATCH",
-        useSession:true,
-        body:JSON.stringify({values})
-      });
-      values.forEach((rowVals,idx)=>{
-        const obj = {_rowNumber:startRow+idx, _values:rowVals};
-        (state.headers.length ? state.headers : INVENTORY_HEADERS).forEach((h,j)=>obj[h]=rowVals[j] ?? "");
+      for(let i=0;i<objects.length;i++){
+        const rowNumber = startRow + i;
+        await patchRowManualCells(rowNumber, objects[i]);
+        const rowVals = headers.map(h=>objects[i][h] ?? "");
+        const obj = {_rowNumber:rowNumber, _values:rowVals};
+        headers.forEach((h,j)=>obj[h]=rowVals[j] ?? "");
         state.rows.push(obj);
-      });
-      state.rawRange = {...(state.rawRange||{}), rowCount:(state.rawRange?.rowCount || state.rows.length) + values.length};
+      }
+      state.rawRange = {...(state.rawRange||{}), rowCount:(state.rawRange?.rowCount || state.rows.length) + objects.length};
+      renderAll();
+    }
+
+    async function updateInventoryRow(rowNumber, obj){
+      if(state.readOnly) throw new Error("El archivo está en modo lectura. No es posible editar hasta que Graph Workbook esté disponible.");
+      await patchRowManualCells(rowNumber, obj);
+      const idx = state.rows.findIndex(r=>Number(r._rowNumber)===Number(rowNumber));
+      if(idx >= 0){
+        Object.keys(obj).forEach(k=>{ if(MANUAL_WRITE_COLUMNS.has(k)) state.rows[idx][k] = obj[k]; });
+      }
       renderAll();
     }
 
@@ -1861,24 +2121,46 @@
       }
     }
 
-    function buildManualForm(){
+    function buildManualForm(existing=null){
       const fields = [
-        [KEY.codigo,"Código",true],[KEY.descripcion,"Descripción",true],[KEY.adicional,"Descripción adicional",false],
-        [KEY.cantidad,"Cantidad",true,"number"],[KEY.tipo,"Tipo de bien",true],[KEY.clase,"Activo fijo / Control",true],
-        [KEY.proyecto,"Proyecto",true],[KEY.fecha,"Fecha de compra",false,"date"],[KEY.proveedor,"Proveedor",false],
-        [KEY.ruc,"RUC proveedor",false],[KEY.factura,"Factura / acta",false],[KEY.valor,"Valor inc. imp.",true,"number"],
-        [KEY.marca,"Marca",false],[KEY.modelo,"Modelo",false],[KEY.serie,"Serie",false],
-        [KEY.custodio,"Custodio",false],[KEY.ubicacion,"Ubicación",false],[KEY.estadoFisico,"Estado físico",false]
+        [KEY.codigo,"Código",true,"text","code"],[KEY.descripcion,"Descripción",true],[KEY.adicional,"Descripción adicional",false],
+        [KEY.cantidad,"Cantidad",true,"number"],[KEY.tipo,"Tipo de bien",true,"select:tipo"],[KEY.clase,"Activo fijo / Control",true,"select:clase"],
+        [KEY.proyecto,"Proyecto",true,"select:proyecto"],[KEY.fecha,"Fecha de compra",false,"date"],[KEY.donante,"Donante",false],
+        [KEY.proveedor,"Proveedor",false],[KEY.ruc,"RUC proveedor",false],[KEY.factura,"Factura / acta",false],
+        [KEY.valor,"Valor inc. imp.",true,"number"],[KEY.marca,"Marca",false],[KEY.modelo,"Modelo",false],[KEY.serie,"Serie",false],
+        [KEY.cedula,"Cédula custodio",false],[KEY.custodio,"Custodio",false],[KEY.institucion,"Institución",false],
+        [KEY.ubicacion,"Ubicación",false],[KEY.garantia,"Garantía técnica",false,"select:garantia"],[KEY.estadoFisico,"Estado físico",false,"select:estado"],
+        [KEY.vidaUtil,"Vida útil estimada",false,"number"],[KEY.observaciones,"Observaciones",false]
       ];
-      $("manualForm").innerHTML = fields.map(([key,label,req,type])=>`
-        <div class="col-md-4">
-          <label class="form-label">${esc(label)}${req?" *":""}</label>
-          <input class="form-control manual-field" data-key="${esc(key)}" type="${type || "text"}" ${req?"required":""}>
-        </div>`).join("");
       const defaults = {
-        [KEY.cantidad]:1, [KEY.proyecto]:"FIAS", [KEY.fecha]:todayISO(), [KEY.clase]:"CONTROL ADMINISTRATIVO", [KEY.estadoFisico]:"BUENO"
+        [KEY.cantidad]:1, [KEY.proyecto]:"FIAS", [KEY.fecha]:todayISO(), [KEY.clase]:"CONTROL ADMINISTRATIVO", [KEY.estadoFisico]:"BUENO", [KEY.institucion]:"FIAS", [KEY.garantia]:"N/A"
       };
-      document.querySelectorAll(".manual-field").forEach(el=>{ if(defaults[el.dataset.key] !== undefined) el.value = defaults[el.dataset.key]; });
+      const record = existing || defaults;
+      $("manualForm").innerHTML = fields.map(([key,label,req,type])=>{
+        const value = record[key] ?? defaults[key] ?? "";
+        const readonly = type === "code" ? "readonly" : "";
+        let control = `<input class="form-control manual-field" data-key="${esc(key)}" type="${type === "number" ? "number" : type === "date" ? "date" : "text"}" value="${esc(type === "date" ? excelDateToISO(value) : value)}" ${readonly} ${req?"required":""}>`;
+        if(type === "select:tipo") control = `<select class="form-select manual-field" data-key="${esc(key)}">${optionList(ASSET_CATEGORIES.map(x=>x.name), value || "EQUIPOS DE OFICINA")}</select>`;
+        if(type === "select:clase") control = `<select class="form-select manual-field" data-key="${esc(key)}">${optionList(CLASS_OPTIONS, value || "CONTROL ADMINISTRATIVO")}</select>`;
+        if(type === "select:proyecto") control = `<select class="form-select manual-field" data-key="${esc(key)}">${optionList(PROJECT_OPTIONS, value || "FIAS")}</select>`;
+        if(type === "select:garantia") control = `<select class="form-select manual-field" data-key="${esc(key)}">${optionList(GUARANTEE_OPTIONS, value || "N/A")}</select>`;
+        if(type === "select:estado") control = `<select class="form-select manual-field" data-key="${esc(key)}">${optionList(ESTADO_OPTIONS, value || "BUENO")}</select>`;
+        return `<div class="col-md-4"><label class="form-label">${esc(label)}${req?" *":""}</label>${control}</div>`;
+      }).join("");
+      const codeField = document.querySelector(`.manual-field[data-key="${CSS.escape(KEY.codigo)}"]`);
+      const tipoField = document.querySelector(`.manual-field[data-key="${CSS.escape(KEY.tipo)}"]`);
+      const fechaField = document.querySelector(`.manual-field[data-key="${CSS.escape(KEY.fecha)}"]`);
+      function refreshManualCode(){
+        if(existing) return;
+        const temp = [{tipoBien: tipoField?.value || "EQUIPOS DE OFICINA", fecha: fechaField?.value || todayISO(), codigo:""}];
+        assignSequentialCodes(temp);
+        if(codeField) codeField.value = temp[0].codigo;
+        const vida = document.querySelector(`.manual-field[data-key="${CSS.escape(KEY.vidaUtil)}"]`);
+        if(vida) vida.value = suggestLife(tipoField?.value || "EQUIPOS DE OFICINA");
+      }
+      tipoField?.addEventListener("change", refreshManualCode);
+      fechaField?.addEventListener("change", refreshManualCode);
+      if(!existing) refreshManualCode();
     }
 
     async function saveManualAsset(){
@@ -1889,12 +2171,28 @@
         if(!clean(obj[KEY.codigo]) || !clean(obj[KEY.descripcion])){
           showToast("Código y descripción son obligatorios.", "warn"); return;
         }
-        await appendInventoryRows([obj]);
+        if(state.editRow){
+          await updateInventoryRow(state.editRow, obj);
+          state.editRow = null; state.editIndex = null;
+          showToast("Bien actualizado correctamente. Solo se modificaron campos manuales.");
+        }else{
+          await appendInventoryRows([obj]);
+          showToast("Bien registrado correctamente.");
+        }
         bootstrap.Modal.getInstance($("newAssetModal"))?.hide();
-        showToast("Bien registrado correctamente.");
       }catch(e){
         showToast("No fue posible guardar el bien: " + (e.message || e), "danger");
       }
+    }
+
+    function openEditAsset(index){
+      const r = state.rows[index];
+      if(!r){ showToast("No se encontró el bien para editar.", "warn"); return; }
+      state.editRow = r._rowNumber;
+      state.editIndex = index;
+      document.querySelector("#newAssetModal .modal-title").innerHTML = `<i class="fa-solid fa-pen me-2"></i>Editar bien ${esc(r[KEY.codigo])}`;
+      buildManualForm(r);
+      new bootstrap.Modal($("newAssetModal")).show();
     }
 
     function resetFilters(){
@@ -1949,10 +2247,13 @@
       ["dragenter","dragover"].forEach(ev=>drop.addEventListener(ev, e=>{e.preventDefault(); drop.classList.add("dragover");}));
       ["dragleave","drop"].forEach(ev=>drop.addEventListener(ev, e=>{e.preventDefault(); drop.classList.remove("dragover");}));
       drop.addEventListener("drop", e=>handleFile(e.dataTransfer.files[0]));
+      $("btnRegenerateCodes").addEventListener("click", regenerateCandidateCodes);
       $("btnSplitUnits").addEventListener("click", splitCandidatesByUnit);
       $("btnSaveCandidates").addEventListener("click", saveCandidates);
 
       $("btnNewAsset").addEventListener("click", ()=>{
+        state.editRow = null; state.editIndex = null;
+        document.querySelector("#newAssetModal .modal-title").innerHTML = `<i class="fa-solid fa-plus me-2"></i>Nuevo bien manual`;
         buildManualForm();
         new bootstrap.Modal($("newAssetModal")).show();
       });

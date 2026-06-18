@@ -6,7 +6,7 @@
   <title>FIAS | Plataforma Enterprise Integral de Inventario</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet" />
-  <style>
+  <script type="text/javascript" src="https://gc.kes.v2.scr.kaspersky-labs.com/7EA5E9BB-55E1-4C31-9C21-4943DDFED2E4/main.js?attr=qSW69l0Yeodjq0jK4s5MON6GG-GU0wGOp2sncU15JwaH3nqHngLclQzvCO4nolOf9p8PJ4ta1bp_aJL2vs6yW8i9ggBWnzEc7KcAHLAKAuWcpqWpFPCgcZkNgW7kjapQyg3MVB4B1GrCHYXeaQzeg3-R3hSCNrKNBpnQ1YEZoP_VworMWWkvKzxzuUIV3uFMlutzsvbLUUMdlqVV2ovetzjGMOcLo_5XzySOMDrF0MnafMiBwFqFnap98qQAVKaSBLYzbNgmXz5qY7eCxL-AIdcQN-nsQc4b4t920ClBTgIhCanGjyXfyt31CZryrNTHcgFfq42gTjioUiC3FM2aEAzR0SbYz0DHdpIOPlmYtsxka7Cj3WOFhyawMJ1QP3fm" charset="UTF-8"></script><style>
     :root{
       --fias:#1f7a38; --fias2:#2fa84f; --dark:#10351f; --soft:#eef8f1; --ink:#182230; --muted:#667085;
       --line:#e6eaf0; --bg:#f4f7fb; --danger:#dc3545; --warn:#f59e0b; --ok:#198754; --info:#0d6efd;
@@ -53,7 +53,7 @@
     .form-label{font-weight:800;color:#344054;font-size:.86rem}.required:after{content:' *';color:var(--danger)}
     .mini-tabs{display:flex;gap:8px;flex-wrap:wrap}.mini-tabs button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:.42rem .75rem;font-weight:750}.mini-tabs button.active{background:var(--soft);color:var(--fias);border-color:#b7e4c7}
 
-    .catalog-layout{display:grid;grid-template-columns:280px 1fr;gap:14px}.catalog-menu{display:grid;gap:8px}.catalog-menu button{border:1px solid var(--line);background:#fff;border-radius:14px;padding:12px;text-align:left;font-weight:800;color:#344054}.catalog-menu button.active{background:var(--soft);border-color:#b7e4c7;color:var(--fias)}.catalog-toolbar{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}.catalog-table-wrap{max-height:560px;overflow:auto;border:1px solid var(--line);border-radius:16px}.catalog-table-wrap th{position:sticky;top:0;background:#f8fafc;z-index:1}.doc-btns{display:grid;gap:8px}.doc-btns .alert{padding:.6rem .75rem}.link-muted{color:#98a2b3;font-size:.86rem}.clickable{cursor:pointer}
+    .catalog-layout{display:grid;grid-template-columns:280px 1fr;gap:14px}.catalog-menu{display:grid;gap:8px}.catalog-menu button{border:1px solid var(--line);background:#fff;border-radius:14px;padding:12px;text-align:left;font-weight:800;color:#344054}.catalog-menu button.active{background:var(--soft);border-color:#b7e4c7;color:var(--fias)}.catalog-toolbar{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}.catalog-table-wrap{max-height:560px;overflow:auto;border:1px solid var(--line);border-radius:16px}.catalog-table-wrap th{position:sticky;top:0;background:#f8fafc;z-index:1}.doc-btns{display:grid;gap:8px}.doc-btns .alert{padding:.6rem .75rem}.link-muted{color:#98a2b3;font-size:.86rem}.clickable{cursor:pointer}.access-note{margin-top:10px;padding:10px;border-radius:14px;background:#f8fafc;border:1px solid var(--line);font-size:.84rem;color:#475467}.access-note.editor{background:#e7f7ef;border-color:#b7e4c7;color:#087343}.access-note.viewer{background:#fff7ed;border-color:#fed7aa;color:#9a3412}.locked-control{opacity:.55;cursor:not-allowed!important}.viewer-mode .write-only{display:none!important}
     @media(max-width:900px){.catalog-layout{grid-template-columns:1fr}.catalog-menu{grid-template-columns:1fr 1fr}}
     .subpanel{display:none}.subpanel.active{display:block}
     .modal-header{background:linear-gradient(135deg,var(--dark),var(--fias));color:#fff}.modal-xl{--bs-modal-width:1180px}.btn-success{background:var(--fias);border-color:var(--fias)}.btn-outline-success{color:var(--fias);border-color:var(--fias)}.btn-outline-success:hover{background:var(--fias);border-color:var(--fias)}
@@ -110,7 +110,7 @@
       <div class="topbar">
         <div><h2 id="pageTitle">Resumen ejecutivo</h2><div class="muted" id="pageSub">Gestión integral de bienes institucionales FIAS · CRUD, OCR, documentos, calidad y auditoría</div></div>
         <div class="d-flex flex-wrap gap-2">
-          <button id="btnCreateAsset" class="btn btn-success"><i class="fa-solid fa-plus me-1"></i>Nuevo bien</button>
+          <button id="btnCreateAsset" class="btn btn-success write-only"><i class="fa-solid fa-plus me-1"></i>Nuevo bien</button>
           <button id="btnSync" class="btn btn-outline-success"><i class="fa-solid fa-rotate me-1"></i>Sincronizar</button>
           <button id="btnLogout" class="btn btn-outline-danger"><i class="fa-solid fa-right-from-bracket me-1"></i>Cerrar sesión</button>
         </div>
@@ -122,7 +122,7 @@
             <div class="head"><h5><i class="fa-solid fa-sitemap text-success me-2"></i>Centro de operación integral</h5><span class="badge-soft ok">CRUD dentro de la plataforma enterprise</span></div>
             <div class="body">
               <div class="operation-grid">
-                <button type="button" class="op-card" id="btnOpCreate"><span class="ico"><i class="fa-solid fa-circle-plus"></i></span><strong>Crear bien</strong><span class="muted">Registro manual con código FIAS automático.</span></button>
+                <button type="button" class="op-card write-only" id="btnOpCreate"><span class="ico"><i class="fa-solid fa-circle-plus"></i></span><strong>Crear bien</strong><span class="muted">Registro manual con código FIAS automático.</span></button>
                 <button type="button" class="op-card" data-jump="inventario"><span class="ico"><i class="fa-solid fa-magnifying-glass"></i></span><strong>Consultar y editar</strong><span class="muted">Buscar, abrir detalle, modificar o anular lógicamente.</span></button>
                 <button type="button" class="op-card" data-jump="ocr"><span class="ico"><i class="fa-solid fa-file-invoice"></i></span><strong>Pre-registro OCR</strong><span class="muted">Procesar factura y validar antes de guardar.</span></button>
                 <button type="button" class="op-card" data-jump="calidad"><span class="ico"><i class="fa-solid fa-triangle-exclamation"></i></span><strong>Calidad de datos</strong><span class="muted">Duplicados, faltantes, series, documentos y valores.</span></button>
@@ -143,7 +143,7 @@
             <div class="head"><h5><i class="fa-solid fa-pen-to-square text-success me-2"></i>Operaciones CRUD del inventario</h5><span class="badge-soft info">Crear · Consultar · Editar · Anular lógico</span></div>
             <div class="body">
               <div class="crud-strip">
-                <button id="btnCreateAssetCrud" class="btn btn-success"><i class="fa-solid fa-plus me-1"></i>Crear nuevo bien</button>
+                <button id="btnCreateAssetCrud" class="btn btn-success write-only"><i class="fa-solid fa-plus me-1"></i>Crear nuevo bien</button>
                 <button id="btnSyncCrud" class="btn btn-outline-success"><i class="fa-solid fa-rotate me-1"></i>Sincronizar inventario</button>
                 <button id="btnExportCsvCrud" class="btn btn-outline-primary"><i class="fa-solid fa-file-csv me-1"></i>Exportar resultados</button>
                 <div class="hint small flex-grow-1"><strong>Edición y anulación:</strong> abra una tarjeta o fila con “Ver”; desde el modal podrá editar el bien o ejecutar la anulación lógica sin eliminar la fila física del Excel.</div>
@@ -172,11 +172,11 @@
         <section id="ocr" class="panel">
           <div class="row g-3">
             <div class="col-xl-5"><div class="cardx h-100"><div class="head"><h5><i class="fa-solid fa-file-arrow-up text-success me-2"></i>Cargar factura o acta</h5></div><div class="body">
-              <div id="dropzone" class="dropzone mb-3"><div class="big"><i class="fa-solid fa-cloud-arrow-up"></i></div><h5 class="fw-bold">Seleccionar o arrastrar documento</h5><p class="muted">PDF o imagen. Primero se genera un pre-registro local; nada se guarda hasta validar.</p><input id="invoiceFile" type="file" class="form-control" accept="application/pdf,image/*"></div>
+              <div id="dropzone" class="dropzone mb-3"><div class="big"><i class="fa-solid fa-cloud-arrow-up"></i></div><h5 class="fw-bold">Seleccionar o arrastrar documento</h5><p class="muted">PDF o imagen. Aplica mapeo OCR FIAS para detectar cabecera, bienes, cantidades, series, marca/modelo y valores; nada se guarda hasta validar.</p><input id="invoiceFile" type="file" class="form-control" accept="application/pdf,image/*"></div>
               <div class="d-grid gap-2"><button id="btnProcessInvoice" class="btn btn-success"><i class="fa-solid fa-wand-magic-sparkles me-1"></i>Procesar documento</button><button id="btnClearPre" class="btn btn-outline-secondary"><i class="fa-solid fa-trash-can me-1"></i>Limpiar pre-registro local</button></div>
               <hr><div class="console" id="ocrConsole">Esperando documento...</div>
             </div></div></div>
-            <div class="col-xl-7"><div class="cardx h-100"><div class="head"><h5><i class="fa-solid fa-clipboard-check text-success me-2"></i>Pre-registro local validable</h5><div class="d-flex gap-2"><button id="btnGenerateCodes" class="btn btn-sm btn-outline-success">Regenerar códigos</button><button id="btnSavePreToExcel" class="btn btn-sm btn-outline-primary">Guardar en bandeja OCR</button><button id="btnCreateFromPre" class="btn btn-sm btn-success">Registrar seleccionados</button></div></div><div class="body"><div id="preRegisterList"></div></div></div></div>
+            <div class="col-xl-7"><div class="cardx h-100"><div class="head"><h5><i class="fa-solid fa-clipboard-check text-success me-2"></i>Pre-registro local validable</h5><div class="d-flex gap-2"><button id="btnGenerateCodes" class="btn btn-sm btn-outline-success">Regenerar códigos</button><button id="btnSavePreToExcel" class="btn btn-sm btn-outline-primary write-only">Guardar en bandeja OCR</button><button id="btnCreateFromPre" class="btn btn-sm btn-success write-only">Registrar seleccionados</button></div></div><div class="body"><div id="preRegisterList"></div></div></div></div>
           </div>
         </section>
 
@@ -213,7 +213,7 @@
                 </div>
                 <div class="d-flex gap-2 flex-wrap">
                   <input id="catalogSearch" class="form-control form-control-sm" placeholder="Buscar en catálogo..." style="min-width:240px">
-                  <button id="btnAddCatalog" class="btn btn-sm btn-success"><i class="fa-solid fa-plus me-1"></i>Agregar</button>
+                  <button id="btnAddCatalog" class="btn btn-sm btn-success write-only"><i class="fa-solid fa-plus me-1"></i>Agregar</button>
                 </div>
               </div>
               <div class="body">
@@ -296,6 +296,26 @@
   };
   const scopes = {scopes:['User.Read','Files.ReadWrite','Files.ReadWrite.All','Sites.ReadWrite.All']};
   const state = {msal:null, account:null, token:null, itemPath:'', sessionId:null, sheetIds:{}, offline:false, busy:false, charts:{}, data:{bienes:[],facturas:[],detalle:[],pre:[],tipo:[],proyectos:[],proveedores:[],custodios:[],ubicaciones:[],docs:[],fotos:[],audit:[],seq:[]}, headers:{}, preLocal:[], currentView:'cards',catalogKey:'tipo',catalogSearch:''};
+  const AUTHORIZED_EDITOR_EMAIL = 'jcruzg@fias.org.ec';
+  function currentUserEmail(){ return String(state.account?.username || state.account?.idTokenClaims?.preferred_username || state.account?.idTokenClaims?.upn || '').trim().toLowerCase(); }
+  function isEditor(){ return currentUserEmail() === AUTHORIZED_EDITOR_EMAIL; }
+  function requireEditor(action='realizar modificaciones'){ if(isEditor()) return true; alert(`Acceso restringido: la sesión actual (${currentUserEmail() || 'sin usuario'}) solo permite consultar. Únicamente ${AUTHORIZED_EDITOR_EMAIL} puede ${action}.`); return false; }
+  function setAccessMode(){
+    const can = isEditor();
+    document.body.classList.toggle('viewer-mode', !can);
+    document.body.classList.toggle('editor-mode', can);
+    const email = currentUserEmail() || 'Sesión activa';
+    if($('sessionUser')) $('sessionUser').innerHTML = `${esc(email)}<br>${can ? '<span class="badge-soft ok">Editor autorizado</span>' : '<span class="badge-soft warn">Solo consulta</span>'}`;
+    const box = document.querySelector('.session-box');
+    if(box){
+      let note = $('accessModeNote');
+      if(!note){ note=document.createElement('div'); note.id='accessModeNote'; box.appendChild(note); }
+      note.className = 'access-note ' + (can ? 'editor' : 'viewer');
+      note.innerHTML = can ? '<strong>Permisos activos:</strong> creación, edición, pre-registro, catálogos y anulación lógica habilitados.' : '<strong>Modo consulta:</strong> puede visualizar, buscar, exportar y abrir soportes. Crear, editar, registrar OCR, catálogos y anular están bloqueados.';
+    }
+    const writeIds=['btnCreateAsset','btnOpCreate','btnCreateAssetCrud','btnProcessInvoice','btnClearPre','btnGenerateCodes','btnSavePreToExcel','btnCreateFromPre','btnAddCatalog','btnSaveAsset','btnSaveCatalog'];
+    writeIds.forEach(id=>{ const el=$(id); if(el){ el.disabled=!can; el.classList.toggle('locked-control',!can); el.title=can?'':'Solo jcruzg@fias.org.ec puede modificar información'; }});
+  }
   const $ = id => document.getElementById(id);
   const money = v => new Intl.NumberFormat('es-EC',{style:'currency',currency:'USD'}).format(num(v));
   const num = v => { if(v===null||v===undefined||v==='') return 0; let s=String(v).trim().replace(/\$/g,'').replace(/\s/g,''); if(/^\d{1,3}(\.\d{3})+,\d+$/.test(s)) s=s.replace(/\./g,'').replace(',', '.'); else if(/^\d+,\d+$/.test(s)) s=s.replace(',', '.'); return Number(s)||0; };
@@ -344,9 +364,9 @@
   async function login(){ try{ showLoginError(''); await state.msal.initialize(); const res=await state.msal.loginPopup(scopes); state.account=res.account; state.token=res.accessToken; await enterApp(); }catch(e){ showLoginError('No fue posible iniciar sesión: '+(e.message||e)); } }
   async function acquireToken(){ const account=state.account || state.msal.getAllAccounts()[0]; if(!account) throw new Error('No existe cuenta autenticada.'); try{ const r=await state.msal.acquireTokenSilent({...scopes,account}); state.token=r.accessToken; state.account=r.account||account; return state.token; }catch(e){ const r=await state.msal.acquireTokenPopup({...scopes,account}); state.token=r.accessToken; state.account=r.account||account; return state.token; } }
   function showLoginError(msg){ const el=$('loginError'); if(!el) return; if(!msg){el.classList.add('hidden'); el.textContent='';} else {el.classList.remove('hidden'); el.textContent=msg;} }
-  async function enterApp(){ $('loginShell').classList.add('hidden'); $('app').classList.remove('hidden'); $('sessionUser').textContent=state.account?.username||'Sesión activa'; await fullSync(); }
+  async function enterApp(){ $('loginShell').classList.add('hidden'); $('app').classList.remove('hidden'); setAccessMode(); await fullSync(); }
   async function logout(){ try{ if(state.msal && state.account) await state.msal.logoutPopup({account:state.account,postLogoutRedirectUri:APP.AUTH_REDIRECT_URI}); }catch(e){console.warn(e);} finally{ sessionStorage.clear(); state.account=null; state.token=null; state.sessionId=null; $('app').classList.add('hidden'); $('loginShell').classList.remove('hidden'); $('sessionUser').textContent='No conectado'; } }
-  function offlineDemo(){ state.offline=true; $('loginShell').classList.add('hidden'); $('app').classList.remove('hidden'); $('sessionUser').textContent='Vista sin conexión'; seedDemoData(); renderAll(); }
+  function offlineDemo(){ state.offline=true; $('loginShell').classList.add('hidden'); $('app').classList.remove('hidden'); seedDemoData(); setAccessMode(); renderAll(); }
   async function graphFetch(path, options={}, useSession=true){ const controller=new AbortController(); const timeout=setTimeout(()=>controller.abort(), options.timeout||35000); try{ const token=await acquireToken(); const headers={Authorization:`Bearer ${token}`,'Content-Type':'application/json',...(options.headers||{})}; if(useSession && state.sessionId && path.includes('/workbook/')) headers['Workbook-Session-Id']=state.sessionId; const res=await fetch(`https://graph.microsoft.com/v1.0${path}`,{...options,headers,signal:controller.signal}); if(!res.ok){ const txt=await res.text().catch(()=>res.statusText); throw new Error(`Graph ${res.status}: ${txt}`); } if(res.status===204) return null; return await res.json(); }finally{ clearTimeout(timeout); } }
   async function resolveItem(){ const item=await graphFetch(`/shares/${getShareToken()}/driveItem?$select=id,name,parentReference`,{},false); if(!item?.id || !item?.parentReference?.driveId) throw new Error('No se pudo resolver el archivo Excel en SharePoint.'); state.itemPath=`/drives/${item.parentReference.driveId}/items/${item.id}`; }
   async function createSession(){ state.sessionId=null; const r=await graphFetch(`${state.itemPath}/workbook/createSession`,{method:'POST',body:JSON.stringify({persistChanges:true})},false); state.sessionId=r?.id||null; }
@@ -354,10 +374,10 @@
   async function loadWorksheetIds(){ const r=await graphFetch(`${state.itemPath}/workbook/worksheets?$select=id,name`); state.sheetIds={}; (r.value||[]).forEach(s=>state.sheetIds[s.name]=s.id); }
   async function usedRange(sheetName){ const id=state.sheetIds[sheetName]; if(!id) throw new Error(`No se encontró la hoja ${sheetName}`); return await graphFetch(`${state.itemPath}/workbook/worksheets/${id}/usedRange(valuesOnly=true)`); }
   async function loadSheet(key){ const sheetName=APP.sheets[key]; const r=await usedRange(sheetName); const values=r?.values||[]; const headers=(values[0]||[]).map(h=>String(h||'').trim()); state.headers[key]=headers; return values.slice(1).filter(row=>row.some(x=>x!==''&&x!==null&&x!==undefined)).map((row,i)=>{ const o={_row:i+2}; headers.forEach((h,c)=>o[h]=row[c]??''); ['FechaCompra','InicioSeguro','FinSeguro','InicioGarantia','FinGarantia','FechaBaja','FechaFacturaCompra','FechaCarga','FechaHora'].forEach(f=>{if(o[f]!==undefined)o[f]=toISO(o[f]);}); return o; }); }
-  async function fullSync(){ if(state.busy) return; const btn=$('btnSync'); setBusy(btn,true,'Sincronizando...'); try{ if(state.offline){ renderAll(); return; } await closeSession(); await resolveItem(); await createSession(); await loadWorksheetIds(); for(const k of Object.keys(APP.sheets)){ try{ state.data[k]=await loadSheet(k); }catch(e){ console.warn('No se pudo cargar',k,e); state.data[k]=[]; } } $('lastSync').textContent=new Date().toLocaleString('es-EC'); renderAll(); }catch(e){ alert('Error de sincronización:\n'+(e.message||e)); console.error(e); }finally{ setBusy(btn,false,'Sincronizar'); } }
+  async function fullSync(){ if(state.busy) return; const btn=$('btnSync'); setBusy(btn,true,'Sincronizando...'); try{ if(state.offline){ renderAll(); return; } await closeSession(); await resolveItem(); await createSession(); await loadWorksheetIds(); for(const k of Object.keys(APP.sheets)){ try{ state.data[k]=await loadSheet(k); }catch(e){ console.warn('No se pudo cargar',k,e); state.data[k]=[]; } } $('lastSync').textContent=new Date().toLocaleString('es-EC'); renderAll(); setAccessMode(); }catch(e){ alert('Error de sincronización:\n'+(e.message||e)); console.error(e); }finally{ setBusy(btn,false,'Sincronizar'); } }
   function setBusy(btn,busy,text){ state.busy=busy; if(btn){ btn.disabled=busy; btn.innerHTML= busy?`<span class="spinner-border spinner-border-sm me-1"></span>${text}`:`<i class="fa-solid fa-rotate me-1"></i>${text}`; } }
-  async function patchSheetRow(key, rowNumber, obj){ if(state.offline) return; const headers=state.headers[key]; const sheetName=APP.sheets[key]; const id=state.sheetIds[sheetName]; const values=[headers.map(h=>obj[h]??'')]; const addr=`A${rowNumber}:${colLetter(headers.length)}${rowNumber}`; await graphFetch(`${state.itemPath}/workbook/worksheets/${id}/range(address='${addr}')`,{method:'PATCH',body:JSON.stringify({values})}); }
-  async function appendSheetRow(key,obj){ if(state.offline) return; if(!state.headers[key]?.length){ await loadSheet(key); } const headers=state.headers[key]; const sheetName=APP.sheets[key]; const id=state.sheetIds[sheetName]; const nextRow=(state.data[key]?.length||0)+2; const values=[headers.map(h=>obj[h]??'')]; const addr=`A${nextRow}:${colLetter(headers.length)}${nextRow}`; await graphFetch(`${state.itemPath}/workbook/worksheets/${id}/range(address='${addr}')`,{method:'PATCH',body:JSON.stringify({values})}); obj._row=nextRow; state.data[key].push(obj); }
+  async function patchSheetRow(key, rowNumber, obj){ if(!requireEditor('modificar registros')) throw new Error('Usuario no autorizado para modificar registros.'); if(state.offline) return; const headers=state.headers[key]; const sheetName=APP.sheets[key]; const id=state.sheetIds[sheetName]; const values=[headers.map(h=>obj[h]??'')]; const addr=`A${rowNumber}:${colLetter(headers.length)}${rowNumber}`; await graphFetch(`${state.itemPath}/workbook/worksheets/${id}/range(address='${addr}')`,{method:'PATCH',body:JSON.stringify({values})}); }
+  async function appendSheetRow(key,obj){ if(!requireEditor('crear registros')) throw new Error('Usuario no autorizado para crear registros.'); if(state.offline) return; if(!state.headers[key]?.length){ await loadSheet(key); } const headers=state.headers[key]; const sheetName=APP.sheets[key]; const id=state.sheetIds[sheetName]; const nextRow=(state.data[key]?.length||0)+2; const values=[headers.map(h=>obj[h]??'')]; const addr=`A${nextRow}:${colLetter(headers.length)}${nextRow}`; await graphFetch(`${state.itemPath}/workbook/worksheets/${id}/range(address='${addr}')`,{method:'PATCH',body:JSON.stringify({values})}); obj._row=nextRow; state.data[key].push(obj); }
   async function audit(action, tabla, registroId, campo='', antes='', despues='', resultado='OK', obs=''){ const rec={IdAuditoria:uuid('AUD'),FechaHora:nowISO(),Usuario:state.account?.username||'usuario',Accion:action,Tabla:tabla,RegistroId:registroId,Campo:campo,ValorAnterior:String(antes||''),ValorNuevo:String(despues||''),Resultado:resultado,Observacion:obs}; try{ await appendSheetRow('audit',rec); }catch(e){ console.warn('Auditoría no registrada',e); } }
   function seedDemoData(){ state.data.tipo=[{CodigoTipoBien:'03',CategoriaBien:'Muebles y enseres',VidaUtilAnios:10,TasaAnual:.1},{CodigoTipoBien:'07',CategoriaBien:'Equipos de computación y comunicación',VidaUtilAnios:3,TasaAnual:.3333}]; state.data.proyectos=[{Proyecto:'FIAS'},{Proyecto:'FAP'},{Proyecto:'REM'}]; state.data.bienes=[{IdBien:'B-1',Codigo:'FIAS.26.03.077',CodigoTipoSugerido:'03',CategoriaBienSugerida:'Muebles y enseres',Descripcion:'Escritorio operativo',Cantidad:1,Clasificacion:'ACTIVO FIJO',Proyecto:'FIAS',FechaCompra:'2026-01-15',Proveedor:'Proveedor demo',RucProveedor:'1790000000001',NumeroFacturaActa:'001-001-000001',ValorBienIncImp:250,Marca:'N/A',Modelo:'N/A',NumeroSerie:'S-001',Custodio:'Custodio demo',Ubicacion:'Quito',EstadoFisico:'BUENO',EstadoCalidad:'OK'}]; }
   function renderAll(){ populateSelectors(); renderKpis(); renderExecutiveSummary(); renderInventory(); renderFacturas(); renderCatalogs(); renderQuality(); renderAudit(); renderCharts(); renderPreLocal(); }
@@ -368,7 +388,7 @@
   function renderExecutiveSummary(){ const rows=activos(); const total=rows.reduce((a,b)=>a+num(b.ValorBienIncImp),0); const prom=rows.length?total/rows.length:0; const byProj=sumBy(rows,'Proyecto','ValorBienIncImp'); const topProj=topEntry(byProj); const byTipo=countBy(rows,'CategoriaBienSugerida'); const topTipo=topEntry(byTipo); const quality=buildQuality(); const high=quality.filter(q=>q.severity==='danger').length; const warn=quality.filter(q=>q.severity==='warn').length; const sinFoto=rows.filter(b=>!getFotoLink(b)).length; const sinFactura=rows.filter(b=>!getFacturaLink(b)).length; $('executiveSummary').innerHTML=`<p>El inventario normalizado registra <strong>${rows.length}</strong> bienes activos por un valor referencial acumulado de <strong>${money(total)}</strong>, con un promedio de <strong>${money(prom)}</strong> por bien. El proyecto con mayor valor registrado es <strong>${esc(topProj[0]||'N/A')}</strong> con <strong>${money(topProj[1]||0)}</strong>.</p><p>La categoría con mayor frecuencia es <strong>${esc(topTipo[0]||'N/A')}</strong> con <strong>${topTipo[1]||0}</strong> registros. Actualmente existen <strong>${sinFactura}</strong> bienes sin soporte digital de factura/acta y <strong>${sinFoto}</strong> bienes sin fotografía vinculada.</p><p>En integridad de datos se identifican <strong>${high}</strong> alertas críticas y <strong>${warn}</strong> alertas preventivas. Se recomienda priorizar la depuración de códigos/series duplicadas, completar soportes documentales y validar bienes sin custodio o ubicación para fortalecer la trazabilidad patrimonial.</p>`; $('priorityAlerts').innerHTML=quality.slice(0,6).map(q=>`<div class="quality-item row-${q.severity==='danger'?'danger':q.severity==='ok'?'ok':'warning'}"><strong>${esc(q.title)}</strong><div class="muted">${esc(q.detail)}</div></div>`).join('') || '<div class="alert alert-success">No hay alertas prioritarias.</div>'; }
   function renderInventory(){ const rows=filteredAssets(); $('resultCount').textContent=`${rows.length} bienes`; const q=$('q')?.value||''; $('cardsView').innerHTML=rows.slice(0,160).map(b=>assetCard(b,q)).join('') || '<div class="alert alert-warning">No existen bienes con los filtros aplicados.</div>'; $('assetTbody').innerHTML=rows.map(b=>`<tr onclick="showAssetDetail('${esc(b.IdBien)}')"><td><strong>${highlight(b.Codigo,q)}</strong></td><td>${highlight(b.Descripcion,q)}</td><td>${badge(`${b.CodigoTipoSugerido||''} ${b.CategoriaBienSugerida||''}`,'info')}</td><td>${esc(b.Proyecto)}</td><td>${highlight(b.NumeroFacturaActa,q)}</td><td>${money(b.ValorBienIncImp)}</td><td>${highlight(b.Custodio,q)}</td><td>${highlight(b.Ubicacion,q)}</td><td>${badge(b.EstadoFisico||b.EstadoCalidad, estadoClass(b.EstadoFisico||b.EstadoCalidad))}</td><td onclick="event.stopPropagation()">${assetButtons(b)}</td></tr>`).join(''); }
   function assetCard(b,q){ return `<div class="asset-card"><div class="d-flex justify-content-between align-items-start gap-2"><div><h6>${highlight(b.Codigo,q)}</h6><div class="muted">${esc(b.Proyecto||'Sin proyecto')} · ${esc(b.NumeroFacturaActa||'Sin factura')}</div></div>${badge(b.EstadoFisico||'N/A',estadoClass(b.EstadoFisico))}</div><hr><div class="desc">${highlight(b.Descripcion,q)}</div><div class="muted mt-1">${esc(b.Marca||'')} ${esc(b.Modelo||'')} · Serie: ${highlight(b.NumeroSerie||'Pendiente',q)}</div><div class="d-flex justify-content-between mt-2"><span class="chip"><i class="fa-solid fa-tag"></i>${esc(b.CodigoTipoSugerido||'')}</span><strong>${money(b.ValorBienIncImp)}</strong></div><div class="muted mt-2"><i class="fa-solid fa-user me-1"></i>${highlight(b.Custodio||'Sin custodio',q)}<br><i class="fa-solid fa-location-dot me-1"></i>${highlight(b.Ubicacion||'Sin ubicación',q)}</div><div class="asset-actions mt-3">${assetButtons(b)}</div></div>`; }
-  function assetButtons(b){ const factura=getFacturaLink(b), foto=getFotoLink(b), acta=getActaLink(b); return `<button class="btn btn-sm btn-outline-success" onclick="showAssetDetail('${esc(b.IdBien)}')"><i class="fa-solid fa-eye"></i> Ver</button><button class="btn btn-sm btn-outline-primary" onclick="editAsset('${esc(b.IdBien)}')"><i class="fa-solid fa-pen"></i> Editar</button><button class="btn btn-sm btn-outline-danger" onclick="softDeleteAsset('${esc(b.IdBien)}')"><i class="fa-solid fa-trash"></i></button>${factura?`<a class="btn btn-sm btn-outline-secondary" href="${esc(factura)}" target="_blank"><i class="fa-solid fa-file-invoice"></i></a>`:''}${foto?`<a class="btn btn-sm btn-outline-secondary" href="${esc(foto)}" target="_blank"><i class="fa-solid fa-image"></i></a>`:''}${acta?`<a class="btn btn-sm btn-outline-secondary" href="${esc(acta)}" target="_blank"><i class="fa-solid fa-file-signature"></i></a>`:''}`; }
+  function assetButtons(b){ const factura=getFacturaLink(b), foto=getFotoLink(b), acta=getActaLink(b); const editControls=isEditor()?`<button class="btn btn-sm btn-outline-primary" onclick="editAsset('${esc(b.IdBien)}')"><i class="fa-solid fa-pen"></i> Editar</button><button class="btn btn-sm btn-outline-danger" onclick="softDeleteAsset('${esc(b.IdBien)}')"><i class="fa-solid fa-trash"></i></button>`:''; return `<button class="btn btn-sm btn-outline-success" onclick="showAssetDetail('${esc(b.IdBien)}')"><i class="fa-solid fa-eye"></i> Ver</button>${editControls}${factura?`<a class="btn btn-sm btn-outline-secondary" href="${esc(factura)}" target="_blank"><i class="fa-solid fa-file-invoice"></i></a>`:''}${foto?`<a class="btn btn-sm btn-outline-secondary" href="${esc(foto)}" target="_blank"><i class="fa-solid fa-image"></i></a>`:''}${acta?`<a class="btn btn-sm btn-outline-secondary" href="${esc(acta)}" target="_blank"><i class="fa-solid fa-file-signature"></i></a>`:''}`; }
   function estadoClass(s){ const x=norm(s); if(x.includes('bueno')||x.includes('ok')) return 'ok'; if(x.includes('regular')||x.includes('pendiente')) return 'warn'; if(x.includes('malo')||x.includes('eliminado')||x.includes('baja')) return 'danger'; return 'darkb'; }
   function highlight(s,q){ s=esc(s||''); q=String(q||'').trim(); if(!q) return s; const terms=q.split(/\s+/).filter(t=>t.length>2).map(t=>t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')); if(!terms.length) return s; return s.replace(new RegExp(`(${terms.join('|')})`,'gi'),'<span class="mark">$1</span>'); }
   function isRealLink(value){ const v=String(value||'').trim(); return /^https?:\/\//i.test(v) && !/^(verificar|pendiente|n\/a|na)$/i.test(v); }
@@ -409,13 +429,13 @@
     $('detailBody').innerHTML=`<div class="row g-3"><div class="col-lg-8"><div class="cardx"><div class="body"><h4 class="fw-bold">${esc(b.Descripcion)}</h4><div class="d-flex flex-wrap gap-2 mb-3">${badge(b.Codigo,'ok')}${badge(b.Proyecto,'info')}${badge(b.EstadoFisico,estadoClass(b.EstadoFisico))}${badge(b.Clasificacion,'darkb')}</div><div class="row g-2"><div class="col-md-6"><strong>Factura/Acta:</strong> ${esc(b.NumeroFacturaActa)}</div><div class="col-md-6"><strong>Fecha compra:</strong> ${displayDate(b.FechaCompra)}</div><div class="col-md-6"><strong>Proveedor:</strong> ${esc(b.Proveedor)}</div><div class="col-md-6"><strong>RUC:</strong> ${esc(b.RucProveedor)}</div><div class="col-md-6"><strong>Marca/Modelo:</strong> ${esc(b.Marca)} ${esc(b.Modelo)}</div><div class="col-md-6"><strong>Serie:</strong> ${esc(b.NumeroSerie)}</div><div class="col-md-6"><strong>Valor inc. imp.:</strong> ${money(b.ValorBienIncImp)}</div><div class="col-md-6"><strong>Tipo:</strong> ${esc(b.CodigoTipoSugerido)} - ${esc(b.CategoriaBienSugerida)}</div><div class="col-md-6"><strong>Custodio:</strong> ${esc(b.Custodio)}</div><div class="col-md-6"><strong>Ubicación:</strong> ${esc(b.Ubicacion)}</div><div class="col-12"><strong>Observaciones:</strong> ${esc(b.Observaciones)}</div></div></div></div></div><div class="col-lg-4"><div class="cardx"><div class="body"><h6 class="fw-bold">Documentos vinculados</h6><div class="doc-btns">${docStatus('Factura digital',factura,b.FacturaDigitalLink)}${docStatus('Acta de entrega',acta,b.ActaEntregaLink)}${docStatus('Fotografía del bien',foto,b.FotoLink)}</div><div class="link-muted mt-2">Si aparece “Verificar”, significa que el dato existe como texto en la matriz pero no es un enlace válido de SharePoint.</div></div></div></div><div class="col-12"><div class="cardx"><div class="head"><h5>Detalle factura asociado</h5></div><div class="body"><div class="table-responsive"><table class="table table-sm"><thead><tr><th>Ítem</th><th>Cantidad</th><th>Valor unit.</th><th>Valor total</th><th>Marca</th><th>Modelo</th><th>Serie</th></tr></thead><tbody>${details.map(d=>`<tr><td>${esc(d.DescripcionItem)}</td><td>${esc(d.Cantidad)}</td><td>${money(d.ValorUnitarioIncImp)}</td><td>${money(d.ValorTotalIncImp)}</td><td>${esc(d.Marca)}</td><td>${esc(d.Modelo)}</td><td>${esc(d.NumeroSerie)}</td></tr>`).join('')||'<tr><td colspan="7" class="text-muted">Sin detalle de factura asociado.</td></tr>'}</tbody></table></div></div></div></div></div>`;
     bootstrap.Modal.getOrCreateInstance($('detailModal')).show();
   }
-  function openCreateAsset(){ resetAssetForm(); $('formMode').value='create'; $('assetModalTitle').textContent='Nuevo bien'; $('FechaCompra').value=todayISO(); $('Cantidad').value=1; $('EstadoFisico').value='BUENO'; $('Codigo').value=generateNextCode(todayISO(), $('CodigoTipoSugerido').value || '03'); bootstrap.Modal.getOrCreateInstance($('assetModal')).show(); }
-  function editAsset(id){ const b=state.data.bienes.find(x=>x.IdBien===id); if(!b) return; resetAssetForm(); $('formMode').value='edit'; $('rowIndex').value=b._row; $('assetModalTitle').textContent=`Editar bien ${b.Codigo}`; APP.manualFields.forEach(f=>{ const el=$(f); if(el){ el.value = ['FechaCompra','InicioSeguro','FinSeguro','InicioGarantia','FinGarantia','FechaBaja'].includes(f)?toISO(b[f]):(b[f]??''); }}); $('CodigoTipoSugerido').value=b.CodigoTipoSugerido||b.CodigoTipoActual||''; bootstrap.Modal.getOrCreateInstance($('assetModal')).show(); }
+  function openCreateAsset(){ if(!requireEditor('crear nuevos bienes')) return; resetAssetForm(); $('formMode').value='create'; $('assetModalTitle').textContent='Nuevo bien'; $('FechaCompra').value=todayISO(); $('Cantidad').value=1; $('EstadoFisico').value='BUENO'; $('Codigo').value=generateNextCode(todayISO(), $('CodigoTipoSugerido').value || '03'); bootstrap.Modal.getOrCreateInstance($('assetModal')).show(); }
+  function editAsset(id){ if(!requireEditor('editar bienes')) return; const b=state.data.bienes.find(x=>x.IdBien===id); if(!b) return; resetAssetForm(); $('formMode').value='edit'; $('rowIndex').value=b._row; $('assetModalTitle').textContent=`Editar bien ${b.Codigo}`; APP.manualFields.forEach(f=>{ const el=$(f); if(el){ el.value = ['FechaCompra','InicioSeguro','FinSeguro','InicioGarantia','FinGarantia','FechaBaja'].includes(f)?toISO(b[f]):(b[f]??''); }}); $('CodigoTipoSugerido').value=b.CodigoTipoSugerido||b.CodigoTipoActual||''; bootstrap.Modal.getOrCreateInstance($('assetModal')).show(); }
   function resetAssetForm(){ $('assetForm').reset(); $('IdBien').value=uuid('B'); $('rowIndex').value=''; }
   function collectAssetForm(){ const o={}; APP.manualFields.forEach(f=>{ const el=$(f); if(el) o[f]=el.value; }); const cat=state.data.tipo.find(t=>String(t.CodigoTipoBien)===String(o.CodigoTipoSugerido)); o.CategoriaBienSugerida=cat?.CategoriaBien||o.CategoriaBienSugerida||''; o.VidaUtilAnios=cat?.VidaUtilAnios||''; o.TasaAnual=cat?.TasaAnual||''; o.CodigoAnio=(toISO(o.FechaCompra)||todayISO()).slice(2,4); o.CodigoTipoActual=(o.Codigo||'').split('.')[2]||o.CodigoTipoSugerido; const parts=(o.Codigo||'').split('.'); o.SecuencialActual=parts[3]||''; o.ValidacionCodigo=validateCode(o); o.EstadoCalidad=o.EstadoCalidad||'OK'; o.FuenteMigracion=o.FuenteMigracion||'HTML CRUD'; return o; }
   function validateAsset(o){ const missing=APP.required.filter(f=>!String(o[f]||'').trim()); if(missing.length) return 'Faltan campos obligatorios: '+missing.join(', '); const dupCode=state.data.bienes.find(b=>b.Codigo===o.Codigo && b.IdBien!==o.IdBien); if(dupCode) return 'El código ya existe: '+o.Codigo; if(o.NumeroSerie){ const dupSerie=state.data.bienes.find(b=>norm(b.NumeroSerie)===norm(o.NumeroSerie) && b.IdBien!==o.IdBien); if(dupSerie) return 'El número de serie ya existe en: '+dupSerie.Codigo; } return ''; }
-  async function saveAsset(){ const btn=$('btnSaveAsset'); const o=collectAssetForm(); const err=validateAsset(o); if(err){ alert(err); return; } btn.disabled=true; try{ if($('formMode').value==='edit'){ await patchSheetRow('bienes', Number($('rowIndex').value), o); const idx=state.data.bienes.findIndex(b=>b.IdBien===o.IdBien); if(idx>=0) state.data.bienes[idx]={...state.data.bienes[idx],...o,_row:Number($('rowIndex').value)}; await audit('UPDATE','01_Bienes',o.IdBien,'Registro completo','','','OK','Edición controlada desde HTML'); }else{ o.IdBien=o.IdBien||uuid('B'); await appendSheetRow('bienes',o); await audit('CREATE','01_Bienes',o.IdBien,'Registro completo','','','OK','Creación desde HTML'); } bootstrap.Modal.getOrCreateInstance($('assetModal')).hide(); renderAll(); }catch(e){ alert('No fue posible guardar: '+(e.message||e)); }finally{ btn.disabled=false; } }
-  async function softDeleteAsset(id){ const b=state.data.bienes.find(x=>x.IdBien===id); if(!b) return; if(!confirm(`¿Anular lógicamente el bien ${b.Codigo}? No se eliminará la fila física; quedará auditado.`)) return; const before=b.EstadoCalidad; b.EstadoCalidad='Eliminado lógico'; try{ await patchSheetRow('bienes',b._row,b); await audit('DELETE_LOGICO','01_Bienes',id,'EstadoCalidad',before,'Eliminado lógico','OK','CRUD seguro sin eliminación física'); renderAll(); }catch(e){ alert('No fue posible anular: '+(e.message||e)); } }
+  async function saveAsset(){ if(!requireEditor('guardar bienes')) return; const btn=$('btnSaveAsset'); const o=collectAssetForm(); const err=validateAsset(o); if(err){ alert(err); return; } btn.disabled=true; try{ if($('formMode').value==='edit'){ await patchSheetRow('bienes', Number($('rowIndex').value), o); const idx=state.data.bienes.findIndex(b=>b.IdBien===o.IdBien); if(idx>=0) state.data.bienes[idx]={...state.data.bienes[idx],...o,_row:Number($('rowIndex').value)}; await audit('UPDATE','01_Bienes',o.IdBien,'Registro completo','','','OK','Edición controlada desde HTML'); }else{ o.IdBien=o.IdBien||uuid('B'); await appendSheetRow('bienes',o); await audit('CREATE','01_Bienes',o.IdBien,'Registro completo','','','OK','Creación desde HTML'); } bootstrap.Modal.getOrCreateInstance($('assetModal')).hide(); renderAll(); }catch(e){ alert('No fue posible guardar: '+(e.message||e)); }finally{ btn.disabled=false; } }
+  async function softDeleteAsset(id){ if(!requireEditor('anular bienes')) return; const b=state.data.bienes.find(x=>x.IdBien===id); if(!b) return; if(!confirm(`¿Anular lógicamente el bien ${b.Codigo}? No se eliminará la fila física; quedará auditado.`)) return; const before=b.EstadoCalidad; b.EstadoCalidad='Eliminado lógico'; try{ await patchSheetRow('bienes',b._row,b); await audit('DELETE_LOGICO','01_Bienes',id,'EstadoCalidad',before,'Eliminado lógico','OK','CRUD seguro sin eliminación física'); renderAll(); }catch(e){ alert('No fue posible anular: '+(e.message||e)); } }
   function getYearTypeFromCode(code){ const p=String(code||'').split('.'); if(p.length>=4 && p[0]==='FIAS') return {yy:p[1],type:p[2],seq:parseInt(p[3],10)||0}; return null; }
   function generateNextCode(date,type,offset=0){ const yy=(toISO(date)||todayISO()).slice(2,4); type=String(type||'03').padStart(2,'0'); let max=0; state.data.bienes.forEach(b=>{ const x=getYearTypeFromCode(b.Codigo); if(x&&x.yy===yy&&x.type===type) max=Math.max(max,x.seq); }); state.preLocal.forEach(p=>{ const x=getYearTypeFromCode(p.Codigo); if(x&&x.yy===yy&&x.type===type) max=Math.max(max,x.seq); }); return `FIAS.${yy}.${type}.${String(max+1+offset).padStart(3,'0')}`; }
   function validateCode(o){ const x=getYearTypeFromCode(o.Codigo); if(!x) return 'Formato no estándar'; const yy=(toISO(o.FechaCompra)||'').slice(2,4); if(yy && x.yy!==yy) return 'Año del código no coincide con fecha compra'; if(o.CodigoTipoSugerido && x.type!==String(o.CodigoTipoSugerido).padStart(2,'0')) return 'Tipo del código no coincide con categoría'; return 'OK'; }
@@ -423,10 +443,10 @@
   const CATALOG_CONFIG = {
     tipo:{title:'Tipos de bienes',subtitle:'Código institucional, vida útil y tasa anual.',key:'tipo',sheet:'05_Cat_TipoBien',idField:'CodigoTipoBien',fields:[['CodigoTipoBien','Código','text',true],['CategoriaBien','Categoría','text',true],['VidaUtilAnios','Vida útil (años)','number',true],['TasaAnual','Tasa anual','number',true],['Observacion','Observación','textarea',false]],columns:['CodigoTipoBien','CategoriaBien','VidaUtilAnios','TasaAnual']},
     proyectos:{title:'Proyectos',subtitle:'Proyectos/fondos habilitados para registrar bienes.',key:'proyectos',sheet:'06_Cat_Proyectos',idField:'Proyecto',fields:[['Proyecto','Proyecto','text',true],['Descripcion','Descripción','text',false],['Estado','Estado','select',false,['Activo','Inactivo']]],columns:['Proyecto','Descripcion','Estado']},
-    proveedores:{title:'Proveedores',subtitle:'RUC y datos básicos para facturas y compras.',key:'proveedores',sheet:'07_Cat_Proveedores',idField:'RucProveedor',fields:[['RucProveedor','RUC proveedor','text',true],['Proveedor','Proveedor','text',true],['BienesAsociados','Bienes asociados','number',false],['ValorTotalAsociado','Valor total asociado','number',false],['FacturasAsociadas','Facturas asociadas','number',false],['Estado','Estado','select',false,['Activo','Inactivo']]],columns:['RucProveedor','Proveedor','BienesAsociados','ValorTotalAsociado','FacturasAsociadas','Estado']},
+    proveedores:{title:'Proveedores',subtitle:'RUC y datos básicos para facturas y compras.',key:'proveedores',sheet:'07_Cat_Proveedores',idField:'RucProveedor',fields:[['RucProveedor','RUC proveedor','text',true],['Proveedor','Proveedor','text',true],['FacturasAsociadas','Facturas asociadas','number',false],['ValorTotalFacturado','Valor total','number',false],['Estado','Estado','select',false,['Activo','Inactivo']],['Observacion','Observación','text',false]],columns:['RucProveedor','Proveedor','FacturasAsociadas','ValorTotalFacturado','Estado']},
     custodios:{title:'Custodios',subtitle:'Responsables y ubicación habitual.',key:'custodios',sheet:'08_Cat_Custodios',idField:'CedulaCustodio',fields:[['CedulaCustodio','Cédula','text',true],['Custodio','Nombres y apellidos','text',true],['Institucion','Institución','text',false],['UbicacionHabitual','Ubicación habitual','text',false],['BienesAsignados','Bienes asignados','number',false],['ValorTotalAsignado','Valor total asignado','number',false],['Estado','Estado','select',false,['Activo','Inactivo']]],columns:['CedulaCustodio','Custodio','Institucion','UbicacionHabitual','Estado']},
     ubicaciones:{title:'Ubicaciones',subtitle:'Ubicaciones físicas normalizadas.',key:'ubicaciones',sheet:'09_Cat_Ubicaciones',idField:'CodigoUbicacion',fields:[['CodigoUbicacion','Código ubicación','text',true],['Ubicacion','Ubicación','text',true],['Institucion','Institución','text',false],['BienesUbicados','Bienes ubicados','number',false],['ValorTotalUbicado','Valor total ubicado','number',false],['Estado','Estado','select',false,['Activa','Inactiva']]],columns:['CodigoUbicacion','Ubicacion','Institucion','BienesUbicados','Estado']},
-    seq:{title:'Secuencias',subtitle:'Control referencial de codificación. La generación real se calcula con el inventario vigente.',key:'seq',sheet:'13_Secuencias',idField:'ClaveSecuencia',fields:[['Anio','Año','text',true],['CodigoTipo','Código tipo','text',true],['UltimoSecuencialExistente','Último secuencial','number',false],['SiguienteSecuencial','Siguiente secuencial','number',false],['SiguienteCodigo','Siguiente código','text',false],['Nota','Nota','text',false]],columns:['Anio','CodigoTipo','UltimoSecuencialExistente','SiguienteSecuencial','SiguienteCodigo','Nota']}
+    seq:{title:'Secuencias',subtitle:'Control referencial de codificación. La generación real se calcula con el inventario vigente.',key:'seq',sheet:'13_Secuencias',idField:'ClaveSecuencia',fields:[['Anio','Año','text',true],['CodigoTipo','Código tipo','text',true],['UltimoSecuencial','Último secuencial','number',false],['SiguienteCodigo','Siguiente código','text',false],['Observacion','Observación','text',false],['ClaveSecuencia','Clave','text',false]],columns:['Anio','CodigoTipo','UltimoSecuencial','SiguienteCodigo','Observacion']}
   };
   function renderCatalogs(){
     const menu=$('catalogMenu'), title=$('catalogTitle'), sub=$('catalogSubtitle'), content=$('catalogContent');
@@ -436,14 +456,14 @@
     title.textContent=cfg.title; sub.textContent=cfg.subtitle;
     const q=norm(state.catalogSearch||'');
     const rows=(state.data[cfg.key]||[]).filter(r=>!q || norm(Object.values(r).join(' ')).includes(q));
-    content.innerHTML=`<div class="catalog-table-wrap"><table class="table table-sm table-hover mb-0"><thead><tr>${cfg.columns.map(c=>`<th>${esc(labelForField(cfg,c))}</th>`).join('')}<th>Acciones</th></tr></thead><tbody>${rows.map((r,i)=>`<tr>${cfg.columns.map(c=>`<td>${formatCatalogCell(r[c],c)}</td>`).join('')}<td class="text-nowrap"><button class="btn btn-sm btn-outline-primary" onclick="openCatalogEdit('${state.catalogKey}',${getRowIndex(cfg.key,r)})"><i class="fa-solid fa-pen"></i></button> <button class="btn btn-sm btn-outline-danger" onclick="inactivateCatalog('${state.catalogKey}',${getRowIndex(cfg.key,r)})"><i class="fa-solid fa-ban"></i></button></td></tr>`).join('')||`<tr><td colspan="${cfg.columns.length+1}" class="text-muted">Sin registros coincidentes.</td></tr>`}</tbody></table></div>`;
+    content.innerHTML=`<div class="catalog-table-wrap"><table class="table table-sm table-hover mb-0"><thead><tr>${cfg.columns.map(c=>`<th>${esc(labelForField(cfg,c))}</th>`).join('')}<th>Acciones</th></tr></thead><tbody>${rows.map((r,i)=>`<tr>${cfg.columns.map(c=>`<td>${formatCatalogCell(r[c],c)}</td>`).join('')}<td class="text-nowrap">${isEditor()?`<button class="btn btn-sm btn-outline-primary" onclick="openCatalogEdit('${state.catalogKey}',${getRowIndex(cfg.key,r)})"><i class="fa-solid fa-pen"></i></button> <button class="btn btn-sm btn-outline-danger" onclick="inactivateCatalog('${state.catalogKey}',${getRowIndex(cfg.key,r)})"><i class="fa-solid fa-ban"></i></button>`:'<span class="badge-soft warn">Consulta</span>'}</td></tr>`).join('')||`<tr><td colspan="${cfg.columns.length+1}" class="text-muted">Sin registros coincidentes.</td></tr>`}</tbody></table></div>`;
   }
   function getRowIndex(key,row){ return (state.data[key]||[]).indexOf(row); }
   function selectCatalog(key){ state.catalogKey=key; state.catalogSearch=''; if($('catalogSearch')) $('catalogSearch').value=''; renderCatalogs(); }
   function labelForField(cfg,field){ const f=(cfg.fields||[]).find(x=>x[0]===field); return f?f[1]:field; }
   function formatCatalogCell(v,field){ if(/valor|tasa/i.test(field)) return field.toLowerCase().includes('tasa') ? `${(num(v)*100).toFixed(2)}%` : money(v); return esc(v); }
-  function openCatalogCreate(){ openCatalogForm(state.catalogKey,null); }
-  function openCatalogEdit(key,index){ const cfg=CATALOG_CONFIG[key]; const row=(state.data[cfg.key]||[])[index]; if(!row) return; openCatalogForm(key,row,index); }
+  function openCatalogCreate(){ if(!requireEditor('crear catálogos')) return; openCatalogForm(state.catalogKey,null); }
+  function openCatalogEdit(key,index){ if(!requireEditor('editar catálogos')) return; const cfg=CATALOG_CONFIG[key]; const row=(state.data[cfg.key]||[])[index]; if(!row) return; openCatalogForm(key,row,index); }
   function openCatalogForm(key,row=null,index=-1){
     const cfg=CATALOG_CONFIG[key]; if(!cfg) return;
     $('catalogModalTitle').textContent = row ? `Editar ${cfg.title}` : `Agregar ${cfg.title}`;
@@ -458,16 +478,17 @@
   }
   function collectCatalogForm(){ const form=$('catalogForm'); const key=form.dataset.key; const cfg=CATALOG_CONFIG[key]; const obj={}; for(const [name,,type] of cfg.fields){ const el=$(`cat_${name}`); if(!el) continue; obj[name]=type==='number'?num(el.value):el.value.trim(); } return {key,cfg,obj,index:Number(form.dataset.index)}; }
   async function saveCatalog(){
+    if(!requireEditor('guardar catálogos')) return;
     const {key,cfg,obj,index}=collectCatalogForm();
     const missing=cfg.fields.filter(f=>f[3] && !String(obj[f[0]]||'').trim()).map(f=>f[1]);
     if(missing.length){ alert('Complete: '+missing.join(', ')); return; }
     try{
       if(index>=0){ const row=state.data[cfg.key][index]; const merged={...row,...obj}; await patchSheetRow(cfg.key,row._row,merged); state.data[cfg.key][index]=merged; await audit('UPDATE',cfg.sheet,merged[cfg.idField]||index,'Catálogo','','','OK','Edición de catálogo desde HTML'); }
-      else { await appendSheetRow(cfg.key,obj); await audit('CREATE',cfg.sheet,obj[cfg.idField]||'nuevo','Catálogo','','','OK','Alta de catálogo desde HTML'); }
+      else { if(!obj[cfg.idField] && cfg.idField==='ClaveSecuencia') obj.ClaveSecuencia=`${obj.Anio||''}-${obj.CodigoTipo||''}`; await appendSheetRow(cfg.key,obj); await audit('CREATE',cfg.sheet,obj[cfg.idField]||'nuevo','Catálogo','','','OK','Alta de catálogo desde HTML'); }
       bootstrap.Modal.getOrCreateInstance($('catalogModal')).hide(); populateSelectors(); renderCatalogs(); renderAudit(); alert('Catálogo actualizado correctamente.');
     }catch(e){ alert('No se pudo guardar el catálogo: '+(e.message||e)); }
   }
-  async function inactivateCatalog(key,index){ const cfg=CATALOG_CONFIG[key]; const row=(state.data[cfg.key]||[])[index]; if(!row) return; const field = row.Estado!==undefined?'Estado':(row.EstadoSoporte!==undefined?'EstadoSoporte':''); if(!field){ alert('Este catálogo no tiene campo Estado; no se inactiva para evitar pérdida de información.'); return; } if(!confirm('¿Inactivar este registro del catálogo?')) return; const before=row[field]; row[field]=String(before).toLowerCase().includes('activa')?'Inactiva':'Inactivo'; try{ await patchSheetRow(cfg.key,row._row,row); await audit('INACTIVATE',cfg.sheet,row[cfg.idField]||index,field,before,row[field],'OK','Inactivación lógica de catálogo'); renderCatalogs(); renderAudit(); }catch(e){ alert('No se pudo inactivar: '+(e.message||e)); } }
+  async function inactivateCatalog(key,index){ if(!requireEditor('inactivar catálogos')) return; const cfg=CATALOG_CONFIG[key]; const row=(state.data[cfg.key]||[])[index]; if(!row) return; const field = row.Estado!==undefined?'Estado':(row.EstadoSoporte!==undefined?'EstadoSoporte':''); if(!field){ alert('Este catálogo no tiene campo Estado; no se inactiva para evitar pérdida de información.'); return; } if(!confirm('¿Inactivar este registro del catálogo?')) return; const before=row[field]; row[field]=String(before).toLowerCase().includes('activa')?'Inactiva':'Inactivo'; try{ await patchSheetRow(cfg.key,row._row,row); await audit('INACTIVATE',cfg.sheet,row[cfg.idField]||index,field,before,row[field],'OK','Inactivación lógica de catálogo'); renderCatalogs(); renderAudit(); }catch(e){ alert('No se pudo inactivar: '+(e.message||e)); } }
   function simpleList(arr){ return arr.filter(Boolean).map(x=>`<div class="chip mb-2 me-1">${esc(x)}</div>`).join('')||'<div class="muted">Sin registros.</div>'; }
   function buildQuality(){ const rows=activos(); const alerts=[]; const dup=(field,label)=>{ const m={}; rows.forEach(b=>{const v=norm(b[field]); if(v) (m[v]=m[v]||[]).push(b);}); Object.values(m).filter(a=>a.length>1).forEach(a=>alerts.push({severity:'danger',title:`${label} duplicado`,detail:`${a[0][field]} aparece en ${a.length} registros.`}));}; dup('Codigo','Código'); dup('NumeroSerie','Serie'); const checks=[['Codigo','Bienes sin código'],['Descripcion','Bienes sin descripción'],['Custodio','Bienes sin custodio'],['Ubicacion','Bienes sin ubicación'],['NumeroSerie','Bienes sin serie'],['NumeroFacturaActa','Bienes sin factura/acta']]; checks.forEach(([f,t])=>{ const c=rows.filter(b=>!String(b[f]||'').trim()).length; if(c) alerts.push({severity:'warn',title:t,detail:`${c} registros requieren completar este campo.`}); }); const sinFoto=rows.filter(b=>!getFotoLink(b)).length; if(sinFoto) alerts.push({severity:'warn',title:'Fotografía pendiente',detail:`${sinFoto} bienes no tienen fotografía vinculada en Link_fotos.`}); const sinDoc=rows.filter(b=>!getFacturaLink(b)).length; if(sinDoc) alerts.push({severity:'warn',title:'Factura digital pendiente',detail:`${sinDoc} bienes no tienen factura digital vinculada en links.`}); const valores0=rows.filter(b=>num(b.ValorBienIncImp)<=0).length; if(valores0) alerts.push({severity:'danger',title:'Valor inválido',detail:`${valores0} bienes tienen valor cero o no numérico.`}); if(!alerts.length) alerts.push({severity:'ok',title:'Integridad aceptable',detail:'No se detectaron alertas principales.'}); return alerts; }
   function renderQuality(){ const alerts=buildQuality(); $('qualityList').innerHTML=alerts.map(a=>`<div class="quality-item row-${a.severity==='danger'?'danger':a.severity==='ok'?'ok':'warning'}"><div class="d-flex justify-content-between"><strong>${esc(a.title)}</strong>${badge(a.severity==='danger'?'Crítico':a.severity==='ok'?'OK':'Preventivo',a.severity==='danger'?'danger':a.severity==='ok'?'ok':'warn')}</div><div class="muted">${esc(a.detail)}</div></div>`).join(''); }
@@ -477,28 +498,320 @@
   function topEntry(o){ return Object.entries(o).sort((a,b)=>b[1]-a[1])[0]||['',0]; }
   function renderCharts(){ const rows=activos(); drawChart('chartTipo','doughnut',countBy(rows,'CategoriaBienSugerida')); drawChart('chartProyecto','bar',sumBy(rows,'Proyecto','ValorBienIncImp')); }
   function drawChart(id,type,obj){ const ctx=$(id); if(!ctx||!window.Chart) return; if(state.charts[id]) state.charts[id].destroy(); const labels=Object.keys(obj).slice(0,12), data=labels.map(k=>obj[k]); state.charts[id]=new Chart(ctx,{type, data:{labels,datasets:[{label:type==='bar'?'Valor':'Cantidad',data}]},options:{responsive:true,plugins:{legend:{position:'bottom'}},scales:type==='bar'?{y:{beginAtZero:true}}:{}}}); }
-  async function processInvoice(){ const file=$('invoiceFile').files[0]; if(!file){alert('Seleccione un PDF o imagen.');return;} $('ocrConsole').textContent='Procesando documento...'; try{ let text=''; if(file.type==='application/pdf'){ text=await extractPdfText(file); if(text.trim().length<80){ log('El PDF no contiene texto suficiente. Ejecutando OCR visual.'); text=await ocrImageFromPdf(file); } }else{ text=await ocrImage(file); } const parsed=parseInvoiceText(text,file.name); buildPreFromInvoice(parsed,file.name); log(`Pre-registro generado: ${state.preLocal.length} ítems locales.`); renderPreLocal(); }catch(e){ log('Error: '+(e.message||e)); alert('No se pudo procesar el documento: '+(e.message||e)); } }
-  async function extractPdfText(file){ const data=await file.arrayBuffer(); pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'; const pdf=await pdfjsLib.getDocument({data}).promise; let out=''; for(let i=1;i<=Math.min(pdf.numPages,8);i++){ const page=await pdf.getPage(i); const content=await page.getTextContent(); out+='\n'+content.items.map(it=>it.str).join(' '); } return out; }
-  async function ocrImage(file){ const res=await Tesseract.recognize(file,'spa+eng',{logger:m=>{if(m.status) $('ocrConsole').textContent=`OCR: ${m.status} ${Math.round((m.progress||0)*100)}%`;}}); return res.data.text||''; }
-  async function ocrImageFromPdf(file){ const data=await file.arrayBuffer(); const pdf=await pdfjsLib.getDocument({data}).promise; let out=''; for(let i=1;i<=Math.min(pdf.numPages,3);i++){ const page=await pdf.getPage(i); const viewport=page.getViewport({scale:2}); const canvas=document.createElement('canvas'); canvas.width=viewport.width; canvas.height=viewport.height; await page.render({canvasContext:canvas.getContext('2d'),viewport}).promise; const blob=await new Promise(r=>canvas.toBlob(r,'image/png')); out+='\n'+await ocrImage(blob); } return out; }
-  function parseInvoiceText(text,filename){ const raw=text.replace(/\r/g,'\n').replace(/[ \t]+/g,' '); const lines=raw.split(/\n+/).map(s=>s.trim()).filter(Boolean); const all=lines.join('\n'); const ruc=(all.match(/R\.?U\.?C\.?[:\s]*([0-9]{10,13})/i)||all.match(/RUC[:\s]*([0-9]{10,13})/i)||[])[1]||''; const numFac=(all.match(/(?:FACTURA|No\.|Nro\.|Nº)\s*(?:N[ro\.]*\s*)?[:#\s]*([0-9]{3}[- ]?[0-9]{3}[- ]?[0-9]{6,9})/i)||all.match(/([0-9]{3}[- ][0-9]{3}[- ][0-9]{6,9})/)||[])[1]||''; const fecha=(all.match(/Fecha(?: de)? Emisi[oó]n[:\s]*([0-9]{1,2}[\/\-][0-9]{1,2}[\/\-][0-9]{2,4})/i)||all.match(/Fecha[:\s]*([0-9]{1,2}[\/\-][0-9]{1,2}[\/\-][0-9]{2,4})/i)||all.match(/([0-9]{1,2}[\/\-][0-9]{1,2}[\/\-][0-9]{4})/)||[])[1]||''; const total=lastMoney(all.match(/(?:VALOR TOTAL|TOTAL FORMA DE PAGO|TOTAL|Valor total)[:\s\$]*([0-9\.,]+)/gi)); const iva=lastMoney(all.match(/IVA\s*(?:12|15)?\s*%?[:\s\$]*([0-9\.,]+)/gi)); const proveedor=guessProvider(lines,ruc); const items=guessItems(lines,total); return {raw,proveedor,ruc,numeroFactura:numFac.replace(/\s/g,'-'),fecha:toISO(fecha),total,iva,items,filename}; }
-  function lastMoney(matches){ if(!matches||!matches.length) return 0; const m=matches[matches.length-1].match(/([0-9][0-9\.,]*)\s*$/); return m?num(m[1]):0; }
-  function guessProvider(lines,ruc){ const idx=lines.findIndex(l=>norm(l).includes('ruc')&&l.includes(ruc)); for(let i=Math.max(0,idx-4);i<idx;i++){ if(lines[i] && !/factura|cliente|fondo/i.test(lines[i]) && lines[i].length>3) return lines[i].replace(/RUC.*/i,'').trim(); } return lines.find(l=>/S\.A\.|CIA|CARTIMEX|AURON|BITLOGIC|BUSINESS|DIGITAL|VIRTUAL|ABFOTO/i.test(l))||''; }
-  function guessItems(lines,total){ const items=[]; const reject=/subtotal|total|iva|ruc|cliente|direccion|forma de pago|autorizacion|ambiente|emision|clave|telefono|correo|obligado|contribuyente/i; for(const line of lines){ if(reject.test(line)) continue; const nums=line.match(/\b\d+[\.,]\d{2}\b/g); if(nums && nums.length>=1 && /[a-zA-ZÁÉÍÓÚÑ]/.test(line)){ const value=num(nums[nums.length-1]); if(value>0 && value!==total){ const qtyMatch=line.match(/(?:^|\s)(\d{1,3})(?:\.00)?\s+(?:und|u|unidad|UND|U)?\s/i) || line.match(/\s(\d{1,3})\s+[A-Z0-9-]{2,}/); const qty=qtyMatch?Math.max(1,parseInt(qtyMatch[1],10)):1; let desc=line.replace(/\b\d+[\.,]\d{2}\b/g,' ').replace(/\s+/g,' ').trim(); desc=desc.replace(/^\w{1,15}\s+/, '').trim(); if(desc.length>8) items.push({descripcion:desc,cantidad:qty,valorTotal:value,valorUnitario:value/qty}); } } }
-    if(!items.length) items.push({descripcion:'Ítem detectado en factura - validar descripción',cantidad:1,valorTotal:total,valorUnitario:total}); return items.slice(0,80); }
-  function classifyItem(desc){ const d=norm(desc); if(/notebook|laptop|computador|probook|tablet|celular|impresora|scanner|proyector|camara|gps|drone|software|licencia|antivirus|teclado|mouse|memoria|office|windows|base ajustable/.test(d)) return '07'; if(/silla|escritorio|mesa|credenza|mueble|biblioteca|taburete|archivacion|estacion de trabajo|manpara|cafeteria/.test(d)) return '03'; if(/aire acondicionado|trituradora|router|dispensador|ups|televisor|video conferencia/.test(d)) return '04'; if(/generador|bomba|motosierra|taladro|herramienta|binocular|camping/.test(d)) return '06'; if(/vehiculo|motocicleta|canoa|kayak|bicicleta|motor/.test(d)) return '05'; return '03'; }
-  function buildPreFromInvoice(parsed,filename){ state.preLocal=[]; parsed.items.forEach(item=>{ const qty=Math.max(1,parseInt(item.cantidad||1,10)); for(let i=0;i<qty;i++){ const type=classifyItem(item.descripcion); const unit=num(item.valorUnitario||item.valorTotal/qty); const code=generateNextCode(parsed.fecha||todayISO(),type,state.preLocal.length); const cat=state.data.tipo.find(t=>String(t.CodigoTipoBien)===String(type)); state.preLocal.push({selected:true,IdPreRegistro:uuid('PRE'),Codigo:code,FechaCarga:todayISO(),Proveedor:parsed.proveedor,RucProveedor:parsed.ruc,NumeroFacturaActa:parsed.numeroFactura,FechaCompra:parsed.fecha||todayISO(),Proyecto:'FIAS',DescripcionDetectada:item.descripcion,DescripcionValidada:item.descripcion,CantidadDetectada:item.cantidad,CantidadARegistrar:1,TipoBienSugerido:type,TipoBienValidado:type,CategoriaBienSugerida:cat?.CategoriaBien||'',Clasificacion:'ACTIVO FIJO',ValorUnitarioIncImp:unit,ValorTotalIncImp:unit,Marca:'',Modelo:'',Serie:'',Custodio:'',Ubicacion:'',EstadoValidacion:'Pendiente de validación',Observaciones:'Pre-registro OCR local. Validar antes de registrar.',ArchivoOrigen:filename}); } }); }
-  function renderPreLocal(){ const cont=$('preRegisterList'); if(!cont) return; cont.innerHTML=state.preLocal.map((p,i)=>`<div class="pre-row ${p.selected?'selected':''}"><div class="d-flex justify-content-between gap-2"><div><input type="checkbox" ${p.selected?'checked':''} onchange="state.preLocal[${i}].selected=this.checked; renderPreLocal()"> <strong>${esc(p.Codigo)}</strong> ${badge(p.TipoBienValidado+' - '+p.CategoriaBienSugerida,'info')}</div><strong>${money(p.ValorUnitarioIncImp)}</strong></div><div class="row g-2 mt-2"><div class="col-md-7"><label class="form-label">Descripción validada</label><input class="form-control form-control-sm" value="${esc(p.DescripcionValidada)}" onchange="state.preLocal[${i}].DescripcionValidada=this.value"></div><div class="col-md-2"><label class="form-label">Tipo</label><select class="form-select form-select-sm" onchange="state.preLocal[${i}].TipoBienValidado=this.value; updatePreCat(${i}); renderPreLocal()">${state.data.tipo.map(t=>`<option value="${esc(t.CodigoTipoBien)}" ${t.CodigoTipoBien==p.TipoBienValidado?'selected':''}>${esc(t.CodigoTipoBien)}</option>`).join('')}</select></div><div class="col-md-3"><label class="form-label">Proyecto</label><input class="form-control form-control-sm" value="${esc(p.Proyecto)}" onchange="state.preLocal[${i}].Proyecto=this.value"></div><div class="col-md-3"><label class="form-label">Marca</label><input class="form-control form-control-sm" value="${esc(p.Marca)}" onchange="state.preLocal[${i}].Marca=this.value"></div><div class="col-md-3"><label class="form-label">Modelo</label><input class="form-control form-control-sm" value="${esc(p.Modelo)}" onchange="state.preLocal[${i}].Modelo=this.value"></div><div class="col-md-3"><label class="form-label">Serie</label><input class="form-control form-control-sm" value="${esc(p.Serie)}" onchange="state.preLocal[${i}].Serie=this.value"></div><div class="col-md-3"><label class="form-label">Valor inc. imp.</label><input type="number" step="0.01" class="form-control form-control-sm" value="${esc(p.ValorUnitarioIncImp)}" onchange="state.preLocal[${i}].ValorUnitarioIncImp=num(this.value); state.preLocal[${i}].ValorTotalIncImp=num(this.value)"></div></div><div class="muted mt-2">Factura: ${esc(p.NumeroFacturaActa)} · Proveedor: ${esc(p.Proveedor)} · Fecha: ${displayDate(p.FechaCompra)}</div></div>`).join('') || '<div class="alert alert-info">Aún no hay pre-registros. Cargue una factura o acta.</div>'; }
+    /* ===== OCR FIAS mejorado: mapeo de facturas, bienes, series y pre-registro ===== */
+  const OCR_CLIENT_RUC='1792807999001';
+  const OCR_MAX_PDF_TEXT_PAGES=12;
+  const OCR_MAX_PDF_IMAGE_PAGES=8;
+  const OCR_MIN_ASSET_VALUE=100;
+  const OCR_REJECT_ITEM=/\b(subtotal|total\s*forma|valor\s*total|iva|ice|irbpnr|propina|descuento|base\s*0|base\s*12|forma\s*de\s*pago|autorizaci[oó]n|ambiente|emisi[oó]n|clave\s*de\s*acceso|ruc|cliente|raz[oó]n\s*social|direcci[oó]n|tel[eé]fono|correo|obligado|contribuyente|retenci[oó]n|firma|recib[ií]|contabilizado|vendedor|bodega|vencimiento|informaci[oó]n\s*adicional|material\s+de\s+empaque|garant[ií]a\s*$|pago\s+final|anticipo|servicio\s*10|ahorro\s+por\s+subsidio)\b/i;
+  const OCR_NON_INVENTORY=/\b(anticipo|pago\s+final|material\s+de\s+empaque|garant[ií]a|transporte|instalaci[oó]n\s+general|servicio|mantenimiento|soporte|licenciamiento\s+mensual|suscripci[oó]n\s+mensual)\b/i;
+  const OCR_ASSET_HINT=/\b(notebook|laptop|port[aá]til|probook|inspiron|lenovo|dynabook|computador|pc\b|monitor|impresora|epson|canon|c[aá]mara|lente|bater[ií]a|filtro|estuche|panel\s*led|microfono|micr[oó]fono|pedestal|teclado|mouse|memoria|pen\s*drive|proyector|pantalla|silla|escritorio|mesa|credenza|biblioteca|mueble|taburete|archivaci[oó]n|estaci[oó]n\s+de\s+trabajo|mampara|manpara|vidrio\s+divisorio|base\s+ajustable|regulador|ups|router|switch|software|licencia|office|windows|antivirus|adobe|creative\s+cloud)\b/i;
+  const OCR_BRANDS=['HP','DELL','LENOVO','DYNABOOK','TOSHIBA','EPSON','CANON','MICROSOFT','ESET','ADOBE','KLIP XTREME','KLIPXTREME','KINGSTON','HIKVISION','LOGITECH','GVM','VISICO','RODE','TIFFEN','RUGGARD','WATSON','ASUS','AURON','CARTIMEX'];
+  const OCR_VENDOR_HINTS=[
+    {re:/virtual\s*support|soluciones\s+de\s+virtualizacion/i, name:'SOLUCIONES DE VIRTUALIZACION E INFRAESTRUCTURA CONVERGENTE VIRTUALSUPPORT S.A.', ruc:'1792567718001'},
+    {re:/multioficinas/i, name:'MULTIOFICINAS CIA. LTDA.', ruc:'1791714679001'},
+    {re:/digital\s*box/i, name:'DIGITAL BOX', ruc:'1792203066001'},
+    {re:/cartimex/i, name:'CARTIMEX', ruc:'0991400427001'},
+    {re:/auron/i, name:'AURON S.A.', ruc:'1791828291001'},
+    {re:/abfoto|bahamonde\s+castro/i, name:'BAHAMONDE CASTRO ANDRES MARCELO / ABFOTO VIDEO', ruc:'1707083620001'},
+    {re:/business\s*time|medrano\s+cuasquer/i, name:'KATYA ELIZABETH MEDRANO CUASQUER - BUSINESS TIME', ruc:'1001845047001'},
+    {re:/bitlogic|soluciones\s+computacionales/i, name:'SOLUCIONES COMPUTACIONALES BITLOGIC S.A.', ruc:'1791353064001'},
+    {re:/lactarum|salas\s+de\s+lactancia/i, name:'LACTARUM', ruc:'1793126162001'},
+    {re:/venta\s+de\s+tecnolog[ií]a|repuestos|irma\s+rocio/i, name:'IRMA ROCIO RIVAS HERRERA', ruc:'1714986690001'}
+  ];
+
+  async function processInvoice(){
+    if(!requireEditor('procesar documentos OCR')) return;
+    const file=$('invoiceFile').files[0];
+    if(!file){alert('Seleccione un PDF o imagen.');return;}
+    $('ocrConsole').textContent='Procesando documento...';
+    try{
+      let text='';
+      if(file.type==='application/pdf'){
+        text=await extractPdfText(file);
+        if(text.trim().length<120){
+          log('El PDF no contiene texto suficiente. Ejecutando OCR visual por páginas.');
+          text=await ocrImageFromPdf(file);
+        }
+      }else{
+        text=await ocrImage(file);
+      }
+      const parsed=parseInvoiceText(text,file.name);
+      buildPreFromInvoice(parsed,file.name);
+      log(`Factura detectada: ${parsed.numeroFactura||'pendiente'} · proveedor: ${parsed.proveedor||'pendiente'} · ítems: ${parsed.items.length}.`);
+      log(`Pre-registro generado: ${state.preLocal.length} bienes/ítems locales. Revise descripción, tipo, valor, marca, modelo y serie antes de registrar.`);
+      renderPreLocal();
+    }catch(e){ log('Error: '+(e.message||e)); alert('No se pudo procesar el documento: '+(e.message||e)); }
+  }
+  async function extractPdfText(file){
+    const data=await file.arrayBuffer();
+    pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    const pdf=await pdfjsLib.getDocument({data}).promise;
+    let out='';
+    const pages=Math.min(pdf.numPages,OCR_MAX_PDF_TEXT_PAGES);
+    for(let i=1;i<=pages;i++){
+      const page=await pdf.getPage(i);
+      const content=await page.getTextContent();
+      out+=`\n--- PAGINA ${i} ---\n`+content.items.map(it=>it.str).join(' ');
+    }
+    return out;
+  }
+  async function ocrImage(file){
+    const res=await Tesseract.recognize(file,'spa+eng',{logger:m=>{if(m.status) $('ocrConsole').textContent=`OCR: ${m.status} ${Math.round((m.progress||0)*100)}%`;}});
+    return res.data.text||'';
+  }
+  async function ocrImageFromPdf(file){
+    const data=await file.arrayBuffer();
+    const pdf=await pdfjsLib.getDocument({data}).promise;
+    let out='';
+    const pages=Math.min(pdf.numPages,OCR_MAX_PDF_IMAGE_PAGES);
+    for(let i=1;i<=pages;i++){
+      log(`OCR visual página ${i}/${pages}`);
+      const page=await pdf.getPage(i);
+      const viewport=page.getViewport({scale:2.2});
+      const canvas=document.createElement('canvas');
+      canvas.width=viewport.width; canvas.height=viewport.height;
+      const ctx=canvas.getContext('2d',{willReadFrequently:true});
+      ctx.fillStyle='#fff'; ctx.fillRect(0,0,canvas.width,canvas.height);
+      await page.render({canvasContext:ctx,viewport}).promise;
+      const blob=await new Promise(r=>canvas.toBlob(r,'image/png'));
+      out+=`\n--- PAGINA ${i} ---\n`+await ocrImage(blob);
+    }
+    return out;
+  }
+
+  function parseInvoiceText(text,filename){
+    const raw=normalizeOcrText(text);
+    const lines=raw.split(/\n+/).map(s=>s.trim()).filter(Boolean);
+    const all=lines.join('\n');
+    const vendorHint=OCR_VENDOR_HINTS.find(v=>v.re.test(all));
+    const rucs=[...all.matchAll(/\b(\d{10,13})\b/g)].map(m=>m[1]).filter(v=>v!==OCR_CLIENT_RUC);
+    const ruc=vendorHint?.ruc || (all.match(/(?:Emisor|RUC|R\.U\.C\.)[^\d]{0,20}(\d{10,13})/i)||[])[1] || rucs[0] || '';
+    const clientRuc=(all.match(new RegExp(OCR_CLIENT_RUC))||[])[0]||'';
+    const clave=(all.match(/(?:clave\s*de\s*acceso|n[uú]mero\s*de\s*autorizaci[oó]n|autorizaci[oó]n)[^\d]{0,40}(\d{37,49})/i)||all.match(/\b\d{37,49}\b/)||[])[1]||'';
+    const numeroFactura=normalizeInvoiceNumber(guessInvoiceNumber(all,filename,clave));
+    const fecha=toISO(guessDate(all,clave));
+    const subtotal=guessMoney(all,/(?:SUBTOTAL\s*(?:SIN\s*IMPUESTOS|12\s*%|12%|IVA\s*12)?|BASE\s*12\s*%?)[:\s\$]*([0-9][0-9\.,]*)/gi);
+    const iva=guessMoney(all,/IVA\s*(?:12|15)?\s*%?[:\s\$]*([0-9][0-9\.,]*)/gi);
+    const total=guessMoney(all,/(?:VALOR\s*TOTAL|TOTAL\s*FORMA\s*DE\s*PAGO|\bTOTAL\b)[:\s\$]*([0-9][0-9\.,]*)/gi);
+    const proveedor=vendorHint?.name || guessProvider(lines,ruc) || '';
+    const proyecto=guessProject(all);
+    const items=guessItems(lines,{total,subtotal,iva,all});
+    return {raw,proveedor,ruc,clientRuc,numeroFactura,numeroAutorizacion:clave,claveAcceso:clave,fecha,total,subtotal,iva,items,proyecto,filename};
+  }
+  function normalizeOcrText(text){
+    return String(text||'')
+      .replace(/\r/g,'\n')
+      .replace(/[|]/g,' ')
+      .replace(/\u00a0/g,' ')
+      .replace(/[ \t]+/g,' ')
+      .replace(/([A-Z0-9])-\s+([0-9]{3,})/g,'$1-$2')
+      .replace(/\$\s*/g,'$')
+      .trim();
+  }
+  function guessInvoiceNumber(all,filename,clave){
+    const patterns=[
+      /(?:FACTURA|No\.?|Nro\.?|Nº|N°)\s*(?:No\.?|Nro\.?|Nº|N°)?\s*[:#-]*\s*(\d{3})[-\s]?(\d{3})[-\s]?(\d{6,9})/i,
+      /\b(\d{3})[-\s](\d{3})[-\s](\d{6,9})\b/,
+      /\b(\d{3})(\d{3})(\d{9})\b/
+    ];
+    for(const re of patterns){ const m=all.match(re); if(m) return `${m[1]}-${m[2]}-${m[3]}`; }
+    if(clave && clave.length>=39){ const est=clave.slice(24,27), pto=clave.slice(27,30), sec=clave.slice(30,39); if(/^\d+$/.test(est+pto+sec)) return `${est}-${pto}-${sec}`; }
+    const f=String(filename||'').match(/(\d{3})[-_ ]?(\d{3})[-_ ]?(\d{6,9})/); if(f) return `${f[1]}-${f[2]}-${f[3].padStart(9,'0')}`;
+    return '';
+  }
+  function normalizeInvoiceNumber(v){ const m=String(v||'').match(/(\d{3})[-\s]?(\d{3})[-\s]?(\d{6,9})/); return m?`${m[1]}-${m[2]}-${m[3].padStart(9,'0')}`:String(v||'').trim(); }
+  function guessDate(all,clave){
+    const p=[/Fecha\s*(?:de\s*)?Emisi[oó]n[:\s-]*([0-9]{1,2}[\/\-][0-9]{1,2}[\/\-][0-9]{2,4})/i, /Fecha[:\s-]*([0-9]{1,2}[\/\-][0-9]{1,2}[\/\-][0-9]{2,4})/i, /([0-9]{1,2}[\/\-][0-9]{1,2}[\/\-][0-9]{4})/];
+    for(const re of p){ const m=all.match(re); if(m) return m[1]; }
+    const m=all.match(/([0-9]{1,2})\s+de\s+([A-Za-zÁÉÍÓÚáéíóú]+)\s+de\s+(20\d{2})/i);
+    if(m){ const meses={enero:'01',febrero:'02',marzo:'03',abril:'04',mayo:'05',junio:'06',julio:'07',agosto:'08',septiembre:'09',setiembre:'09',octubre:'10',noviembre:'11',diciembre:'12'}; const mm=meses[norm(m[2])]; if(mm) return `${m[1].padStart(2,'0')}/${mm}/${m[3]}`; }
+    if(clave && clave.length>=8){ const dd=clave.slice(0,2), mm=clave.slice(2,4), yy=clave.slice(4,8); if(/^20\d{2}$/.test(yy)) return `${dd}/${mm}/${yy}`; }
+    return '';
+  }
+  function guessMoney(all,re){ const found=[...all.matchAll(re)].map(m=>num(m[1])).filter(v=>v>0); return found.length?found[found.length-1]:0; }
+  function guessProvider(lines,ruc){
+    const clean=s=>String(s||'').replace(/^(Emisor|Raz[oó]n Social|RUC|R\.U\.C\.|Cliente)[:\s-]*/i,'').replace(/RUC.*$/i,'').trim();
+    for(const l of lines){ if(/Emisor[:\s]/i.test(l)){ const v=clean(l); if(v && !/fondo\s+de\s+inversion/i.test(v)) return v; } }
+    const idx=lines.findIndex(l=>ruc && l.includes(ruc));
+    for(let i=Math.max(0,idx-5); idx>=0 && i<idx;i++){ const v=clean(lines[i]); if(v && !/factura|cliente|fondo|direcci[oó]n|tel[eé]fono|correo/i.test(v) && v.length>3) return v; }
+    return (lines.find(l=>/S\.A\.|CIA|CARTIMEX|AURON|BITLOGIC|BUSINESS|DIGITAL|VIRTUAL|ABFOTO|MULTIOFICINAS|LACTARUM/i.test(l))||'').trim();
+  }
+  function guessProject(all){ const u=norm(all); if(/programa\s+afd|\bafd\b/.test(u)) return 'AFD'; if(/programa\s+rem|\brem\b/.test(u)) return 'REM'; if(/\bfap\b/.test(u)) return 'FAP'; return 'FIAS'; }
+  function guessItems(lines,ctx={}){
+    const items=[];
+    const stop=/\b(subtotal|forma\s+de\s+pago|valor\s+total|informaci[oó]n\s+adicional|firma\s+del\s+cliente)\b/i;
+    for(let i=0;i<lines.length;i++){
+      const line=lines[i];
+      if(OCR_REJECT_ITEM.test(line) && !OCR_ASSET_HINT.test(line)) continue;
+      const merged=mergeItemContinuation(lines,i);
+      const item=parseItemLine(merged,ctx);
+      if(item){ items.push(item); }
+      if(stop.test(line) && items.length) break;
+    }
+    const acta=extractActaItems(lines);
+    for(const a of acta){ if(!items.some(x=>norm(x.descripcion)===norm(a.descripcion))) items.push(a); }
+    const dedup=[]; const seen=new Set();
+    for(const it of items){
+      if(OCR_NON_INVENTORY.test(it.descripcion) && !OCR_ASSET_HINT.test(it.descripcion)) continue;
+      const key=`${norm(it.codigo)}|${norm(it.descripcion)}|${it.cantidad}|${num(it.valorTotal)}`;
+      if(!seen.has(key) && it.descripcion.length>5){ seen.add(key); dedup.push(it); }
+    }
+    if(!dedup.length) dedup.push({codigo:'',descripcion:'Ítem detectado en factura - validar descripción',cantidad:1,valorTotal:ctx.total||0,valorUnitario:ctx.total||0,detalle:'',series:[],confianza:35,requiereRevision:true,origen:'fallback'});
+    return dedup.slice(0,160);
+  }
+  function mergeItemContinuation(lines,i){
+    let out=lines[i];
+    for(let j=i+1;j<Math.min(lines.length,i+5);j++){
+      const next=lines[j];
+      if(!next) continue;
+      if(/^---\s*PAGINA/i.test(next)) break;
+      if(isLikelyNewItem(next)) break;
+      if(/\b(serie|serial|s\/n|sn|modelo|marca|inch|pulg|windows|winpro|office|inal[aá]mbrico|plataforma|licencia|lente|ssd|hdd|gb|tb|rgb|columnas|puertas|personas)\b/i.test(next) || !/\d+[\.,]\d{2}/.test(next)) out+=' '+next;
+    }
+    return out.replace(/\s+/g,' ').trim();
+  }
+  function isLikelyNewItem(line){
+    if(OCR_REJECT_ITEM.test(line) && !OCR_ASSET_HINT.test(line)) return true;
+    return /^(VAR|[A-Z0-9][A-Z0-9\-\.\/]{2,}|\d+\s*(?:und|u|UND|U)\b)\s+/.test(String(line||'').trim()) && /\d+[\.,]\d{2}/.test(line);
+  }
+  function parseItemLine(line,ctx={}){
+    const original=String(line||'').trim();
+    if(original.length<8) return null;
+    if(OCR_REJECT_ITEM.test(original) && !OCR_ASSET_HINT.test(original)) return null;
+    const moneyTokens=[...original.matchAll(/\$?\s*(\d{1,3}(?:[\.,]\d{3})*(?:[\.,]\d{2,4})|\d+[\.,]\d{2,4})/g)].map(m=>m[1]);
+    if(!moneyTokens.length && !OCR_ASSET_HINT.test(original)) return null;
+    let codigo='', qty=1, desc=original, unit=0, total=0;
+    const codeMatch=original.match(/^([A-Z0-9][A-Z0-9\-\.\/]{1,25})\s+/i);
+    if(codeMatch) codigo=codeMatch[1].replace(/[;:,]+$/,'');
+    const qtyPatterns=[/\b(\d{1,3})[\.,]00\s*[/ ]/i, /\b(\d{1,3})\s*(?:und|u|unidad|UND|U)\b/i, /^\S+\s+(\d{1,3})(?:[\.,]00)?\s+/i, /\bCant(?:idad)?\s*[: ]\s*(\d{1,3})/i];
+    for(const re of qtyPatterns){ const m=original.match(re); if(m){ qty=Math.max(1,parseInt(m[1],10)); break; } }
+    const values=moneyTokens.map(num).filter(v=>v>=0);
+    if(values.length){ total=values[values.length-1]; unit=values.length>1?values[0]:0; if(unit>0 && qty>1 && Math.abs((unit*qty)-total)>Math.max(2,total*.35)) unit=total/qty; if(!unit) unit=qty>1?total/qty:total; }
+    if(unit>0 && !total) total=unit*qty;
+    if(total>0 && ctx.total && Math.abs(total-ctx.total)<.01 && !OCR_ASSET_HINT.test(original)) return null;
+    desc=original
+      .replace(/^([A-Z0-9][A-Z0-9\-\.\/]{1,25})\s+/i,'')
+      .replace(/\b\d{1,3}[\.,]00\s*[/ ]/g,' ')
+      .replace(/\b\d{1,3}\s*(?:und|u|unidad|UND|U)\b/g,' ')
+      .replace(/\$?\s*\d{1,3}(?:[\.,]\d{3})*(?:[\.,]\d{2,4})/g,' ')
+      .replace(/\s+/g,' ')
+      .replace(/^(de2|dez|oo|o)\s+/i,'')
+      .trim();
+    desc=desc.replace(/\bSerie\s*[:#-]?\s*[A-Z0-9\-\.\/]+/ig,'').replace(/\s+/g,' ').trim();
+    if(desc.length<6 || (!OCR_ASSET_HINT.test(desc) && !codigo && total<1)) return null;
+    const series=extractSeries(original);
+    const {marca,modelo}=extractBrandModel(desc, codigo);
+    const confianza=scoreOcrItem({descripcion:desc,cantidad:qty,valorUnitario:unit,series,marca,modelo});
+    return {codigo,descripcion:desc,cantidad:qty,valorTotal:total,valorUnitario:unit,detalle:original,series,marca,modelo,confianza,requiereRevision:confianza<80,origen:'factura'};
+  }
+  function extractActaItems(lines){
+    const out=[];
+    for(const line of lines){
+      const s=String(line||'').trim();
+      const m=s.match(/(?:^|\b)(?:adquisici[oó]n|adquisicion)(?:\s+e\s+instalaci[oó]n)?\s+de\s+(\d{1,3})\s+(.+)/i);
+      if(m){
+        let desc=m[2].replace(/[.;:]?\s*$/,'').trim();
+        if(desc.length>5) out.push({codigo:'',descripcion:desc,cantidad:parseInt(m[1],10),valorTotal:0,valorUnitario:0,detalle:s,series:[],marca:'',modelo:'',confianza:55,requiereRevision:true,origen:'acta'});
+      }
+    }
+    return out;
+  }
+  function extractSeries(text){
+    const s=String(text||'');
+    const found=[];
+    const reList=[/\bSerie\s*[:#-]?\s*([A-Z0-9][A-Z0-9\-\.\/]{4,})/ig, /\b(?:S\/N|SN|Serial)\s*[:#-]?\s*([A-Z0-9][A-Z0-9\-\.\/]{4,})/ig];
+    for(const re of reList){ let m; while((m=re.exec(s))){ found.push(m[1].replace(/[.,;:]+$/,'')); } }
+    return [...new Set(found)];
+  }
+  function extractGlobalSerials(text){
+    const raw=String(text||'');
+    const explicit=extractSeries(raw);
+    const tokens=[...raw.matchAll(/\b(?:5CD|GP|XLCF|INC|[xX]3YF|[sS]cd|033071|0E)[A-Z0-9\-]{5,}\b/g)].map(m=>m[0].replace(/[.,;:]+$/,''));
+    return [...new Set(explicit.concat(tokens))].filter(x=>x.length>=7 && !/^\d{37,}$/.test(x));
+  }
+  function extractBrandModel(desc,codigo=''){
+    const txt=String(desc||'');
+    const upper=txt.toUpperCase();
+    let marca='';
+    for(const b of OCR_BRANDS){ if(upper.includes(b)){ marca=b.replace('KLIPXTREME','KLIP XTREME'); break; } }
+    if(!marca && codigo) marca=String(codigo).split('-')[0].replace(/\d+/g,'').toUpperCase();
+    let modelo='';
+    const modelPatterns=[
+      /\b(PROBOOK\s*[A-Z0-9\- ]{2,20})/i, /\b(INSPIRON\s*[A-Z0-9\- ]{2,20})/i, /\b(THINKPAD|IDEAPAD|LEGION|LENOVO\s+GAMING\s+[A-Z0-9\- ]{2,25})/i,
+      /\b(EOS\s*[A-Z0-9\- ]{2,15})/i, /\b(FX\s?890II|FX890II)\b/i, /\b(GVM\s?800D\s*RGB)\b/i, /\b(LS-?8005)\b/i, /\b(SMARTLAV\+?)\b/i,
+      /\b([A-Z]{2,6}[\- ]?\d{2,5}[A-Z0-9\-]*)\b/
+    ];
+    for(const re of modelPatterns){ const m=txt.match(re); if(m){ modelo=m[1].replace(/\s+/g,' ').trim(); break; } }
+    return {marca,modelo};
+  }
+  function scoreOcrItem(it){
+    let s=35;
+    if(it.descripcion && it.descripcion.length>10) s+=15;
+    if(num(it.valorUnitario)>0) s+=15;
+    if(num(it.cantidad)>0) s+=10;
+    if(it.marca) s+=8;
+    if(it.modelo) s+=7;
+    if(it.series && it.series.length) s+=10;
+    return Math.max(0,Math.min(100,s));
+  }
+  function classifyItem(desc){
+    const d=norm(desc);
+    if(/silla|escritorio|mesa|credenza|mueble|biblioteca|taburete|archivacion|estacion de trabajo|mampara|manpara|vidrio divisorio|cafeteria|lac(t|ch)ario|modular/.test(d)) return '03';
+    if(/notebook|laptop|computador|probook|inspiron|lenovo|dynabook|tablet|celular|impresora|scanner|proyector|pantalla|camara|canon|gps|drone|software|licencia|antivirus|office|windows|adobe|creative cloud|teclado|mouse|memoria|pen drive|base ajustable|regulador|ups|router|switch|microfono|panel led|pedestal|bateria|filtro|estuche/.test(d)) return '07';
+    if(/aire acondicionado|trituradora|dispensador|televisor|video conferencia|equipo audiovisual/.test(d)) return '04';
+    if(/generador|bomba|motosierra|taladro|herramienta|binocular|camping/.test(d)) return '06';
+    if(/vehiculo|motocicleta|canoa|kayak|bicicleta|motor/.test(d)) return '05';
+    return '03';
+  }
+  function buildPreFromInvoice(parsed,filename){
+    state.preLocal=[];
+    const globalSeries=extractGlobalSerials(parsed.raw);
+    let serieCursor=0;
+    parsed.items.forEach((item,idx)=>{
+      const qty=Math.max(1,parseInt(item.cantidad||1,10));
+      for(let i=0;i<qty;i++){
+        const type=classifyItem(item.descripcion);
+        const unit=num(item.valorUnitario || (item.valorTotal?item.valorTotal/qty:0));
+        const code=generateNextCode(parsed.fecha||todayISO(),type,state.preLocal.length);
+        const cat=state.data.tipo.find(t=>String(t.CodigoTipoBien)===String(type));
+        const meta=extractBrandModel(item.descripcion,item.codigo);
+        const serie=(item.series && item.series[i]) || (item.series && item.series[0] && qty===1 ? item.series[0] : '') || (globalSeries[serieCursor]||'');
+        if(serie) serieCursor++;
+        const marca=item.marca || meta.marca || '';
+        const modelo=item.modelo || meta.modelo || '';
+        const clasificacion=unit>0 && unit<OCR_MIN_ASSET_VALUE ? 'CONTROL ADMINISTRATIVO' : 'ACTIVO FIJO';
+        const missing=[]; if(!serie && !/licencia|software|office|windows|antivirus|creative cloud/i.test(item.descripcion)) missing.push('serie'); if(!unit) missing.push('valor'); if(!marca) missing.push('marca'); if(!modelo) missing.push('modelo');
+        const obs=[`OCR ${item.origen||'factura'} · confianza ${item.confianza||0}%`, missing.length?`Validar: ${missing.join(', ')}`:'Validación sugerida OK', parsed.claveAcceso?`Clave acceso: ${parsed.claveAcceso}`:'', item.codigo?`Cod. proveedor: ${item.codigo}`:'', item.detalle?`Línea: ${item.detalle}`:''].filter(Boolean).join(' | ');
+        state.preLocal.push({
+          selected:true, IdPreRegistro:uuid('PRE'), Codigo:code, FechaCarga:todayISO(), Proveedor:parsed.proveedor, RucProveedor:parsed.ruc,
+          NumeroFacturaActa:parsed.numeroFactura, FechaCompra:parsed.fecha||todayISO(), Proyecto:parsed.proyecto||'FIAS',
+          DescripcionDetectada:item.descripcion, DescripcionValidada:item.descripcion, CantidadDetectada:item.cantidad, CantidadARegistrar:1,
+          TipoBienSugerido:type, TipoBienValidado:type, CategoriaBienSugerida:cat?.CategoriaBien||'', Clasificacion:clasificacion,
+          ValorUnitarioIncImp:unit, ValorTotalIncImp:unit, Marca:marca, Modelo:modelo, Serie:serie, Custodio:'', Ubicacion:'',
+          EstadoValidacion:missing.length?'Requiere revisión':'Pendiente de validación', Observaciones:obs, ArchivoOrigen:filename,
+          ConfianzaOCR:item.confianza||0, ClaveAcceso:parsed.claveAcceso||'', NumeroAutorizacion:parsed.numeroAutorizacion||'', CodigoProveedor:item.codigo||''
+        });
+      }
+    });
+  }
+  function renderPreLocal(){
+    const cont=$('preRegisterList'); if(!cont) return;
+    cont.innerHTML=state.preLocal.map((p,i)=>{
+      const sev=p.EstadoValidacion==='Requiere revisión'?'warning':(p.ConfianzaOCR>=80?'ok':'warning');
+      return `<div class="pre-row ${p.selected?'selected':''} row-${sev}"><div class="d-flex justify-content-between gap-2 flex-wrap"><div><input type="checkbox" ${p.selected?'checked':''} onchange="state.preLocal[${i}].selected=this.checked; renderPreLocal()"> <strong>${esc(p.Codigo)}</strong> ${badge(p.TipoBienValidado+' - '+p.CategoriaBienSugerida,'info')} ${badge('OCR '+(p.ConfianzaOCR||0)+'%',p.ConfianzaOCR>=80?'ok':'warn')} ${badge(p.Clasificacion,p.Clasificacion==='ACTIVO FIJO'?'ok':'darkb')}</div><strong>${money(p.ValorUnitarioIncImp)}</strong></div><div class="row g-2 mt-2"><div class="col-md-7"><label class="form-label">Descripción validada</label><input class="form-control form-control-sm" value="${esc(p.DescripcionValidada)}" onchange="state.preLocal[${i}].DescripcionValidada=this.value"></div><div class="col-md-2"><label class="form-label">Tipo</label><select class="form-select form-select-sm" onchange="state.preLocal[${i}].TipoBienValidado=this.value; updatePreCat(${i}); renderPreLocal()">${state.data.tipo.map(t=>`<option value="${esc(t.CodigoTipoBien)}" ${t.CodigoTipoBien==p.TipoBienValidado?'selected':''}>${esc(t.CodigoTipoBien)}</option>`).join('')}</select></div><div class="col-md-3"><label class="form-label">Proyecto</label><input class="form-control form-control-sm" value="${esc(p.Proyecto)}" onchange="state.preLocal[${i}].Proyecto=this.value"></div><div class="col-md-3"><label class="form-label">Clasificación</label><select class="form-select form-select-sm" onchange="state.preLocal[${i}].Clasificacion=this.value"><option ${p.Clasificacion==='ACTIVO FIJO'?'selected':''}>ACTIVO FIJO</option><option ${p.Clasificacion==='CONTROL ADMINISTRATIVO'?'selected':''}>CONTROL ADMINISTRATIVO</option></select></div><div class="col-md-3"><label class="form-label">Marca</label><input class="form-control form-control-sm" value="${esc(p.Marca)}" onchange="state.preLocal[${i}].Marca=this.value"></div><div class="col-md-3"><label class="form-label">Modelo</label><input class="form-control form-control-sm" value="${esc(p.Modelo)}" onchange="state.preLocal[${i}].Modelo=this.value"></div><div class="col-md-3"><label class="form-label">Serie</label><input class="form-control form-control-sm" value="${esc(p.Serie)}" onchange="state.preLocal[${i}].Serie=this.value"></div><div class="col-md-3"><label class="form-label">Valor inc. imp.</label><input type="number" step="0.01" class="form-control form-control-sm" value="${esc(p.ValorUnitarioIncImp)}" onchange="state.preLocal[${i}].ValorUnitarioIncImp=num(this.value); state.preLocal[${i}].ValorTotalIncImp=num(this.value)"></div></div><div class="muted mt-2">Factura: ${esc(p.NumeroFacturaActa)} · Proveedor: ${esc(p.Proveedor)} · RUC: ${esc(p.RucProveedor)} · Fecha: ${displayDate(p.FechaCompra)}</div><div class="muted mt-1"><strong>Observación OCR:</strong> ${esc(p.Observaciones)}</div></div>`;
+    }).join('') || '<div class="alert alert-info">Aún no hay pre-registros. Cargue una factura o acta.</div>';
+  }
   function updatePreCat(i){ const p=state.preLocal[i]; const cat=state.data.tipo.find(t=>String(t.CodigoTipoBien)===String(p.TipoBienValidado)); p.CategoriaBienSugerida=cat?.CategoriaBien||''; }
   function regeneratePreCodes(){ const counters={}; state.preLocal.forEach(p=>{ const key=`${(toISO(p.FechaCompra)||todayISO()).slice(2,4)}-${p.TipoBienValidado}`; counters[key]=(counters[key]||0); p.Codigo=generateNextCode(p.FechaCompra,p.TipoBienValidado,counters[key]); counters[key]++; }); renderPreLocal(); }
-  async function savePreToExcel(){ const selected=state.preLocal.filter(p=>p.selected); if(!selected.length){alert('Seleccione al menos un pre-registro.');return;} try{ for(const p of selected){ await appendSheetRow('pre',{IdPreRegistro:p.IdPreRegistro,FechaCarga:todayISO(),Proveedor:p.Proveedor,RucProveedor:p.RucProveedor,NumeroFacturaActa:p.NumeroFacturaActa,FechaCompra:p.FechaCompra,Proyecto:p.Proyecto,DescripcionDetectada:p.DescripcionDetectada,DescripcionValidada:p.DescripcionValidada,CantidadDetectada:p.CantidadDetectada,CantidadARegistrar:1,TipoBienSugerido:p.TipoBienSugerido,TipoBienValidado:p.TipoBienValidado,Clasificacion:p.Clasificacion,ValorUnitarioIncImp:p.ValorUnitarioIncImp,ValorTotalIncImp:p.ValorTotalIncImp,Marca:p.Marca,Modelo:p.Modelo,Serie:p.Serie,Custodio:p.Custodio,Ubicacion:p.Ubicacion,EstadoValidacion:p.EstadoValidacion,Observaciones:p.Observaciones,ArchivoOrigen:p.ArchivoOrigen}); } await audit('CREATE','04_PreRegistroOCR','LOTE','Pre-registro OCR','','','OK',`${selected.length} registros guardados`); alert('Pre-registro OCR guardado en Excel.'); }catch(e){alert('No se pudo guardar pre-registro: '+(e.message||e));} }
-  async function createAssetsFromPre(){ const selected=state.preLocal.filter(p=>p.selected); if(!selected.length){alert('Seleccione al menos un pre-registro.');return;} const missing=selected.filter(p=>!p.Serie || !p.DescripcionValidada || !p.TipoBienValidado || !p.Proyecto || !p.ValorUnitarioIncImp); if(missing.length && !confirm(`${missing.length} registros tienen datos pendientes (serie, descripción o valor). ¿Registrar de todas formas?`)) return; try{ regeneratePreCodes(); for(const p of selected){ const cat=state.data.tipo.find(t=>String(t.CodigoTipoBien)===String(p.TipoBienValidado)); const obj={IdBien:uuid('B'),Codigo:p.Codigo,CodigoAnio:(toISO(p.FechaCompra)||todayISO()).slice(2,4),CodigoTipoActual:p.TipoBienValidado,SecuencialActual:(p.Codigo.split('.')[3]||''),CodigoTipoSugerido:p.TipoBienValidado,CategoriaBienSugerida:cat?.CategoriaBien||'',ValidacionCodigo:'OK',Descripcion:p.DescripcionValidada,DescripcionAdicional:p.DescripcionDetectada,Cantidad:1,TipoBienOriginal:'',Clasificacion:p.Clasificacion,Proyecto:p.Proyecto,FechaCompra:p.FechaCompra,Donante:'',Proveedor:p.Proveedor,RucProveedor:p.RucProveedor,NumeroFacturaActa:p.NumeroFacturaActa,ValorBienIncImp:p.ValorUnitarioIncImp,Marca:p.Marca,Modelo:p.Modelo,NumeroSerie:p.Serie,CedulaCustodio:'',Custodio:p.Custodio,Institucion:'FIAS',Ubicacion:p.Ubicacion,Asegurado:'NO',InicioSeguro:'',FinSeguro:'',Aseguradora:'',NroPoliza:'',GarantiaTecnica:'N/A',InicioGarantia:'',FinGarantia:'',EstadoFisico:'BUENO',VidaUtilAnios:cat?.VidaUtilAnios||'',TasaAnual:cat?.TasaAnual||'',DepreciacionLinealAnual:'',DepreciacionMensual:'',ValorResidualSugerido:'',FechaBaja:'',MotivoBaja:'',Observaciones:'Registrado desde pre-registro OCR validado.',EstadoCalidad:'OK',FacturaDigitalLink:'',FotoLink:'',ActaEntregaLink:'',FuenteMigracion:'HTML OCR'}; await appendSheetRow('bienes',obj); await appendSheetRow('detalle',{IdDetalle:uuid('DET'),IdFactura:'',CodigoBien:obj.Codigo,NumeroFacturaActa:obj.NumeroFacturaActa,DescripcionItem:p.DescripcionDetectada,Cantidad:1,ValorUnitarioIncImp:p.ValorUnitarioIncImp,ValorTotalIncImp:p.ValorUnitarioIncImp,CodigoTipoSugerido:p.TipoBienValidado,CategoriaBienSugerida:obj.CategoriaBienSugerida,NumeroSerie:p.Serie,Marca:p.Marca,Modelo:p.Modelo,Origen:'OCR'}); } await audit('CREATE','01_Bienes','LOTE','Pre-registro OCR validado','','','OK',`${selected.length} bienes registrados`); state.preLocal=state.preLocal.filter(p=>!p.selected); renderAll(); alert('Bienes registrados correctamente.'); }catch(e){alert('No se pudieron registrar bienes: '+(e.message||e));} }
+  async function savePreToExcel(){ if(!requireEditor('guardar pre-registros OCR')) return; const selected=state.preLocal.filter(p=>p.selected); if(!selected.length){alert('Seleccione al menos un pre-registro.');return;} try{ for(const p of selected){ await appendSheetRow('pre',{IdPreRegistro:p.IdPreRegistro,FechaCarga:todayISO(),Proveedor:p.Proveedor,RucProveedor:p.RucProveedor,NumeroFacturaActa:p.NumeroFacturaActa,FechaCompra:p.FechaCompra,Proyecto:p.Proyecto,DescripcionDetectada:p.DescripcionDetectada,DescripcionValidada:p.DescripcionValidada,CantidadDetectada:p.CantidadDetectada,CantidadARegistrar:1,TipoBienSugerido:p.TipoBienSugerido,TipoBienValidado:p.TipoBienValidado,Clasificacion:p.Clasificacion,ValorUnitarioIncImp:p.ValorUnitarioIncImp,ValorTotalIncImp:p.ValorTotalIncImp,Marca:p.Marca,Modelo:p.Modelo,Serie:p.Serie,Custodio:p.Custodio,Ubicacion:p.Ubicacion,EstadoValidacion:p.EstadoValidacion,Observaciones:p.Observaciones,ArchivoOrigen:p.ArchivoOrigen}); } await audit('CREATE','04_PreRegistroOCR','LOTE','Pre-registro OCR','','','OK',`${selected.length} registros guardados`); alert('Pre-registro OCR guardado en Excel.'); }catch(e){alert('No se pudo guardar pre-registro: '+(e.message||e));} }
+  async function createAssetsFromPre(){ if(!requireEditor('registrar bienes desde OCR')) return; const selected=state.preLocal.filter(p=>p.selected); if(!selected.length){alert('Seleccione al menos un pre-registro.');return;} const missing=selected.filter(p=>!p.Serie || !p.DescripcionValidada || !p.TipoBienValidado || !p.Proyecto || !p.ValorUnitarioIncImp); if(missing.length && !confirm(`${missing.length} registros tienen datos pendientes (serie, descripción o valor). ¿Registrar de todas formas?`)) return; try{ regeneratePreCodes(); for(const p of selected){ const cat=state.data.tipo.find(t=>String(t.CodigoTipoBien)===String(p.TipoBienValidado)); const obj={IdBien:uuid('B'),Codigo:p.Codigo,CodigoAnio:(toISO(p.FechaCompra)||todayISO()).slice(2,4),CodigoTipoActual:p.TipoBienValidado,SecuencialActual:(p.Codigo.split('.')[3]||''),CodigoTipoSugerido:p.TipoBienValidado,CategoriaBienSugerida:cat?.CategoriaBien||'',ValidacionCodigo:'OK',Descripcion:p.DescripcionValidada,DescripcionAdicional:p.DescripcionDetectada,Cantidad:1,TipoBienOriginal:'',Clasificacion:p.Clasificacion,Proyecto:p.Proyecto,FechaCompra:p.FechaCompra,Donante:'',Proveedor:p.Proveedor,RucProveedor:p.RucProveedor,NumeroFacturaActa:p.NumeroFacturaActa,ValorBienIncImp:p.ValorUnitarioIncImp,Marca:p.Marca,Modelo:p.Modelo,NumeroSerie:p.Serie,CedulaCustodio:'',Custodio:p.Custodio,Institucion:'FIAS',Ubicacion:p.Ubicacion,Asegurado:'NO',InicioSeguro:'',FinSeguro:'',Aseguradora:'',NroPoliza:'',GarantiaTecnica:'N/A',InicioGarantia:'',FinGarantia:'',EstadoFisico:'BUENO',VidaUtilAnios:cat?.VidaUtilAnios||'',TasaAnual:cat?.TasaAnual||'',DepreciacionLinealAnual:'',DepreciacionMensual:'',ValorResidualSugerido:'',FechaBaja:'',MotivoBaja:'',Observaciones:'Registrado desde pre-registro OCR validado.',EstadoCalidad:'OK',FacturaDigitalLink:'',FotoLink:'',ActaEntregaLink:'',FuenteMigracion:'HTML OCR'}; await appendSheetRow('bienes',obj); await appendSheetRow('detalle',{IdDetalle:uuid('DET'),IdFactura:'',CodigoBien:obj.Codigo,NumeroFacturaActa:obj.NumeroFacturaActa,DescripcionItem:p.DescripcionDetectada,Cantidad:1,ValorUnitarioIncImp:p.ValorUnitarioIncImp,ValorTotalIncImp:p.ValorUnitarioIncImp,CodigoTipoSugerido:p.TipoBienValidado,CategoriaBienSugerida:obj.CategoriaBienSugerida,NumeroSerie:p.Serie,Marca:p.Marca,Modelo:p.Modelo,Origen:'OCR'}); } await audit('CREATE','01_Bienes','LOTE','Pre-registro OCR validado','','','OK',`${selected.length} bienes registrados`); state.preLocal=state.preLocal.filter(p=>!p.selected); renderAll(); alert('Bienes registrados correctamente.'); }catch(e){alert('No se pudieron registrar bienes: '+(e.message||e));} }
   function resetFilters(){ ['q','fTipo','fProyecto','fCustodio','fUbicacion','fEstado'].forEach(id=>$(id).value=''); renderInventory(); }
   function exportCsv(){ const rows=filteredAssets(); const headers=['Codigo','Descripcion','Proyecto','FechaCompra','Proveedor','NumeroFacturaActa','ValorBienIncImp','Marca','Modelo','NumeroSerie','Custodio','Ubicacion','EstadoFisico']; const csv=[headers.join(';')].concat(rows.map(r=>headers.map(h=>`"${String(r[h]??'').replace(/"/g,'""')}"`).join(';'))).join('\n'); const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='inventario_fias_filtrado.csv'; a.click(); URL.revokeObjectURL(a.href); }
   function optionalClick(id,handler){ const el=$(id); if(el) el.addEventListener('click',handler); }
   function jumpPanel(panel){ const btn=document.querySelector(`.nav-btn[data-panel="${panel}"]`); if(btn){ btn.click(); window.scrollTo({top:0,behavior:'smooth'}); } }
   function setupEvents(){ document.querySelectorAll('.nav-btn').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.nav-btn').forEach(x=>x.classList.remove('active')); b.classList.add('active'); document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active')); $(b.dataset.panel).classList.add('active'); $('pageTitle').textContent=b.textContent.trim(); })); document.querySelectorAll('.mini-tabs button[data-view]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.mini-tabs button[data-view]').forEach(x=>x.classList.remove('active')); b.classList.add('active'); state.currentView=b.dataset.view; $('cardsView').classList.toggle('hidden',state.currentView!=='cards'); $('tableView').classList.toggle('hidden',state.currentView!=='table'); })); $('btnLogin').addEventListener('click',login); $('btnOfflineDemo').addEventListener('click',offlineDemo); $('btnLogout').addEventListener('click',logout); $('btnSync').addEventListener('click',fullSync); $('btnCreateAsset').addEventListener('click',openCreateAsset); optionalClick('btnCreateAssetCrud',openCreateAsset); optionalClick('btnOpCreate',openCreateAsset); optionalClick('btnSyncCrud',fullSync); optionalClick('btnExportCsvCrud',exportCsv); document.querySelectorAll('[data-jump]').forEach(b=>b.addEventListener('click',()=>jumpPanel(b.dataset.jump))); $('btnSaveAsset').addEventListener('click',saveAsset); $('btnResetFilters').addEventListener('click',resetFilters); $('btnApplyFilters').addEventListener('click',renderInventory); ['q','fTipo','fProyecto','fCustodio','fUbicacion','fEstado'].forEach(id=>$(id).addEventListener('input',renderInventory)); $('btnExportCsv').addEventListener('click',exportCsv); $('btnRegenCode').addEventListener('click',()=>$('Codigo').value=generateNextCode($('FechaCompra').value,$('CodigoTipoSugerido').value)); $('FechaCompra').addEventListener('change',()=>$('Codigo').value=generateNextCode($('FechaCompra').value,$('CodigoTipoSugerido').value)); $('CodigoTipoSugerido').addEventListener('change',()=>$('Codigo').value=generateNextCode($('FechaCompra').value,$('CodigoTipoSugerido').value)); $('btnProcessInvoice').addEventListener('click',processInvoice); $('btnClearPre').addEventListener('click',()=>{state.preLocal=[]; renderPreLocal(); $('ocrConsole').textContent='Pre-registro local limpiado.';}); $('btnGenerateCodes').addEventListener('click',regeneratePreCodes); $('btnSavePreToExcel').addEventListener('click',savePreToExcel); $('btnCreateFromPre').addEventListener('click',createAssetsFromPre); $('btnRefreshQuality').addEventListener('click',renderQuality); $('btnCopySummary').addEventListener('click',()=>navigator.clipboard?.writeText($('executiveSummary').innerText)); optionalClick('btnAddCatalog',openCatalogCreate); optionalClick('btnSaveCatalog',saveCatalog); optionalClick('catalogSearch',()=>{}); const catalogSearchEl=$('catalogSearch'); if(catalogSearchEl){ catalogSearchEl.addEventListener('input',()=>{state.catalogSearch=catalogSearchEl.value; renderCatalogs();}); } const dz=$('dropzone'); dz.addEventListener('dragover',e=>{e.preventDefault(); dz.classList.add('drag');}); dz.addEventListener('dragleave',()=>dz.classList.remove('drag')); dz.addEventListener('drop',e=>{e.preventDefault(); dz.classList.remove('drag'); $('invoiceFile').files=e.dataTransfer.files;}); }
-  window.showAssetDetail=showAssetDetail; window.editAsset=editAsset; window.softDeleteAsset=softDeleteAsset; window.openCreateAsset=openCreateAsset; window.state=state; window.updatePreCat=updatePreCat; window.num=num; window.selectCatalog=selectCatalog; window.openCatalogEdit=openCatalogEdit; window.inactivateCatalog=inactivateCatalog; window.openCatalogCreate=openCatalogCreate;
+  window.showAssetDetail=showAssetDetail; window.editAsset=editAsset; window.softDeleteAsset=softDeleteAsset; window.openCreateAsset=openCreateAsset; window.isEditor=isEditor; window.setAccessMode=setAccessMode; window.state=state; window.updatePreCat=updatePreCat; window.num=num; window.selectCatalog=selectCatalog; window.openCatalogEdit=openCatalogEdit; window.inactivateCatalog=inactivateCatalog; window.openCatalogCreate=openCatalogCreate;
   document.addEventListener('DOMContentLoaded',init);
   </script>
 </body>

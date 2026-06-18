@@ -159,13 +159,38 @@
     @media(max-width:560px){.grid-kpi{grid-template-columns:1fr}.connection-row{flex-direction:column}.card-head{flex-direction:column;align-items:flex-start}.drawer{padding:0}.drawer-panel{border-radius:22px 22px 0 0}}
   
     @media(max-width:760px){.ocr-help{grid-template-columns:1fr}.doc-drop{min-height:170px;padding:20px}.upload-icon{width:52px;height:52px}.doc-drop strong{font-size:1rem}}
+
+
+    /* ===== Pantalla de acceso previa al sistema ===== */
+    .auth-gate{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:28px;background:linear-gradient(135deg,#f4fff8 0%,#eef5ff 52%,#ffffff 100%)}
+    .auth-card{width:min(560px,100%);background:#fff;border:1px solid var(--gray-200);border-radius:28px;box-shadow:var(--shadow);padding:30px;text-align:center}
+    .auth-logo{width:78px;height:78px;border-radius:24px;background:linear-gradient(135deg,var(--green-900),var(--green-500));color:#fff;display:grid;place-items:center;margin:0 auto 16px;font-weight:950;font-size:1.25rem;letter-spacing:-.04em}
+    .auth-card h2{margin:0;font-size:1.75rem;font-weight:950;letter-spacing:-.04em;color:var(--gray-950)}
+    .auth-card p{color:var(--gray-600);line-height:1.55;margin:10px 0 20px}
+    .auth-actions{display:grid;gap:10px;margin-top:14px}.auth-actions .btn{justify-content:center;width:100%}
+    .auth-note{margin-top:16px;border:1px solid #b7e4c7;background:#f7fffa;color:var(--green-800);border-radius:16px;padding:12px;font-size:.9rem;text-align:left}
+    .app-shell.locked{display:none!important}
+    .auth-gate.hidden{display:none!important}
+
 </style>
 </head>
 <body>
   <div class="loading" id="loading"><div class="spinner"></div><strong id="loadingText">Inicializando plataforma...</strong></div>
   <div class="toast-zone" id="toastZone"></div>
 
-  <div class="app-shell">
+  <div class="auth-gate" id="authGate">
+    <div class="auth-card">
+      <div class="auth-logo">FIAS</div>
+      <h2>Acceso a mantenimientos vehiculares</h2>
+      <p>Inicie sesión con su cuenta institucional de Microsoft 365 antes de cargar, consultar o sincronizar la base de mantenimiento vehicular del FIAS.</p>
+      <div class="auth-actions">
+        <button class="btn btn-primary" id="btnGateLogin"><i class="bi bi-microsoft"></i> Iniciar sesión con Microsoft</button>
+      </div>
+      <div class="auth-note"><strong>Seguridad:</strong> la plataforma no muestra la información institucional hasta validar la sesión corporativa.</div>
+    </div>
+  </div>
+
+  <div class="app-shell locked" id="appShell">
     <aside class="sidebar">
       <div class="brand">
         <div class="brand-mark">FIAS</div>
@@ -482,8 +507,8 @@
     const $ = (id) => document.getElementById(id);
     const $$ = (selector, root=document) => [...root.querySelectorAll(selector)];
 
-    function showLoading(message){ $('loadingText').textContent = message || 'Procesando...'; $('loading').classList.add('open'); state.loading = true; }
-    function hideLoading(){ $('loading').classList.remove('open'); state.loading = false; }
+    function showLoading(message){ $('loadingText').textContent = message || 'Procesando...'; $('loading').classList.add('open'); state.loading = true; setAuthenticatedView(!!state.account); }
+    function hideLoading(){ $('loading').classList.remove('open'); state.loading = false; setAuthenticatedView(!!state.account); }
     function toast(title, body='', type='ok'){
       const box = document.createElement('div');
       box.className = 'toast ' + (type === 'danger' ? 'danger' : type === 'warn' ? 'warn' : '');
@@ -491,6 +516,19 @@
       $('toastZone').appendChild(box);
       setTimeout(()=>box.remove(), 6200);
     }
+
+    function setAuthenticatedView(isLogged){
+      const gate = $('authGate');
+      const shell = $('appShell');
+      if(gate) gate.classList.toggle('hidden', !!isLogged);
+      if(shell) shell.classList.toggle('locked', !isLogged);
+      const gateBtn = $('btnGateLogin');
+      if(gateBtn){
+        gateBtn.disabled = state.syncInProgress || state.loading;
+        gateBtn.innerHTML = state.loading ? '<i class="bi bi-hourglass-split"></i> Procesando...' : '<i class="bi bi-microsoft"></i> Iniciar sesión con Microsoft';
+      }
+    }
+
     function escapeHtml(value){ return String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch])); }
     function normalizeText(value){ return String(value ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim(); }
     function numberValue(value){
@@ -573,33 +611,40 @@
     async function login(){
       showLoading('Autenticando con Microsoft 365...');
       try{
+        if(!state.msal) await setupMsal();
         const result = await state.msal.loginPopup({ scopes: CONFIG.scopes });
         state.account = result.account;
         state.token = result.accessToken;
         updateConnectionUi();
         await syncAll();
-      }catch(err){ toast('No fue posible iniciar sesión', err.message, 'danger'); }
-      finally{ hideLoading(); }
+      }catch(err){
+        state.connected = false;
+        updateConnectionUi();
+        toast('No fue posible iniciar sesión', err.message || String(err), 'danger');
+      }finally{
+        hideLoading();
+        updateConnectionUi();
+      }
     }
 
     async function logout(){
-      showLoading('Cerrando sesión activa...');
       const account = state.account || (state.msal && state.msal.getAllAccounts()[0]);
+      showLoading('Cerrando sesión activa...');
       try{
-        await closeWorkbookSession();
-      }catch(err){
-        console.warn('No se pudo cerrar la sesión de Excel antes de salir.', err);
-      }
-      try{
+        // Limpieza visual inmediata para que la página vuelva a la pantalla de acceso.
         state.connected = false;
+        state.syncInProgress = false;
         state.sessionId = '';
         state.token = null;
         state.account = null;
         state.rows = {};
         state.headers = {};
         state.binaryWorkbook = null;
-        updateConnectionUi();
+        state.binaryMode = false;
         renderAll();
+        updateConnectionUi();
+
+        // El cierre de Microsoft se dispara directamente desde el clic del usuario para evitar bloqueo de popup.
         if(state.msal && account){
           await state.msal.logoutPopup({
             account,
@@ -609,7 +654,10 @@
         }
         toast('Sesión cerrada', 'La cuenta Microsoft se desvinculó de esta página.');
       }catch(err){
-        toast('Cierre de sesión local', 'Se limpió la sesión de la página. Si Microsoft mantiene la cuenta en el navegador, vuelva a iniciar sesión o use otra cuenta.', 'warn');
+        if(state.msal && typeof state.msal.getTokenCache === 'function'){
+          try{ sessionStorage.clear(); }catch(_e){}
+        }
+        toast('Cierre de sesión local', 'Se limpió la sesión de la página. Si Microsoft conserva la cuenta en el navegador, cierre la pestaña o vuelva a iniciar sesión.', 'warn');
       }finally{
         hideLoading();
         updateConnectionUi();
@@ -649,6 +697,19 @@
       return clean;
     }
 
+    async function fetchWithTimeout(url, options={}, timeoutMs=45000){
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), timeoutMs);
+      try{
+        return await fetch(url, Object.assign({}, options, { signal: controller.signal }));
+      }catch(err){
+        if(err && err.name === 'AbortError') throw new Error('Tiempo de espera agotado al contactar Microsoft Graph. Intente sincronizar nuevamente.');
+        throw err;
+      }finally{
+        clearTimeout(timer);
+      }
+    }
+
     async function graph(path, options={}){
       let attempt = 0;
       const cleanOptions = sanitizeGraphOptions(options);
@@ -656,7 +717,7 @@
         const token = await acquireToken();
         const headers = Object.assign({ Authorization: `Bearer ${token}`, 'Content-Type':'application/json' }, cleanOptions.headers || {});
         if(shouldAttachWorkbookSession(path, options)) headers['Workbook-Session-Id'] = state.sessionId;
-        const res = await fetch(`https://graph.microsoft.com/v1.0${path}`, Object.assign({}, cleanOptions, { headers }));
+        const res = await fetchWithTimeout(`https://graph.microsoft.com/v1.0${path}`, Object.assign({}, cleanOptions, { headers }));
         if(res.status === 423 || res.status === 409 || res.status === 429){
           attempt += 1;
           await new Promise(resolve => setTimeout(resolve, 1400 * attempt));
@@ -687,7 +748,7 @@
       const token = await acquireToken();
       const cleanOptions = sanitizeGraphOptions(options);
       const headers = Object.assign({ Authorization: `Bearer ${token}` }, cleanOptions.headers || {});
-      const res = await fetch(`https://graph.microsoft.com/v1.0${path}`, Object.assign({}, cleanOptions, { headers }));
+      const res = await fetchWithTimeout(`https://graph.microsoft.com/v1.0${path}`, Object.assign({}, cleanOptions, { headers }));
       if(!res.ok){
         const text = await res.text().catch(()=>res.statusText);
         throw new Error(`Graph ${res.status}: ${text}`);
@@ -709,7 +770,7 @@
       const oldSessionId = state.sessionId;
       try{
         const token = await acquireToken();
-        await fetch(`https://graph.microsoft.com/v1.0${state.driveItemPath}/workbook/closeSession`, {
+        await fetchWithTimeout(`https://graph.microsoft.com/v1.0${state.driveItemPath}/workbook/closeSession`, {
           method:'POST',
           headers:{ Authorization:`Bearer ${token}`, 'Content-Type':'application/json', 'Workbook-Session-Id': oldSessionId }
         });
@@ -849,7 +910,11 @@
     async function syncAll(){
       if(!state.account){
         const restored = await ensureActiveAccount();
-        if(!restored) return login();
+        if(!restored){
+          updateConnectionUi();
+          toast('Inicio de sesión requerido', 'Primero ingrese con su cuenta institucional de Microsoft 365.', 'warn');
+          return;
+        }
       }
       if(state.syncInProgress){
         toast('Sincronización en curso', 'Espere a que termine el proceso actual antes de volver a sincronizar.', 'warn');
@@ -878,7 +943,7 @@
         renderAll();
         toast('Sincronización completada', state.binaryMode ? 'Datos leídos por modo binario XLSX debido a limitación del Workbook API.' : 'Las tablas del Excel Enterprise fueron leídas correctamente.');
       }catch(err){ state.connected = false; updateConnectionUi(); toast('Error de sincronización', friendlyGraphError(err), 'danger'); }
-      finally{ state.syncInProgress = false; hideLoading(); }
+      finally{ state.syncInProgress = false; hideLoading(); updateConnectionUi(); }
     }
 
     function friendlyGraphError(err){
@@ -895,6 +960,7 @@
     function updateConnectionUi(){
       const logged = !!state.account;
       const username = state.account ? (state.account.username || state.account.name || 'Sesión activa') : '';
+      setAuthenticatedView(logged);
 
       if($('userName')) $('userName').textContent = logged ? username : 'No autenticado';
 
@@ -930,7 +996,7 @@
       }
       if(chipText) chipText.textContent = logged ? username : 'Sin sesión';
       if(syncBtn){
-        syncBtn.disabled = state.syncInProgress;
+        syncBtn.disabled = state.syncInProgress || !logged;
         syncBtn.innerHTML = state.syncInProgress ? '<i class="bi bi-hourglass-split"></i> Sincronizando...' : '<i class="bi bi-arrow-repeat"></i> Sincronizar';
       }
     }
@@ -1922,7 +1988,8 @@
 
     function bindEvents(){
       $$('.nav-button').forEach(btn => btn.addEventListener('click', () => { $$('.nav-button').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); $$('.module').forEach(m=>m.classList.remove('active')); $(btn.dataset.module).classList.add('active'); }));
-      $('btnLogin').addEventListener('click', login);
+      if($('btnGateLogin')) $('btnGateLogin').addEventListener('click', login);
+      if($('btnLogin')) $('btnLogin').addEventListener('click', login);
       if($('btnLogout')) $('btnLogout').addEventListener('click', logout);
       $('btnSync').addEventListener('click', syncAll);
       $('btnNew').addEventListener('click', openDrawer);
@@ -1948,10 +2015,20 @@
 
     async function init(){
       bindEvents();
+      setAuthenticatedView(false);
       renderSchema();
       renderAll();
-      try{ await setupMsal(); if(state.account) await syncAll(); }
-      catch(err){ state.account = null; state.connected = false; updateConnectionUi(); toast('Modo sin conexión inicial', err.message, 'warn'); }
+      try{
+        await setupMsal();
+        updateConnectionUi();
+        if(state.account) await syncAll();
+      }
+      catch(err){
+        state.account = null;
+        state.connected = false;
+        updateConnectionUi();
+        toast('Inicio pendiente', err.message || String(err), 'warn');
+      }
     }
 
     document.addEventListener('DOMContentLoaded', init);

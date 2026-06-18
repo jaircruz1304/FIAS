@@ -4,9 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FIAS | Plataforma Enterprise Integral de Inventario</title>
-  <!-- Versión integrada: Financiero + OCR Enterprise FIAS -->
+  <!-- Versión integrada: Financiero + OCR Enterprise FIAS + Validación serie inteligente -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet" /><style>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet" /><script type="text/javascript" src="https://gc.kes.v2.scr.kaspersky-labs.com/7EA5E9BB-55E1-4C31-9C21-4943DDFED2E4/main.js?attr=qQiW0gS__5Dbea9ezr6CRXhBWIytaSYrb3ZNJMjPaCugs7KdyFtfBgluMwlxqPOH10ve3nXMORHjSDPH1fxtySnnM4dVbA7O5g99p4i_r8KLDBnEOw3uKdhWXpDCAJchBOZNwPY9WRMDv8lX_TKKlS9UNceaMmKbd9_3FguKImDfSe9aKJrSDOWfJQN69TIxLKYm9SIap1CgBD0IB0LCjF6M2yCnxHbdqjSt1nWZlmNzd1X4DVFNW2qmJ04OEHdcxhOH7Kzgna6SN537TgdK71ar6yOSpyDvamT5CNOvXclPK8_UPDg7l2EC7T73-SJ_rj7Ze77l3kiZMgGs2ERcJBAi5dvVReagqBPZr-TbkZuj4PJD6y611hAAb2zwxpEeAI5yn6Z1iB0gX5D14D4SSg" charset="UTF-8"></script><style>
     :root{
       --fias:#1f7a38; --fias2:#2fa84f; --dark:#10351f; --soft:#eef8f1; --ink:#182230; --muted:#667085;
       --line:#e6eaf0; --bg:#f4f7fb; --danger:#dc3545; --warn:#f59e0b; --ok:#198754; --info:#0d6efd;
@@ -279,7 +279,7 @@
     <div class="col-md-2"><label class="form-label required">Valor inc. imp.</label><input id="ValorBienIncImp" type="number" step="0.01" min="0" class="form-control" required></div>
     <div class="col-md-3"><label class="form-label required">Marca</label><input id="Marca" class="form-control" required></div>
     <div class="col-md-3"><label class="form-label required">Modelo</label><input id="Modelo" class="form-control" required></div>
-    <div class="col-md-3"><label class="form-label required">Número de serie</label><input id="NumeroSerie" class="form-control" required></div>
+    <div class="col-md-3"><label class="form-label required">Número de serie</label><input id="NumeroSerie" class="form-control" required placeholder="Serie real o N/A si no aplica"><div class="form-text">N/A, S/N o Sin serie no se validan como duplicados.</div></div>
     <div class="col-md-3"><label class="form-label">Cédula custodio</label><input id="CedulaCustodio" class="form-control"></div>
     <div class="col-md-4"><label class="form-label">Custodio</label><input id="Custodio" class="form-control" list="custodioList"></div>
     <div class="col-md-4"><label class="form-label">Institución</label><input id="Institucion" class="form-control"></div>
@@ -348,6 +348,9 @@
   const money = v => new Intl.NumberFormat('es-EC',{style:'currency',currency:'USD'}).format(num(v));
   const num = v => { if(v===null||v===undefined||v==='') return 0; let s=String(v).trim().replace(/\$/g,'').replace(/\s/g,''); if(/^\d{1,3}(\.\d{3})+,\d+$/.test(s)) s=s.replace(/\./g,'').replace(',', '.'); else if(/^\d+,\d+$/.test(s)) s=s.replace(',', '.'); return Number(s)||0; };
   const norm = s => String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
+  const SERIAL_PLACEHOLDERS = new Set(['','na','nd','sn','noaplica','noaplica','noaplica','sinserie','sinnumerodeserie','noposee','notiene','pendiente','verificar','ninguno','none']);
+  function serialKey(value){ return norm(value).replace(/[^a-z0-9]/g,''); }
+  function isRealSerial(value){ return !SERIAL_PLACEHOLDERS.has(serialKey(value)); }
   const todayISO = () => new Date().toISOString().slice(0,10);
   const nowISO = () => new Date().toISOString();
   const esc = s => String(s??'').replace(/[&<>'"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[m]));
@@ -504,7 +507,20 @@
   function editAsset(id){ if(!requireEditor('editar bienes')) return; const b=state.data.bienes.find(x=>x.IdBien===id); if(!b) return; resetAssetForm(); $('formMode').value='edit'; $('rowIndex').value=b._row; $('assetModalTitle').textContent=`Editar bien ${b.Codigo}`; APP.manualFields.forEach(f=>{ const el=$(f); if(el){ el.value = ['FechaCompra','InicioSeguro','FinSeguro','InicioGarantia','FinGarantia','FechaBaja'].includes(f)?toISO(b[f]):(b[f]??''); }}); $('CodigoTipoSugerido').value=b.CodigoTipoSugerido||b.CodigoTipoActual||''; bootstrap.Modal.getOrCreateInstance($('assetModal')).show(); }
   function resetAssetForm(){ $('assetForm').reset(); $('IdBien').value=uuid('B'); $('rowIndex').value=''; }
   function collectAssetForm(){ const o={}; APP.manualFields.forEach(f=>{ const el=$(f); if(el) o[f]=el.value; }); const cat=state.data.tipo.find(t=>String(t.CodigoTipoBien)===String(o.CodigoTipoSugerido)); o.CategoriaBienSugerida=cat?.CategoriaBien||o.CategoriaBienSugerida||''; o.VidaUtilAnios=cat?.VidaUtilAnios||''; o.TasaAnual=cat?.TasaAnual||''; o.CodigoAnio=(toISO(o.FechaCompra)||todayISO()).slice(2,4); o.CodigoTipoActual=(o.Codigo||'').split('.')[2]||o.CodigoTipoSugerido; const parts=(o.Codigo||'').split('.'); o.SecuencialActual=parts[3]||''; o.ValidacionCodigo=validateCode(o); o.EstadoCalidad=o.EstadoCalidad||'OK'; o.FuenteMigracion=o.FuenteMigracion||'HTML CRUD'; return o; }
-  function validateAsset(o){ const missing=APP.required.filter(f=>!String(o[f]||'').trim()); if(missing.length) return 'Faltan campos obligatorios: '+missing.join(', '); const dupCode=state.data.bienes.find(b=>b.Codigo===o.Codigo && b.IdBien!==o.IdBien); if(dupCode) return 'El código ya existe: '+o.Codigo; if(o.NumeroSerie){ const dupSerie=state.data.bienes.find(b=>norm(b.NumeroSerie)===norm(o.NumeroSerie) && b.IdBien!==o.IdBien); if(dupSerie) return 'El número de serie ya existe en: '+dupSerie.Codigo; } return ''; }
+  function validateAsset(o){
+    const missing=APP.required.filter(f=>!String(o[f]||'').trim());
+    if(missing.length) return 'Faltan campos obligatorios: '+missing.join(', ');
+    const dupCode=state.data.bienes.find(b=>norm(b.Codigo)===norm(o.Codigo) && b.IdBien!==o.IdBien);
+    if(dupCode) return 'El código ya existe: '+o.Codigo;
+    // Validación inteligente de serie: valores genéricos como N/A, S/N, Sin serie,
+    // Pendiente o Verificar no deben bloquear el registro, porque no identifican un bien real.
+    if(isRealSerial(o.NumeroSerie)){
+      const key=serialKey(o.NumeroSerie);
+      const dupSerie=state.data.bienes.find(b=>isRealSerial(b.NumeroSerie) && serialKey(b.NumeroSerie)===key && b.IdBien!==o.IdBien);
+      if(dupSerie) return 'El número de serie ya existe en: '+dupSerie.Codigo;
+    }
+    return '';
+  }
   async function saveAsset(){ if(!requireEditor('guardar bienes')) return; const btn=$('btnSaveAsset'); const o=collectAssetForm(); const err=validateAsset(o); if(err){ alert(err); return; } btn.disabled=true; try{ if($('formMode').value==='edit'){ await patchSheetRow('bienes', Number($('rowIndex').value), o); const idx=state.data.bienes.findIndex(b=>b.IdBien===o.IdBien); if(idx>=0) state.data.bienes[idx]={...state.data.bienes[idx],...o,_row:Number($('rowIndex').value)}; await audit('UPDATE','01_Bienes',o.IdBien,'Registro completo','','','OK','Edición controlada desde HTML'); }else{ o.IdBien=o.IdBien||uuid('B'); await appendSheetRow('bienes',o); await audit('CREATE','01_Bienes',o.IdBien,'Registro completo','','','OK','Creación desde HTML'); } bootstrap.Modal.getOrCreateInstance($('assetModal')).hide(); renderAll(); }catch(e){ alert('No fue posible guardar: '+(e.message||e)); }finally{ btn.disabled=false; } }
   async function softDeleteAsset(id){ if(!requireEditor('anular bienes')) return; const b=state.data.bienes.find(x=>x.IdBien===id); if(!b) return; if(!confirm(`¿Anular lógicamente el bien ${b.Codigo}? No se eliminará la fila física; quedará auditado.`)) return; const before=b.EstadoCalidad; b.EstadoCalidad='Eliminado lógico'; try{ await patchSheetRow('bienes',b._row,b); await audit('DELETE_LOGICO','01_Bienes',id,'EstadoCalidad',before,'Eliminado lógico','OK','CRUD seguro sin eliminación física'); renderAll(); }catch(e){ alert('No fue posible anular: '+(e.message||e)); } }
   function getYearTypeFromCode(code){ const p=String(code||'').split('.'); if(p.length>=4 && p[0]==='FIAS') return {yy:p[1],type:p[2],seq:parseInt(p[3],10)||0}; return null; }
@@ -612,7 +628,38 @@
   }
   async function inactivateCatalog(key,index){ if(!requireEditor('inactivar catálogos')) return; const cfg=CATALOG_CONFIG[key]; const row=(state.data[cfg.key]||[])[index]; if(!row) return; const field = row.Estado!==undefined?'Estado':(row.EstadoSoporte!==undefined?'EstadoSoporte':''); if(!field){ alert('Este catálogo no tiene campo Estado; no se inactiva para evitar pérdida de información.'); return; } if(!confirm('¿Inactivar este registro del catálogo?')) return; const before=row[field]; row[field]=String(before).toLowerCase().includes('activa')?'Inactiva':'Inactivo'; try{ await patchSheetRow(cfg.key,row._row,row); await audit('INACTIVATE',cfg.sheet,row[cfg.idField]||index,field,before,row[field],'OK','Inactivación lógica de catálogo'); renderCatalogs(); renderAudit(); }catch(e){ alert('No se pudo inactivar: '+(e.message||e)); } }
   function simpleList(arr){ return arr.filter(Boolean).map(x=>`<div class="chip mb-2 me-1">${esc(x)}</div>`).join('')||'<div class="muted">Sin registros.</div>'; }
-  function buildQuality(){ const rows=activos(); const alerts=[]; const dup=(field,label)=>{ const m={}; rows.forEach(b=>{const v=norm(b[field]); if(v) (m[v]=m[v]||[]).push(b);}); Object.values(m).filter(a=>a.length>1).forEach(a=>alerts.push({severity:'danger',title:`${label} duplicado`,detail:`${a[0][field]} aparece en ${a.length} registros.`}));}; dup('Codigo','Código'); dup('NumeroSerie','Serie'); const checks=[['Codigo','Bienes sin código'],['Descripcion','Bienes sin descripción'],['Custodio','Bienes sin custodio'],['Ubicacion','Bienes sin ubicación'],['NumeroSerie','Bienes sin serie'],['NumeroFacturaActa','Bienes sin factura/acta']]; checks.forEach(([f,t])=>{ const c=rows.filter(b=>!String(b[f]||'').trim()).length; if(c) alerts.push({severity:'warn',title:t,detail:`${c} registros requieren completar este campo.`}); }); const sinFoto=rows.filter(b=>!getFotoLink(b)).length; if(sinFoto) alerts.push({severity:'warn',title:'Fotografía pendiente',detail:`${sinFoto} bienes no tienen fotografía vinculada en Link_fotos.`}); const sinDoc=rows.filter(b=>!getFacturaLink(b)).length; if(sinDoc) alerts.push({severity:'warn',title:'Factura digital pendiente',detail:`${sinDoc} bienes no tienen factura digital vinculada en links.`}); const valores0=rows.filter(b=>num(b.ValorBienIncImp)<=0).length; if(valores0) alerts.push({severity:'danger',title:'Valor inválido',detail:`${valores0} bienes tienen valor cero o no numérico.`}); if(!alerts.length) alerts.push({severity:'ok',title:'Integridad aceptable',detail:'No se detectaron alertas principales.'}); return alerts; }
+  function buildQuality(){
+    const rows=activos();
+    const alerts=[];
+    const dup=(field,label,opts={})=>{
+      const m={};
+      rows.forEach(b=>{
+        let v='';
+        if(opts.serial){
+          if(!isRealSerial(b[field])) return;
+          v=serialKey(b[field]);
+        }else{
+          v=norm(b[field]);
+        }
+        if(v) (m[v]=m[v]||[]).push(b);
+      });
+      Object.values(m).filter(a=>a.length>1).forEach(a=>alerts.push({severity:'danger',title:`${label} duplicado`,detail:`${a[0][field]} aparece en ${a.length} registros.`}));
+    };
+    dup('Codigo','Código');
+    dup('NumeroSerie','Serie',{serial:true});
+    const checks=[['Codigo','Bienes sin código'],['Descripcion','Bienes sin descripción'],['Custodio','Bienes sin custodio'],['Ubicacion','Bienes sin ubicación'],['NumeroFacturaActa','Bienes sin factura/acta']];
+    checks.forEach(([f,t])=>{ const c=rows.filter(b=>!String(b[f]||'').trim()).length; if(c) alerts.push({severity:'warn',title:t,detail:`${c} registros requieren completar este campo.`}); });
+    const sinSerie=rows.filter(b=>!isRealSerial(b.NumeroSerie)).length;
+    if(sinSerie) alerts.push({severity:'warn',title:'Bienes sin serie real',detail:`${sinSerie} registros constan con N/A, S/N, pendiente o sin número de serie. No se bloquean como duplicados, pero deben verificarse cuando aplique.`});
+    const sinFoto=rows.filter(b=>!getFotoLink(b)).length;
+    if(sinFoto) alerts.push({severity:'warn',title:'Fotografía pendiente',detail:`${sinFoto} bienes no tienen fotografía vinculada en Link_fotos.`});
+    const sinDoc=rows.filter(b=>!getFacturaLink(b)).length;
+    if(sinDoc) alerts.push({severity:'warn',title:'Factura digital pendiente',detail:`${sinDoc} bienes no tienen factura digital vinculada en links.`});
+    const valores0=rows.filter(b=>num(b.ValorBienIncImp)<=0).length;
+    if(valores0) alerts.push({severity:'danger',title:'Valor inválido',detail:`${valores0} bienes tienen valor cero o no numérico.`});
+    if(!alerts.length) alerts.push({severity:'ok',title:'Integridad aceptable',detail:'No se detectaron alertas principales.'});
+    return alerts;
+  }
   function renderQuality(){ const alerts=buildQuality(); $('qualityList').innerHTML=alerts.map(a=>`<div class="quality-item row-${a.severity==='danger'?'danger':a.severity==='ok'?'ok':'warning'}"><div class="d-flex justify-content-between"><strong>${esc(a.title)}</strong>${badge(a.severity==='danger'?'Crítico':a.severity==='ok'?'OK':'Preventivo',a.severity==='danger'?'danger':a.severity==='ok'?'ok':'warn')}</div><div class="muted">${esc(a.detail)}</div></div>`).join(''); }
   function renderAudit(){ $('auditTbody').innerHTML=state.data.audit.slice().reverse().slice(0,300).map(a=>`<tr><td>${displayDate(a.FechaHora)} ${String(a.FechaHora||'').slice(11,19)}</td><td>${esc(a.Usuario)}</td><td>${esc(a.Accion)}</td><td>${esc(a.Tabla)}</td><td>${esc(a.RegistroId)}</td><td>${esc(a.Campo)}</td><td>${badge(a.Resultado,a.Resultado==='OK'?'ok':'warn')}</td><td>${esc(a.Observacion)}</td></tr>`).join(''); }
   function countBy(arr,key){ return arr.reduce((o,r)=>{const k=r[key]||'N/A'; o[k]=(o[k]||0)+1; return o;},{}); }

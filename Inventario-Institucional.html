@@ -3,2274 +3,338 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Inventario Enterprise | FIAS</title>
-
-  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
-  <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
-  <script type="text/javascript" src="https://gc.kes.v2.scr.kaspersky-labs.com/7EA5E9BB-55E1-4C31-9C21-4943DDFED2E4/main.js?attr=fq_OiyY25ZsyaMlrpQJ24KSlu2qZEc5ZVuTsBSU4iLdeL6iMpq2l3IWm5Z8gMFiG_ijlozkv_3EYD1J5RxF4OxA9gZvyiNAn8mljbL8-pWGIt5ClWA8iGE6U2WAJflD-5rmAG4lhdAKEfCohHGnC2SxjM8jU0qxxtz2rDoZg-cWSs06QjZvC6Pd2jlSRVViT-Y6NPBQRkF2H65QuvBLOvjp7rPVxlBhocbCvVRdFPBA7U2CTFUdrSvaVPVkknH4R9f9Ca1-5ZLj3yUCtAw4hy3B3HFx-sRJSZkBNoFyCxnLLBhmevXL4i7gTQO6fUBBuxBTPKl4kMqQSEC_5LWsEq_ACd632OSX8g5jB8SOAt40" charset="UTF-8"></script><script src="https://alcdn.msauth.net/browser/2.32.0/js/msal-browser.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-  <style>
+  <title>FIAS | Inventario Enterprise Normalizado</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet" />
+  <script type="text/javascript" src="https://gc.kes.v2.scr.kaspersky-labs.com/7EA5E9BB-55E1-4C31-9C21-4943DDFED2E4/main.js?attr=7ezeiibXycvGi0wN9ENSzS6Fwz0qPpWpa8OGk-ciyGzM0q6H6G6eerOwqI4zYrQ1vVLLG-yqyYLrHJ1mDokhwS1Znd1hv2S-6w8lzG9tjvXajgmC44iIPaSwFF7lllaLNnu1cQk3Yo6SB73YQC2jlvRru-mTQzLstw-SKG4TjwUSxUuFRU2p5ATt_WVgUgN2KukiNZkfb5_6KLehDCleelCgQX4aNtcqXvPR3-9t8j4ciug3cqgmzCxtvFut_Um9YvJ6OU71wB_mNBbvnbqKXZu22qoUYgxeiHEE7985r2IlIqH8i8FuJMm9pqqiwt755G2OYpEeCVPcdxoUeJUdr8p0KSAnC3_NKorzaOzJygg" charset="UTF-8"></script><style>
     :root{
-      --brand:#16723a;
-      --brand-2:#22a052;
-      --brand-3:#0f4e2a;
-      --ink:#122034;
-      --muted:#687489;
-      --line:#e5eaf1;
-      --soft:#eff8f2;
-      --bg:#f4f7fb;
-      --card:#ffffff;
-      --warn:#b7791f;
-      --danger:#b42318;
-      --ok:#087343;
-      --info:#0b62d6;
-      --shadow:0 18px 45px rgba(16,24,40,.10);
-      --radius:22px;
+      --fias:#1f7a38; --fias2:#2fa84f; --dark:#10351f; --soft:#eef8f1; --ink:#182230; --muted:#667085;
+      --line:#e6eaf0; --bg:#f4f7fb; --danger:#dc3545; --warn:#f59e0b; --ok:#198754; --info:#0d6efd;
+      --shadow:0 18px 45px rgba(16,24,40,.10); --radius:20px;
     }
     *{box-sizing:border-box}
-    body{
-      margin:0;
-      background:var(--bg);
-      color:var(--ink);
-      font-family:"Segoe UI",system-ui,-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
-    }
-    a{color:var(--brand); text-decoration:none}
+    body{font-family:Segoe UI,Tahoma,Verdana,sans-serif;background:var(--bg);color:var(--ink);margin:0}
+    a{color:var(--fias)}
     .hidden{display:none!important}
-
-    .login-shell{
-      min-height:100vh;
-      display:grid;
-      place-items:center;
-      padding:28px;
-      background:
-        radial-gradient(circle at 12% 10%, rgba(34,160,82,.18), transparent 34%),
-        radial-gradient(circle at 88% 22%, rgba(13,98,214,.12), transparent 32%),
-        linear-gradient(135deg,#f7fff9 0%,#eef5ff 100%);
-    }
-    .login-card{
-      width:min(980px,100%);
-      display:grid;
-      grid-template-columns:1.15fr .85fr;
-      border-radius:34px;
-      overflow:hidden;
-      box-shadow:var(--shadow);
-      background:#fff;
-      border:1px solid rgba(255,255,255,.6);
-    }
-    .login-hero{
-      padding:44px;
-      color:white;
-      background:linear-gradient(135deg,var(--brand-3),var(--brand));
-      position:relative;
-      min-height:430px;
-    }
-    .login-hero:after{
-      content:"";
-      position:absolute;
-      width:260px;
-      height:260px;
-      border-radius:50%;
-      right:-70px;
-      bottom:-70px;
-      background:rgba(255,255,255,.10);
-    }
-    .login-hero h1{font-weight:850; letter-spacing:-.03em; margin-top:34px}
-    .login-hero p{opacity:.93; font-size:1.04rem; max-width:620px}
-    .login-panel{padding:44px; display:flex; flex-direction:column; justify-content:center}
-    .logo-box{
-      background:#fff;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      border-radius:16px;
-      padding:8px 12px;
-      box-shadow:0 8px 24px rgba(0,0,0,.09);
-      width:max-content;
-    }
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:7px;
-      border-radius:999px;
-      padding:.42rem .75rem;
-      font-size:.82rem;
-      font-weight:750;
-      background:#eef8f1;
-      color:var(--brand);
-      border:1px solid #d7efdf;
-    }
-    .app{
-      min-height:100vh;
-      display:grid;
-      grid-template-columns:286px 1fr;
-    }
-    .sidebar{
-      background:linear-gradient(180deg,#0b3520 0%,#123f27 48%,#0f2c1e 100%);
-      color:#eaf7ee;
-      padding:22px 18px;
-      position:sticky;
-      top:0;
-      height:100vh;
-      overflow:auto;
-    }
-    .side-brand{
-      display:flex; align-items:center; gap:12px;
-      padding-bottom:18px;
-      border-bottom:1px solid rgba(255,255,255,.12);
-    }
-    .side-brand img{background:white; border-radius:12px; padding:4px; width:105px}
-    .side-title{font-weight:850; line-height:1.1}
-    .nav-list{display:grid; gap:8px; margin-top:20px}
-    .nav-btn{
-      width:100%;
-      border:0;
-      background:transparent;
-      color:#d9f1df;
-      border-radius:16px;
-      padding:13px 14px;
-      display:flex;
-      align-items:center;
-      gap:12px;
-      text-align:left;
-      font-weight:750;
-      transition:.18s ease;
-    }
-    .nav-btn:hover,.nav-btn.active{
-      background:rgba(255,255,255,.12);
-      color:#fff;
-      transform:translateX(2px);
-    }
-    .side-foot{
-      margin-top:24px;
-      background:rgba(255,255,255,.08);
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:18px;
-      padding:14px;
-      font-size:.86rem;
-    }
-    .main{min-width:0}
-    .topbar{
-      min-height:70px;
-      background:rgba(255,255,255,.92);
-      backdrop-filter: blur(10px);
-      position:sticky;
-      top:0;
-      z-index:100;
-      border-bottom:1px solid var(--line);
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      padding:14px 24px;
-    }
-    .status-dot{
-      width:10px;height:10px;border-radius:50%;
-      background:#9ca3af; display:inline-block;
-    }
-    .status-dot.ok{background:#16a34a}
-    .status-dot.warn{background:#f59e0b}
-    .content{padding:24px; max-width:1700px; margin:auto}
-    .page-title h2{font-weight:850;letter-spacing:-.03em;margin:0}
-    .page-title p{color:var(--muted);margin:.4rem 0 0}
-    .panel{
-      background:var(--card);
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      box-shadow:0 10px 28px rgba(16,24,40,.06);
-      overflow:hidden;
-    }
-    .panel-header{
-      padding:18px 20px;
-      border-bottom:1px solid var(--line);
-      display:flex;
-      justify-content:space-between;
-      gap:12px;
-      align-items:center;
-    }
-    .panel-header h5{font-weight:850;margin:0}
-    .panel-body{padding:20px}
-    .kpi-grid{
-      display:grid;
-      grid-template-columns:repeat(4,minmax(190px,1fr));
-      gap:16px;
-    }
-    .kpi{
-      background:#fff;
-      border:1px solid var(--line);
-      border-radius:22px;
-      padding:18px;
-      box-shadow:0 8px 24px rgba(16,24,40,.06);
-    }
-    .kpi .icon{
-      width:46px;height:46px;border-radius:16px;
-      background:var(--soft);
-      color:var(--brand);
-      display:grid;place-items:center;
-      font-size:1.15rem;
-    }
-    .kpi-value{font-size:1.72rem;font-weight:900;letter-spacing:-.04em}
-    .small-muted{font-size:.86rem;color:var(--muted)}
-    .filters{
-      display:grid;
-      grid-template-columns:minmax(260px,2fr) repeat(4,minmax(150px,1fr)) auto;
-      gap:10px;
-      align-items:end;
-    }
-    .form-label{font-weight:750;color:#374151;font-size:.86rem}
-    .table-wrap{max-height:650px; overflow:auto}
-    .enterprise-table{
-      width:100%;
-      border-collapse:separate;
-      border-spacing:0;
-    }
-    .enterprise-table th{
-      position:sticky; top:0;
-      background:#f8fafc;
-      color:#334155;
-      font-size:.78rem;
-      letter-spacing:.02em;
-      text-transform:uppercase;
-      border-bottom:1px solid var(--line);
-      padding:12px;
-      white-space:nowrap;
-      z-index:2;
-    }
-    .enterprise-table td{
-      border-bottom:1px solid #eef2f7;
-      padding:12px;
-      vertical-align:middle;
-      font-size:.92rem;
-    }
-    .enterprise-table tr:hover td{background:#fbfffc}
-    .asset-card-grid{
-      display:grid;
-      grid-template-columns:repeat(3,minmax(260px,1fr));
-      gap:14px;
-    }
-    .asset-card{
-      border:1px solid var(--line);
-      border-radius:22px;
-      background:#fff;
-      padding:16px;
-      box-shadow:0 8px 22px rgba(16,24,40,.05);
-      cursor:pointer;
-      transition:.16s ease;
-    }
-    .asset-card:hover{transform:translateY(-2px); box-shadow:var(--shadow)}
-    .asset-card h6{font-weight:850; margin:0 0 4px}
-    .tag{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      padding:.35rem .62rem;
-      border-radius:999px;
-      font-size:.78rem;
-      font-weight:760;
-      background:#eef2ff;
-      color:#3444a1;
-      border:1px solid #e0e7ff;
-      white-space:nowrap;
-    }
-    .tag.ok{background:#e7f7ef;color:var(--ok);border-color:#caeed9}
-    .tag.warn{background:#fff7e6;color:#996409;border-color:#ffe3ad}
-    .tag.danger{background:#fde8e8;color:var(--danger);border-color:#fad0d0}
-    .tag.info{background:#e7f0ff;color:#0b4ab8;border-color:#cfe0ff}
-    .tag.dark{background:#eef0f2;color:#344054;border-color:#d9dee6}
-    mark.hl{background:#fff3bf;padding:0 .12rem;border-radius:4px}
-    .chart-box{height:300px; position:relative}
-    .exec-summary{
-      display:grid;
-      grid-template-columns:1.1fr .9fr;
-      gap:16px;
-    }
-    .summary-narrative{
-      border-radius:20px;
-      border:1px solid #e1efe5;
-      background:linear-gradient(180deg,#f9fffb,#f2faf5);
-      padding:18px;
-      line-height:1.55;
-    }
-    .priority-list{display:grid; gap:10px}
-    .priority-item{
-      border:1px solid var(--line);
-      border-radius:18px;
-      padding:12px;
-      background:#fff;
-    }
-    .upload-card{
-      display:grid;
-      grid-template-columns:minmax(280px,.9fr) 1.1fr;
-      gap:18px;
-      align-items:stretch;
-    }
-    .dropzone{
-      min-height:260px;
-      border:2px dashed #9fdcad;
-      border-radius:24px;
-      background:linear-gradient(180deg,#fbfffc,#f2fbf4);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      flex-direction:column;
-      padding:26px;
-      text-align:center;
-      transition:.18s ease;
-      position:relative;
-    }
-    .dropzone.dragover{
-      border-color:var(--brand);
-      box-shadow:0 0 0 5px rgba(22,114,58,.1);
-      transform:scale(1.01);
-    }
-    .dropzone i{
-      font-size:3rem;
-      color:var(--brand);
-      margin-bottom:12px;
-    }
-    .dropzone h5{font-weight:850}
-    .status-console{
-      background:#111827;
-      color:#d1d5db;
-      border-radius:18px;
-      padding:14px 16px;
-      font-family:Consolas, Monaco, monospace;
-      font-size:.86rem;
-      min-height:52px;
-      max-height:210px;
-      overflow:auto;
-      white-space:pre-wrap;
-    }
-    .ocr-steps{
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:10px;
-      margin-top:12px;
-    }
-    .ocr-step{
-      border:1px solid var(--line);
-      border-radius:16px;
-      padding:12px;
-      background:#fff;
-    }
-    .candidate-table input,.candidate-table select{
-      min-width:140px;
-      font-size:.84rem;
-    }
-    .candidate-table .desc-input{min-width:260px}
-    .modal-header{
-      background:linear-gradient(135deg,var(--brand-3),var(--brand));
-      color:#fff;
-    }
-    .detail-grid{
-      display:grid;
-      grid-template-columns:repeat(4,1fr);
-      gap:12px;
-    }
-    .detail-cell{
-      border:1px solid var(--line);
-      border-radius:16px;
-      padding:12px;
-      background:#fff;
-    }
-    .detail-cell span{display:block;color:var(--muted);font-size:.78rem;font-weight:750;text-transform:uppercase}
-    .detail-cell strong{font-size:.98rem}
-    .audit-card{
-      border-left:5px solid var(--brand);
-      border-radius:16px;
-      background:#fff;
-      padding:14px;
-      box-shadow:0 5px 18px rgba(16,24,40,.05);
-    }
-    .toast-holder{
-      position:fixed;
-      right:18px;
-      top:84px;
-      z-index:5000;
-      display:grid;
-      gap:10px;
-    }
-    .toastx{
-      background:#fff;
-      border:1px solid var(--line);
-      border-left:6px solid var(--brand);
-      border-radius:16px;
-      padding:12px 14px;
-      min-width:290px;
-      box-shadow:var(--shadow);
-    }
-    .toastx.danger{border-left-color:var(--danger)}
-    .toastx.warn{border-left-color:#f59e0b}
-    .toastx.ok{border-left-color:#16a34a}
-    .mobile-toggle{display:none}
-    @media(max-width:1200px){
-      .kpi-grid{grid-template-columns:repeat(2,1fr)}
-      .filters{grid-template-columns:1fr 1fr}
-      .asset-card-grid{grid-template-columns:repeat(2,1fr)}
-      .exec-summary,.upload-card{grid-template-columns:1fr}
-    }
-    @media(max-width:860px){
-      .login-card{grid-template-columns:1fr}
-      .login-hero{min-height:auto}
-      .app{grid-template-columns:1fr}
-      .sidebar{
-        position:fixed; inset:0 auto 0 0;
-        width:286px; z-index:1000;
-        transform:translateX(-105%);
-        transition:.2s ease;
-      }
-      .sidebar.open{transform:translateX(0)}
-      .mobile-toggle{display:inline-flex}
-      .content{padding:16px}
-      .kpi-grid,.filters,.asset-card-grid,.detail-grid,.ocr-steps{grid-template-columns:1fr}
-      .topbar{padding:12px 16px}
-    }
+    .login-shell{min-height:100vh;display:grid;place-items:center;background:radial-gradient(circle at 10% 10%,#e7f8ed 0,#f4f7fb 42%,#eef4ff 100%);padding:24px}
+    .login-card{width:min(1040px,100%);border:1px solid #e7edf5;border-radius:28px;background:#fff;box-shadow:var(--shadow);overflow:hidden}
+    .login-hero{background:linear-gradient(135deg,#0d3b22,#1f7a38 60%,#4bc26a);color:white;padding:34px}
+    .login-hero h1{font-weight:850;letter-spacing:-.03em;margin:18px 0 8px;font-size:clamp(1.8rem,3vw,3rem)}
+    .login-hero p{opacity:.95;max-width:780px}
+    .login-body{padding:34px}
+    .brand-logo{background:#fff;border-radius:14px;padding:8px 12px;display:inline-flex;align-items:center;box-shadow:0 12px 25px rgba(0,0,0,.08)}
+    .app{display:grid;grid-template-columns:288px 1fr;min-height:100vh}
+    .side{background:linear-gradient(180deg,#0e2d1b,#12351f);color:white;padding:20px;position:sticky;top:0;height:100vh;overflow:auto}
+    .side .brand{display:flex;align-items:center;gap:12px;margin-bottom:24px}
+    .side .brand img{background:white;border-radius:12px;padding:5px;max-width:120px}
+    .nav-btn{width:100%;border:0;background:rgba(255,255,255,.08);color:#fff;border-radius:14px;padding:12px 14px;margin:4px 0;text-align:left;font-weight:750;display:flex;align-items:center;gap:10px;transition:.2s}
+    .nav-btn:hover,.nav-btn.active{background:#fff;color:var(--fias)}
+    .session-box{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:12px;margin-top:18px;font-size:.86rem;color:#e6f4ea}
+    .content{min-width:0}
+    .topbar{position:sticky;top:0;z-index:20;background:rgba(244,247,251,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:14px 22px;display:flex;justify-content:space-between;gap:12px;align-items:center}
+    .topbar h2{font-weight:850;font-size:1.15rem;margin:0;letter-spacing:-.01em}
+    .main{padding:22px}
+    .panel{display:none}.panel.active{display:block}
+    .cardx{border:1px solid #edf0f3;border-radius:var(--radius);background:#fff;box-shadow:0 8px 28px rgba(16,24,40,.06);overflow:hidden}
+    .cardx .head{padding:16px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:10px}
+    .cardx .head h5{font-weight:850;margin:0;font-size:1rem}.cardx .body{padding:18px}
+    .kpi{background:#fff;border:1px solid #edf0f3;border-radius:20px;padding:18px;box-shadow:0 8px 26px rgba(16,24,40,.06);height:100%}
+    .kpi .icon{width:48px;height:48px;border-radius:15px;display:grid;place-items:center;background:var(--soft);color:var(--fias);font-size:1.25rem}.kpi .value{font-size:1.7rem;font-weight:850;letter-spacing:-.03em}.muted{color:var(--muted);font-size:.88rem}
+    .filters{display:grid;grid-template-columns:2fr repeat(5, minmax(120px,1fr)) auto;gap:10px;align-items:end}
+    .chip{border:1px solid var(--line);border-radius:999px;padding:.35rem .65rem;background:#fff;font-weight:700;font-size:.82rem;display:inline-flex;align-items:center;gap:6px}
+    .badge-soft{border-radius:999px;padding:.38rem .68rem;font-weight:800;font-size:.78rem;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}.ok{background:#e7f7ef;color:#087343}.warn{background:#fff5dc;color:#986500}.danger{background:#fde8e8;color:#b42318}.info{background:#e7f0ff;color:#0b4ab8}.darkb{background:#eef0f2;color:#344054}
+    .asset-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:14px}.asset-card{border:1px solid var(--line);border-radius:18px;padding:14px;background:#fff;box-shadow:0 6px 18px rgba(16,24,40,.05)}.asset-card h6{font-weight:850;margin:0}.asset-card .desc{min-height:42px;font-weight:650}.asset-actions{display:flex;gap:8px;flex-wrap:wrap}.asset-actions .btn{flex:1 1 auto}
+    .table-wrap{max-height:620px;overflow:auto;border:1px solid var(--line);border-radius:16px}.table thead th{position:sticky;top:0;background:#f8fafc;z-index:2;white-space:nowrap;font-size:.82rem}.table td{vertical-align:middle;font-size:.86rem}.table tbody tr{cursor:pointer}.table tbody tr:hover{background:#f2fbf5}.mark{background:#fff3cd;padding:0 .15rem;border-radius:4px}
+    .dropzone{border:2px dashed #a8dfb6;border-radius:20px;background:#f7fffa;padding:24px;text-align:center;transition:.2s}.dropzone.drag{background:#eaf8ee;border-color:var(--fias)}.dropzone .big{font-size:2.4rem;color:var(--fias)}
+    .console{background:#101828;color:#d0d5dd;border-radius:16px;padding:12px;font-family:Consolas,monospace;font-size:.82rem;white-space:pre-wrap;max-height:220px;overflow:auto}
+    .pre-row{border:1px solid var(--line);border-radius:18px;background:#fff;padding:14px;margin-bottom:12px}.pre-row.selected{border-color:var(--fias);box-shadow:0 0 0 3px #d7f3df}.row-warning{border-left:5px solid var(--warn)}.row-danger{border-left:5px solid var(--danger)}.row-ok{border-left:5px solid var(--ok)}
+    .quality-list{display:grid;gap:10px}.quality-item{border-left:5px solid var(--warn);border-radius:14px;background:#fff;padding:12px;box-shadow:0 4px 16px rgba(16,24,40,.05)}
+    .summary-text{line-height:1.55}.summary-text strong{color:var(--dark)}
+    .form-label{font-weight:800;color:#344054;font-size:.86rem}.required:after{content:' *';color:var(--danger)}
+    .mini-tabs{display:flex;gap:8px;flex-wrap:wrap}.mini-tabs button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:.42rem .75rem;font-weight:750}.mini-tabs button.active{background:var(--soft);color:var(--fias);border-color:#b7e4c7}
+    .subpanel{display:none}.subpanel.active{display:block}
+    .modal-header{background:linear-gradient(135deg,var(--dark),var(--fias));color:#fff}.modal-xl{--bs-modal-width:1180px}.btn-success{background:var(--fias);border-color:var(--fias)}.btn-outline-success{color:var(--fias);border-color:var(--fias)}.btn-outline-success:hover{background:var(--fias);border-color:var(--fias)}
+    @media(max-width:1100px){.app{grid-template-columns:1fr}.side{height:auto;position:relative}.filters{grid-template-columns:1fr 1fr}.topbar{flex-direction:column;align-items:stretch}.asset-grid{grid-template-columns:1fr}}
+    @media(max-width:640px){.main{padding:12px}.filters{grid-template-columns:1fr}.side{padding:14px}.login-body,.login-hero{padding:22px}}
   </style>
 </head>
 <body>
-  <div class="toast-holder" id="toastHolder"></div>
-
-  <section id="loginShell" class="login-shell">
+  <div id="loginShell" class="login-shell">
     <div class="login-card">
       <div class="login-hero">
-        <div class="logo-box">
-          <img src="https://fias.org.ec/wp-content/uploads/2021/11/Logo_FIAS_web.png" alt="FIAS" style="height:46px;width:150px;object-fit:contain">
-        </div>
-        <h1>Sistema Enterprise de Inventario Institucional</h1>
-        <p>Gestión centralizada de activos y bienes de control, lectura de Excel en SharePoint y pre-registro automatizado desde facturas mediante OCR.</p>
-        <div class="d-flex flex-wrap gap-2 mt-4">
-          <span class="pill" style="background:rgba(255,255,255,.14);color:#fff;border-color:rgba(255,255,255,.18)"><i class="fa-solid fa-shield-halved"></i> Acceso corporativo</span>
-          <span class="pill" style="background:rgba(255,255,255,.14);color:#fff;border-color:rgba(255,255,255,.18)"><i class="fa-solid fa-file-invoice"></i> OCR de facturas</span>
-          <span class="pill" style="background:rgba(255,255,255,.14);color:#fff;border-color:rgba(255,255,255,.18)"><i class="fa-solid fa-database"></i> SharePoint</span>
-        </div>
+        <div class="brand-logo"><img src="https://fias.org.ec/wp-content/uploads/2021/11/Logo_FIAS_web.png" alt="FIAS" height="46"></div>
+        <h1>Inventario Enterprise FIAS</h1>
+        <p>Sistema normalizado para consulta, pre-registro OCR, codificación institucional, edición controlada y auditoría de bienes.</p>
       </div>
-      <div class="login-panel">
-        <span class="pill mb-3"><i class="fa-solid fa-lock"></i> Ingreso seguro</span>
-        <h3 class="fw-bold">Iniciar sesión</h3>
-        <p class="text-muted">Use su cuenta Microsoft 365 autorizada para visualizar y actualizar el inventario institucional.</p>
-        <button class="btn btn-success btn-lg w-100" id="loginBtn">
-          <i class="fa-brands fa-microsoft me-2"></i> Iniciar sesión con Microsoft
-        </button>
-        <div class="small text-muted mt-3">
-          La plataforma no se mostrará hasta validar la sesión corporativa.
+      <div class="login-body row g-4 align-items-center">
+        <div class="col-lg-7">
+          <h4 class="fw-bold">Acceso corporativo requerido</h4>
+          <p class="text-muted mb-3">La plataforma trabaja con el Excel normalizado en SharePoint y protege el registro oficial mediante validación previa, auditoría y edición solo de campos permitidos.</p>
+          <div class="d-grid gap-2 d-md-flex">
+            <button id="btnLogin" class="btn btn-success btn-lg"><i class="fa-brands fa-microsoft me-2"></i>Iniciar sesión con Microsoft</button>
+            <button id="btnOfflineDemo" class="btn btn-outline-secondary btn-lg" title="Solo para revisar la interfaz sin escribir en SharePoint"><i class="fa-solid fa-eye me-2"></i>Vista sin conexión</button>
+          </div>
+          <div id="loginError" class="alert alert-danger mt-3 hidden"></div>
+        </div>
+        <div class="col-lg-5">
+          <div class="cardx"><div class="body">
+            <div class="d-flex gap-3 mb-2"><span class="badge-soft ok"><i class="fa-solid fa-shield"></i>CRUD controlado</span><span class="badge-soft info"><i class="fa-solid fa-file-invoice"></i>OCR</span></div>
+            <div class="muted">Estructura: bienes, facturas, detalle, pre-registro, catálogos, documentos, fotos, auditoría y secuencias.</div>
+          </div></div>
         </div>
       </div>
     </div>
-  </section>
+  </div>
 
-  <section id="appShell" class="app hidden">
-    <aside class="sidebar" id="sidebar">
-      <div class="side-brand">
-        <img src="https://fias.org.ec/wp-content/uploads/2021/11/Logo_FIAS_web.png" alt="FIAS">
-        <div>
-          <div class="side-title">Inventario<br>Enterprise</div>
-          <small style="opacity:.78">FIAS</small>
-        </div>
-      </div>
-      <nav class="nav-list">
-        <button class="nav-btn active" data-tab="tabResumen"><i class="fa-solid fa-chart-line"></i> Resumen ejecutivo</button>
-        <button class="nav-btn" data-tab="tabInventario"><i class="fa-solid fa-boxes-stacked"></i> Inventario</button>
-        <button class="nav-btn" data-tab="tabOCR"><i class="fa-solid fa-file-invoice"></i> Facturas OCR</button>
-        <button class="nav-btn" data-tab="tabCalidad"><i class="fa-solid fa-circle-check"></i> Calidad de datos</button>
-        <button class="nav-btn" data-tab="tabCustodios"><i class="fa-solid fa-user-shield"></i> Custodios y ubicación</button>
-      </nav>
-      <div class="side-foot">
-        <div class="d-flex justify-content-between"><span>Fuente</span><strong>Inventario Mejorado</strong></div>
-        <div class="d-flex justify-content-between mt-1"><span>Estado</span><strong id="sideStatus">Pendiente</strong></div>
-        <div class="small mt-2" style="opacity:.8">Desarrollado para consulta, control y pre-registro operativo de bienes.</div>
+  <div id="app" class="app hidden">
+    <aside class="side">
+      <div class="brand"><img src="https://fias.org.ec/wp-content/uploads/2021/11/Logo_FIAS_web.png" alt="FIAS"><div><div class="fw-bold">Inventario</div><small>Enterprise Normalizado</small></div></div>
+      <button class="nav-btn active" data-panel="dashboard"><i class="fa-solid fa-gauge-high"></i>Resumen ejecutivo</button>
+      <button class="nav-btn" data-panel="inventario"><i class="fa-solid fa-boxes-stacked"></i>Inventario</button>
+      <button class="nav-btn" data-panel="ocr"><i class="fa-solid fa-file-invoice"></i>OCR y pre-registro</button>
+      <button class="nav-btn" data-panel="facturas"><i class="fa-solid fa-receipt"></i>Facturas y detalle</button>
+      <button class="nav-btn" data-panel="catalogos"><i class="fa-solid fa-list-check"></i>Catálogos</button>
+      <button class="nav-btn" data-panel="calidad"><i class="fa-solid fa-triangle-exclamation"></i>Calidad de datos</button>
+      <button class="nav-btn" data-panel="auditoria"><i class="fa-solid fa-clock-rotate-left"></i>Auditoría</button>
+      <div class="session-box">
+        <div class="fw-bold"><i class="fa-solid fa-user-lock me-1"></i>Sesión</div>
+        <div id="sessionUser">No conectado</div>
+        <div class="mt-2"><small>Última sync:</small><br><strong id="lastSync">Pendiente</strong></div>
       </div>
     </aside>
 
-    <main class="main">
-      <header class="topbar">
-        <div class="d-flex align-items-center gap-2">
-          <button class="btn btn-outline-success btn-sm mobile-toggle" id="menuBtn"><i class="fa-solid fa-bars"></i></button>
-          <span class="status-dot" id="statusDot"></span>
-          <div>
-            <strong id="sessionLabel">Sesión activa</strong>
-            <div class="small-muted" id="syncLabel">Sin sincronizar</div>
-          </div>
-        </div>
-        <div class="d-flex gap-2 flex-wrap justify-content-end">
-          <button class="btn btn-outline-success btn-sm" id="btnSync"><i class="fa-solid fa-rotate me-1"></i> Sincronizar</button>
-          <button class="btn btn-success btn-sm" id="btnNewAsset"><i class="fa-solid fa-plus me-1"></i> Nuevo bien</button>
-          <button class="btn btn-outline-danger btn-sm" id="btnLogout"><i class="fa-solid fa-right-from-bracket me-1"></i> Cerrar sesión</button>
-        </div>
-      </header>
-
-      <div class="content">
-        <section id="tabResumen" class="tab-panel">
-          <div class="page-title mb-3">
-            <h2>Resumen ejecutivo del inventario</h2>
-            <p>Indicadores para toma de decisiones: volumen de bienes, valoración, aseguramiento, custodios, ubicación, alertas y prioridades.</p>
-          </div>
-          <div class="kpi-grid mb-3" id="kpiGrid"></div>
-
-          <div class="exec-summary mb-3">
-            <div class="panel">
-              <div class="panel-header">
-                <h5><i class="fa-solid fa-file-lines text-success me-2"></i>Lectura ejecutiva</h5>
-                <button class="btn btn-outline-success btn-sm" id="btnCopySummary"><i class="fa-solid fa-copy me-1"></i>Copiar</button>
-              </div>
-              <div class="panel-body">
-                <div class="summary-narrative" id="executiveSummary">
-                  Sin datos sincronizados.
-                </div>
-              </div>
-            </div>
-            <div class="panel">
-              <div class="panel-header"><h5><i class="fa-solid fa-triangle-exclamation text-warning me-2"></i>Prioridades</h5></div>
-              <div class="panel-body">
-                <div class="priority-list" id="priorityList"></div>
-              </div>
-            </div>
-          </div>
-
-          <div class="row g-3">
-            <div class="col-xl-6">
-              <div class="panel h-100">
-                <div class="panel-header"><h5>Valor por tipo de bien</h5></div>
-                <div class="panel-body"><div class="chart-box"><canvas id="chartTipoBien"></canvas></div></div>
-              </div>
-            </div>
-            <div class="col-xl-6">
-              <div class="panel h-100">
-                <div class="panel-header"><h5>Estado físico del inventario</h5></div>
-                <div class="panel-body"><div class="chart-box"><canvas id="chartEstadoFisico"></canvas></div></div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section id="tabInventario" class="tab-panel hidden">
-          <div class="page-title mb-3">
-            <h2>Inventario institucional</h2>
-            <p>Consulta dinámica de bienes con filtros, búsqueda contextual, tarjetas y visualización de detalle.</p>
-          </div>
-          <div class="panel mb-3">
-            <div class="panel-header">
-              <h5><i class="fa-solid fa-filter text-success me-2"></i>Filtros de búsqueda</h5>
-            </div>
-            <div class="panel-body">
-              <div class="filters">
-                <div>
-                  <label class="form-label">Buscar palabra clave</label>
-                  <input class="form-control" id="searchInput" placeholder="Código, descripción, custodio, proveedor, serie, ubicación, factura...">
-                </div>
-                <div>
-                  <label class="form-label">Tipo de bien</label>
-                  <select class="form-select" id="filterTipo"><option value="">Todos</option></select>
-                </div>
-                <div>
-                  <label class="form-label">Proyecto</label>
-                  <select class="form-select" id="filterProyecto"><option value="">Todos</option></select>
-                </div>
-                <div>
-                  <label class="form-label">Asegurado</label>
-                  <select class="form-select" id="filterAsegurado"><option value="">Todos</option><option>SI</option><option>NO</option></select>
-                </div>
-                <div>
-                  <label class="form-label">Estado físico</label>
-                  <select class="form-select" id="filterEstado"><option value="">Todos</option></select>
-                </div>
-                <button class="btn btn-outline-secondary" id="btnResetFilters"><i class="fa-solid fa-eraser me-1"></i> Resetear</button>
-              </div>
-              <div class="d-flex flex-wrap gap-2 mt-3">
-                <button class="btn btn-sm btn-outline-success quick-chip" data-q="computadora laptop monitor impresora">Equipos tecnológicos</button>
-                <button class="btn btn-sm btn-outline-success quick-chip" data-q="silla escritorio estanteria mueble">Muebles y enseres</button>
-                <button class="btn btn-sm btn-outline-success quick-chip" data-q="sin serie N/A">Sin serie / revisar</button>
-                <button class="btn btn-sm btn-outline-success quick-chip" data-q="garantia vigente">Garantía</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="asset-card-grid mb-3" id="assetCards"></div>
-
-          <div class="panel">
-            <div class="panel-header">
-              <h5><i class="fa-solid fa-table text-success me-2"></i>Detalle de inventario</h5>
-              <span class="small-muted" id="resultCount">0 registros</span>
-            </div>
-            <div class="table-wrap">
-              <table class="enterprise-table" id="inventoryTable">
-                <thead>
-                  <tr>
-                    <th>Código</th>
-                    <th>Descripción</th>
-                    <th>Tipo</th>
-                    <th>Proyecto</th>
-                    <th>Custodio</th>
-                    <th>Ubicación</th>
-                    <th>Proveedor</th>
-                    <th>Factura</th>
-                    <th>Valor</th>
-                    <th>Estado</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody></tbody>
-              </table>
-            </div>
-          </div>
-        </section>
-
-        <section id="tabOCR" class="tab-panel hidden">
-          <div class="page-title mb-3">
-            <h2>Facturas OCR y pre-registro de bienes</h2>
-            <p>Cargue una factura en PDF o imagen para extraer datos y generar un pre-registro editable como nuevos activos o bienes de control.</p>
-          </div>
-
-          <div class="panel mb-3">
-            <div class="panel-header">
-              <h5><i class="fa-solid fa-wand-magic-sparkles text-success me-2"></i>Carga inteligente de facturas</h5>
-              <span class="tag info" id="ocrModeTag">Esperando documento</span>
-            </div>
-            <div class="panel-body">
-              <div class="upload-card">
-                <div>
-                  <div class="dropzone" id="dropzone">
-                    <i class="fa-solid fa-cloud-arrow-up"></i>
-                    <h5>Seleccione o arrastre la factura</h5>
-                    <p class="small-muted mb-3">PDF electrónico o imagen escaneada. Primero se intenta leer el texto interno; si no existe, se usa OCR visual.</p>
-                    <input type="file" id="invoiceFile" class="hidden" accept=".pdf,.png,.jpg,.jpeg,.webp"/>
-                    <button class="btn btn-success" id="btnChooseFile"><i class="fa-solid fa-file-arrow-up me-1"></i>Seleccionar documento</button>
-                  </div>
-                  <div class="ocr-steps">
-                    <div class="ocr-step"><strong>1. Cargar</strong><div class="small-muted">Factura PDF o imagen</div></div>
-                    <div class="ocr-step"><strong>2. Pre-registro</strong><div class="small-muted">Datos extraídos y editables</div></div>
-                    <div class="ocr-step"><strong>3. Guardar</strong><div class="small-muted">Se agrega al Excel</div></div>
-                  </div>
-                </div>
-                <div>
-                  <label class="form-label">Estado del procesamiento</label>
-                  <div class="status-console mb-3" id="ocrConsole">Esperando documento...</div>
-                  <div id="invoiceSummary" class="d-grid gap-2"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="panel hidden" id="candidatePanel">
-            <div class="panel-header">
-              <div>
-                <h5><i class="fa-solid fa-clipboard-list text-success me-2"></i>Pre-registro de bienes propuestos</h5>
-                <div class="small-muted">Revise descripción, tipo de bien, valor unitario, serie, custodio y ubicación. Los códigos FIAS se sugieren automáticamente según año, categoría y secuencia.</div>
-              </div>
-              <div class="d-flex gap-2">
-                <button class="btn btn-outline-primary btn-sm" id="btnRegenerateCodes"><i class="fa-solid fa-barcode me-1"></i>Regenerar códigos</button>
-                <button class="btn btn-outline-success btn-sm" id="btnSplitUnits"><i class="fa-solid fa-scissors me-1"></i>Separar por unidad</button>
-                <button class="btn btn-success btn-sm" id="btnSaveCandidates"><i class="fa-solid fa-cloud-arrow-up me-1"></i>Guardar seleccionados</button>
-              </div>
-            </div>
-            <div class="table-wrap">
-              <table class="enterprise-table candidate-table" id="candidateTable">
-                <thead>
-                  <tr>
-                    <th>Usar</th>
-                    <th>Código sugerido</th>
-                    <th>Descripción</th>
-                    <th>Tipo de bien</th>
-                    <th>Activo/Control</th>
-                    <th>Proyecto</th>
-                    <th>Cant.</th>
-                    <th>Valor inc. imp.</th>
-                    <th>Marca</th>
-                    <th>Modelo</th>
-                    <th>Serie</th>
-                    <th>Custodio</th>
-                    <th>Ubicación</th>
-                  </tr>
-                </thead>
-                <tbody></tbody>
-              </table>
-            </div>
-          </div>
-        </section>
-
-        <section id="tabCalidad" class="tab-panel hidden">
-          <div class="page-title mb-3">
-            <h2>Calidad de datos</h2>
-            <p>Validaciones para identificar registros incompletos, duplicidades, enlaces pendientes, garantías y seguros por revisar.</p>
-          </div>
-          <div class="panel">
-            <div class="panel-header"><h5><i class="fa-solid fa-shield-check text-success me-2"></i>Hallazgos de control</h5></div>
-            <div class="panel-body"><div class="d-grid gap-2" id="qualityFindings"></div></div>
-          </div>
-        </section>
-
-        <section id="tabCustodios" class="tab-panel hidden">
-          <div class="page-title mb-3">
-            <h2>Custodios y ubicación</h2>
-            <p>Distribución de bienes por responsable, institución y ubicación para seguimiento administrativo.</p>
-          </div>
-          <div class="row g-3">
-            <div class="col-xl-6">
-              <div class="panel h-100">
-                <div class="panel-header"><h5>Top custodios por cantidad</h5></div>
-                <div class="panel-body"><div class="chart-box"><canvas id="chartCustodios"></canvas></div></div>
-              </div>
-            </div>
-            <div class="col-xl-6">
-              <div class="panel h-100">
-                <div class="panel-header"><h5>Ubicaciones con mayor valor</h5></div>
-                <div class="panel-body"><div class="chart-box"><canvas id="chartUbicaciones"></canvas></div></div>
-              </div>
-            </div>
-          </div>
-        </section>
-      </div>
-    </main>
-  </section>
-
-  <div class="modal fade" id="assetModal" tabindex="-1">
-    <div class="modal-dialog modal-xl modal-dialog-scrollable">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="assetModalTitle"><i class="fa-solid fa-box me-2"></i>Ficha del bien</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-        </div>
-        <div class="modal-body" id="assetModalBody"></div>
-        <div class="modal-footer">
-          <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+    <section class="content">
+      <div class="topbar">
+        <div><h2 id="pageTitle">Resumen ejecutivo</h2><div class="muted" id="pageSub">Gestión integral de bienes institucionales FIAS</div></div>
+        <div class="d-flex flex-wrap gap-2">
+          <button id="btnCreateAsset" class="btn btn-success"><i class="fa-solid fa-plus me-1"></i>Nuevo bien</button>
+          <button id="btnSync" class="btn btn-outline-success"><i class="fa-solid fa-rotate me-1"></i>Sincronizar</button>
+          <button id="btnLogout" class="btn btn-outline-danger"><i class="fa-solid fa-right-from-bracket me-1"></i>Cerrar sesión</button>
         </div>
       </div>
-    </div>
+      <main class="main">
+        <section id="dashboard" class="panel active">
+          <div class="row g-3 mb-3" id="kpis"></div>
+          <div class="row g-3">
+            <div class="col-xl-7"><div class="cardx h-100"><div class="head"><h5><i class="fa-solid fa-chart-line text-success me-2"></i>Resumen ejecutivo inteligente</h5><button class="btn btn-sm btn-outline-success" id="btnCopySummary"><i class="fa-regular fa-copy me-1"></i>Copiar</button></div><div class="body summary-text" id="executiveSummary"></div></div></div>
+            <div class="col-xl-5"><div class="cardx h-100"><div class="head"><h5><i class="fa-solid fa-bell text-warning me-2"></i>Alertas prioritarias</h5></div><div class="body"><div id="priorityAlerts" class="quality-list"></div></div></div></div>
+            <div class="col-xl-6"><div class="cardx"><div class="head"><h5>Distribución por tipo de bien</h5></div><div class="body"><canvas id="chartTipo" height="130"></canvas></div></div></div>
+            <div class="col-xl-6"><div class="cardx"><div class="head"><h5>Valor por proyecto</h5></div><div class="body"><canvas id="chartProyecto" height="130"></canvas></div></div></div>
+          </div>
+        </section>
+
+        <section id="inventario" class="panel">
+          <div class="cardx mb-3"><div class="head"><h5><i class="fa-solid fa-filter text-success me-2"></i>Filtros y búsqueda</h5><button id="btnResetFilters" class="btn btn-sm btn-outline-secondary"><i class="fa-solid fa-filter-circle-xmark me-1"></i>Resetear filtros</button></div>
+            <div class="body"><div class="filters">
+              <input id="q" class="form-control" placeholder="Buscar por código, descripción, serie, custodio, proveedor, factura, ubicación...">
+              <select id="fTipo" class="form-select"><option value="">Tipo</option></select>
+              <select id="fProyecto" class="form-select"><option value="">Proyecto</option></select>
+              <select id="fCustodio" class="form-select"><option value="">Custodio</option></select>
+              <select id="fUbicacion" class="form-select"><option value="">Ubicación</option></select>
+              <select id="fEstado" class="form-select"><option value="">Estado</option><option>BUENO</option><option>REGULAR</option><option>MALO</option><option>Eliminado lógico</option></select>
+              <button id="btnApplyFilters" class="btn btn-success"><i class="fa-solid fa-magnifying-glass"></i></button>
+            </div></div>
+          </div>
+          <div class="d-flex justify-content-between align-items-center mb-2 gap-2 flex-wrap">
+            <div><strong id="resultCount">0 bienes</strong> <span class="muted">según filtros aplicados</span></div>
+            <div class="mini-tabs"><button class="active" data-view="cards"><i class="fa-solid fa-grip"></i> Tarjetas</button><button data-view="table"><i class="fa-solid fa-table"></i> Tabla</button><button id="btnExportCsv"><i class="fa-solid fa-file-csv"></i> CSV</button></div>
+          </div>
+          <div id="cardsView" class="asset-grid"></div>
+          <div id="tableView" class="table-wrap hidden"><table class="table table-hover mb-0"><thead><tr><th>Código</th><th>Descripción</th><th>Tipo</th><th>Proyecto</th><th>Factura</th><th>Valor</th><th>Custodio</th><th>Ubicación</th><th>Estado</th><th>Acciones</th></tr></thead><tbody id="assetTbody"></tbody></table></div>
+        </section>
+
+        <section id="ocr" class="panel">
+          <div class="row g-3">
+            <div class="col-xl-5"><div class="cardx h-100"><div class="head"><h5><i class="fa-solid fa-file-arrow-up text-success me-2"></i>Cargar factura o acta</h5></div><div class="body">
+              <div id="dropzone" class="dropzone mb-3"><div class="big"><i class="fa-solid fa-cloud-arrow-up"></i></div><h5 class="fw-bold">Seleccionar o arrastrar documento</h5><p class="muted">PDF o imagen. Primero se genera un pre-registro local; nada se guarda hasta validar.</p><input id="invoiceFile" type="file" class="form-control" accept="application/pdf,image/*"></div>
+              <div class="d-grid gap-2"><button id="btnProcessInvoice" class="btn btn-success"><i class="fa-solid fa-wand-magic-sparkles me-1"></i>Procesar documento</button><button id="btnClearPre" class="btn btn-outline-secondary"><i class="fa-solid fa-trash-can me-1"></i>Limpiar pre-registro local</button></div>
+              <hr><div class="console" id="ocrConsole">Esperando documento...</div>
+            </div></div></div>
+            <div class="col-xl-7"><div class="cardx h-100"><div class="head"><h5><i class="fa-solid fa-clipboard-check text-success me-2"></i>Pre-registro local validable</h5><div class="d-flex gap-2"><button id="btnGenerateCodes" class="btn btn-sm btn-outline-success">Regenerar códigos</button><button id="btnSavePreToExcel" class="btn btn-sm btn-outline-primary">Guardar en bandeja OCR</button><button id="btnCreateFromPre" class="btn btn-sm btn-success">Registrar seleccionados</button></div></div><div class="body"><div id="preRegisterList"></div></div></div></div>
+          </div>
+        </section>
+
+        <section id="facturas" class="panel">
+          <div class="row g-3">
+            <div class="col-xl-5"><div class="cardx"><div class="head"><h5>Facturas normalizadas</h5></div><div class="body"><div class="table-wrap"><table class="table table-sm table-hover mb-0"><thead><tr><th>Factura/Acta</th><th>Proveedor</th><th>Fecha</th><th>Total</th><th>Soporte</th></tr></thead><tbody id="facturasTbody"></tbody></table></div></div></div></div>
+            <div class="col-xl-7"><div class="cardx"><div class="head"><h5>Detalle de factura / bienes asociados</h5></div><div class="body"><div class="table-wrap"><table class="table table-sm mb-0"><thead><tr><th>Factura</th><th>Código bien</th><th>Ítem</th><th>Cant.</th><th>Valor</th><th>Serie</th></tr></thead><tbody id="detalleFacturaTbody"></tbody></table></div></div></div></div>
+          </div>
+        </section>
+
+        <section id="catalogos" class="panel">
+          <div class="row g-3">
+            <div class="col-xl-6"><div class="cardx"><div class="head"><h5>Tipos de bienes</h5></div><div class="body"><div id="catTipos"></div></div></div></div>
+            <div class="col-xl-6"><div class="cardx"><div class="head"><h5>Secuencias de codificación</h5></div><div class="body"><div id="seqList"></div></div></div></div>
+            <div class="col-xl-4"><div class="cardx"><div class="head"><h5>Proyectos</h5></div><div class="body"><div id="catProyectos"></div></div></div></div>
+            <div class="col-xl-4"><div class="cardx"><div class="head"><h5>Custodios</h5></div><div class="body"><div id="catCustodios"></div></div></div></div>
+            <div class="col-xl-4"><div class="cardx"><div class="head"><h5>Ubicaciones</h5></div><div class="body"><div id="catUbicaciones"></div></div></div></div>
+          </div>
+        </section>
+
+        <section id="calidad" class="panel">
+          <div class="cardx"><div class="head"><h5><i class="fa-solid fa-triangle-exclamation text-warning me-2"></i>Control de calidad e integridad</h5><button id="btnRefreshQuality" class="btn btn-sm btn-outline-success">Actualizar</button></div><div class="body"><div id="qualityList" class="quality-list"></div></div></div>
+        </section>
+
+        <section id="auditoria" class="panel">
+          <div class="cardx"><div class="head"><h5><i class="fa-solid fa-clock-rotate-left text-success me-2"></i>Trazabilidad de cambios</h5></div><div class="body"><div class="table-wrap"><table class="table table-sm table-hover mb-0"><thead><tr><th>Fecha</th><th>Usuario</th><th>Acción</th><th>Tabla</th><th>Registro</th><th>Campo</th><th>Resultado</th><th>Obs.</th></tr></thead><tbody id="auditTbody"></tbody></table></div></div></div>
+        </section>
+      </main>
+    </section>
   </div>
 
-  <div class="modal fade" id="newAssetModal" tabindex="-1">
-    <div class="modal-dialog modal-xl modal-dialog-scrollable">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title"><i class="fa-solid fa-plus me-2"></i>Nuevo bien manual</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-        </div>
-        <div class="modal-body">
-          <div class="row g-3" id="manualForm"></div>
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button class="btn btn-success" id="btnSaveManual"><i class="fa-solid fa-save me-1"></i>Guardar en inventario</button>
-        </div>
-      </div>
-    </div>
-  </div>
+  <div class="modal fade" id="assetModal" tabindex="-1"><div class="modal-dialog modal-xl modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="assetModalTitle">Bien</h5><button class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div><div class="modal-body"><form id="assetForm" class="row g-3">
+    <input type="hidden" id="formMode"><input type="hidden" id="rowIndex"><input type="hidden" id="IdBien">
+    <div class="col-md-3"><label class="form-label required">Código</label><div class="input-group"><input id="Codigo" class="form-control" required><button class="btn btn-outline-success" type="button" id="btnRegenCode"><i class="fa-solid fa-rotate"></i></button></div></div>
+    <div class="col-md-3"><label class="form-label required">Fecha compra</label><input id="FechaCompra" type="date" class="form-control" required></div>
+    <div class="col-md-3"><label class="form-label required">Tipo de bien</label><select id="CodigoTipoSugerido" class="form-select" required></select></div>
+    <div class="col-md-3"><label class="form-label required">Clasificación</label><select id="Clasificacion" class="form-select"><option>ACTIVO FIJO</option><option>CONTROL ADMINISTRATIVO</option></select></div>
+    <div class="col-md-8"><label class="form-label required">Descripción</label><input id="Descripcion" class="form-control" required></div>
+    <div class="col-md-4"><label class="form-label">Descripción adicional</label><input id="DescripcionAdicional" class="form-control"></div>
+    <div class="col-md-2"><label class="form-label required">Cantidad</label><input id="Cantidad" type="number" min="1" step="1" class="form-control" required value="1"></div>
+    <div class="col-md-3"><label class="form-label required">Proyecto</label><select id="Proyecto" class="form-select" required></select></div>
+    <div class="col-md-3"><label class="form-label">Donante</label><input id="Donante" class="form-control"></div>
+    <div class="col-md-4"><label class="form-label required">Proveedor</label><input id="Proveedor" class="form-control" required></div>
+    <div class="col-md-3"><label class="form-label required">RUC proveedor</label><input id="RucProveedor" class="form-control" required></div>
+    <div class="col-md-3"><label class="form-label required">Factura / Acta</label><input id="NumeroFacturaActa" class="form-control" required></div>
+    <div class="col-md-2"><label class="form-label required">Valor inc. imp.</label><input id="ValorBienIncImp" type="number" step="0.01" min="0" class="form-control" required></div>
+    <div class="col-md-3"><label class="form-label required">Marca</label><input id="Marca" class="form-control" required></div>
+    <div class="col-md-3"><label class="form-label required">Modelo</label><input id="Modelo" class="form-control" required></div>
+    <div class="col-md-3"><label class="form-label required">Número de serie</label><input id="NumeroSerie" class="form-control" required></div>
+    <div class="col-md-3"><label class="form-label">Cédula custodio</label><input id="CedulaCustodio" class="form-control"></div>
+    <div class="col-md-4"><label class="form-label">Custodio</label><input id="Custodio" class="form-control" list="custodioList"></div>
+    <div class="col-md-4"><label class="form-label">Institución</label><input id="Institucion" class="form-control"></div>
+    <div class="col-md-4"><label class="form-label">Ubicación</label><input id="Ubicacion" class="form-control" list="ubicacionList"></div>
+    <div class="col-md-3"><label class="form-label">Estado físico</label><select id="EstadoFisico" class="form-select"><option>BUENO</option><option>REGULAR</option><option>MALO</option></select></div>
+    <div class="col-md-3"><label class="form-label">Garantía técnica</label><select id="GarantiaTecnica" class="form-select"><option>N/A</option><option>SI</option><option>NO</option></select></div>
+    <div class="col-md-3"><label class="form-label">Inicio garantía</label><input id="InicioGarantia" type="date" class="form-control"></div>
+    <div class="col-md-3"><label class="form-label">Fin garantía</label><input id="FinGarantia" type="date" class="form-control"></div>
+    <div class="col-md-3"><label class="form-label">Asegurado</label><select id="Asegurado" class="form-select"><option>NO</option><option>SI</option><option>N/A</option></select></div>
+    <div class="col-md-3"><label class="form-label">Inicio seguro</label><input id="InicioSeguro" type="date" class="form-control"></div>
+    <div class="col-md-3"><label class="form-label">Fin seguro</label><input id="FinSeguro" type="date" class="form-control"></div>
+    <div class="col-md-3"><label class="form-label">Aseguradora</label><input id="Aseguradora" class="form-control"></div>
+    <div class="col-md-3"><label class="form-label">Nro póliza</label><input id="NroPoliza" class="form-control"></div>
+    <div class="col-md-3"><label class="form-label">Fecha baja</label><input id="FechaBaja" type="date" class="form-control"></div>
+    <div class="col-md-6"><label class="form-label">Motivo baja</label><input id="MotivoBaja" class="form-control"></div>
+    <div class="col-12"><label class="form-label">Observaciones</label><textarea id="Observaciones" class="form-control" rows="2"></textarea></div>
+    <div class="col-12"><div class="alert alert-info small mb-0"><strong>Campos protegidos:</strong> enlaces, fuente de migración, depreciaciones y datos calculados se actualizan desde tablas auxiliares o fórmulas. El formulario solo edita datos manuales.</div></div>
+  </form></div><div class="modal-footer"><button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button><button class="btn btn-success" id="btnSaveAsset"><i class="fa-solid fa-save me-1"></i>Guardar</button></div></div></div></div>
+
+  <div class="modal fade" id="detailModal" tabindex="-1"><div class="modal-dialog modal-xl modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="detailTitle">Detalle del bien</h5><button class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div><div class="modal-body" id="detailBody"></div><div class="modal-footer"><button class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button></div></div></div></div>
+  <datalist id="custodioList"></datalist><datalist id="ubicacionList"></datalist>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://alcdn.msauth.net/browser/2.38.0/js/msal-browser.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
   <script>
-    if (window.pdfjsLib) {
-      pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
-    }
-
-    const CONFIG = {
-      tenantId: "5e23e4af-237d-4d97-bf6e-dca808015787",
-      clientId: "c8a828c1-3a20-4876-96af-b4f30ce4abeb",
-      shareInput: "U!aHR0cHM6Ly9maWFzZWMuc2hhcmVwb2ludC5jb20vOng6L3MvRk9ORE9ERUlOVkVSU0lPTkFNQklFTlRBTFNPU1RFTklCTEUvSVFCOFQ0SUhBQ0pBVHBScTdIckpYcGpuQVZDcmxUT0xaMTRHd3BSV1JxTUh3dUU/ZT1helNmR3E=",
-      sheetName: "Inventario Mejorado",
-      fallbackSheetName: "Inventario mejorado",
-      timeoutMs: 35000,
-      assetThreshold: 100
-    };
-
-    const INVENTORY_HEADERS = [
-      "CODIGO","DESCRIPCIÓN","DESCRIPCIÓN(ADICIONAL)","CANTIDAD","TIPO DE BIEN",
-      "ACTIVO FIJO/CONTROL ADMINISTRATIVO","PROYECTO (FIAS-FEIG-FAP-PASF-CONSERVA AVES-BIOECONOMIA)",
-      "FECHA DE COMPRA\n(DD/MM/AAA)","DONANTE","PROVEEDOR","RUC DE PROVEEDOR",
-      "N° Factura\n*001-001-0001*/ACTA DE DON ACIÓN","FACTURA DIGITAL","VALOR DEL BIEN(INC.IMP)",
-      "MARCA","MODELO","NUMERO DE SERIE","CEDULA CUSTODIO","NOMBRES Y APELLIDOS CUSTODIO","INSTITUCIÓN",
-      "UBICACIÓN","ACTA ENTREGA \n(link de share point)","ASEGURADO (SI/NO)","INICIO SEGURO","FIN SEGURO",
-      "ASEGURADORA","NRO DE POLIZA","GARANTIA TECNICA (SI-NO-N/A)","INICIO GARANTIA\n(FECHA)",
-      "FIN DE GARANTIA\n(FECHA)","ESTADO DE GARANTIA\n(VIGENTE-CADUCADA-NA)","Estado físico detallado\n(BUENO-MALO-REGULAR)",
-      "Vida útil estimada (AÑOS)","Depreciación Lineal Anual (Campo Automatico)","Depreciación Acumulada (Campo Automatico)",
-      "Depreciación Mensual (Campo Automatico)","Valor residual (Campo Automatico)","Fecha de baja (SI APLICA)",
-      "Motivo de baja (SI APLICA)","OBSERVACIONES","Fotografía del bien (link en share point)",
-      "Código QR (Campo Automatico)","VALOR  INVENTARIO 2024"
-    ];
-
-    const KEY = {
-      codigo:"CODIGO",
-      descripcion:"DESCRIPCIÓN",
-      adicional:"DESCRIPCIÓN(ADICIONAL)",
-      cantidad:"CANTIDAD",
-      tipo:"TIPO DE BIEN",
-      clase:"ACTIVO FIJO/CONTROL ADMINISTRATIVO",
-      proyecto:"PROYECTO (FIAS-FEIG-FAP-PASF-CONSERVA AVES-BIOECONOMIA)",
-      fecha:"FECHA DE COMPRA\n(DD/MM/AAA)",
-      donante:"DONANTE",
-      proveedor:"PROVEEDOR",
-      ruc:"RUC DE PROVEEDOR",
-      factura:"N° Factura\n*001-001-0001*/ACTA DE DON ACIÓN",
-      facturaDigital:"FACTURA DIGITAL",
-      valor:"VALOR DEL BIEN(INC.IMP)",
-      marca:"MARCA",
-      modelo:"MODELO",
-      serie:"NUMERO DE SERIE",
-      cedula:"CEDULA CUSTODIO",
-      custodio:"NOMBRES Y APELLIDOS CUSTODIO",
-      institucion:"INSTITUCIÓN",
-      ubicacion:"UBICACIÓN",
-      acta:"ACTA ENTREGA \n(link de share point)",
-      asegurado:"ASEGURADO (SI/NO)",
-      inicioSeguro:"INICIO SEGURO",
-      finSeguro:"FIN SEGURO",
-      aseguradora:"ASEGURADORA",
-      poliza:"NRO DE POLIZA",
-      garantia:"GARANTIA TECNICA (SI-NO-N/A)",
-      inicioGarantia:"INICIO GARANTIA\n(FECHA)",
-      finGarantia:"FIN DE GARANTIA\n(FECHA)",
-      estadoGarantia:"ESTADO DE GARANTIA\n(VIGENTE-CADUCADA-NA)",
-      estadoFisico:"Estado físico detallado\n(BUENO-MALO-REGULAR)",
-      vidaUtil:"Vida útil estimada (AÑOS)",
-      bajaFecha:"Fecha de baja (SI APLICA)",
-      bajaMotivo:"Motivo de baja (SI APLICA)",
-      observaciones:"OBSERVACIONES",
-      foto:"Fotografía del bien (link en share point)"
-    };
-
-    const ASSET_CATEGORIES = [
-      {code:"01", name:"INMUEBLES", life:20, rate:0.05, keywords:["terreno","oficina","casa","departamento","inmueble"]},
-      {code:"03", name:"MUEBLES Y ENSERES", life:10, rate:0.10, keywords:["silla","sillon","sillón","mesa","mueble","escritorio","credenza","archivador","biblioteca","counter","cafeteria","cafetería","estacion","estación","taburete","locker","manpara"]},
-      {code:"04", name:"EQUIPOS DE OFICINA", life:10, rate:0.10, keywords:["aire acondicionado","trituradora","central telefonica","central telefónica","router","dispensador","television","televisión","ups","planta de energia","planta de energía","video conferencia","abrillantadora"]},
-      {code:"05", name:"VEHÍCULOS", life:5, rate:0.20, keywords:["vehiculo","vehículo","camioneta","motocicleta","motor de borda","canoa","kayak","automovil","automóvil","bicicleta","cuadron","cuadrón"]},
-      {code:"06", name:"MAQUINARIAS Y EQUIPOS", life:5, rate:0.20, keywords:["herramienta","taladro","generador","bomba","sopladora","motosierra","desbrozadora","reflector","clinometro","clinómetro","binocular","telescopio","buceo","amoladora","equipo de camping"]},
-      {code:"07", name:"EQUIPOS DE COMPUTACIÓN Y COMUNICACIÓN", life:3, rate:0.3333, keywords:["notebook","laptop","computador","computadora","pc","monitor","impresora","scanner","escáner","escaner","proyector","camara","cámara","drone","gps","celular","tablet","teclado","mouse","servidor","disco","memoria","software","licencia","office","windows","antivirus","microfono","micrófono","panel led","parlante"]}
-    ];
-
-    const PROJECT_OPTIONS = ["FIAS","FEIG","FAP","PASF","CONSERVA AVES","BIOECONOMIA","REM","AFD","N/A"];
-    const CLASS_OPTIONS = ["ACTIVO FIJO","CONTROL ADMINISTRATIVO"];
-    const ESTADO_OPTIONS = ["BUENO","REGULAR","MALO"];
-    const GUARANTEE_OPTIONS = ["SI","NO","N/A"];
-
-    // Columnas que el HTML no debe sobrescribir porque dependen de BUSCARV, enlaces o fórmulas del libro.
-    // Los enlaces reales se leen desde las hojas links y Link_fotos para mostrarlos como botones en la interfaz.
-    const FORMULA_PROTECTED_COLUMNS = new Set([
-      KEY.facturaDigital, KEY.acta, KEY.asegurado, KEY.finSeguro, KEY.estadoGarantia,
-      "Depreciación Lineal Anual (Campo Automatico)",
-      "Depreciación Acumulada (Campo Automatico)",
-      "Depreciación Mensual (Campo Automatico)",
-      "Valor residual (Campo Automatico)",
-      KEY.foto, "Código QR (Campo Automatico)", "VALOR  INVENTARIO 2024"
-    ]);
-
-    const MANUAL_WRITE_COLUMNS = new Set([
-      KEY.codigo, KEY.descripcion, KEY.adicional, KEY.cantidad, KEY.tipo, KEY.clase, KEY.proyecto, KEY.fecha,
-      KEY.donante, KEY.proveedor, KEY.ruc, KEY.factura, KEY.valor, KEY.marca, KEY.modelo, KEY.serie,
-      KEY.cedula, KEY.custodio, KEY.institucion, KEY.ubicacion, KEY.inicioSeguro, KEY.aseguradora, KEY.poliza,
-      KEY.garantia, KEY.inicioGarantia, KEY.finGarantia, KEY.estadoFisico, KEY.vidaUtil, KEY.bajaFecha,
-      KEY.bajaMotivo, KEY.observaciones
-    ]);
-
-    const state = {
-      account:null, token:null, msal:null,
-      driveId:null, itemId:null, worksheetId:null, worksheetList:[], sessionId:null,
-      rows:[], headers:[], rawRange:null, connected:false, syncing:false, readOnly:false,
-      linkMap:{}, photoMap:{}, formulaNote:"",
-      filters:{q:"", tipo:"", proyecto:"", asegurado:"", estado:""},
-      candidates:[], parsedInvoice:null, editRow:null, editIndex:null,
-      charts:{}
-    };
-
-    const loginRequest = { scopes:["User.Read","Files.ReadWrite","Files.ReadWrite.All","Sites.ReadWrite.All"] };
-
-    const $ = (id)=>document.getElementById(id);
-    const norm = (v)=>String(v ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();
-    const clean = (v)=>String(v ?? "").trim();
-    const money = (v)=>new Intl.NumberFormat("es-EC",{style:"currency",currency:"USD"}).format(toNumber(v));
-    const numberFmt = (v)=>new Intl.NumberFormat("es-EC",{maximumFractionDigits:2}).format(toNumber(v));
-    const esc = (s)=>String(s ?? "").replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]));
-    const todayISO = ()=>new Date().toISOString().slice(0,10);
-
-    function toNumber(v){
-      if(v === null || v === undefined || v === "") return 0;
-      if(typeof v === "number") return isFinite(v) ? v : 0;
-      let s = String(v).trim();
-      if(!s) return 0;
-      s = s.replace(/\$/g,"").replace(/\s/g,"");
-      if(s.includes(",") && s.includes(".")){
-        s = s.replace(/\./g,"").replace(",",".");
-      }else if(s.includes(",")){
-        s = s.replace(",",".");
-      }
-      const n = Number(s);
-      return isFinite(n) ? n : 0;
-    }
-
-    function excelDateToISO(value){
-      if(value === null || value === undefined || value === "") return "";
-      if(value instanceof Date && !isNaN(value)) return value.toISOString().slice(0,10);
-      if(typeof value === "number" && isFinite(value)){
-        const date = new Date(Math.round((value - 25569) * 86400 * 1000));
-        return isNaN(date) ? "" : date.toISOString().slice(0,10);
-      }
-      const s = String(value).trim();
-      if(!s || s === "#REF!" || s === "#VALUE!") return "";
-      if(/^\d{4}-\d{2}-\d{2}/.test(s)) return s.slice(0,10);
-      let m = s.match(/^(\d{4})[\/-](\d{1,2})[\/-](\d{1,2})$/);
-      if(m) return `${m[1]}-${m[2].padStart(2,"0")}-${m[3].padStart(2,"0")}`;
-      m = s.match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})$/);
-      if(m) return `${m[3]}-${m[2].padStart(2,"0")}-${m[1].padStart(2,"0")}`;
-      const dt = new Date(s);
-      return isNaN(dt) ? s : dt.toISOString().slice(0,10);
-    }
-    function displayDate(v){
-      const iso = excelDateToISO(v);
-      const m = iso.match(/^(\d{4})-(\d{2})-(\d{2})$/);
-      return m ? `${m[3]}/${m[2]}/${m[1]}` : (iso || "N/A");
-    }
-
-    function normalizeLookupKey(v){
-      return String(v ?? "").trim().toUpperCase().replace(/\s+/g," ");
-    }
-
-    function normalizeInvoiceNumber(v){
-      let s = String(v ?? "").trim();
-      if(!s) return "";
-      s = s.replace(/[–—]/g,"-").replace(/\s+/g,"");
-      const hy = s.match(/(\d{3})-?(\d{3})-?(\d{1,9})/);
-      if(hy){
-        return `${hy[1]}-${hy[2]}-${hy[3].padStart(9,"0")}`;
-      }
-      const digits = s.replace(/\D/g,"");
-      if(digits.length >= 15){
-        const last15 = digits.slice(-15);
-        return `${last15.slice(0,3)}-${last15.slice(3,6)}-${last15.slice(6)}`;
-      }
-      return s;
-    }
-
-    function normalizeFacturaKey(v){
-      return normalizeLookupKey(normalizeInvoiceNumber(v));
-    }
-
-    function categoryByName(tipo){
-      const n = norm(tipo);
-      return ASSET_CATEGORIES.find(c=>norm(c.name)===n)
-        || ASSET_CATEGORIES.find(c=>n.includes(norm(c.name)) || norm(c.name).includes(n))
-        || ASSET_CATEGORIES.find(c=>c.keywords.some(k=>n.includes(norm(k))))
-        || ASSET_CATEGORIES.find(c=>c.code === String(tipo).padStart(2,"0"));
-    }
-
-    function categoryByCode(code){
-      const c = String(code || "").padStart(2,"0");
-      return ASSET_CATEGORIES.find(x=>x.code===c);
-    }
-
-    function categoryCodeFromType(tipo){
-      return (categoryByName(tipo) || ASSET_CATEGORIES[1]).code;
-    }
-
-    function purchaseYear2(fecha){
-      const iso = excelDateToISO(fecha);
-      const y = /^\d{4}/.test(iso) ? iso.slice(2,4) : new Date().getFullYear().toString().slice(2,4);
-      return y;
-    }
-
-    function parseAssetCode(code){
-      const s = String(code || "").trim().toUpperCase();
-      const m = s.match(/^FIAS\.(\d{2})\.(\d{2})\.(\d+)(?:\.(\d+))?$/);
-      if(!m) return null;
-      return {prefix:"FIAS", year:m[1], category:m[2], seq:Number(m[3]), suffix:m[4] ? Number(m[4]) : null};
-    }
-
-    function maxSequenceFor(year2, categoryCode){
-      let max = 0;
-      state.rows.forEach(r=>{
-        const parsed = parseAssetCode(r[KEY.codigo]);
-        if(parsed && parsed.year===year2 && parsed.category===categoryCode && parsed.seq > max) max = parsed.seq;
-      });
-      state.candidates.forEach(c=>{
-        const parsed = parseAssetCode(c.codigo);
-        if(parsed && parsed.year===year2 && parsed.category===categoryCode && parsed.seq > max) max = parsed.seq;
-      });
-      return max;
-    }
-
-    function formatFIASCode(year2, categoryCode, seq){
-      return `FIAS.${year2}.${categoryCode}.${String(seq).padStart(3,"0")}`;
-    }
-
-    function assignSequentialCodes(candidates){
-      const counters = {};
-      candidates.forEach(c=>{
-        const year2 = purchaseYear2(c.fecha);
-        const cat = categoryCodeFromType(c.tipoBien);
-        const key = `${year2}.${cat}`;
-        if(counters[key] === undefined) counters[key] = maxSequenceFor(year2, cat);
-        counters[key] += 1;
-        c.codigo = formatFIASCode(year2, cat, counters[key]);
-      });
-    }
-
-    function regenerateCandidateCodes(){
-      assignSequentialCodes(state.candidates);
-      renderCandidates();
-      showToast("Códigos FIAS regenerados según año de compra, tipo de bien y secuencia disponible.");
-    }
-
-    function linkForInvoice(factura){
-      const key = normalizeFacturaKey(factura);
-      return state.linkMap[key] || state.linkMap[normalizeLookupKey(factura)] || "";
-    }
-
-    function photoForAsset(codigo){
-      return state.photoMap[normalizeLookupKey(codigo)] || "";
-    }
-
-    function showToast(message,type="ok"){
-      const item = document.createElement("div");
-      item.className = `toastx ${type}`;
-      item.innerHTML = `<strong>${type==="danger"?"Error":type==="warn"?"Atención":"Listo"}</strong><div class="small">${esc(message)}</div>`;
-      $("toastHolder").appendChild(item);
-      setTimeout(()=>item.remove(),5200);
-    }
-
-    function setAppStatus(ok, text){
-      $("statusDot").className = "status-dot " + (ok ? "ok" : "warn");
-      $("sideStatus").textContent = ok ? "Conectado" : "Pendiente";
-      $("syncLabel").textContent = text || "";
-    }
-
-    function setSyncing(flag, label){
-      state.syncing = flag;
-      const btn = $("btnSync");
-      btn.disabled = flag;
-      btn.innerHTML = flag ? `<span class="spinner-border spinner-border-sm me-1"></span> Sincronizando` : `<i class="fa-solid fa-rotate me-1"></i> Sincronizar`;
-      if(label) $("syncLabel").textContent = label;
-    }
-
-    function initMsal(){
-      if(!window.msal) throw new Error("No se cargó MSAL. Revise la conexión a internet o los CDN.");
-      state.msal = new msal.PublicClientApplication({
-        auth:{ clientId:CONFIG.clientId, authority:`https://login.microsoftonline.com/${CONFIG.tenantId}`, redirectUri:window.location.origin },
-        cache:{ cacheLocation:"localStorage", storeAuthStateInCookie:false }
-      });
-    }
-
-    async function bootstrap(){
-      initMsal();
-      await state.msal.initialize();
-      const accounts = state.msal.getAllAccounts();
-      if(accounts.length){
-        state.account = accounts[0];
-        $("sessionLabel").textContent = state.account.username || "Sesión activa";
-        showApp();
-        await syncInventory();
-      }else{
-        showLogin();
-      }
-    }
-
-    function showLogin(){
-      $("loginShell").classList.remove("hidden");
-      $("appShell").classList.add("hidden");
-    }
-    function showApp(){
-      $("loginShell").classList.add("hidden");
-      $("appShell").classList.remove("hidden");
-    }
-
-    async function login(){
-      try{
-        $("loginBtn").disabled = true;
-        $("loginBtn").innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span> Validando sesión`;
-        const result = await state.msal.loginPopup(loginRequest);
-        state.account = result.account;
-        state.token = result.accessToken;
-        $("sessionLabel").textContent = state.account.username || "Sesión activa";
-        showApp();
-        await syncInventory();
-      }catch(e){
-        showToast("No fue posible iniciar sesión: " + (e.message || e), "danger");
-      }finally{
-        $("loginBtn").disabled = false;
-        $("loginBtn").innerHTML = `<i class="fa-brands fa-microsoft me-2"></i> Iniciar sesión con Microsoft`;
-      }
-    }
-
-    async function logout(){
-      try{
-        state.sessionId = null;
-        state.token = null;
-        state.driveId = null;
-        state.itemId = null;
-        state.worksheetId = null;
-        state.rows = [];
-        state.headers = [];
-        const account = state.account || state.msal.getAllAccounts()[0];
-        state.account = null;
-        if(account){
-          await state.msal.logoutPopup({account, mainWindowRedirectUri:window.location.origin});
-        }
-      }catch(e){
-        console.warn(e);
-      }finally{
-        showLogin();
-      }
-    }
-
-    async function getToken(){
-      const account = state.account || state.msal.getAllAccounts()[0];
-      if(!account) throw new Error("No existe cuenta autenticada.");
-      try{
-        const res = await state.msal.acquireTokenSilent({...loginRequest, account});
-        state.account = res.account || account;
-        state.token = res.accessToken;
-        return state.token;
-      }catch(e){
-        if(e instanceof msal.InteractionRequiredAuthError){
-          const res = await state.msal.acquireTokenPopup({...loginRequest, account});
-          state.account = res.account || account;
-          state.token = res.accessToken;
-          return state.token;
-        }
-        throw e;
-      }
-    }
-
-    function timeoutPromise(ms){
-      return new Promise((_, reject)=>setTimeout(()=>reject(new Error("Tiempo de espera agotado.")), ms));
-    }
-
-    async function graphFetch(path, options={}){
-      const token = await getToken();
-      const headers = {
-        Authorization:`Bearer ${token}`,
-        ...(options.headers || {})
-      };
-      if(options.json !== false) headers["Content-Type"] = "application/json";
-      if(options.useSession && state.sessionId) headers["Workbook-Session-Id"] = state.sessionId;
-      const fetcher = fetch(`https://graph.microsoft.com/v1.0${path}`, {...options, headers});
-      const res = await Promise.race([fetcher, timeoutPromise(CONFIG.timeoutMs)]);
-      if(!res.ok){
-        const txt = await res.text().catch(()=>res.statusText);
-        throw new Error(`Graph ${res.status}: ${txt}`);
-      }
-      if(res.status === 204) return null;
-      if(options.binary) return await res.arrayBuffer();
-      return await res.json();
-    }
-
-    function base64UrlEncode(str){
-      return btoa(unescape(encodeURIComponent(str))).replace(/=+$/,"").replace(/\+/g,"-").replace(/\//g,"_");
-    }
-    function base64UrlDecode(str){
-      let s = String(str).replace(/-/g,"+").replace(/_/g,"/");
-      while(s.length % 4) s += "=";
-      return decodeURIComponent(escape(atob(s)));
-    }
-    function shareIdFromInput(input){
-      let raw = String(input || "").trim();
-      if(/^https?:\/\//i.test(raw)) return "u!" + base64UrlEncode(raw);
-      if(/^[uU]!/.test(raw)){
-        const payload = raw.slice(2);
-        try{
-          const decoded = base64UrlDecode(payload);
-          if(/^https?:\/\//i.test(decoded)) return "u!" + base64UrlEncode(decoded);
-        }catch(e){}
-        return "u!" + payload.replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
-      }
-      return raw;
-    }
-
-    async function resolveWorkbook(){
-      const shareId = shareIdFromInput(CONFIG.shareInput);
-      const item = await graphFetch(`/shares/${shareId}/driveItem?$select=id,name,webUrl,parentReference`, {json:true});
-      state.driveId = item.parentReference.driveId;
-      state.itemId = item.id;
-      return item;
-    }
-
-    async function createWorkbookSession(){
-      state.sessionId = null;
-      const res = await graphFetch(`/drives/${state.driveId}/items/${state.itemId}/workbook/createSession`, {
-        method:"POST",
-        body:JSON.stringify({persistChanges:true}),
-        json:true
-      });
-      state.sessionId = res?.id || null;
-    }
-
-    async function resolveWorksheetId(){
-      const list = await graphFetch(`/drives/${state.driveId}/items/${state.itemId}/workbook/worksheets`, {useSession:true});
-      state.worksheetList = list.value || [];
-      const target = norm(CONFIG.sheetName);
-      const fallback = norm(CONFIG.fallbackSheetName);
-      const ws = (list.value || []).find(w=>norm(w.name) === target) || (list.value || []).find(w=>norm(w.name) === fallback);
-      if(!ws) throw new Error(`No se encontró la hoja "${CONFIG.sheetName}".`);
-      state.worksheetId = ws.id;
-      CONFIG.sheetName = ws.name;
-      return ws;
-    }
-
-    async function loadUsedRangeViaGraph(){
-      const range = await graphFetch(`/drives/${state.driveId}/items/${state.itemId}/workbook/worksheets/${state.worksheetId}/usedRange(valuesOnly=true)`, {useSession:true});
-      state.rawRange = range;
-      const values = range.values || [];
-      parseInventoryValues(values);
-      state.readOnly = false;
-    }
-
-    async function loadSheetValuesByName(sheetName){
-      const ws = (state.worksheetList || []).find(w=>norm(w.name)===norm(sheetName));
-      if(!ws) return [];
-      const range = await graphFetch(`/drives/${state.driveId}/items/${state.itemId}/workbook/worksheets/${ws.id}/usedRange(valuesOnly=true)`, {useSession:true});
-      return range.values || [];
-    }
-
-    function mapLookupSheet(values){
-      const map = {};
-      (values || []).slice(1).forEach(row=>{
-        const k = normalizeLookupKey(row?.[0]);
-        const v = String(row?.[1] ?? "").trim();
-        if(k && v) map[k] = v;
-        const fk = normalizeFacturaKey(row?.[0]);
-        if(fk && v) map[fk] = v;
-      });
-      return map;
-    }
-
-    async function loadSupplementarySheetsGraph(){
-      try{
-        const links = await loadSheetValuesByName("links");
-        const photos = await loadSheetValuesByName("Link_fotos");
-        state.linkMap = mapLookupSheet(links);
-        state.photoMap = mapLookupSheet(photos);
-      }catch(e){
-        console.warn("No se pudieron cargar hojas de enlaces/fotos", e);
-        state.linkMap = {};
-        state.photoMap = {};
-      }
-    }
-
-    function loadSupplementarySheetsFromWorkbook(wb){
-      const linkName = wb.SheetNames.find(n=>norm(n)==="links");
-      const photoName = wb.SheetNames.find(n=>norm(n)==="link_fotos");
-      state.linkMap = linkName ? mapLookupSheet(XLSX.utils.sheet_to_json(wb.Sheets[linkName], {header:1, raw:true, blankrows:false})) : {};
-      state.photoMap = photoName ? mapLookupSheet(XLSX.utils.sheet_to_json(wb.Sheets[photoName], {header:1, raw:true, blankrows:false})) : {};
-    }
-
-    async function loadBinaryFallback(){
-      const buffer = await graphFetch(`/drives/${state.driveId}/items/${state.itemId}/content`, {binary:true, json:false});
-      const wb = XLSX.read(buffer, {type:"array", cellDates:true});
-      const sheetName = wb.SheetNames.find(n=>norm(n)===norm(CONFIG.sheetName)) || wb.SheetNames.find(n=>norm(n)===norm(CONFIG.fallbackSheetName)) || wb.SheetNames[0];
-      const ws = wb.Sheets[sheetName];
-      const values = XLSX.utils.sheet_to_json(ws, {header:1, raw:true, blankrows:false});
-      parseInventoryValues(values);
-      loadSupplementarySheetsFromWorkbook(wb);
-      state.readOnly = true;
-      showToast("Se cargó en modo lectura por respaldo binario. Para guardar se requiere que la API del libro esté disponible.", "warn");
-    }
-
-    function parseInventoryValues(values){
-      if(!values || values.length < 1) throw new Error("La hoja no contiene datos.");
-      const headers = values[0].map(h=>String(h ?? "").trim());
-      state.headers = headers;
-      const rows = [];
-      for(let i=1;i<values.length;i++){
-        const rowVals = values[i] || [];
-        if(rowVals.every(v=>v === null || v === undefined || String(v).trim()==="")) continue;
-        const obj = {_rowNumber:i+1, _values:rowVals};
-        headers.forEach((h,idx)=>obj[h] = rowVals[idx] ?? "");
-        rows.push(obj);
-      }
-      state.rows = rows;
-    }
-
-    async function syncInventory(){
-      if(state.syncing) return;
-      try{
-        setSyncing(true, "Resolviendo archivo de inventario...");
-        await resolveWorkbook();
-        setSyncing(true, "Abriendo libro de inventario...");
-        await createWorkbookSession();
-        await resolveWorksheetId();
-        setSyncing(true, "Leyendo hoja Inventario Mejorado...");
-        await loadUsedRangeViaGraph();
-        setSyncing(true, "Leyendo enlaces de facturas y fotografías...");
-        await loadSupplementarySheetsGraph();
-        state.connected = true;
-        setAppStatus(true, `Sincronizado: ${new Date().toLocaleString("es-EC")}`);
-        renderAll();
-        showToast("Inventario sincronizado correctamente.");
-      }catch(e){
-        console.error(e);
-        try{
-          setSyncing(true, "Intentando respaldo de lectura...");
-          await loadBinaryFallback();
-          state.connected = true;
-          setAppStatus(false, `Modo lectura: ${new Date().toLocaleString("es-EC")}`);
-          renderAll();
-        }catch(e2){
-          console.error(e2);
-          setAppStatus(false, "Error de sincronización");
-          showToast("Error de sincronización: " + (e.message || e), "danger");
-        }
-      }finally{
-        setSyncing(false);
-      }
-    }
-
-    function filteredRows(){
-      const q = norm(state.filters.q);
-      const tokens = expandQuery(q).filter(Boolean);
-      return state.rows.filter(r=>{
-        const blob = norm(Object.values(r).join(" "));
-        const okQ = !tokens.length || tokens.every(t=>blob.includes(t));
-        return okQ
-          && (!state.filters.tipo || clean(r[KEY.tipo]) === state.filters.tipo)
-          && (!state.filters.proyecto || clean(r[KEY.proyecto]) === state.filters.proyecto)
-          && (!state.filters.asegurado || clean(r[KEY.asegurado]).toUpperCase() === state.filters.asegurado)
-          && (!state.filters.estado || clean(r[KEY.estadoFisico]) === state.filters.estado);
-      });
-    }
-
-    function expandQuery(q){
-      if(!q) return [];
-      const synonyms = {
-        "computadora":["computadora","laptop","notebook","cpu","monitor","teclado","mouse"],
-        "laptop":["laptop","computadora","notebook","portatil"],
-        "impresora":["impresora","multifuncion","plotter"],
-        "mueble":["mueble","silla","sillon","escritorio","mesa","estanteria","archivador"],
-        "seguro":["seguro","asegurado","poliza","aseguradora"],
-        "garantia":["garantia","vigente","caducada"],
-        "sin serie":["n/a","na","sin serie","s/serie"]
-      };
-      let tokens = q.split(/\s+/).filter(Boolean);
-      Object.entries(synonyms).forEach(([k,vals])=>{
-        if(q.includes(k)) tokens = tokens.concat(vals);
-      });
-      return [...new Set(tokens.map(norm))];
-    }
-
-    function highlight(text){
-      const q = norm(state.filters.q);
-      const s = esc(text ?? "");
-      if(!q) return s;
-      const first = q.split(/\s+/).find(t=>t.length>2);
-      if(!first) return s;
-      const re = new RegExp(`(${first.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")})`, "ig");
-      return s.replace(re, "<mark class='hl'>$1</mark>");
-    }
-
-    function populateFilters(){
-      const unique = (key)=>[...new Set(state.rows.map(r=>clean(r[key])).filter(Boolean))].sort((a,b)=>a.localeCompare(b));
-      fillSelect("filterTipo", unique(KEY.tipo), "Todos");
-      fillSelect("filterProyecto", unique(KEY.proyecto), "Todos");
-      fillSelect("filterEstado", unique(KEY.estadoFisico), "Todos");
-    }
-    function fillSelect(id, values, first){
-      const cur = $(id).value;
-      $(id).innerHTML = `<option value="">${first}</option>` + values.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join("");
-      if(values.includes(cur)) $(id).value = cur;
-    }
-
-    function renderAll(){
-      populateFilters();
-      renderKpis();
-      renderExecutiveSummary();
-      renderInventory();
-      renderQuality();
-      renderCharts();
-    }
-
-    function renderKpis(){
-      const total = state.rows.length;
-      const value = state.rows.reduce((a,r)=>a+toNumber(r[KEY.valor] || r["VALOR  INVENTARIO 2024"]),0);
-      const insured = state.rows.filter(r=>clean(r[KEY.asegurado]).toUpperCase()==="SI").length;
-      const incomplete = buildQualityFindings().filter(f=>f.severity!=="ok").length;
-      const custodios = new Set(state.rows.map(r=>clean(r[KEY.custodio])).filter(Boolean)).size;
-      const ubicaciones = new Set(state.rows.map(r=>clean(r[KEY.ubicacion])).filter(Boolean)).size;
-      const data = [
-        ["fa-boxes-stacked","Bienes registrados",total.toLocaleString("es-EC"),"Filas activas en inventario"],
-        ["fa-sack-dollar","Valor referencial",money(value),"Valor del bien inc. impuestos"],
-        ["fa-shield-halved","Asegurados",`${insured}/${total}`, total ? `${Math.round(insured/total*100)}% del universo` : "Sin datos"],
-        ["fa-triangle-exclamation","Alertas de datos",incomplete.toLocaleString("es-EC"),"Requieren revisión"],
-        ["fa-user-shield","Custodios",custodios.toLocaleString("es-EC"),"Responsables identificados"],
-        ["fa-location-dot","Ubicaciones",ubicaciones.toLocaleString("es-EC"),"Puntos de custodia"],
-        ["fa-file-invoice","Facturas únicas",new Set(state.rows.map(r=>clean(r[KEY.factura])).filter(Boolean)).size.toLocaleString("es-EC"),"Soportes registrados"],
-        ["fa-circle-check","Estado bueno",state.rows.filter(r=>norm(r[KEY.estadoFisico]).includes("bueno")).length.toLocaleString("es-EC"),"Bienes en buen estado"]
-      ];
-      $("kpiGrid").innerHTML = data.map(d=>`
-        <div class="kpi">
-          <div class="d-flex justify-content-between align-items-start">
-            <div>
-              <div class="small-muted text-uppercase fw-bold">${d[1]}</div>
-              <div class="kpi-value">${d[2]}</div>
-              <div class="small-muted">${d[3]}</div>
-            </div>
-            <div class="icon"><i class="fa-solid ${d[0]}"></i></div>
-          </div>
-        </div>`).join("");
-    }
-
-    function renderExecutiveSummary(){
-      const total = state.rows.length;
-      const value = state.rows.reduce((a,r)=>a+toNumber(r[KEY.valor] || r["VALOR  INVENTARIO 2024"]),0);
-      const byType = groupSum(state.rows, KEY.tipo, KEY.valor);
-      const topType = Object.entries(byType).sort((a,b)=>b[1]-a[1])[0] || ["N/A",0];
-      const byProject = countBy(state.rows, KEY.proyecto);
-      const topProject = Object.entries(byProject).sort((a,b)=>b[1]-a[1])[0] || ["N/A",0];
-      const insuredPct = total ? Math.round(state.rows.filter(r=>clean(r[KEY.asegurado]).toUpperCase()==="SI").length/total*100) : 0;
-      const noFactura = state.rows.filter(r=>!clean(r[KEY.factura]) || norm(r[KEY.factura]).includes("verificar")).length;
-      const noFoto = state.rows.filter(r=>!clean(r[KEY.foto]) || norm(r[KEY.foto]).includes("verificar")).length;
-      const duplicateSeries = findDuplicate(KEY.serie).length;
-      const duplicateInvoices = findDuplicate(KEY.factura).length;
-      const estado = countBy(state.rows, KEY.estadoFisico);
-      const estadoTxt = Object.entries(estado).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`${k || "N/A"}: ${v}`).slice(0,4).join("; ");
-      const critical = buildQualityFindings().filter(f=>f.severity==="danger").length;
-      const warning = buildQualityFindings().filter(f=>f.severity==="warn").length;
-
-      const narrative = `
-        <p><strong>Situación general:</strong> El inventario contiene <strong>${total.toLocaleString("es-EC")}</strong> bienes registrados, con una valoración referencial acumulada de <strong>${money(value)}</strong>. La categoría con mayor peso económico es <strong>${esc(topType[0])}</strong>, con <strong>${money(topType[1])}</strong>.</p>
-        <p><strong>Distribución institucional:</strong> El proyecto con mayor cantidad de registros es <strong>${esc(topProject[0])}</strong> (${topProject[1]} bienes). Se identifican <strong>${new Set(state.rows.map(r=>clean(r[KEY.custodio])).filter(Boolean)).size}</strong> custodios y <strong>${new Set(state.rows.map(r=>clean(r[KEY.ubicacion])).filter(Boolean)).size}</strong> ubicaciones.</p>
-        <p><strong>Control administrativo:</strong> El <strong>${insuredPct}%</strong> de los bienes figura como asegurado. Existen <strong>${noFactura}</strong> registros con factura o soporte por verificar y <strong>${noFoto}</strong> registros con fotografía pendiente o marcada como “Verificar”.</p>
-        <p><strong>Calidad de datos:</strong> Se detectan <strong>${critical}</strong> alertas críticas y <strong>${warning}</strong> alertas preventivas. Las principales fuentes de revisión son duplicidad de series (${duplicateSeries}), facturas repetidas (${duplicateInvoices}), campos vacíos y enlaces documentales pendientes.</p>
-        <p><strong>Estado físico:</strong> ${esc(estadoTxt || "Sin clasificación registrada")}.</p>
-        <p><strong>Recomendación ejecutiva:</strong> priorizar la depuración de registros sin soporte documental, completar series/marca/modelo, validar custodios y ubicación, y utilizar el módulo OCR para que las nuevas adquisiciones entren como pre-registro estructurado antes de su validación administrativa.</p>`;
-      $("executiveSummary").innerHTML = narrative;
-
-      const priorities = buildQualityFindings().filter(f=>f.severity!=="ok").slice(0,6);
-      $("priorityList").innerHTML = priorities.length ? priorities.map(p=>`
-        <div class="priority-item">
-          <span class="tag ${p.severity}">${esc(p.label)}</span>
-          <div class="fw-bold mt-2">${esc(p.title)}</div>
-          <div class="small-muted">${esc(p.description)}</div>
-        </div>`).join("") : `<div class="alert alert-success mb-0">No se identifican prioridades críticas con los criterios actuales.</div>`;
-    }
-
-    function renderInventory(){
-      const rows = filteredRows();
-      $("resultCount").textContent = `${rows.length.toLocaleString("es-EC")} registros`;
-      const cardRows = rows.slice(0,9);
-      $("assetCards").innerHTML = cardRows.map((r,idx)=>assetCard(r,idx)).join("") || `<div class="alert alert-warning">No hay registros coincidentes.</div>`;
-      const body = rows.slice(0,500).map((r,idx)=>`
-        <tr>
-          <td><strong>${highlight(r[KEY.codigo])}</strong></td>
-          <td>${highlight(r[KEY.descripcion])}<div class="small-muted">${highlight(r[KEY.adicional])}</div></td>
-          <td>${tag(r[KEY.tipo],"info")}</td>
-          <td>${esc(r[KEY.proyecto])}</td>
-          <td>${highlight(r[KEY.custodio])}</td>
-          <td>${highlight(r[KEY.ubicacion])}</td>
-          <td>${highlight(r[KEY.proveedor])}</td>
-          <td>${highlight(r[KEY.factura])}</td>
-          <td><strong>${money(r[KEY.valor] || r["VALOR  INVENTARIO 2024"])}</strong></td>
-          <td>${estadoTag(r[KEY.estadoFisico])}</td>
-          <td><button class="btn btn-sm btn-outline-success" onclick="openAssetDetail(${state.rows.indexOf(r)})"><i class="fa-solid fa-eye"></i></button></td>
-        </tr>`).join("");
-      $("inventoryTable").querySelector("tbody").innerHTML = body || `<tr><td colspan="11" class="text-center text-muted py-4">No existen resultados.</td></tr>`;
-    }
-
-    function assetCard(r){
-      const idx = state.rows.indexOf(r);
-      return `<div class="asset-card" onclick="openAssetDetail(${idx})">
-        <div class="d-flex justify-content-between gap-2 mb-2">
-          <div>
-            <h6>${highlight(r[KEY.codigo])}</h6>
-            <div class="small-muted">${highlight(r[KEY.descripcion])}</div>
-          </div>
-          ${estadoTag(r[KEY.estadoFisico])}
-        </div>
-        <div class="d-flex flex-wrap gap-1 mb-2">
-          ${tag(r[KEY.tipo],"info")}
-          ${tag(r[KEY.clase],"dark")}
-          ${clean(r[KEY.asegurado]).toUpperCase()==="SI" ? tag("Asegurado","ok") : tag("No asegurado","warn")}
-        </div>
-        <div class="d-flex justify-content-between small"><span>Custodio</span><strong class="text-end">${esc(r[KEY.custodio] || "N/A")}</strong></div>
-        <div class="d-flex justify-content-between small"><span>Ubicación</span><strong class="text-end">${esc(r[KEY.ubicacion] || "N/A")}</strong></div>
-        <div class="d-flex justify-content-between small"><span>Valor</span><strong>${money(r[KEY.valor] || r["VALOR  INVENTARIO 2024"])}</strong></div>
-      </div>`;
-    }
-
-    function tag(text,cls="info"){
-      const v = clean(text) || "N/A";
-      return `<span class="tag ${cls}">${esc(v)}</span>`;
-    }
-    function estadoTag(text){
-      const n = norm(text);
-      let cls = "dark";
-      if(n.includes("bueno")) cls = "ok";
-      else if(n.includes("regular")) cls = "warn";
-      else if(n.includes("malo")) cls = "danger";
-      return tag(text || "Sin estado", cls);
-    }
-
-    function openAssetDetail(index){
-      const r = state.rows[index];
-      if(!r) return;
-      $("assetModalTitle").innerHTML = `<i class="fa-solid fa-box me-2"></i>${esc(r[KEY.codigo] || "Ficha del bien")}`;
-      $("assetModalBody").innerHTML = `
-        <div class="detail-grid mb-3">
-          ${detailCell("Descripción", r[KEY.descripcion])}
-          ${detailCell("Detalle adicional", r[KEY.adicional])}
-          ${detailCell("Tipo de bien", r[KEY.tipo])}
-          ${detailCell("Activo / Control", r[KEY.clase])}
-          ${detailCell("Cantidad", r[KEY.cantidad])}
-          ${detailCell("Valor", money(r[KEY.valor] || r["VALOR  INVENTARIO 2024"]))}
-          ${detailCell("Fecha de compra", displayDate(r[KEY.fecha]))}
-          ${detailCell("Proyecto", r[KEY.proyecto])}
-          ${detailCell("Proveedor", r[KEY.proveedor])}
-          ${detailCell("RUC proveedor", r[KEY.ruc])}
-          ${detailCell("Factura / acta", r[KEY.factura])}
-          ${detailCell("Factura digital", r[KEY.facturaDigital])}
-          ${detailCell("Marca", r[KEY.marca])}
-          ${detailCell("Modelo", r[KEY.modelo])}
-          ${detailCell("Serie", r[KEY.serie])}
-          ${detailCell("Estado físico", r[KEY.estadoFisico])}
-          ${detailCell("Cédula custodio", r[KEY.cedula])}
-          ${detailCell("Custodio", r[KEY.custodio])}
-          ${detailCell("Institución", r[KEY.institucion])}
-          ${detailCell("Ubicación", r[KEY.ubicacion])}
-          ${detailCell("Asegurado", r[KEY.asegurado])}
-          ${detailCell("Póliza", r[KEY.poliza])}
-          ${detailCell("Garantía técnica", r[KEY.garantia])}
-          ${detailCell("Estado garantía", r[KEY.estadoGarantia])}
-        </div>
-        <div class="panel mb-0">
-          <div class="panel-header"><h5>Observaciones y soportes</h5></div>
-          <div class="panel-body">
-            <p>${esc(r[KEY.observaciones] || "Sin observaciones.")}</p>
-            <div class="d-flex flex-wrap gap-2">
-              ${linkBadge("Acta de entrega", r[KEY.acta], linkForInvoice(r[KEY.factura]))}
-              ${linkBadge("Fotografía", r[KEY.foto], photoForAsset(r[KEY.codigo]))}
-              ${linkBadge("Factura digital", r[KEY.facturaDigital], linkForInvoice(r[KEY.factura]))}
-              <button class="btn btn-outline-primary btn-sm" onclick="openEditAsset(${index})"><i class="fa-solid fa-pen me-1"></i>Editar campos manuales</button>
-            </div>
-          </div>
-        </div>`;
-      new bootstrap.Modal($("assetModal")).show();
-    }
-
-    function detailCell(label,value){
-      return `<div class="detail-cell"><span>${esc(label)}</span><strong>${esc(value || "N/A")}</strong></div>`;
-    }
-    function linkBadge(label,value,fallback=""){
-      const resolved = clean(fallback) || clean(value);
-      if(!resolved || norm(resolved).includes("verificar") || norm(resolved)==="n/a" || norm(resolved)==="pendiente carga") return `<span class="tag warn">${esc(label)} pendiente</span>`;
-      if(/^https?:\/\//i.test(resolved)) return `<a class="tag info" href="${esc(resolved)}" target="_blank" rel="noopener"><i class="fa-solid fa-link me-1"></i>${esc(label)}</a>`;
-      return `<span class="tag dark">${esc(label)}: ${esc(resolved)}</span>`;
-    }
-
-    function buildQualityFindings(){
-      const total = state.rows.length;
-      const noCode = state.rows.filter(r=>!clean(r[KEY.codigo])).length;
-      const noDescription = state.rows.filter(r=>!clean(r[KEY.descripcion])).length;
-      const noCustodio = state.rows.filter(r=>!clean(r[KEY.custodio]) || norm(r[KEY.custodio])==="n/a").length;
-      const noUbicacion = state.rows.filter(r=>!clean(r[KEY.ubicacion]) || norm(r[KEY.ubicacion])==="n/a").length;
-      const noSerie = state.rows.filter(r=>!clean(r[KEY.serie]) || ["n/a","na","s/n","sn"].includes(norm(r[KEY.serie]))).length;
-      const noFactura = state.rows.filter(r=>!clean(r[KEY.factura]) || norm(r[KEY.factura]).includes("verificar")).length;
-      const noFoto = state.rows.filter(r=>!clean(r[KEY.foto]) || norm(r[KEY.foto]).includes("verificar")).length;
-      const dupCodes = findDuplicate(KEY.codigo);
-      const dupSeries = findDuplicate(KEY.serie, true);
-      const dupInvoices = findDuplicate(KEY.factura, true);
-      return [
-        {severity:noCode?"danger":"ok",label:"Código",title:`${noCode} bienes sin código`,description:"El código es la llave operativa del inventario y debe ser único."},
-        {severity:noDescription?"danger":"ok",label:"Descripción",title:`${noDescription} bienes sin descripción`,description:"La descripción permite identificar el bien en actas, seguros y auditorías."},
-        {severity:noCustodio?"warn":"ok",label:"Custodio",title:`${noCustodio} bienes sin custodio claro`,description:"Debe completarse el responsable para trazabilidad administrativa."},
-        {severity:noUbicacion?"warn":"ok",label:"Ubicación",title:`${noUbicacion} bienes sin ubicación`,description:"La ubicación es necesaria para constatación física."},
-        {severity:noSerie?"warn":"ok",label:"Serie",title:`${noSerie} bienes sin serie o con N/A`,description:"En equipos tecnológicos, la serie es esencial para garantía y seguro."},
-        {severity:noFactura?"warn":"ok",label:"Factura",title:`${noFactura} soportes de compra por verificar`,description:"Revise factura digital, acta de donación o documento equivalente."},
-        {severity:noFoto?"warn":"ok",label:"Fotografía",title:`${noFoto} fotografías pendientes o por verificar`,description:"La evidencia visual facilita constatación y control."},
-        {severity:dupCodes.length?"danger":"ok",label:"Duplicidad",title:`${dupCodes.length} códigos repetidos`,description:"El código del bien no debería repetirse."},
-        {severity:dupSeries.length?"warn":"ok",label:"Duplicidad",title:`${dupSeries.length} series repetidas`,description:"Revise si corresponde a bienes iguales, errores de digitación o registros duplicados."},
-        {severity:dupInvoices.length?"warn":"ok",label:"Factura",title:`${dupInvoices.length} facturas repetidas`,description:"Puede ser normal por compras múltiples, pero conviene validar cantidades e ítems."}
-      ];
-    }
-
-    function renderQuality(){
-      const findings = buildQualityFindings();
-      $("qualityFindings").innerHTML = findings.map(f=>`
-        <div class="audit-card" style="border-left-color:${f.severity==="danger"?"#b42318":f.severity==="warn"?"#f59e0b":"#16a34a"}">
-          <div class="d-flex justify-content-between gap-2">
-            <div>
-              <span class="tag ${f.severity}">${esc(f.label)}</span>
-              <h6 class="fw-bold mt-2 mb-1">${esc(f.title)}</h6>
-              <div class="small-muted">${esc(f.description)}</div>
-            </div>
-          </div>
-        </div>`).join("");
-    }
-
-    function findDuplicate(key, ignoreNA=false){
-      const map = new Map();
-      for(const r of state.rows){
-        const val = clean(r[key]);
-        if(!val) continue;
-        if(ignoreNA && ["N/A","NA","S/N","SN","Verificar"].some(x=>norm(val)===norm(x) || norm(val).includes("verificar"))) continue;
-        map.set(val, (map.get(val)||0)+1);
-      }
-      return [...map.entries()].filter(([_,c])=>c>1);
-    }
-
-    function countBy(arr,key){
-      return arr.reduce((a,r)=>{const k=clean(r[key]) || "N/A"; a[k]=(a[k]||0)+1; return a;},{});
-    }
-    function groupSum(arr,key,valKey){
-      return arr.reduce((a,r)=>{const k=clean(r[key]) || "N/A"; a[k]=(a[k]||0)+toNumber(r[valKey] || r["VALOR  INVENTARIO 2024"]); return a;},{});
-    }
-
-    function renderCharts(){
-      const byType = Object.entries(groupSum(state.rows, KEY.tipo, KEY.valor)).sort((a,b)=>b[1]-a[1]).slice(0,8);
-      const estado = Object.entries(countBy(state.rows, KEY.estadoFisico)).sort((a,b)=>b[1]-a[1]).slice(0,6);
-      const custodios = Object.entries(countBy(state.rows, KEY.custodio)).sort((a,b)=>b[1]-a[1]).slice(0,10);
-      const ubicaciones = Object.entries(groupSum(state.rows, KEY.ubicacion, KEY.valor)).sort((a,b)=>b[1]-a[1]).slice(0,10);
-      drawChart("chartTipoBien","bar",byType.map(x=>x[0]),byType.map(x=>x[1]),"Valor USD");
-      drawChart("chartEstadoFisico","doughnut",estado.map(x=>x[0]),estado.map(x=>x[1]),"Cantidad");
-      drawChart("chartCustodios","bar",custodios.map(x=>x[0]),custodios.map(x=>x[1]),"Bienes");
-      drawChart("chartUbicaciones","bar",ubicaciones.map(x=>x[0]),ubicaciones.map(x=>x[1]),"Valor USD");
-    }
-
-    function drawChart(id,type,labels,data,label){
-      const canvas = $(id);
-      if(!canvas) return;
-      if(state.charts[id]) state.charts[id].destroy();
-      state.charts[id] = new Chart(canvas, {
-        type,
-        data:{labels,datasets:[{label,data,borderWidth:1}]},
-        options:{
-          responsive:true, maintainAspectRatio:false,
-          plugins:{legend:{display:type==="doughnut",position:"bottom"}},
-          scales:type==="doughnut" ? {} : {x:{ticks:{autoSkip:false,maxRotation:35,minRotation:0}}, y:{beginAtZero:true}}
-        }
-      });
-    }
-
-    async function extractTextFromFile(file){
-      logOCR(`Documento recibido: ${file.name}`);
-      if(file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf")){
-        const buffer = await file.arrayBuffer();
-        logOCR("Leyendo texto interno del PDF...");
-        let text = "";
-        if(window.pdfjsLib){
-          const doc = await pdfjsLib.getDocument({data:buffer}).promise;
-          for(let p=1;p<=doc.numPages;p++){
-            const page = await doc.getPage(p);
-            const content = await page.getTextContent();
-            text += content.items.map(it=>it.str).join(" ") + "\n";
-          }
-        }
-        if(text.replace(/\s/g,"").length > 80){
-          logOCR("Texto interno detectado. No se requiere OCR visual.");
-          return text;
-        }
-        logOCR("El PDF no contiene texto suficiente. Aplicando OCR visual...");
-        return await runTesseract(file);
-      }
-      logOCR("Procesando imagen con OCR visual...");
-      return await runTesseract(file);
-    }
-
-    async function runTesseract(file){
-      if(!window.Tesseract) throw new Error("No se cargó Tesseract.js.");
-      const res = await Tesseract.recognize(file, "spa+eng", {
-        logger: m => {
-          if(m.status) $("ocrModeTag").textContent = m.status;
-          if(m.progress) logOCR(`${m.status}: ${Math.round(m.progress*100)}%`, true);
-        }
-      });
-      return res.data.text || "";
-    }
-
-    function logOCR(msg, replaceLast=false){
-      const c = $("ocrConsole");
-      if(replaceLast){
-        const lines = c.textContent.split("\n");
-        lines[lines.length-1] = msg;
-        c.textContent = lines.join("\n");
-      }else{
-        c.textContent = (c.textContent && c.textContent !== "Esperando documento..." ? c.textContent + "\n" : "") + msg;
-      }
-      c.scrollTop = c.scrollHeight;
-    }
-
-    function parseInvoice(text){
-      const raw = text.replace(/\r/g,"\n").replace(/[ \t]+/g," ").trim();
-      const lines = raw.split(/\n/).map(x=>x.trim()).filter(Boolean);
-      const flat = lines.join("\n");
-      const compact = flat.replace(/\s+/g," ");
-
-      let factura = normalizeInvoiceNumber(
-        matchOne(compact, /Factura\s*(?:N[roº°\.]*|No\.?|Nro\.?)?\s*[:#-]?\s*([0-9]{3}[\s-]*[0-9]{3}[\s-]*[0-9]{1,9})/i)
-        || matchOne(compact, /Nro\.?\s*[:#-]?\s*([0-9]{3}[\s-]*[0-9]{3}[\s-]*[0-9]{1,9})/i)
-        || matchOne(compact, /No\.?\s*([0-9]{3}[\s-]*[0-9]{3}[\s-]*[0-9]{1,9})/i)
-        || matchOne(compact, /\b([0-9]{3}-[0-9]{3}-[0-9]{1,9})\b/)
-        || matchOne(compact, /\b([0-9]{15})\b/)
-      );
-
-      const invoice = {
-        proveedor: detectProvider(lines),
-        rucProveedor: detectProviderRuc(compact),
-        claveAcceso: matchOne(compact, /\b([0-9]{49})\b/),
-        fechaEmision: normalizeInvoiceDate(
-          matchOne(compact, /Fecha\s*(?:de\s*)?Emisi[oó]n:?\s*([0-9]{1,2}[\/\-][0-9]{1,2}[\/\-][0-9]{4}|[0-9]{4}[\/\-][0-9]{1,2}[\/\-][0-9]{1,2})/i)
-          || matchOne(compact, /Fecha:?\s*([0-9]{1,2}[\/\-][0-9]{1,2}[\/\-][0-9]{4}|[0-9]{4}[\/\-][0-9]{1,2}[\/\-][0-9]{1,2})/i)
-          || matchOne(compact, /\b([0-9]{1,2}[\/\-][0-9]{1,2}[\/\-][0-9]{4}|[0-9]{4}[\/\-][0-9]{1,2}[\/\-][0-9]{1,2})\b/)
-        ),
-        factura,
-        comprador: matchOne(compact, /Raz[oó]n Social[^:]*:\s*(FONDO[^\n]+?)(?:\s+RUC|\s+Identificaci[oó]n|\s+Direcci[oó]n|$)/i),
-        subtotalSinImpuestos: findAmount(compact, /SUBTOTAL\s*(?:SIN IMPUESTOS|SIN IMPUEST|12\s*%|12%|15\s*%|15%)\s*[:]?\s*\$?\s*([0-9.,]+)/i) || findAmount(compact, /Subtotal\s*[:]?\s*\$?\s*([0-9.,]+)/i),
-        iva: findAmount(compact, /(?:IVA|Valor IVA)\s*(?:12|15)?\s*%?\s*[:]?\s*\$?\s*([0-9.,]+)/i),
-        total: findAmount(compact, /(?:VALOR TOTAL|Valor total|TOTAL FACTURA|Total forma de pago|Total)\s*[:]?\s*\$?\s*([0-9.,]+)/i),
-        items:[]
-      };
-      invoice.items = parseInvoiceItems(lines);
-      if(!invoice.factura && invoice.claveAcceso && invoice.claveAcceso.length >= 39){
-        const estab = invoice.claveAcceso.slice(24,27);
-        const pto = invoice.claveAcceso.slice(27,30);
-        const seq = invoice.claveAcceso.slice(30,39);
-        invoice.factura = `${estab}-${pto}-${seq}`;
-      }
-      if(!invoice.subtotalSinImpuestos && invoice.items.length){
-        invoice.subtotalSinImpuestos = invoice.items.reduce((a,it)=>a+toNumber(it.neto || it.total),0);
-      }
-      if(!invoice.total && invoice.subtotalSinImpuestos){
-        invoice.total = round2(invoice.subtotalSinImpuestos + (invoice.iva || 0));
-      }
-      if(!invoice.total && invoice.items.length){
-        invoice.total = invoice.items.reduce((a,it)=>a+toNumber(it.neto || it.total),0);
-      }
-      return invoice;
-    }
-
-    function detectProviderRuc(text){
-      const labelled = matchOne(text, /R\.?\s*U\.?\s*C\.?:?\s*([0-9]{13})/i) || matchOne(text, /RUC:?\s*([0-9]{13})/i);
-      if(labelled) return labelled;
-      const all = [...text.matchAll(/\b([0-9]{13})\b/g)].map(m=>m[1]);
-      return all.find(x=>x !== "1792807999001") || all[0] || "";
-    }
-
-    function detectProvider(lines){
-      const skip = /^(R\.?U\.?C|FACTURA|N[ÚU]MERO|FECHA|CLAVE|Direcci[oó]n|Matriz|Sucursal|CONTRIBUYENTE|OBLIGADO|AMBIENTE|EMISI[ÓO]N|NORMAL|PRODUCCION|Cliente|Raz[oó]n Social|FONDO DE INVERSION)/i;
-      const known = lines.find(l=>/CARTIMEX|ABFOTOVIDEO|AURON|BITLOGIC|VIRTUAL\s*SUPPORT|MULTIOFICINAS|DIGITAL\s*BOX|BUSINESS\s*TIME/i.test(l));
-      if(known) return known.replace(/\s{2,}.*/,"").trim();
-      for(const l of lines){
-        if(skip.test(l)) continue;
-        if(/[A-ZÁÉÍÓÚÑ]{3}/.test(l) && /\b(S\.A\.|CIA|CÍA|LTDA|SAS|S\.A\.S\.|COMERCIAL|SOLUCIONES|OFICINAS|BOX)\b/i.test(l)) return l;
-      }
-      return lines.find(l=>/\b(S\.A\.|LTDA|CIA|CÍA|SAS)\b/i.test(l)) || "";
-    }
-
-    function matchOne(text, re){
-      const m = text.match(re);
-      return m ? (m[1] || "").trim() : "";
-    }
-    function findAmount(text,re){
-      const m = text.match(re);
-      return m ? toNumber(m[1]) : 0;
-    }
-    function normalizeInvoiceDate(s){
-      if(!s) return "";
-      s = s.trim();
-      let m = s.match(/^(\d{4})[\/-](\d{1,2})[\/-](\d{1,2})$/);
-      if(m) return `${m[1]}-${m[2].padStart(2,"0")}-${m[3].padStart(2,"0")}`;
-      m = s.match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})$/);
-      if(m) return `${m[3]}-${m[2].padStart(2,"0")}-${m[1].padStart(2,"0")}`;
-      return s;
-    }
-
-    function parseInvoiceItems(lines){
-      const items = [];
-      let inTable = false;
-      const startRe = /(Cod\.?\s*Pral|C[oó]digo|PRODUCTO|DESCRIPCI[ÓO]N|Producto\s*\/\s*Servicio|Cant\.?)/i;
-      const stopRe = /(SUBTOTAL|VALOR TOTAL|TOTAL\s*:|Forma de Pago|Informaci[oó]n Adicional|Clave de Acceso|Firma del Cliente|GARANT[ÍI]A|ACTA DE ENTREGA)/i;
-      for(const rawLine of lines){
-        let line = rawLine.replace(/\$/g,"").replace(/\s+/g," ").trim();
-        if(!line) continue;
-        if(startRe.test(line)){ inTable = true; continue; }
-        if(inTable && stopRe.test(line)) break;
-        if(!inTable && !/^([A-Z0-9._-]+|[RMS])\s+/i.test(line)) continue;
-        const parsed = parseItemLine(line);
-        if(parsed && !isNonInventariable(parsed.descripcion)) items.push(parsed);
-      }
-      return items;
-    }
-
-    function parseItemLine(line){
-      const normalized = line.trim().replace(/\s+/g," ");
-      // CASABACA: R CODIGO DESCRIPCION CANTIDAD P. TOTAL DESCUENTO NETO
-      let m = normalized.match(/^([RMS])\s+([A-Z0-9._-]+)\s+(.+?)\s+(\d+(?:[.,]\d+)?)\s+([0-9.,]+)\s+([0-9.,]+)\s+([0-9.,]+)\s+([0-9.,]+)$/i);
-      if(m){
-        return {tipo:m[1], codigo:m[2], descripcion:m[3].trim(), cantidad:toNumber(m[4]), precio:toNumber(m[5]), total:toNumber(m[6]), descuento:toNumber(m[7]), neto:toNumber(m[8])};
-      }
-      // AURON / general: CODIGO CANT U DESCRIPCION P.UNIT DESC TOTAL
-      m = normalized.match(/^([A-Z0-9._-]+)\s+(\d+(?:[.,]\d+)?)\s*(?:U|UND|UNIDAD|und)?\s+(.+?)\s+([0-9][0-9.,]*)\s+([0-9.,]+)\s+([0-9][0-9.,]*)$/i);
-      if(m){
-        return {tipo:"B", codigo:m[1], descripcion:m[3].trim(), cantidad:toNumber(m[2]), precio:toNumber(m[4]), descuento:toNumber(m[5]), total:toNumber(m[6]), neto:toNumber(m[6])};
-      }
-      // ABFOTOVIDEO: 2 und CODIGO DESCRIPCION precio descuento total
-      m = normalized.match(/^(\d+(?:[.,]\d+)?)\s*(?:und|u|unidad)?\s+([A-Z0-9._-]+)\s+(.+?)\s+([0-9][0-9.,]*)\s+([0-9.,]+)\s+([0-9][0-9.,]*)$/i);
-      if(m){
-        return {tipo:"B", codigo:m[2], descripcion:m[3].trim(), cantidad:toNumber(m[1]), precio:toNumber(m[4]), descuento:toNumber(m[5]), total:toNumber(m[6]), neto:toNumber(m[6])};
-      }
-      // Business Time / Cartimex OCR: CODIGO CANT DESCRIPCION ... precio total
-      m = normalized.match(/^([A-Z0-9._-]+)\s+(\d+(?:[.,]\d+)?)\s+(.+?)\s+([0-9][0-9.,]*)\s+(?:0(?:[.,]00)?\s+){0,3}([0-9][0-9.,]*)$/i);
-      if(m){
-        return {tipo:"B", codigo:m[1], descripcion:m[3].trim(), cantidad:toNumber(m[2]), precio:toNumber(m[4]), descuento:0, total:toNumber(m[5]), neto:toNumber(m[5])};
-      }
-      return null;
-    }
-
-    function isNonInventariable(desc){
-      const n = norm(desc);
-      return /garantia$|material de empaque|transporte|envio|instalacion sin bien|pago final|anticipo/.test(n);
-    }
-
-    function invoiceToCandidates(invoice){
-      const subtotal = invoice.subtotalSinImpuestos || invoice.items.reduce((a,it)=>a+toNumber(it.neto || it.total),0) || invoice.total || 0;
-      const ratio = subtotal ? (invoice.total || subtotal) / subtotal : 1;
-      const itemSource = invoice.items.length ? invoice.items : [{
-        tipo:"B", codigo:"", descripcion:"Bien facturado", cantidad:1, precio:invoice.total, total:invoice.total, descuento:0, neto:invoice.total
-      }];
-      const expanded = [];
-      itemSource.filter(it=>toNumber(it.neto || it.total) > 0).forEach((it)=>{
-        const qty = Math.max(1, Math.floor(toNumber(it.cantidad) || 1));
-        const lineBase = toNumber(it.neto || it.total);
-        const unitValue = round2((lineBase / qty) * ratio);
-        const tipoBien = classifyItem(it.descripcion);
-        for(let unit=1; unit<=qty; unit++){
-          const c = {
-            selected:true,
-            codigo:"",
-            descripcion:String(it.descripcion || "").toUpperCase(),
-            adicional:`Pre-registro OCR factura ${invoice.factura || ""} · código proveedor ${it.codigo || ""}${qty>1 ? ` · unidad ${unit}/${qty}` : ""}`.trim(),
-            cantidad:1,
-            tipoBien,
-            clase: unitValue >= CONFIG.assetThreshold ? "ACTIVO FIJO" : "CONTROL ADMINISTRATIVO",
-            proyecto:"FIAS",
-            fecha:invoice.fechaEmision || todayISO(),
-            donante:"N/A",
-            proveedor:invoice.proveedor || "",
-            ruc:invoice.rucProveedor || "",
-            factura:invoice.factura || "",
-            facturaDigital: linkForInvoice(invoice.factura) || "Verificar",
-            valor:unitValue,
-            marca:inferBrand(it.descripcion),
-            modelo:inferModel(it.descripcion),
-            serie:"",
-            cedula:"",
-            custodio:"",
-            institucion:"FIAS",
-            ubicacion:"",
-            acta: linkForInvoice(invoice.factura) || "Verificar",
-            asegurado:"NO",
-            inicioSeguro:"",
-            finSeguro:"",
-            aseguradora:"",
-            poliza:"",
-            garantia:"N/A",
-            inicioGarantia:"",
-            finGarantia:"",
-            estadoGarantia:"NA",
-            estadoFisico:"BUENO",
-            vidaUtil:suggestLife(tipoBien),
-            observaciones:`Generado por OCR. Validar físicamente serie, custodio, ubicación, marca/modelo y clasificación antes de guardar.`
-          };
-          expanded.push(c);
-        }
-      });
-      assignSequentialCodes(expanded);
-      return expanded;
-    }
-
-    function round2(n){ return Math.round((Number(n)||0)*100)/100; }
-
-    function classifyItem(desc){
-      const n = norm(desc);
-      const cat = ASSET_CATEGORIES.find(c=>c.keywords.some(k=>n.includes(norm(k))));
-      return (cat || ASSET_CATEGORIES.find(c=>c.code==="04")).name;
-    }
-    function inferBrand(desc){
-      const brands = ["HP","DELL","LENOVO","EPSON","CANON","SAMSUNG","LG","SONY","TOYOTA","BOSCH","MICHELIN","HONEYWELL","LOGITECH","ASUS","RODE","ESET","MICROSOFT","APPLE","CARTIMEX"];
-      const up = String(desc || "").toUpperCase();
-      return brands.find(b=>up.includes(b)) || "";
-    }
-    function inferModel(desc){
-      const up = String(desc || "").toUpperCase();
-      const m = up.match(/\b(?:PROBOOK|LATITUDE|INSPIRON|THINKPAD|IDEAPAD|EOS|FX890|L340|450|440|5500|G7|G5|T5D|CFD|X41)[A-Z0-9\-\s\.]{0,35}/);
-      return m ? m[0].trim() : "";
-    }
-    function suggestLife(tipo){
-      return (categoryByName(tipo) || ASSET_CATEGORIES.find(c=>c.code==="04")).life;
-    }
-    function suggestCode(seq){
-      const year2 = new Date().getFullYear().toString().slice(2,4);
-      const cat = "04";
-      return formatFIASCode(year2, cat, maxSequenceFor(year2, cat) + Number(seq || 1));
-    }
-
-    function renderInvoiceSummary(invoice){
-      $("invoiceSummary").innerHTML = `
-        <div class="detail-grid">
-          ${detailCell("Proveedor", invoice.proveedor)}
-          ${detailCell("RUC", invoice.rucProveedor)}
-          ${detailCell("Factura", invoice.factura)}
-          ${detailCell("Fecha", displayDate(invoice.fechaEmision))}
-          ${detailCell("Subtotal", money(invoice.subtotalSinImpuestos))}
-          ${detailCell("IVA", money(invoice.iva))}
-          ${detailCell("Total", money(invoice.total))}
-          ${detailCell("Ítems detectados", invoice.items.length)}
-        </div>`;
-    }
-
-    function renderCandidates(){
-      $("candidatePanel").classList.remove("hidden");
-      const body = state.candidates.map((c,i)=>`
-        <tr>
-          <td><input type="checkbox" class="form-check-input cand-selected" data-i="${i}" ${c.selected?"checked":""}></td>
-          <td><input class="form-control cand" data-i="${i}" data-k="codigo" value="${esc(c.codigo)}"></td>
-          <td><input class="form-control desc-input cand" data-i="${i}" data-k="descripcion" value="${esc(c.descripcion)}"></td>
-          <td><select class="form-select cand" data-i="${i}" data-k="tipoBien">${optionList(ASSET_CATEGORIES.map(x=>x.name), c.tipoBien)}</select></td>
-          <td><select class="form-select cand" data-i="${i}" data-k="clase">${optionList(CLASS_OPTIONS, c.clase)}</select></td>
-          <td><select class="form-select cand" data-i="${i}" data-k="proyecto">${optionList(PROJECT_OPTIONS, c.proyecto)}</select></td>
-          <td><input type="number" step="0.01" class="form-control cand" data-i="${i}" data-k="cantidad" value="${esc(c.cantidad)}"></td>
-          <td><input type="number" step="0.01" class="form-control cand" data-i="${i}" data-k="valor" value="${esc(c.valor)}"></td>
-          <td><input class="form-control cand" data-i="${i}" data-k="marca" value="${esc(c.marca)}"></td>
-          <td><input class="form-control cand" data-i="${i}" data-k="modelo" value="${esc(c.modelo)}"></td>
-          <td><input class="form-control cand" data-i="${i}" data-k="serie" value="${esc(c.serie)}"></td>
-          <td><input class="form-control cand" data-i="${i}" data-k="custodio" value="${esc(c.custodio)}"></td>
-          <td><input class="form-control cand" data-i="${i}" data-k="ubicacion" value="${esc(c.ubicacion)}"></td>
-        </tr>`).join("");
-      $("candidateTable").querySelector("tbody").innerHTML = body || `<tr><td colspan="13" class="text-center py-4 text-muted">No hay candidatos.</td></tr>`;
-      document.querySelectorAll(".cand").forEach(el=>el.addEventListener("input", updateCandidateFromInput));
-      document.querySelectorAll(".cand-selected").forEach(el=>el.addEventListener("change", e=>state.candidates[Number(e.target.dataset.i)].selected = e.target.checked));
-    }
-
-    function optionList(options, selected){
-      return options.map(o=>`<option ${o===selected?"selected":""}>${esc(o)}</option>`).join("");
-    }
-    function updateCandidateFromInput(e){
-      const i = Number(e.target.dataset.i);
-      const k = e.target.dataset.k;
-      let v = e.target.value;
-      if(["cantidad","valor"].includes(k)) v = toNumber(v);
-      state.candidates[i][k] = v;
-      if(k === "tipoBien") state.candidates[i].vidaUtil = suggestLife(v);
-    }
-
-    function splitCandidatesByUnit(){
-      const next = [];
-      state.candidates.forEach(c=>{
-        const qty = Math.max(1, Math.floor(toNumber(c.cantidad)));
-        if(qty <= 1){ next.push(c); return; }
-        const unitValue = round2(toNumber(c.valor) / qty);
-        for(let i=1;i<=qty;i++){
-          next.push({...c, cantidad:1, valor:unitValue, codigo:"", adicional:`${c.adicional} · unidad ${i}/${qty}`});
-        }
-      });
-      state.candidates = next;
-      assignSequentialCodes(state.candidates);
-      renderCandidates();
-      showToast("Los ítems con cantidad mayor a 1 fueron separados por unidad y recodificados.");
-    }
-
-    function candidateToRow(c){
-      const obj = {};
-      INVENTORY_HEADERS.forEach(h=>obj[h]="");
-      obj[KEY.codigo] = c.codigo;
-      obj[KEY.descripcion] = c.descripcion;
-      obj[KEY.adicional] = c.adicional;
-      obj[KEY.cantidad] = c.cantidad;
-      obj[KEY.tipo] = c.tipoBien;
-      obj[KEY.clase] = c.clase;
-      obj[KEY.proyecto] = c.proyecto;
-      obj[KEY.fecha] = c.fecha;
-      obj[KEY.donante] = c.donante;
-      obj[KEY.proveedor] = c.proveedor;
-      obj[KEY.ruc] = c.ruc;
-      obj[KEY.factura] = c.factura;
-      obj[KEY.facturaDigital] = c.facturaDigital;
-      obj[KEY.valor] = c.valor;
-      obj[KEY.marca] = c.marca;
-      obj[KEY.modelo] = c.modelo;
-      obj[KEY.serie] = c.serie;
-      obj[KEY.cedula] = c.cedula;
-      obj[KEY.custodio] = c.custodio;
-      obj[KEY.institucion] = c.institucion;
-      obj[KEY.ubicacion] = c.ubicacion;
-      obj[KEY.acta] = c.acta;
-      obj[KEY.asegurado] = c.asegurado;
-      obj[KEY.inicioSeguro] = c.inicioSeguro;
-      obj[KEY.finSeguro] = c.finSeguro;
-      obj[KEY.aseguradora] = c.aseguradora;
-      obj[KEY.poliza] = c.poliza;
-      obj[KEY.garantia] = c.garantia;
-      obj[KEY.inicioGarantia] = c.inicioGarantia;
-      obj[KEY.finGarantia] = c.finGarantia;
-      obj[KEY.estadoGarantia] = c.estadoGarantia;
-      obj[KEY.estadoFisico] = c.estadoFisico;
-      obj[KEY.vidaUtil] = c.vidaUtil;
-      obj[KEY.observaciones] = c.observaciones;
-      return obj;
-    }
-
-    function rowArrayFromObject(obj){
-      const headers = state.headers.length ? state.headers : INVENTORY_HEADERS;
-      return headers.map(h=>obj[h] ?? "");
-    }
-
-    function colName(n){
-      let s = "";
-      while(n > 0){ const m = (n-1)%26; s = String.fromCharCode(65+m)+s; n = Math.floor((n-m)/26); }
-      return s;
-    }
-
-    function headerIndex(header){
-      const headers = state.headers.length ? state.headers : INVENTORY_HEADERS;
-      const exact = headers.indexOf(header);
-      if(exact >= 0) return exact;
-      const target = norm(header);
-      return headers.findIndex(h=>norm(h)===target);
-    }
-
-    async function patchRowManualCells(rowNumber, obj){
-      const headers = state.headers.length ? state.headers : INVENTORY_HEADERS;
-      // Agrupa columnas manuales contiguas para reducir llamadas a Graph y evitar sobrescribir fórmulas/enlaces.
-      const segments = [];
-      let current = null;
-      headers.forEach((h, idx)=>{
-        if(!MANUAL_WRITE_COLUMNS.has(h) || FORMULA_PROTECTED_COLUMNS.has(h)){
-          if(current){ segments.push(current); current = null; }
-          return;
-        }
-        const val = obj[h] ?? "";
-        if(!current){ current = {start:idx, values:[val]}; }
-        else if(idx === current.start + current.values.length){ current.values.push(val); }
-        else { segments.push(current); current = {start:idx, values:[val]}; }
-      });
-      if(current) segments.push(current);
-      for(const seg of segments){
-        const startCol = colName(seg.start + 1);
-        const endCol = colName(seg.start + seg.values.length);
-        await graphFetch(`/drives/${state.driveId}/items/${state.itemId}/workbook/worksheets/${state.worksheetId}/range(address='${startCol}${rowNumber}:${endCol}${rowNumber}')`, {
-          method:"PATCH",
-          useSession:true,
-          body:JSON.stringify({values:[seg.values]})
-        });
-      }
-    }
-
-    async function appendInventoryRows(objects){
-      if(state.readOnly) throw new Error("El archivo está en modo lectura. No es posible escribir hasta que Graph Workbook esté disponible.");
-      if(!state.worksheetId) throw new Error("No se resolvió la hoja de inventario.");
-      const headers = state.headers.length ? state.headers : INVENTORY_HEADERS;
-      const startRow = (state.rawRange?.rowIndex ?? 0) + (state.rawRange?.rowCount ?? (state.rows.length+1)) + 1;
-      for(let i=0;i<objects.length;i++){
-        const rowNumber = startRow + i;
-        await patchRowManualCells(rowNumber, objects[i]);
-        const rowVals = headers.map(h=>objects[i][h] ?? "");
-        const obj = {_rowNumber:rowNumber, _values:rowVals};
-        headers.forEach((h,j)=>obj[h]=rowVals[j] ?? "");
-        state.rows.push(obj);
-      }
-      state.rawRange = {...(state.rawRange||{}), rowCount:(state.rawRange?.rowCount || state.rows.length) + objects.length};
-      renderAll();
-    }
-
-    async function updateInventoryRow(rowNumber, obj){
-      if(state.readOnly) throw new Error("El archivo está en modo lectura. No es posible editar hasta que Graph Workbook esté disponible.");
-      await patchRowManualCells(rowNumber, obj);
-      const idx = state.rows.findIndex(r=>Number(r._rowNumber)===Number(rowNumber));
-      if(idx >= 0){
-        Object.keys(obj).forEach(k=>{ if(MANUAL_WRITE_COLUMNS.has(k)) state.rows[idx][k] = obj[k]; });
-      }
-      renderAll();
-    }
-
-    async function saveCandidates(){
-      try{
-        const selected = state.candidates.filter(c=>c.selected);
-        if(!selected.length){ showToast("Seleccione al menos un bien para guardar.", "warn"); return; }
-        const invalid = selected.find(c=>!clean(c.codigo) || !clean(c.descripcion));
-        if(invalid){ showToast("Todos los bienes seleccionados deben tener código y descripción.", "warn"); return; }
-        $("btnSaveCandidates").disabled = true;
-        $("btnSaveCandidates").innerHTML = `<span class="spinner-border spinner-border-sm me-1"></span> Guardando`;
-        await appendInventoryRows(selected.map(candidateToRow));
-        showToast(`${selected.length} bien(es) agregados al inventario.`);
-        $("candidatePanel").classList.add("hidden");
-        state.candidates = [];
-      }catch(e){
-        showToast("No se pudo guardar el pre-registro: " + (e.message || e), "danger");
-      }finally{
-        $("btnSaveCandidates").disabled = false;
-        $("btnSaveCandidates").innerHTML = `<i class="fa-solid fa-cloud-arrow-up me-1"></i>Guardar seleccionados`;
-      }
-    }
-
-    async function handleFile(file){
-      if(!file) return;
-      $("ocrConsole").textContent = "Iniciando procesamiento...";
-      $("ocrModeTag").textContent = "Procesando";
-      try{
-        const text = await extractTextFromFile(file);
-        if(!text || text.replace(/\s/g,"").length < 20) throw new Error("No se pudo extraer texto útil de la factura.");
-        logOCR("Analizando campos de factura...");
-        const invoice = parseInvoice(text);
-        state.parsedInvoice = invoice;
-        state.candidates = invoiceToCandidates(invoice);
-        renderInvoiceSummary(invoice);
-        renderCandidates();
-        $("ocrModeTag").textContent = "Pre-registro listo";
-        logOCR(`Pre-registro generado: ${state.candidates.length} línea(s) de bien propuestas.`);
-        showToast("Factura procesada. Revise el pre-registro antes de guardar.");
-      }catch(e){
-        $("ocrModeTag").textContent = "Error";
-        logOCR("Error: " + (e.message || e));
-        showToast("No fue posible procesar la factura: " + (e.message || e), "danger");
-      }
-    }
-
-    function buildManualForm(existing=null){
-      const fields = [
-        [KEY.codigo,"Código",true,"text","code"],[KEY.descripcion,"Descripción",true],[KEY.adicional,"Descripción adicional",false],
-        [KEY.cantidad,"Cantidad",true,"number"],[KEY.tipo,"Tipo de bien",true,"select:tipo"],[KEY.clase,"Activo fijo / Control",true,"select:clase"],
-        [KEY.proyecto,"Proyecto",true,"select:proyecto"],[KEY.fecha,"Fecha de compra",false,"date"],[KEY.donante,"Donante",false],
-        [KEY.proveedor,"Proveedor",false],[KEY.ruc,"RUC proveedor",false],[KEY.factura,"Factura / acta",false],
-        [KEY.valor,"Valor inc. imp.",true,"number"],[KEY.marca,"Marca",false],[KEY.modelo,"Modelo",false],[KEY.serie,"Serie",false],
-        [KEY.cedula,"Cédula custodio",false],[KEY.custodio,"Custodio",false],[KEY.institucion,"Institución",false],
-        [KEY.ubicacion,"Ubicación",false],[KEY.garantia,"Garantía técnica",false,"select:garantia"],[KEY.estadoFisico,"Estado físico",false,"select:estado"],
-        [KEY.vidaUtil,"Vida útil estimada",false,"number"],[KEY.observaciones,"Observaciones",false]
-      ];
-      const defaults = {
-        [KEY.cantidad]:1, [KEY.proyecto]:"FIAS", [KEY.fecha]:todayISO(), [KEY.clase]:"CONTROL ADMINISTRATIVO", [KEY.estadoFisico]:"BUENO", [KEY.institucion]:"FIAS", [KEY.garantia]:"N/A"
-      };
-      const record = existing || defaults;
-      $("manualForm").innerHTML = fields.map(([key,label,req,type])=>{
-        const value = record[key] ?? defaults[key] ?? "";
-        const readonly = type === "code" ? "readonly" : "";
-        let control = `<input class="form-control manual-field" data-key="${esc(key)}" type="${type === "number" ? "number" : type === "date" ? "date" : "text"}" value="${esc(type === "date" ? excelDateToISO(value) : value)}" ${readonly} ${req?"required":""}>`;
-        if(type === "select:tipo") control = `<select class="form-select manual-field" data-key="${esc(key)}">${optionList(ASSET_CATEGORIES.map(x=>x.name), value || "EQUIPOS DE OFICINA")}</select>`;
-        if(type === "select:clase") control = `<select class="form-select manual-field" data-key="${esc(key)}">${optionList(CLASS_OPTIONS, value || "CONTROL ADMINISTRATIVO")}</select>`;
-        if(type === "select:proyecto") control = `<select class="form-select manual-field" data-key="${esc(key)}">${optionList(PROJECT_OPTIONS, value || "FIAS")}</select>`;
-        if(type === "select:garantia") control = `<select class="form-select manual-field" data-key="${esc(key)}">${optionList(GUARANTEE_OPTIONS, value || "N/A")}</select>`;
-        if(type === "select:estado") control = `<select class="form-select manual-field" data-key="${esc(key)}">${optionList(ESTADO_OPTIONS, value || "BUENO")}</select>`;
-        return `<div class="col-md-4"><label class="form-label">${esc(label)}${req?" *":""}</label>${control}</div>`;
-      }).join("");
-      const codeField = document.querySelector(`.manual-field[data-key="${CSS.escape(KEY.codigo)}"]`);
-      const tipoField = document.querySelector(`.manual-field[data-key="${CSS.escape(KEY.tipo)}"]`);
-      const fechaField = document.querySelector(`.manual-field[data-key="${CSS.escape(KEY.fecha)}"]`);
-      function refreshManualCode(){
-        if(existing) return;
-        const temp = [{tipoBien: tipoField?.value || "EQUIPOS DE OFICINA", fecha: fechaField?.value || todayISO(), codigo:""}];
-        assignSequentialCodes(temp);
-        if(codeField) codeField.value = temp[0].codigo;
-        const vida = document.querySelector(`.manual-field[data-key="${CSS.escape(KEY.vidaUtil)}"]`);
-        if(vida) vida.value = suggestLife(tipoField?.value || "EQUIPOS DE OFICINA");
-      }
-      tipoField?.addEventListener("change", refreshManualCode);
-      fechaField?.addEventListener("change", refreshManualCode);
-      if(!existing) refreshManualCode();
-    }
-
-    async function saveManualAsset(){
-      try{
-        const obj = {};
-        INVENTORY_HEADERS.forEach(h=>obj[h]="");
-        document.querySelectorAll(".manual-field").forEach(el=>obj[el.dataset.key] = el.type==="number" ? toNumber(el.value) : el.value);
-        if(!clean(obj[KEY.codigo]) || !clean(obj[KEY.descripcion])){
-          showToast("Código y descripción son obligatorios.", "warn"); return;
-        }
-        if(state.editRow){
-          await updateInventoryRow(state.editRow, obj);
-          state.editRow = null; state.editIndex = null;
-          showToast("Bien actualizado correctamente. Solo se modificaron campos manuales.");
-        }else{
-          await appendInventoryRows([obj]);
-          showToast("Bien registrado correctamente.");
-        }
-        bootstrap.Modal.getInstance($("newAssetModal"))?.hide();
-      }catch(e){
-        showToast("No fue posible guardar el bien: " + (e.message || e), "danger");
-      }
-    }
-
-    function openEditAsset(index){
-      const r = state.rows[index];
-      if(!r){ showToast("No se encontró el bien para editar.", "warn"); return; }
-      state.editRow = r._rowNumber;
-      state.editIndex = index;
-      document.querySelector("#newAssetModal .modal-title").innerHTML = `<i class="fa-solid fa-pen me-2"></i>Editar bien ${esc(r[KEY.codigo])}`;
-      buildManualForm(r);
-      new bootstrap.Modal($("newAssetModal")).show();
-    }
-
-    function resetFilters(){
-      state.filters = {q:"",tipo:"",proyecto:"",asegurado:"",estado:""};
-      $("searchInput").value = "";
-      $("filterTipo").value = "";
-      $("filterProyecto").value = "";
-      $("filterAsegurado").value = "";
-      $("filterEstado").value = "";
-      renderInventory();
-    }
-
-    function bindEvents(){
-      $("loginBtn").addEventListener("click", login);
-      $("btnLogout").addEventListener("click", logout);
-      $("btnSync").addEventListener("click", syncInventory);
-      $("menuBtn").addEventListener("click", ()=>$("sidebar").classList.toggle("open"));
-
-      document.querySelectorAll(".nav-btn").forEach(btn=>{
-        btn.addEventListener("click", ()=>{
-          document.querySelectorAll(".nav-btn").forEach(b=>b.classList.remove("active"));
-          btn.classList.add("active");
-          document.querySelectorAll(".tab-panel").forEach(p=>p.classList.add("hidden"));
-          $(btn.dataset.tab).classList.remove("hidden");
-          $("sidebar").classList.remove("open");
-          setTimeout(renderCharts,80);
-        });
-      });
-
-      ["searchInput","filterTipo","filterProyecto","filterAsegurado","filterEstado"].forEach(id=>{
-        $(id).addEventListener("input", ()=>{
-          state.filters = {
-            q:$("searchInput").value,
-            tipo:$("filterTipo").value,
-            proyecto:$("filterProyecto").value,
-            asegurado:$("filterAsegurado").value,
-            estado:$("filterEstado").value
-          };
-          renderInventory();
-        });
-      });
-      $("btnResetFilters").addEventListener("click", resetFilters);
-      document.querySelectorAll(".quick-chip").forEach(btn=>btn.addEventListener("click", ()=>{
-        $("searchInput").value = btn.dataset.q;
-        state.filters.q = btn.dataset.q;
-        renderInventory();
-      }));
-
-      $("btnChooseFile").addEventListener("click", ()=>$("invoiceFile").click());
-      $("invoiceFile").addEventListener("change", e=>handleFile(e.target.files[0]));
-      const drop = $("dropzone");
-      ["dragenter","dragover"].forEach(ev=>drop.addEventListener(ev, e=>{e.preventDefault(); drop.classList.add("dragover");}));
-      ["dragleave","drop"].forEach(ev=>drop.addEventListener(ev, e=>{e.preventDefault(); drop.classList.remove("dragover");}));
-      drop.addEventListener("drop", e=>handleFile(e.dataTransfer.files[0]));
-      $("btnRegenerateCodes").addEventListener("click", regenerateCandidateCodes);
-      $("btnSplitUnits").addEventListener("click", splitCandidatesByUnit);
-      $("btnSaveCandidates").addEventListener("click", saveCandidates);
-
-      $("btnNewAsset").addEventListener("click", ()=>{
-        state.editRow = null; state.editIndex = null;
-        document.querySelector("#newAssetModal .modal-title").innerHTML = `<i class="fa-solid fa-plus me-2"></i>Nuevo bien manual`;
-        buildManualForm();
-        new bootstrap.Modal($("newAssetModal")).show();
-      });
-      $("btnSaveManual").addEventListener("click", saveManualAsset);
-      $("btnCopySummary").addEventListener("click", async ()=>{
-        const text = $("executiveSummary").innerText;
-        await navigator.clipboard.writeText(text).catch(()=>{});
-        showToast("Resumen ejecutivo copiado.");
-      });
-    }
-
-    bindEvents();
-    bootstrap().catch(e=>{
-      console.error(e);
-      showToast("Fallo de inicialización: " + (e.message || e), "danger");
-      showLogin();
-    });
+  'use strict';
+  const APP = {
+    TENANT_ID:'5e23e4af-237d-4d97-bf6e-dca808015787',
+    CLIENT_ID:'c8a828c1-3a20-4876-96af-b4f30ce4abeb',
+    SHARE_URL:'https://fiasec.sharepoint.com/:x:/s/FONDODEINVERSIONAMBIENTALSOSTENIBLE/IQB8T4IHACJATpRq7HrJXpjnAVCrlTOLZ14GwpRWRqMHwuE?e=azSfGq',
+    SHARE_B64:'U!aHR0cHM6Ly9maWFzZWMuc2hhcmVwb2ludC5jb20vOng6L3MvRk9ORE9ERUlOVkVSU0lPTkFNQklFTlRBTFNPU1RFTklCTEUvSVFCOFQ0SUhBQ0pBVHBScTdIckpYcGpuQVZDcmxUT0xaMTRHd3BSV1JxTUh3dUU/ZT1helNmR3E=',
+    sheets:{bienes:'01_Bienes',facturas:'02_Facturas',detalle:'03_DetalleFactura',pre:'04_PreRegistroOCR',tipo:'05_Cat_TipoBien',proyectos:'06_Cat_Proyectos',proveedores:'07_Cat_Proveedores',custodios:'08_Cat_Custodios',ubicaciones:'09_Cat_Ubicaciones',docs:'10_DocumentosLinks',fotos:'11_FotosLinks',audit:'12_Auditoria',seq:'13_Secuencias'},
+    required:['Codigo','Descripcion','DescripcionAdicional','Cantidad','CodigoTipoSugerido','Clasificacion','Proyecto','FechaCompra','Proveedor','RucProveedor','NumeroFacturaActa','ValorBienIncImp','Marca','Modelo','NumeroSerie'],
+    manualFields:['IdBien','Codigo','CodigoAnio','CodigoTipoActual','SecuencialActual','CodigoTipoSugerido','CategoriaBienSugerida','ValidacionCodigo','Descripcion','DescripcionAdicional','Cantidad','TipoBienOriginal','Clasificacion','Proyecto','FechaCompra','Donante','Proveedor','RucProveedor','NumeroFacturaActa','ValorBienIncImp','Marca','Modelo','NumeroSerie','CedulaCustodio','Custodio','Institucion','Ubicacion','Asegurado','InicioSeguro','FinSeguro','Aseguradora','NroPoliza','GarantiaTecnica','InicioGarantia','FinGarantia','EstadoFisico','VidaUtilAnios','TasaAnual','DepreciacionLinealAnual','DepreciacionMensual','ValorResidualSugerido','FechaBaja','MotivoBaja','Observaciones','EstadoCalidad','FacturaDigitalLink','FotoLink','ActaEntregaLink','FuenteMigracion']
+  };
+  const scopes = {scopes:['User.Read','Files.ReadWrite','Files.ReadWrite.All','Sites.ReadWrite.All']};
+  const state = {msal:null, account:null, token:null, itemPath:'', sessionId:null, sheetIds:{}, offline:false, busy:false, charts:{}, data:{bienes:[],facturas:[],detalle:[],pre:[],tipo:[],proyectos:[],proveedores:[],custodios:[],ubicaciones:[],docs:[],fotos:[],audit:[],seq:[]}, headers:{}, preLocal:[], currentView:'cards'};
+  const $ = id => document.getElementById(id);
+  const money = v => new Intl.NumberFormat('es-EC',{style:'currency',currency:'USD'}).format(num(v));
+  const num = v => { if(v===null||v===undefined||v==='') return 0; let s=String(v).trim().replace(/\$/g,'').replace(/\s/g,''); if(/^\d{1,3}(\.\d{3})+,\d+$/.test(s)) s=s.replace(/\./g,'').replace(',', '.'); else if(/^\d+,\d+$/.test(s)) s=s.replace(',', '.'); return Number(s)||0; };
+  const norm = s => String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
+  const todayISO = () => new Date().toISOString().slice(0,10);
+  const nowISO = () => new Date().toISOString();
+  const esc = s => String(s??'').replace(/[&<>'"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[m]));
+  const uuid = p => `${p}-${Date.now()}-${Math.random().toString(36).slice(2,7)}`;
+  const colLetter = n => {let s=''; while(n>0){let m=(n-1)%26; s=String.fromCharCode(65+m)+s; n=Math.floor((n-1)/26);} return s;};
+  function toISO(v){ if(!v) return ''; if(v instanceof Date) return v.toISOString().slice(0,10); if(typeof v==='number'){ const d=new Date(Math.round((v-25569)*86400*1000)); return isNaN(d)?String(v):d.toISOString().slice(0,10); } const s=String(v).trim(); if(/^\d{4}-\d{2}-\d{2}/.test(s)) return s.slice(0,10); let m=s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})$/); if(m){let y=m[3].length===2?'20'+m[3]:m[3]; return `${y}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`;} m=s.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})$/); if(m) return `${m[1]}-${m[2].padStart(2,'0')}-${m[3].padStart(2,'0')}`; const d=new Date(s); return isNaN(d)?s:d.toISOString().slice(0,10); }
+  function displayDate(v){ const x=toISO(v); const m=x.match(/^(\d{4})-(\d{2})-(\d{2})$/); return m?`${m[3]}/${m[2]}/${m[1]}`:esc(x); }
+  function badge(text,type='darkb'){ return `<span class="badge-soft ${type}">${esc(text||'N/A')}</span>`; }
+  function log(msg){ const el=$('ocrConsole'); if(el) { el.textContent += `\n${new Date().toLocaleTimeString('es-EC')} · ${msg}`; el.scrollTop=el.scrollHeight; } }
+  function getShareToken(){ if(String(APP.SHARE_B64||'').startsWith('U!')||String(APP.SHARE_B64||'').startsWith('u!')) return 'u!'+APP.SHARE_B64.slice(2); const b64=btoa(unescape(encodeURIComponent(APP.SHARE_URL))).replace(/=+$/,'').replace(/\//g,'_').replace(/\+/g,'-'); return 'u!'+b64; }
+  async function init(){ setupEvents(); setupMsal(); await tryExistingSession(); }
+  function setupMsal(){ if(!window.msal){showLoginError('No se pudo cargar MSAL. Revise internet/CDN.'); return;} state.msal = new msal.PublicClientApplication({auth:{clientId:APP.CLIENT_ID,authority:`https://login.microsoftonline.com/${APP.TENANT_ID}`,redirectUri:location.origin+location.pathname},cache:{cacheLocation:'sessionStorage',storeAuthStateInCookie:false}}); }
+  async function tryExistingSession(){ try{ await state.msal.initialize(); const accs=state.msal.getAllAccounts(); if(accs.length){ state.account=accs[0]; await acquireToken(); await enterApp(); } }catch(e){ console.warn(e); } }
+  async function login(){ try{ showLoginError(''); await state.msal.initialize(); const res=await state.msal.loginPopup(scopes); state.account=res.account; state.token=res.accessToken; await enterApp(); }catch(e){ showLoginError('No fue posible iniciar sesión: '+(e.message||e)); } }
+  async function acquireToken(){ const account=state.account || state.msal.getAllAccounts()[0]; if(!account) throw new Error('No existe cuenta autenticada.'); try{ const r=await state.msal.acquireTokenSilent({...scopes,account}); state.token=r.accessToken; state.account=r.account||account; return state.token; }catch(e){ const r=await state.msal.acquireTokenPopup({...scopes,account}); state.token=r.accessToken; state.account=r.account||account; return state.token; } }
+  function showLoginError(msg){ const el=$('loginError'); if(!el) return; if(!msg){el.classList.add('hidden'); el.textContent='';} else {el.classList.remove('hidden'); el.textContent=msg;} }
+  async function enterApp(){ $('loginShell').classList.add('hidden'); $('app').classList.remove('hidden'); $('sessionUser').textContent=state.account?.username||'Sesión activa'; await fullSync(); }
+  async function logout(){ try{ if(state.msal && state.account) await state.msal.logoutPopup({account:state.account,postLogoutRedirectUri:location.origin+location.pathname}); }catch(e){console.warn(e);} finally{ sessionStorage.clear(); state.account=null; state.token=null; state.sessionId=null; $('app').classList.add('hidden'); $('loginShell').classList.remove('hidden'); $('sessionUser').textContent='No conectado'; } }
+  function offlineDemo(){ state.offline=true; $('loginShell').classList.add('hidden'); $('app').classList.remove('hidden'); $('sessionUser').textContent='Vista sin conexión'; seedDemoData(); renderAll(); }
+  async function graphFetch(path, options={}, useSession=true){ const controller=new AbortController(); const timeout=setTimeout(()=>controller.abort(), options.timeout||35000); try{ const token=await acquireToken(); const headers={Authorization:`Bearer ${token}`,'Content-Type':'application/json',...(options.headers||{})}; if(useSession && state.sessionId && path.includes('/workbook/')) headers['Workbook-Session-Id']=state.sessionId; const res=await fetch(`https://graph.microsoft.com/v1.0${path}`,{...options,headers,signal:controller.signal}); if(!res.ok){ const txt=await res.text().catch(()=>res.statusText); throw new Error(`Graph ${res.status}: ${txt}`); } if(res.status===204) return null; return await res.json(); }finally{ clearTimeout(timeout); } }
+  async function resolveItem(){ const item=await graphFetch(`/shares/${getShareToken()}/driveItem?$select=id,name,parentReference`,{},false); if(!item?.id || !item?.parentReference?.driveId) throw new Error('No se pudo resolver el archivo Excel en SharePoint.'); state.itemPath=`/drives/${item.parentReference.driveId}/items/${item.id}`; }
+  async function createSession(){ state.sessionId=null; const r=await graphFetch(`${state.itemPath}/workbook/createSession`,{method:'POST',body:JSON.stringify({persistChanges:true})},false); state.sessionId=r?.id||null; }
+  async function closeSession(){ if(!state.sessionId) return; try{ await graphFetch(`${state.itemPath}/workbook/closeSession`,{method:'POST'},true); }catch(e){console.warn('No se pudo cerrar sesión previa',e);} finally{state.sessionId=null;} }
+  async function loadWorksheetIds(){ const r=await graphFetch(`${state.itemPath}/workbook/worksheets?$select=id,name`); state.sheetIds={}; (r.value||[]).forEach(s=>state.sheetIds[s.name]=s.id); }
+  async function usedRange(sheetName){ const id=state.sheetIds[sheetName]; if(!id) throw new Error(`No se encontró la hoja ${sheetName}`); return await graphFetch(`${state.itemPath}/workbook/worksheets/${id}/usedRange(valuesOnly=true)`); }
+  async function loadSheet(key){ const sheetName=APP.sheets[key]; const r=await usedRange(sheetName); const values=r?.values||[]; const headers=(values[0]||[]).map(h=>String(h||'').trim()); state.headers[key]=headers; return values.slice(1).filter(row=>row.some(x=>x!==''&&x!==null&&x!==undefined)).map((row,i)=>{ const o={_row:i+2}; headers.forEach((h,c)=>o[h]=row[c]??''); ['FechaCompra','InicioSeguro','FinSeguro','InicioGarantia','FinGarantia','FechaBaja','FechaFacturaCompra','FechaCarga','FechaHora'].forEach(f=>{if(o[f]!==undefined)o[f]=toISO(o[f]);}); return o; }); }
+  async function fullSync(){ if(state.busy) return; const btn=$('btnSync'); setBusy(btn,true,'Sincronizando...'); try{ if(state.offline){ renderAll(); return; } await closeSession(); await resolveItem(); await createSession(); await loadWorksheetIds(); for(const k of Object.keys(APP.sheets)){ try{ state.data[k]=await loadSheet(k); }catch(e){ console.warn('No se pudo cargar',k,e); state.data[k]=[]; } } $('lastSync').textContent=new Date().toLocaleString('es-EC'); renderAll(); }catch(e){ alert('Error de sincronización:\n'+(e.message||e)); console.error(e); }finally{ setBusy(btn,false,'Sincronizar'); } }
+  function setBusy(btn,busy,text){ state.busy=busy; if(btn){ btn.disabled=busy; btn.innerHTML= busy?`<span class="spinner-border spinner-border-sm me-1"></span>${text}`:`<i class="fa-solid fa-rotate me-1"></i>${text}`; } }
+  async function patchSheetRow(key, rowNumber, obj){ if(state.offline) return; const headers=state.headers[key]; const sheetName=APP.sheets[key]; const id=state.sheetIds[sheetName]; const values=[headers.map(h=>obj[h]??'')]; const addr=`A${rowNumber}:${colLetter(headers.length)}${rowNumber}`; await graphFetch(`${state.itemPath}/workbook/worksheets/${id}/range(address='${addr}')`,{method:'PATCH',body:JSON.stringify({values})}); }
+  async function appendSheetRow(key,obj){ if(state.offline) return; if(!state.headers[key]?.length){ await loadSheet(key); } const headers=state.headers[key]; const sheetName=APP.sheets[key]; const id=state.sheetIds[sheetName]; const nextRow=(state.data[key]?.length||0)+2; const values=[headers.map(h=>obj[h]??'')]; const addr=`A${nextRow}:${colLetter(headers.length)}${nextRow}`; await graphFetch(`${state.itemPath}/workbook/worksheets/${id}/range(address='${addr}')`,{method:'PATCH',body:JSON.stringify({values})}); obj._row=nextRow; state.data[key].push(obj); }
+  async function audit(action, tabla, registroId, campo='', antes='', despues='', resultado='OK', obs=''){ const rec={IdAuditoria:uuid('AUD'),FechaHora:nowISO(),Usuario:state.account?.username||'usuario',Accion:action,Tabla:tabla,RegistroId:registroId,Campo:campo,ValorAnterior:String(antes||''),ValorNuevo:String(despues||''),Resultado:resultado,Observacion:obs}; try{ await appendSheetRow('audit',rec); }catch(e){ console.warn('Auditoría no registrada',e); } }
+  function seedDemoData(){ state.data.tipo=[{CodigoTipoBien:'03',CategoriaBien:'Muebles y enseres',VidaUtilAnios:10,TasaAnual:.1},{CodigoTipoBien:'07',CategoriaBien:'Equipos de computación y comunicación',VidaUtilAnios:3,TasaAnual:.3333}]; state.data.proyectos=[{Proyecto:'FIAS'},{Proyecto:'FAP'},{Proyecto:'REM'}]; state.data.bienes=[{IdBien:'B-1',Codigo:'FIAS.26.03.077',CodigoTipoSugerido:'03',CategoriaBienSugerida:'Muebles y enseres',Descripcion:'Escritorio operativo',Cantidad:1,Clasificacion:'ACTIVO FIJO',Proyecto:'FIAS',FechaCompra:'2026-01-15',Proveedor:'Proveedor demo',RucProveedor:'1790000000001',NumeroFacturaActa:'001-001-000001',ValorBienIncImp:250,Marca:'N/A',Modelo:'N/A',NumeroSerie:'S-001',Custodio:'Custodio demo',Ubicacion:'Quito',EstadoFisico:'BUENO',EstadoCalidad:'OK'}]; }
+  function renderAll(){ populateSelectors(); renderKpis(); renderExecutiveSummary(); renderInventory(); renderFacturas(); renderCatalogs(); renderQuality(); renderAudit(); renderCharts(); renderPreLocal(); }
+  function populateSelectors(){ const tipoSel=$('fTipo'), proyectoSel=$('fProyecto'), custSel=$('fCustodio'), ubiSel=$('fUbicacion'); const fill=(el,arr,label)=>{ if(!el) return; const old=el.value; el.innerHTML=`<option value="">${label}</option>`+arr.filter(Boolean).sort().map(v=>`<option>${esc(v)}</option>`).join(''); el.value=old; }; fill(tipoSel,[...new Set(state.data.tipo.map(t=>`${t.CodigoTipoBien} - ${t.CategoriaBien}`))],'Tipo'); fill(proyectoSel,[...new Set(state.data.bienes.map(b=>b.Proyecto).concat(state.data.proyectos.map(p=>p.Proyecto||p.CodigoProyecto)))],'Proyecto'); fill(custSel,[...new Set(state.data.bienes.map(b=>b.Custodio).concat(state.data.custodios.map(c=>c.Custodio||c.NombresApellidos)))],'Custodio'); fill(ubiSel,[...new Set(state.data.bienes.map(b=>b.Ubicacion).concat(state.data.ubicaciones.map(u=>u.Ubicacion||u.NombreUbicacion)))],'Ubicación'); const tipoForm=$('CodigoTipoSugerido'); if(tipoForm){ tipoForm.innerHTML=state.data.tipo.map(t=>`<option value="${esc(t.CodigoTipoBien)}">${esc(t.CodigoTipoBien)} - ${esc(t.CategoriaBien)}</option>`).join(''); } const proyForm=$('Proyecto'); if(proyForm){ proyForm.innerHTML=[...new Set(state.data.proyectos.map(p=>p.Proyecto||p.CodigoProyecto).concat(state.data.bienes.map(b=>b.Proyecto)).filter(Boolean))].map(p=>`<option>${esc(p)}</option>`).join(''); } $('custodioList').innerHTML=[...new Set(state.data.bienes.map(b=>b.Custodio).filter(Boolean))].map(x=>`<option value="${esc(x)}">`).join(''); $('ubicacionList').innerHTML=[...new Set(state.data.bienes.map(b=>b.Ubicacion).filter(Boolean))].map(x=>`<option value="${esc(x)}">`).join(''); }
+  function activos(){ return state.data.bienes.filter(b=>norm(b.EstadoCalidad)!=='eliminado logico' && norm(b.EstadoCalidad)!=='eliminado lógico'); }
+  function filteredAssets(){ let rows=activos(); const q=norm($('q')?.value||''); const fTipo=($('fTipo')?.value||'').split(' - ')[0]; const fProyecto=$('fProyecto')?.value||''; const fCustodio=$('fCustodio')?.value||''; const fUbicacion=$('fUbicacion')?.value||''; const fEstado=$('fEstado')?.value||''; if(fEstado==='Eliminado lógico') rows=state.data.bienes.filter(b=>norm(b.EstadoCalidad).includes('eliminado')); rows=rows.filter(b=>{ const blob=norm(Object.values(b).join(' ')); return (!q||q.split(/\s+/).every(t=>blob.includes(t))) && (!fTipo||String(b.CodigoTipoSugerido||b.CodigoTipoActual||'')===fTipo) && (!fProyecto||b.Proyecto===fProyecto) && (!fCustodio||b.Custodio===fCustodio) && (!fUbicacion||b.Ubicacion===fUbicacion) && (!fEstado||fEstado==='Eliminado lógico'||b.EstadoFisico===fEstado); }); return rows; }
+  function renderKpis(){ const rows=activos(); const total=rows.reduce((a,b)=>a+num(b.ValorBienIncImp),0); const sinSerie=rows.filter(b=>!b.NumeroSerie).length; const sinSoporte=rows.filter(b=>!getFacturaLink(b)).length; const garantias=rows.filter(b=>toISO(b.FinGarantia)>=todayISO()).length; const k=[['fa-boxes-stacked','Bienes activos',rows.length,'Registros vigentes'],['fa-sack-dollar','Valor total',money(total),'Con IVA incluido'],['fa-user-check','Custodios únicos',new Set(rows.map(b=>b.Custodio).filter(Boolean)).size,'Responsables registrados'],['fa-file-circle-exclamation','Sin soporte',sinSoporte,'Factura/acta pendiente'],['fa-barcode','Sin serie',sinSerie,'Requieren completar'],['fa-shield-halved','Garantía vigente',garantias,'Según fecha fin garantía']]; $('kpis').innerHTML=k.map(x=>`<div class="col-sm-6 col-xl-2"><div class="kpi"><div class="d-flex justify-content-between"><div><div class="muted text-uppercase fw-bold">${x[1]}</div><div class="value">${x[2]}</div><div class="muted">${x[3]}</div></div><div class="icon"><i class="fa-solid ${x[0]}"></i></div></div></div></div>`).join(''); }
+  function renderExecutiveSummary(){ const rows=activos(); const total=rows.reduce((a,b)=>a+num(b.ValorBienIncImp),0); const prom=rows.length?total/rows.length:0; const byProj=sumBy(rows,'Proyecto','ValorBienIncImp'); const topProj=topEntry(byProj); const byTipo=countBy(rows,'CategoriaBienSugerida'); const topTipo=topEntry(byTipo); const quality=buildQuality(); const high=quality.filter(q=>q.severity==='danger').length; const warn=quality.filter(q=>q.severity==='warn').length; const sinFoto=rows.filter(b=>!getFotoLink(b)).length; const sinFactura=rows.filter(b=>!getFacturaLink(b)).length; $('executiveSummary').innerHTML=`<p>El inventario normalizado registra <strong>${rows.length}</strong> bienes activos por un valor referencial acumulado de <strong>${money(total)}</strong>, con un promedio de <strong>${money(prom)}</strong> por bien. El proyecto con mayor valor registrado es <strong>${esc(topProj[0]||'N/A')}</strong> con <strong>${money(topProj[1]||0)}</strong>.</p><p>La categoría con mayor frecuencia es <strong>${esc(topTipo[0]||'N/A')}</strong> con <strong>${topTipo[1]||0}</strong> registros. Actualmente existen <strong>${sinFactura}</strong> bienes sin soporte digital de factura/acta y <strong>${sinFoto}</strong> bienes sin fotografía vinculada.</p><p>En integridad de datos se identifican <strong>${high}</strong> alertas críticas y <strong>${warn}</strong> alertas preventivas. Se recomienda priorizar la depuración de códigos/series duplicadas, completar soportes documentales y validar bienes sin custodio o ubicación para fortalecer la trazabilidad patrimonial.</p>`; $('priorityAlerts').innerHTML=quality.slice(0,6).map(q=>`<div class="quality-item row-${q.severity==='danger'?'danger':q.severity==='ok'?'ok':'warning'}"><strong>${esc(q.title)}</strong><div class="muted">${esc(q.detail)}</div></div>`).join('') || '<div class="alert alert-success">No hay alertas prioritarias.</div>'; }
+  function renderInventory(){ const rows=filteredAssets(); $('resultCount').textContent=`${rows.length} bienes`; const q=$('q')?.value||''; $('cardsView').innerHTML=rows.slice(0,160).map(b=>assetCard(b,q)).join('') || '<div class="alert alert-warning">No existen bienes con los filtros aplicados.</div>'; $('assetTbody').innerHTML=rows.map(b=>`<tr onclick="showAssetDetail('${esc(b.IdBien)}')"><td><strong>${highlight(b.Codigo,q)}</strong></td><td>${highlight(b.Descripcion,q)}</td><td>${badge(`${b.CodigoTipoSugerido||''} ${b.CategoriaBienSugerida||''}`,'info')}</td><td>${esc(b.Proyecto)}</td><td>${highlight(b.NumeroFacturaActa,q)}</td><td>${money(b.ValorBienIncImp)}</td><td>${highlight(b.Custodio,q)}</td><td>${highlight(b.Ubicacion,q)}</td><td>${badge(b.EstadoFisico||b.EstadoCalidad, estadoClass(b.EstadoFisico||b.EstadoCalidad))}</td><td onclick="event.stopPropagation()">${assetButtons(b)}</td></tr>`).join(''); }
+  function assetCard(b,q){ return `<div class="asset-card"><div class="d-flex justify-content-between align-items-start gap-2"><div><h6>${highlight(b.Codigo,q)}</h6><div class="muted">${esc(b.Proyecto||'Sin proyecto')} · ${esc(b.NumeroFacturaActa||'Sin factura')}</div></div>${badge(b.EstadoFisico||'N/A',estadoClass(b.EstadoFisico))}</div><hr><div class="desc">${highlight(b.Descripcion,q)}</div><div class="muted mt-1">${esc(b.Marca||'')} ${esc(b.Modelo||'')} · Serie: ${highlight(b.NumeroSerie||'Pendiente',q)}</div><div class="d-flex justify-content-between mt-2"><span class="chip"><i class="fa-solid fa-tag"></i>${esc(b.CodigoTipoSugerido||'')}</span><strong>${money(b.ValorBienIncImp)}</strong></div><div class="muted mt-2"><i class="fa-solid fa-user me-1"></i>${highlight(b.Custodio||'Sin custodio',q)}<br><i class="fa-solid fa-location-dot me-1"></i>${highlight(b.Ubicacion||'Sin ubicación',q)}</div><div class="asset-actions mt-3">${assetButtons(b)}</div></div>`; }
+  function assetButtons(b){ const factura=getFacturaLink(b), foto=getFotoLink(b), acta=getActaLink(b); return `<button class="btn btn-sm btn-outline-success" onclick="showAssetDetail('${esc(b.IdBien)}')"><i class="fa-solid fa-eye"></i> Ver</button><button class="btn btn-sm btn-outline-primary" onclick="editAsset('${esc(b.IdBien)}')"><i class="fa-solid fa-pen"></i> Editar</button><button class="btn btn-sm btn-outline-danger" onclick="softDeleteAsset('${esc(b.IdBien)}')"><i class="fa-solid fa-trash"></i></button>${factura?`<a class="btn btn-sm btn-outline-secondary" href="${esc(factura)}" target="_blank"><i class="fa-solid fa-file-invoice"></i></a>`:''}${foto?`<a class="btn btn-sm btn-outline-secondary" href="${esc(foto)}" target="_blank"><i class="fa-solid fa-image"></i></a>`:''}${acta?`<a class="btn btn-sm btn-outline-secondary" href="${esc(acta)}" target="_blank"><i class="fa-solid fa-file-signature"></i></a>`:''}`; }
+  function estadoClass(s){ const x=norm(s); if(x.includes('bueno')||x.includes('ok')) return 'ok'; if(x.includes('regular')||x.includes('pendiente')) return 'warn'; if(x.includes('malo')||x.includes('eliminado')||x.includes('baja')) return 'danger'; return 'darkb'; }
+  function highlight(s,q){ s=esc(s||''); q=String(q||'').trim(); if(!q) return s; const terms=q.split(/\s+/).filter(t=>t.length>2).map(t=>t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')); if(!terms.length) return s; return s.replace(new RegExp(`(${terms.join('|')})`,'gi'),'<span class="mark">$1</span>'); }
+  function getFacturaLink(b){ return b.FacturaDigitalLink || findDocLink(b.NumeroFacturaActa,'factura') || findDocLink(b.Codigo,'factura'); }
+  function getActaLink(b){ return b.ActaEntregaLink || findDocLink(b.Codigo,'acta') || findDocLink(b.NumeroFacturaActa,'acta'); }
+  function getFotoLink(b){ return b.FotoLink || (state.data.fotos.find(f=>String(f.CodigoBien||'')===String(b.Codigo||''))?.LinkFoto||''); }
+  function findDocLink(clave,tipo){ if(!clave) return ''; const k=norm(clave); const row=state.data.docs.find(d=>norm(d.Clave)===k && (!tipo || norm(d.TipoDocumento).includes(tipo))); return row?.LinkSharePoint||''; }
+  function showAssetDetail(id){ const b=state.data.bienes.find(x=>x.IdBien===id); if(!b) return; const details=state.data.detalle.filter(d=>d.CodigoBien===b.Codigo || d.NumeroFacturaActa===b.NumeroFacturaActa); $('detailTitle').textContent=`Detalle del bien ${b.Codigo||''}`; $('detailBody').innerHTML=`<div class="row g-3"><div class="col-lg-8"><div class="cardx"><div class="body"><h4 class="fw-bold">${esc(b.Descripcion)}</h4><div class="d-flex flex-wrap gap-2 mb-3">${badge(b.Codigo,'ok')}${badge(b.Proyecto,'info')}${badge(b.EstadoFisico,estadoClass(b.EstadoFisico))}${badge(b.Clasificacion,'darkb')}</div><div class="row g-2"><div class="col-md-6"><strong>Factura/Acta:</strong> ${esc(b.NumeroFacturaActa)}</div><div class="col-md-6"><strong>Fecha compra:</strong> ${displayDate(b.FechaCompra)}</div><div class="col-md-6"><strong>Proveedor:</strong> ${esc(b.Proveedor)}</div><div class="col-md-6"><strong>RUC:</strong> ${esc(b.RucProveedor)}</div><div class="col-md-6"><strong>Marca/Modelo:</strong> ${esc(b.Marca)} ${esc(b.Modelo)}</div><div class="col-md-6"><strong>Serie:</strong> ${esc(b.NumeroSerie)}</div><div class="col-md-6"><strong>Valor inc. imp.:</strong> ${money(b.ValorBienIncImp)}</div><div class="col-md-6"><strong>Tipo:</strong> ${esc(b.CodigoTipoSugerido)} - ${esc(b.CategoriaBienSugerida)}</div><div class="col-md-6"><strong>Custodio:</strong> ${esc(b.Custodio)}</div><div class="col-md-6"><strong>Ubicación:</strong> ${esc(b.Ubicacion)}</div><div class="col-12"><strong>Observaciones:</strong> ${esc(b.Observaciones)}</div></div></div></div></div><div class="col-lg-4"><div class="cardx"><div class="body"><h6 class="fw-bold">Documentos</h6><div class="d-grid gap-2">${getFacturaLink(b)?`<a class="btn btn-outline-success" target="_blank" href="${esc(getFacturaLink(b))}"><i class="fa-solid fa-file-invoice me-1"></i>Factura digital</a>`:'<span class="alert alert-warning mb-0">Factura no vinculada</span>'}${getActaLink(b)?`<a class="btn btn-outline-success" target="_blank" href="${esc(getActaLink(b))}"><i class="fa-solid fa-file-signature me-1"></i>Acta entrega</a>`:''}${getFotoLink(b)?`<a class="btn btn-outline-success" target="_blank" href="${esc(getFotoLink(b))}"><i class="fa-solid fa-image me-1"></i>Fotografía</a>`:''}</div></div></div></div><div class="col-12"><div class="cardx"><div class="head"><h5>Detalle factura asociado</h5></div><div class="body"><div class="table-responsive"><table class="table table-sm"><thead><tr><th>Ítem</th><th>Cantidad</th><th>Valor unit.</th><th>Valor total</th><th>Marca</th><th>Modelo</th><th>Serie</th></tr></thead><tbody>${details.map(d=>`<tr><td>${esc(d.DescripcionItem)}</td><td>${esc(d.Cantidad)}</td><td>${money(d.ValorUnitarioIncImp)}</td><td>${money(d.ValorTotalIncImp)}</td><td>${esc(d.Marca)}</td><td>${esc(d.Modelo)}</td><td>${esc(d.NumeroSerie)}</td></tr>`).join('')||'<tr><td colspan="7" class="text-muted">Sin detalle de factura asociado.</td></tr>'}</tbody></table></div></div></div></div></div>`; bootstrap.Modal.getOrCreateInstance($('detailModal')).show(); }
+  function openCreateAsset(){ resetAssetForm(); $('formMode').value='create'; $('assetModalTitle').textContent='Nuevo bien'; $('FechaCompra').value=todayISO(); $('Cantidad').value=1; $('EstadoFisico').value='BUENO'; $('Codigo').value=generateNextCode(todayISO(), $('CodigoTipoSugerido').value || '03'); bootstrap.Modal.getOrCreateInstance($('assetModal')).show(); }
+  function editAsset(id){ const b=state.data.bienes.find(x=>x.IdBien===id); if(!b) return; resetAssetForm(); $('formMode').value='edit'; $('rowIndex').value=b._row; $('assetModalTitle').textContent=`Editar bien ${b.Codigo}`; APP.manualFields.forEach(f=>{ const el=$(f); if(el){ el.value = ['FechaCompra','InicioSeguro','FinSeguro','InicioGarantia','FinGarantia','FechaBaja'].includes(f)?toISO(b[f]):(b[f]??''); }}); $('CodigoTipoSugerido').value=b.CodigoTipoSugerido||b.CodigoTipoActual||''; bootstrap.Modal.getOrCreateInstance($('assetModal')).show(); }
+  function resetAssetForm(){ $('assetForm').reset(); $('IdBien').value=uuid('B'); $('rowIndex').value=''; }
+  function collectAssetForm(){ const o={}; APP.manualFields.forEach(f=>{ const el=$(f); if(el) o[f]=el.value; }); const cat=state.data.tipo.find(t=>String(t.CodigoTipoBien)===String(o.CodigoTipoSugerido)); o.CategoriaBienSugerida=cat?.CategoriaBien||o.CategoriaBienSugerida||''; o.VidaUtilAnios=cat?.VidaUtilAnios||''; o.TasaAnual=cat?.TasaAnual||''; o.CodigoAnio=(toISO(o.FechaCompra)||todayISO()).slice(2,4); o.CodigoTipoActual=(o.Codigo||'').split('.')[2]||o.CodigoTipoSugerido; const parts=(o.Codigo||'').split('.'); o.SecuencialActual=parts[3]||''; o.ValidacionCodigo=validateCode(o); o.EstadoCalidad=o.EstadoCalidad||'OK'; o.FuenteMigracion=o.FuenteMigracion||'HTML CRUD'; return o; }
+  function validateAsset(o){ const missing=APP.required.filter(f=>!String(o[f]||'').trim()); if(missing.length) return 'Faltan campos obligatorios: '+missing.join(', '); const dupCode=state.data.bienes.find(b=>b.Codigo===o.Codigo && b.IdBien!==o.IdBien); if(dupCode) return 'El código ya existe: '+o.Codigo; if(o.NumeroSerie){ const dupSerie=state.data.bienes.find(b=>norm(b.NumeroSerie)===norm(o.NumeroSerie) && b.IdBien!==o.IdBien); if(dupSerie) return 'El número de serie ya existe en: '+dupSerie.Codigo; } return ''; }
+  async function saveAsset(){ const btn=$('btnSaveAsset'); const o=collectAssetForm(); const err=validateAsset(o); if(err){ alert(err); return; } btn.disabled=true; try{ if($('formMode').value==='edit'){ await patchSheetRow('bienes', Number($('rowIndex').value), o); const idx=state.data.bienes.findIndex(b=>b.IdBien===o.IdBien); if(idx>=0) state.data.bienes[idx]={...state.data.bienes[idx],...o,_row:Number($('rowIndex').value)}; await audit('UPDATE','01_Bienes',o.IdBien,'Registro completo','','','OK','Edición controlada desde HTML'); }else{ o.IdBien=o.IdBien||uuid('B'); await appendSheetRow('bienes',o); await audit('CREATE','01_Bienes',o.IdBien,'Registro completo','','','OK','Creación desde HTML'); } bootstrap.Modal.getOrCreateInstance($('assetModal')).hide(); renderAll(); }catch(e){ alert('No fue posible guardar: '+(e.message||e)); }finally{ btn.disabled=false; } }
+  async function softDeleteAsset(id){ const b=state.data.bienes.find(x=>x.IdBien===id); if(!b) return; if(!confirm(`¿Anular lógicamente el bien ${b.Codigo}? No se eliminará la fila física; quedará auditado.`)) return; const before=b.EstadoCalidad; b.EstadoCalidad='Eliminado lógico'; try{ await patchSheetRow('bienes',b._row,b); await audit('DELETE_LOGICO','01_Bienes',id,'EstadoCalidad',before,'Eliminado lógico','OK','CRUD seguro sin eliminación física'); renderAll(); }catch(e){ alert('No fue posible anular: '+(e.message||e)); } }
+  function getYearTypeFromCode(code){ const p=String(code||'').split('.'); if(p.length>=4 && p[0]==='FIAS') return {yy:p[1],type:p[2],seq:parseInt(p[3],10)||0}; return null; }
+  function generateNextCode(date,type,offset=0){ const yy=(toISO(date)||todayISO()).slice(2,4); type=String(type||'03').padStart(2,'0'); let max=0; state.data.bienes.forEach(b=>{ const x=getYearTypeFromCode(b.Codigo); if(x&&x.yy===yy&&x.type===type) max=Math.max(max,x.seq); }); state.preLocal.forEach(p=>{ const x=getYearTypeFromCode(p.Codigo); if(x&&x.yy===yy&&x.type===type) max=Math.max(max,x.seq); }); return `FIAS.${yy}.${type}.${String(max+1+offset).padStart(3,'0')}`; }
+  function validateCode(o){ const x=getYearTypeFromCode(o.Codigo); if(!x) return 'Formato no estándar'; const yy=(toISO(o.FechaCompra)||'').slice(2,4); if(yy && x.yy!==yy) return 'Año del código no coincide con fecha compra'; if(o.CodigoTipoSugerido && x.type!==String(o.CodigoTipoSugerido).padStart(2,'0')) return 'Tipo del código no coincide con categoría'; return 'OK'; }
+  function renderFacturas(){ $('facturasTbody').innerHTML=state.data.facturas.map(f=>`<tr><td><strong>${esc(f.NumeroFacturaActa)}</strong></td><td>${esc(f.Proveedor)}</td><td>${displayDate(f.FechaFacturaCompra)}</td><td>${money(f.TotalBienesIncImp)}</td><td>${f.LinkFacturaDigital?`<a href="${esc(f.LinkFacturaDigital)}" target="_blank" class="btn btn-sm btn-outline-success">Abrir</a>`:badge(f.EstadoSoporte||'Pendiente','warn')}</td></tr>`).join(''); $('detalleFacturaTbody').innerHTML=state.data.detalle.map(d=>`<tr><td>${esc(d.NumeroFacturaActa)}</td><td>${esc(d.CodigoBien)}</td><td>${esc(d.DescripcionItem)}</td><td>${esc(d.Cantidad)}</td><td>${money(d.ValorTotalIncImp)}</td><td>${esc(d.NumeroSerie)}</td></tr>`).join(''); }
+  function renderCatalogs(){ $('catTipos').innerHTML=state.data.tipo.map(t=>`<div class="d-flex justify-content-between border-bottom py-2"><div><strong>${esc(t.CodigoTipoBien)} · ${esc(t.CategoriaBien)}</strong><div class="muted">${esc(t.Observacion)}</div></div><div class="text-end"><span class="chip">${esc(t.VidaUtilAnios)} años</span><br><span class="muted">${(num(t.TasaAnual)*100).toFixed(2)}%</span></div></div>`).join(''); $('seqList').innerHTML=state.data.seq.map(s=>`<div class="d-flex justify-content-between border-bottom py-2"><span>${esc(s.Anio)} · ${esc(s.CodigoTipo)}</span><strong>${esc(s.SiguienteCodigo)}</strong></div>`).join('')||'<div class="muted">Las secuencias se calculan dinámicamente al generar códigos.</div>'; $('catProyectos').innerHTML=simpleList(state.data.proyectos.map(p=>p.Proyecto||p.CodigoProyecto)); $('catCustodios').innerHTML=simpleList([...new Set(state.data.custodios.map(c=>c.Custodio||c.NombresApellidos||c.Nombre).filter(Boolean))].slice(0,100)); $('catUbicaciones').innerHTML=simpleList([...new Set(state.data.ubicaciones.map(u=>u.Ubicacion||u.NombreUbicacion||u.Area).filter(Boolean))].slice(0,100)); }
+  function simpleList(arr){ return arr.filter(Boolean).map(x=>`<div class="chip mb-2 me-1">${esc(x)}</div>`).join('')||'<div class="muted">Sin registros.</div>'; }
+  function buildQuality(){ const rows=activos(); const alerts=[]; const dup=(field,label)=>{ const m={}; rows.forEach(b=>{const v=norm(b[field]); if(v) (m[v]=m[v]||[]).push(b);}); Object.values(m).filter(a=>a.length>1).forEach(a=>alerts.push({severity:'danger',title:`${label} duplicado`,detail:`${a[0][field]} aparece en ${a.length} registros.`}));}; dup('Codigo','Código'); dup('NumeroSerie','Serie'); const checks=[['Codigo','Bienes sin código'],['Descripcion','Bienes sin descripción'],['Custodio','Bienes sin custodio'],['Ubicacion','Bienes sin ubicación'],['NumeroSerie','Bienes sin serie'],['NumeroFacturaActa','Bienes sin factura/acta']]; checks.forEach(([f,t])=>{ const c=rows.filter(b=>!String(b[f]||'').trim()).length; if(c) alerts.push({severity:'warn',title:t,detail:`${c} registros requieren completar este campo.`}); }); const sinFoto=rows.filter(b=>!getFotoLink(b)).length; if(sinFoto) alerts.push({severity:'warn',title:'Fotografía pendiente',detail:`${sinFoto} bienes no tienen fotografía vinculada en Link_fotos.`}); const sinDoc=rows.filter(b=>!getFacturaLink(b)).length; if(sinDoc) alerts.push({severity:'warn',title:'Factura digital pendiente',detail:`${sinDoc} bienes no tienen factura digital vinculada en links.`}); const valores0=rows.filter(b=>num(b.ValorBienIncImp)<=0).length; if(valores0) alerts.push({severity:'danger',title:'Valor inválido',detail:`${valores0} bienes tienen valor cero o no numérico.`}); if(!alerts.length) alerts.push({severity:'ok',title:'Integridad aceptable',detail:'No se detectaron alertas principales.'}); return alerts; }
+  function renderQuality(){ const alerts=buildQuality(); $('qualityList').innerHTML=alerts.map(a=>`<div class="quality-item row-${a.severity==='danger'?'danger':a.severity==='ok'?'ok':'warning'}"><div class="d-flex justify-content-between"><strong>${esc(a.title)}</strong>${badge(a.severity==='danger'?'Crítico':a.severity==='ok'?'OK':'Preventivo',a.severity==='danger'?'danger':a.severity==='ok'?'ok':'warn')}</div><div class="muted">${esc(a.detail)}</div></div>`).join(''); }
+  function renderAudit(){ $('auditTbody').innerHTML=state.data.audit.slice().reverse().slice(0,300).map(a=>`<tr><td>${displayDate(a.FechaHora)} ${String(a.FechaHora||'').slice(11,19)}</td><td>${esc(a.Usuario)}</td><td>${esc(a.Accion)}</td><td>${esc(a.Tabla)}</td><td>${esc(a.RegistroId)}</td><td>${esc(a.Campo)}</td><td>${badge(a.Resultado,a.Resultado==='OK'?'ok':'warn')}</td><td>${esc(a.Observacion)}</td></tr>`).join(''); }
+  function countBy(arr,key){ return arr.reduce((o,r)=>{const k=r[key]||'N/A'; o[k]=(o[k]||0)+1; return o;},{}); }
+  function sumBy(arr,key,val){ return arr.reduce((o,r)=>{const k=r[key]||'N/A'; o[k]=(o[k]||0)+num(r[val]); return o;},{}); }
+  function topEntry(o){ return Object.entries(o).sort((a,b)=>b[1]-a[1])[0]||['',0]; }
+  function renderCharts(){ const rows=activos(); drawChart('chartTipo','doughnut',countBy(rows,'CategoriaBienSugerida')); drawChart('chartProyecto','bar',sumBy(rows,'Proyecto','ValorBienIncImp')); }
+  function drawChart(id,type,obj){ const ctx=$(id); if(!ctx||!window.Chart) return; if(state.charts[id]) state.charts[id].destroy(); const labels=Object.keys(obj).slice(0,12), data=labels.map(k=>obj[k]); state.charts[id]=new Chart(ctx,{type, data:{labels,datasets:[{label:type==='bar'?'Valor':'Cantidad',data}]},options:{responsive:true,plugins:{legend:{position:'bottom'}},scales:type==='bar'?{y:{beginAtZero:true}}:{}}}); }
+  async function processInvoice(){ const file=$('invoiceFile').files[0]; if(!file){alert('Seleccione un PDF o imagen.');return;} $('ocrConsole').textContent='Procesando documento...'; try{ let text=''; if(file.type==='application/pdf'){ text=await extractPdfText(file); if(text.trim().length<80){ log('El PDF no contiene texto suficiente. Ejecutando OCR visual.'); text=await ocrImageFromPdf(file); } }else{ text=await ocrImage(file); } const parsed=parseInvoiceText(text,file.name); buildPreFromInvoice(parsed,file.name); log(`Pre-registro generado: ${state.preLocal.length} ítems locales.`); renderPreLocal(); }catch(e){ log('Error: '+(e.message||e)); alert('No se pudo procesar el documento: '+(e.message||e)); } }
+  async function extractPdfText(file){ const data=await file.arrayBuffer(); pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'; const pdf=await pdfjsLib.getDocument({data}).promise; let out=''; for(let i=1;i<=Math.min(pdf.numPages,8);i++){ const page=await pdf.getPage(i); const content=await page.getTextContent(); out+='\n'+content.items.map(it=>it.str).join(' '); } return out; }
+  async function ocrImage(file){ const res=await Tesseract.recognize(file,'spa+eng',{logger:m=>{if(m.status) $('ocrConsole').textContent=`OCR: ${m.status} ${Math.round((m.progress||0)*100)}%`;}}); return res.data.text||''; }
+  async function ocrImageFromPdf(file){ const data=await file.arrayBuffer(); const pdf=await pdfjsLib.getDocument({data}).promise; let out=''; for(let i=1;i<=Math.min(pdf.numPages,3);i++){ const page=await pdf.getPage(i); const viewport=page.getViewport({scale:2}); const canvas=document.createElement('canvas'); canvas.width=viewport.width; canvas.height=viewport.height; await page.render({canvasContext:canvas.getContext('2d'),viewport}).promise; const blob=await new Promise(r=>canvas.toBlob(r,'image/png')); out+='\n'+await ocrImage(blob); } return out; }
+  function parseInvoiceText(text,filename){ const raw=text.replace(/\r/g,'\n').replace(/[ \t]+/g,' '); const lines=raw.split(/\n+/).map(s=>s.trim()).filter(Boolean); const all=lines.join('\n'); const ruc=(all.match(/R\.?U\.?C\.?[:\s]*([0-9]{10,13})/i)||all.match(/RUC[:\s]*([0-9]{10,13})/i)||[])[1]||''; const numFac=(all.match(/(?:FACTURA|No\.|Nro\.|Nº)\s*(?:N[ro\.]*\s*)?[:#\s]*([0-9]{3}[- ]?[0-9]{3}[- ]?[0-9]{6,9})/i)||all.match(/([0-9]{3}[- ][0-9]{3}[- ][0-9]{6,9})/)||[])[1]||''; const fecha=(all.match(/Fecha(?: de)? Emisi[oó]n[:\s]*([0-9]{1,2}[\/\-][0-9]{1,2}[\/\-][0-9]{2,4})/i)||all.match(/Fecha[:\s]*([0-9]{1,2}[\/\-][0-9]{1,2}[\/\-][0-9]{2,4})/i)||all.match(/([0-9]{1,2}[\/\-][0-9]{1,2}[\/\-][0-9]{4})/)||[])[1]||''; const total=lastMoney(all.match(/(?:VALOR TOTAL|TOTAL FORMA DE PAGO|TOTAL|Valor total)[:\s\$]*([0-9\.,]+)/gi)); const iva=lastMoney(all.match(/IVA\s*(?:12|15)?\s*%?[:\s\$]*([0-9\.,]+)/gi)); const proveedor=guessProvider(lines,ruc); const items=guessItems(lines,total); return {raw,proveedor,ruc,numeroFactura:numFac.replace(/\s/g,'-'),fecha:toISO(fecha),total,iva,items,filename}; }
+  function lastMoney(matches){ if(!matches||!matches.length) return 0; const m=matches[matches.length-1].match(/([0-9][0-9\.,]*)\s*$/); return m?num(m[1]):0; }
+  function guessProvider(lines,ruc){ const idx=lines.findIndex(l=>norm(l).includes('ruc')&&l.includes(ruc)); for(let i=Math.max(0,idx-4);i<idx;i++){ if(lines[i] && !/factura|cliente|fondo/i.test(lines[i]) && lines[i].length>3) return lines[i].replace(/RUC.*/i,'').trim(); } return lines.find(l=>/S\.A\.|CIA|CARTIMEX|AURON|BITLOGIC|BUSINESS|DIGITAL|VIRTUAL|ABFOTO/i.test(l))||''; }
+  function guessItems(lines,total){ const items=[]; const reject=/subtotal|total|iva|ruc|cliente|direccion|forma de pago|autorizacion|ambiente|emision|clave|telefono|correo|obligado|contribuyente/i; for(const line of lines){ if(reject.test(line)) continue; const nums=line.match(/\b\d+[\.,]\d{2}\b/g); if(nums && nums.length>=1 && /[a-zA-ZÁÉÍÓÚÑ]/.test(line)){ const value=num(nums[nums.length-1]); if(value>0 && value!==total){ const qtyMatch=line.match(/(?:^|\s)(\d{1,3})(?:\.00)?\s+(?:und|u|unidad|UND|U)?\s/i) || line.match(/\s(\d{1,3})\s+[A-Z0-9-]{2,}/); const qty=qtyMatch?Math.max(1,parseInt(qtyMatch[1],10)):1; let desc=line.replace(/\b\d+[\.,]\d{2}\b/g,' ').replace(/\s+/g,' ').trim(); desc=desc.replace(/^\w{1,15}\s+/, '').trim(); if(desc.length>8) items.push({descripcion:desc,cantidad:qty,valorTotal:value,valorUnitario:value/qty}); } } }
+    if(!items.length) items.push({descripcion:'Ítem detectado en factura - validar descripción',cantidad:1,valorTotal:total,valorUnitario:total}); return items.slice(0,80); }
+  function classifyItem(desc){ const d=norm(desc); if(/notebook|laptop|computador|probook|tablet|celular|impresora|scanner|proyector|camara|gps|drone|software|licencia|antivirus|teclado|mouse|memoria|office|windows|base ajustable/.test(d)) return '07'; if(/silla|escritorio|mesa|credenza|mueble|biblioteca|taburete|archivacion|estacion de trabajo|manpara|cafeteria/.test(d)) return '03'; if(/aire acondicionado|trituradora|router|dispensador|ups|televisor|video conferencia/.test(d)) return '04'; if(/generador|bomba|motosierra|taladro|herramienta|binocular|camping/.test(d)) return '06'; if(/vehiculo|motocicleta|canoa|kayak|bicicleta|motor/.test(d)) return '05'; return '03'; }
+  function buildPreFromInvoice(parsed,filename){ state.preLocal=[]; parsed.items.forEach(item=>{ const qty=Math.max(1,parseInt(item.cantidad||1,10)); for(let i=0;i<qty;i++){ const type=classifyItem(item.descripcion); const unit=num(item.valorUnitario||item.valorTotal/qty); const code=generateNextCode(parsed.fecha||todayISO(),type,state.preLocal.length); const cat=state.data.tipo.find(t=>String(t.CodigoTipoBien)===String(type)); state.preLocal.push({selected:true,IdPreRegistro:uuid('PRE'),Codigo:code,FechaCarga:todayISO(),Proveedor:parsed.proveedor,RucProveedor:parsed.ruc,NumeroFacturaActa:parsed.numeroFactura,FechaCompra:parsed.fecha||todayISO(),Proyecto:'FIAS',DescripcionDetectada:item.descripcion,DescripcionValidada:item.descripcion,CantidadDetectada:item.cantidad,CantidadARegistrar:1,TipoBienSugerido:type,TipoBienValidado:type,CategoriaBienSugerida:cat?.CategoriaBien||'',Clasificacion:'ACTIVO FIJO',ValorUnitarioIncImp:unit,ValorTotalIncImp:unit,Marca:'',Modelo:'',Serie:'',Custodio:'',Ubicacion:'',EstadoValidacion:'Pendiente de validación',Observaciones:'Pre-registro OCR local. Validar antes de registrar.',ArchivoOrigen:filename}); } }); }
+  function renderPreLocal(){ const cont=$('preRegisterList'); if(!cont) return; cont.innerHTML=state.preLocal.map((p,i)=>`<div class="pre-row ${p.selected?'selected':''}"><div class="d-flex justify-content-between gap-2"><div><input type="checkbox" ${p.selected?'checked':''} onchange="state.preLocal[${i}].selected=this.checked; renderPreLocal()"> <strong>${esc(p.Codigo)}</strong> ${badge(p.TipoBienValidado+' - '+p.CategoriaBienSugerida,'info')}</div><strong>${money(p.ValorUnitarioIncImp)}</strong></div><div class="row g-2 mt-2"><div class="col-md-7"><label class="form-label">Descripción validada</label><input class="form-control form-control-sm" value="${esc(p.DescripcionValidada)}" onchange="state.preLocal[${i}].DescripcionValidada=this.value"></div><div class="col-md-2"><label class="form-label">Tipo</label><select class="form-select form-select-sm" onchange="state.preLocal[${i}].TipoBienValidado=this.value; updatePreCat(${i}); renderPreLocal()">${state.data.tipo.map(t=>`<option value="${esc(t.CodigoTipoBien)}" ${t.CodigoTipoBien==p.TipoBienValidado?'selected':''}>${esc(t.CodigoTipoBien)}</option>`).join('')}</select></div><div class="col-md-3"><label class="form-label">Proyecto</label><input class="form-control form-control-sm" value="${esc(p.Proyecto)}" onchange="state.preLocal[${i}].Proyecto=this.value"></div><div class="col-md-3"><label class="form-label">Marca</label><input class="form-control form-control-sm" value="${esc(p.Marca)}" onchange="state.preLocal[${i}].Marca=this.value"></div><div class="col-md-3"><label class="form-label">Modelo</label><input class="form-control form-control-sm" value="${esc(p.Modelo)}" onchange="state.preLocal[${i}].Modelo=this.value"></div><div class="col-md-3"><label class="form-label">Serie</label><input class="form-control form-control-sm" value="${esc(p.Serie)}" onchange="state.preLocal[${i}].Serie=this.value"></div><div class="col-md-3"><label class="form-label">Valor inc. imp.</label><input type="number" step="0.01" class="form-control form-control-sm" value="${esc(p.ValorUnitarioIncImp)}" onchange="state.preLocal[${i}].ValorUnitarioIncImp=num(this.value); state.preLocal[${i}].ValorTotalIncImp=num(this.value)"></div></div><div class="muted mt-2">Factura: ${esc(p.NumeroFacturaActa)} · Proveedor: ${esc(p.Proveedor)} · Fecha: ${displayDate(p.FechaCompra)}</div></div>`).join('') || '<div class="alert alert-info">Aún no hay pre-registros. Cargue una factura o acta.</div>'; }
+  function updatePreCat(i){ const p=state.preLocal[i]; const cat=state.data.tipo.find(t=>String(t.CodigoTipoBien)===String(p.TipoBienValidado)); p.CategoriaBienSugerida=cat?.CategoriaBien||''; }
+  function regeneratePreCodes(){ const counters={}; state.preLocal.forEach(p=>{ const key=`${(toISO(p.FechaCompra)||todayISO()).slice(2,4)}-${p.TipoBienValidado}`; counters[key]=(counters[key]||0); p.Codigo=generateNextCode(p.FechaCompra,p.TipoBienValidado,counters[key]); counters[key]++; }); renderPreLocal(); }
+  async function savePreToExcel(){ const selected=state.preLocal.filter(p=>p.selected); if(!selected.length){alert('Seleccione al menos un pre-registro.');return;} try{ for(const p of selected){ await appendSheetRow('pre',{IdPreRegistro:p.IdPreRegistro,FechaCarga:todayISO(),Proveedor:p.Proveedor,RucProveedor:p.RucProveedor,NumeroFacturaActa:p.NumeroFacturaActa,FechaCompra:p.FechaCompra,Proyecto:p.Proyecto,DescripcionDetectada:p.DescripcionDetectada,DescripcionValidada:p.DescripcionValidada,CantidadDetectada:p.CantidadDetectada,CantidadARegistrar:1,TipoBienSugerido:p.TipoBienSugerido,TipoBienValidado:p.TipoBienValidado,Clasificacion:p.Clasificacion,ValorUnitarioIncImp:p.ValorUnitarioIncImp,ValorTotalIncImp:p.ValorTotalIncImp,Marca:p.Marca,Modelo:p.Modelo,Serie:p.Serie,Custodio:p.Custodio,Ubicacion:p.Ubicacion,EstadoValidacion:p.EstadoValidacion,Observaciones:p.Observaciones,ArchivoOrigen:p.ArchivoOrigen}); } await audit('CREATE','04_PreRegistroOCR','LOTE','Pre-registro OCR','','','OK',`${selected.length} registros guardados`); alert('Pre-registro OCR guardado en Excel.'); }catch(e){alert('No se pudo guardar pre-registro: '+(e.message||e));} }
+  async function createAssetsFromPre(){ const selected=state.preLocal.filter(p=>p.selected); if(!selected.length){alert('Seleccione al menos un pre-registro.');return;} const missing=selected.filter(p=>!p.Serie || !p.DescripcionValidada || !p.TipoBienValidado || !p.Proyecto || !p.ValorUnitarioIncImp); if(missing.length && !confirm(`${missing.length} registros tienen datos pendientes (serie, descripción o valor). ¿Registrar de todas formas?`)) return; try{ regeneratePreCodes(); for(const p of selected){ const cat=state.data.tipo.find(t=>String(t.CodigoTipoBien)===String(p.TipoBienValidado)); const obj={IdBien:uuid('B'),Codigo:p.Codigo,CodigoAnio:(toISO(p.FechaCompra)||todayISO()).slice(2,4),CodigoTipoActual:p.TipoBienValidado,SecuencialActual:(p.Codigo.split('.')[3]||''),CodigoTipoSugerido:p.TipoBienValidado,CategoriaBienSugerida:cat?.CategoriaBien||'',ValidacionCodigo:'OK',Descripcion:p.DescripcionValidada,DescripcionAdicional:p.DescripcionDetectada,Cantidad:1,TipoBienOriginal:'',Clasificacion:p.Clasificacion,Proyecto:p.Proyecto,FechaCompra:p.FechaCompra,Donante:'',Proveedor:p.Proveedor,RucProveedor:p.RucProveedor,NumeroFacturaActa:p.NumeroFacturaActa,ValorBienIncImp:p.ValorUnitarioIncImp,Marca:p.Marca,Modelo:p.Modelo,NumeroSerie:p.Serie,CedulaCustodio:'',Custodio:p.Custodio,Institucion:'FIAS',Ubicacion:p.Ubicacion,Asegurado:'NO',InicioSeguro:'',FinSeguro:'',Aseguradora:'',NroPoliza:'',GarantiaTecnica:'N/A',InicioGarantia:'',FinGarantia:'',EstadoFisico:'BUENO',VidaUtilAnios:cat?.VidaUtilAnios||'',TasaAnual:cat?.TasaAnual||'',DepreciacionLinealAnual:'',DepreciacionMensual:'',ValorResidualSugerido:'',FechaBaja:'',MotivoBaja:'',Observaciones:'Registrado desde pre-registro OCR validado.',EstadoCalidad:'OK',FacturaDigitalLink:'',FotoLink:'',ActaEntregaLink:'',FuenteMigracion:'HTML OCR'}; await appendSheetRow('bienes',obj); await appendSheetRow('detalle',{IdDetalle:uuid('DET'),IdFactura:'',CodigoBien:obj.Codigo,NumeroFacturaActa:obj.NumeroFacturaActa,DescripcionItem:p.DescripcionDetectada,Cantidad:1,ValorUnitarioIncImp:p.ValorUnitarioIncImp,ValorTotalIncImp:p.ValorUnitarioIncImp,CodigoTipoSugerido:p.TipoBienValidado,CategoriaBienSugerida:obj.CategoriaBienSugerida,NumeroSerie:p.Serie,Marca:p.Marca,Modelo:p.Modelo,Origen:'OCR'}); } await audit('CREATE','01_Bienes','LOTE','Pre-registro OCR validado','','','OK',`${selected.length} bienes registrados`); state.preLocal=state.preLocal.filter(p=>!p.selected); renderAll(); alert('Bienes registrados correctamente.'); }catch(e){alert('No se pudieron registrar bienes: '+(e.message||e));} }
+  function resetFilters(){ ['q','fTipo','fProyecto','fCustodio','fUbicacion','fEstado'].forEach(id=>$(id).value=''); renderInventory(); }
+  function exportCsv(){ const rows=filteredAssets(); const headers=['Codigo','Descripcion','Proyecto','FechaCompra','Proveedor','NumeroFacturaActa','ValorBienIncImp','Marca','Modelo','NumeroSerie','Custodio','Ubicacion','EstadoFisico']; const csv=[headers.join(';')].concat(rows.map(r=>headers.map(h=>`"${String(r[h]??'').replace(/"/g,'""')}"`).join(';'))).join('\n'); const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='inventario_fias_filtrado.csv'; a.click(); URL.revokeObjectURL(a.href); }
+  function setupEvents(){ document.querySelectorAll('.nav-btn').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.nav-btn').forEach(x=>x.classList.remove('active')); b.classList.add('active'); document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active')); $(b.dataset.panel).classList.add('active'); $('pageTitle').textContent=b.textContent.trim(); })); document.querySelectorAll('.mini-tabs button[data-view]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.mini-tabs button[data-view]').forEach(x=>x.classList.remove('active')); b.classList.add('active'); state.currentView=b.dataset.view; $('cardsView').classList.toggle('hidden',state.currentView!=='cards'); $('tableView').classList.toggle('hidden',state.currentView!=='table'); })); $('btnLogin').addEventListener('click',login); $('btnOfflineDemo').addEventListener('click',offlineDemo); $('btnLogout').addEventListener('click',logout); $('btnSync').addEventListener('click',fullSync); $('btnCreateAsset').addEventListener('click',openCreateAsset); $('btnSaveAsset').addEventListener('click',saveAsset); $('btnResetFilters').addEventListener('click',resetFilters); $('btnApplyFilters').addEventListener('click',renderInventory); ['q','fTipo','fProyecto','fCustodio','fUbicacion','fEstado'].forEach(id=>$(id).addEventListener('input',renderInventory)); $('btnExportCsv').addEventListener('click',exportCsv); $('btnRegenCode').addEventListener('click',()=>$('Codigo').value=generateNextCode($('FechaCompra').value,$('CodigoTipoSugerido').value)); $('FechaCompra').addEventListener('change',()=>$('Codigo').value=generateNextCode($('FechaCompra').value,$('CodigoTipoSugerido').value)); $('CodigoTipoSugerido').addEventListener('change',()=>$('Codigo').value=generateNextCode($('FechaCompra').value,$('CodigoTipoSugerido').value)); $('btnProcessInvoice').addEventListener('click',processInvoice); $('btnClearPre').addEventListener('click',()=>{state.preLocal=[]; renderPreLocal(); $('ocrConsole').textContent='Pre-registro local limpiado.';}); $('btnGenerateCodes').addEventListener('click',regeneratePreCodes); $('btnSavePreToExcel').addEventListener('click',savePreToExcel); $('btnCreateFromPre').addEventListener('click',createAssetsFromPre); $('btnRefreshQuality').addEventListener('click',renderQuality); $('btnCopySummary').addEventListener('click',()=>navigator.clipboard?.writeText($('executiveSummary').innerText)); const dz=$('dropzone'); dz.addEventListener('dragover',e=>{e.preventDefault(); dz.classList.add('drag');}); dz.addEventListener('dragleave',()=>dz.classList.remove('drag')); dz.addEventListener('drop',e=>{e.preventDefault(); dz.classList.remove('drag'); $('invoiceFile').files=e.dataTransfer.files;}); }
+  window.showAssetDetail=showAssetDetail; window.editAsset=editAsset; window.softDeleteAsset=softDeleteAsset; window.state=state; window.updatePreCat=updatePreCat; window.num=num;
+  document.addEventListener('DOMContentLoaded',init);
   </script>
 </body>
 </html>

@@ -6,7 +6,7 @@
   <title>FIAS | Plataforma Enterprise Integral de Inventario</title>
   <!-- Versión integrada: Financiero + OCR Enterprise FIAS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet" /><script type="text/javascript" src="https://gc.kes.v2.scr.kaspersky-labs.com/7EA5E9BB-55E1-4C31-9C21-4943DDFED2E4/main.js?attr=qkNozQ8w4ZwJLSw4MR45oX1UMr-5ShFsvATw6qaSmtMCTIgs6Vmr0XssSXEbCncKaoM6pw6DW0st5pqKS3DduSWHdjwe4PokSmr-QoR5KQqS-APIGMMFjVs1Id0oI87-v1jFiQYkSQ58cGefMxWiQXxm1DZoMeM7uosfFBf6Mjh9LdGpzpDc5dyw46HJVuVwfv0KqueKPiVOGr3gLZEXcrYjBSHilHY26ploY3TVZp6uyMNTAzt6IJZ5UqN3qI0eY_IoWkZXQI2sP09pri8W6dAmkeCt3Ftg7uruembeelbG1QzTcWEAcyn--FR5EE_lS9WtCygY8I30KuwgN4o3AJdjuRClgCa_TO1Aed1t6boAy45mrIO4fx1HkY3z5Urjg13z-sPMIDvKczwbtmb-vA" charset="UTF-8"></script><style>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet" /><style>
     :root{
       --fias:#1f7a38; --fias2:#2fa84f; --dark:#10351f; --soft:#eef8f1; --ink:#182230; --muted:#667085;
       --line:#e6eaf0; --bg:#f4f7fb; --danger:#dc3545; --warn:#f59e0b; --ok:#198754; --info:#0d6efd;
@@ -59,6 +59,11 @@
     .modal-header{background:linear-gradient(135deg,var(--dark),var(--fias));color:#fff}.modal-xl{--bs-modal-width:1180px}.btn-success{background:var(--fias);border-color:var(--fias)}.btn-outline-success{color:var(--fias);border-color:var(--fias)}.btn-outline-success:hover{background:var(--fias);border-color:var(--fias)}
     @media(max-width:1100px){.app{grid-template-columns:1fr}.side{height:auto;position:relative}.filters{grid-template-columns:1fr 1fr}.topbar{flex-direction:column;align-items:stretch}.asset-grid{grid-template-columns:1fr}}
     @media(max-width:640px){.main{padding:12px}.filters{grid-template-columns:1fr}.side{padding:14px}.login-body,.login-hero{padding:22px}}
+  
+    .ocr-summary{border:1px solid #d1fadf;background:#f0fdf4;border-radius:16px;padding:12px;margin-bottom:12px;display:grid;gap:6px}
+    .ocr-summary .metric{display:inline-flex;align-items:center;gap:6px;border:1px solid #bbf7d0;background:#fff;border-radius:999px;padding:.35rem .65rem;font-weight:800;font-size:.82rem}
+    .pre-origin{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+    .pre-origin .pill{border:1px solid #e2e8f0;border-radius:999px;background:#f8fafc;padding:.25rem .55rem;font-size:.76rem;font-weight:750;color:#475467}
   </style>
 </head>
 <body>
@@ -503,7 +508,30 @@
   async function saveAsset(){ if(!requireEditor('guardar bienes')) return; const btn=$('btnSaveAsset'); const o=collectAssetForm(); const err=validateAsset(o); if(err){ alert(err); return; } btn.disabled=true; try{ if($('formMode').value==='edit'){ await patchSheetRow('bienes', Number($('rowIndex').value), o); const idx=state.data.bienes.findIndex(b=>b.IdBien===o.IdBien); if(idx>=0) state.data.bienes[idx]={...state.data.bienes[idx],...o,_row:Number($('rowIndex').value)}; await audit('UPDATE','01_Bienes',o.IdBien,'Registro completo','','','OK','Edición controlada desde HTML'); }else{ o.IdBien=o.IdBien||uuid('B'); await appendSheetRow('bienes',o); await audit('CREATE','01_Bienes',o.IdBien,'Registro completo','','','OK','Creación desde HTML'); } bootstrap.Modal.getOrCreateInstance($('assetModal')).hide(); renderAll(); }catch(e){ alert('No fue posible guardar: '+(e.message||e)); }finally{ btn.disabled=false; } }
   async function softDeleteAsset(id){ if(!requireEditor('anular bienes')) return; const b=state.data.bienes.find(x=>x.IdBien===id); if(!b) return; if(!confirm(`¿Anular lógicamente el bien ${b.Codigo}? No se eliminará la fila física; quedará auditado.`)) return; const before=b.EstadoCalidad; b.EstadoCalidad='Eliminado lógico'; try{ await patchSheetRow('bienes',b._row,b); await audit('DELETE_LOGICO','01_Bienes',id,'EstadoCalidad',before,'Eliminado lógico','OK','CRUD seguro sin eliminación física'); renderAll(); }catch(e){ alert('No fue posible anular: '+(e.message||e)); } }
   function getYearTypeFromCode(code){ const p=String(code||'').split('.'); if(p.length>=4 && p[0]==='FIAS') return {yy:p[1],type:p[2],seq:parseInt(p[3],10)||0}; return null; }
-  function generateNextCode(date,type,offset=0){ const yy=(toISO(date)||todayISO()).slice(2,4); type=String(type||'03').padStart(2,'0'); let max=0; state.data.bienes.forEach(b=>{ const x=getYearTypeFromCode(b.Codigo); if(x&&x.yy===yy&&x.type===type) max=Math.max(max,x.seq); }); state.preLocal.forEach(p=>{ const x=getYearTypeFromCode(p.Codigo); if(x&&x.yy===yy&&x.type===type) max=Math.max(max,x.seq); }); return `FIAS.${yy}.${type}.${String(max+1+offset).padStart(3,'0')}`; }
+  function maxSequentialFor(yy,type){
+    yy=String(yy||'').padStart(2,'0'); type=String(type||'03').padStart(2,'0');
+    let max=0;
+    state.data.bienes.forEach(b=>{ const x=getYearTypeFromCode(b.Codigo); if(x&&x.yy===yy&&x.type===type) max=Math.max(max,x.seq); });
+    return max;
+  }
+  function generateNextCode(date,type,offset=0){
+    const yy=(toISO(date)||todayISO()).slice(2,4);
+    type=String(type||'03').padStart(2,'0');
+    const max=maxSequentialFor(yy,type);
+    return `FIAS.${yy}.${type}.${String(max+1+Number(offset||0)).padStart(3,'0')}`;
+  }
+  function assignSequentialPreCodes(){
+    const counters={};
+    state.preLocal.forEach(p=>{
+      const yy=(toISO(p.FechaCompra)||todayISO()).slice(2,4);
+      const type=String(p.TipoBienValidado||p.TipoBienSugerido||'03').padStart(2,'0');
+      const key=`${yy}-${type}`;
+      const offset=counters[key]||0;
+      p.Codigo=`FIAS.${yy}.${type}.${String(maxSequentialFor(yy,type)+1+offset).padStart(3,'0')}`;
+      p.CodigoAnio=yy;
+      counters[key]=offset+1;
+    });
+  }
   function validateCode(o){ const x=getYearTypeFromCode(o.Codigo); if(!x) return 'Formato no estándar'; const yy=(toISO(o.FechaCompra)||'').slice(2,4); if(yy && x.yy!==yy) return 'Año del código no coincide con fecha compra'; if(o.CodigoTipoSugerido && x.type!==String(o.CodigoTipoSugerido).padStart(2,'0')) return 'Tipo del código no coincide con categoría'; return 'OK'; }
   function renderFacturas(){ $('facturasTbody').innerHTML=state.data.facturas.map(f=>{ const link=cleanLink(f.LinkFacturaDigital) || findDocLink(f.NumeroFacturaActa,'factura'); return `<tr><td><strong>${esc(f.NumeroFacturaActa)}</strong></td><td>${esc(f.Proveedor)}</td><td>${displayDate(f.FechaFacturaCompra)}</td><td>${money(f.TotalBienesIncImp)}</td><td>${link?`<a href="${esc(link)}" target="_blank" rel="noopener" class="btn btn-sm btn-outline-success">Abrir</a>`:badge(f.EstadoSoporte||'Pendiente','warn')}</td></tr>`; }).join(''); $('detalleFacturaTbody').innerHTML=state.data.detalle.map(d=>`<tr><td>${esc(d.NumeroFacturaActa)}</td><td>${esc(d.CodigoBien)}</td><td>${esc(d.DescripcionItem)}</td><td>${esc(d.Cantidad)}</td><td>${money(d.ValorTotalIncImp)}</td><td>${esc(d.NumeroSerie)}</td></tr>`).join(''); }
   function financialBadgeStatus(text){
@@ -632,8 +660,9 @@
       }
       const parsed=parseInvoiceText(text,file.name);
       buildPreFromInvoice(parsed,file.name);
-      log(`Factura detectada: ${parsed.numeroFactura||'pendiente'} · proveedor: ${parsed.proveedor||'pendiente'} · ítems: ${parsed.items.length}.`);
-      log(`Pre-registro generado: ${state.preLocal.length} bienes/ítems locales. Revise descripción, tipo, valor, marca, modelo y serie antes de registrar.`);
+      const ocrStats=summarizeOcrProducts(parsed);
+      log(`Factura detectada: ${parsed.numeroFactura||'pendiente'} · proveedor: ${parsed.proveedor||'pendiente'} · productos: ${ocrStats.productCount} · bienes a registrar: ${ocrStats.totalUnits}.`);
+      log(`Pre-registro generado: ${state.preLocal.length} bienes individuales. Si un producto tiene cantidad mayor a 1, se creó un registro por cada bien.`);
       renderPreLocal();
     }catch(e){ log('Error: '+(e.message||e)); alert('No se pudo procesar el documento: '+(e.message||e)); }
   }
@@ -743,6 +772,8 @@
       if(item){ items.push(item); }
       if(stop.test(line) && items.length) break;
     }
+    const structured=extractStructuredInvoiceItems(lines,ctx);
+    for(const s of structured){ if(!items.some(x=>norm(x.descripcion)===norm(s.descripcion) && parseFlexibleQuantity(x.cantidad)===parseFlexibleQuantity(s.cantidad))) items.push(s); }
     const acta=extractActaItems(lines);
     for(const a of acta){ if(!items.some(x=>norm(x.descripcion)===norm(a.descripcion))) items.push(a); }
     const dedup=[]; const seen=new Set();
@@ -754,7 +785,29 @@
     if(!dedup.length) dedup.push({codigo:'',descripcion:'Ítem detectado en factura - validar descripción',cantidad:1,valorTotal:ctx.total||0,valorUnitario:ctx.total||0,detalle:'',series:[],confianza:35,requiereRevision:true,origen:'fallback'});
     return dedup.slice(0,160);
   }
-  function mergeItemContinuation(lines,i){
+  
+  function extractStructuredInvoiceItems(lines,ctx={}){
+    const out=[];
+    for(const line of lines){
+      const s=String(line||'').replace(/\s+/g,' ').trim();
+      if(!s || OCR_REJECT_ITEM.test(s) && !OCR_ASSET_HINT.test(s)) continue;
+      let m=s.match(/^(?:[A-Z]\s+)?([A-Z0-9][A-Z0-9\-\.\/]{1,30})\s+(\d+(?:[\.,]\d+)?)\s*(?:U|UND|UNIDAD|UNIDADES)?\s+(.+?)\s+(\d{1,3}(?:[\.,]\d{3})*(?:[\.,]\d{2})|\d+[\.,]\d{2})\s+(\d{1,3}(?:[\.,]\d{3})*(?:[\.,]\d{2})|\d+[\.,]\d{2})\s+(\d{1,3}(?:[\.,]\d{3})*(?:[\.,]\d{2})|\d+[\.,]\d{2})$/i);
+      if(m){
+        const qty=parseFloat(String(m[2]).replace(',','.'))||1;
+        const desc=m[3].trim();
+        if(desc.length>5) out.push({codigo:m[1],descripcion:desc,cantidad:qty,valorUnitario:num(m[4]),valorTotal:num(m[6]),detalle:s,series:extractSeries(s),...extractBrandModel(desc,m[1]),confianza:86,requiereRevision:false,origen:'tabla'});
+        continue;
+      }
+      m=s.match(/^([A-Z0-9][A-Z0-9\-\.\/]{1,30})\s+(.+?)\s+(\d+(?:[\.,]\d+)?)\s+(\d{1,3}(?:[\.,]\d{3})*(?:[\.,]\d{2})|\d+[\.,]\d{2})\s+(\d{1,3}(?:[\.,]\d{3})*(?:[\.,]\d{2})|\d+[\.,]\d{2})(?:\s+(\d{1,3}(?:[\.,]\d{3})*(?:[\.,]\d{2})|\d+[\.,]\d{2}))?$/i);
+      if(m && OCR_ASSET_HINT.test(m[2])){
+        const qty=parseFloat(String(m[3]).replace(',','.'))||1;
+        const desc=m[2].trim();
+        out.push({codigo:m[1],descripcion:desc,cantidad:qty,valorUnitario:num(m[4]),valorTotal:num(m[6]||m[5]),detalle:s,series:extractSeries(s),...extractBrandModel(desc,m[1]),confianza:82,requiereRevision:false,origen:'tabla'});
+      }
+    }
+    return out;
+  }
+function mergeItemContinuation(lines,i){
     let out=lines[i];
     for(let j=i+1;j<Math.min(lines.length,i+5);j++){
       const next=lines[j];
@@ -849,7 +902,47 @@
     if(it.series && it.series.length) s+=10;
     return Math.max(0,Math.min(100,s));
   }
-  function classifyItem(desc){
+  
+  function roundMoney(v){ return Math.round((Number(v)||0)*100)/100; }
+  function invoiceTaxFactor(parsed){
+    const subtotal=num(parsed?.subtotal), total=num(parsed?.total), iva=num(parsed?.iva);
+    if(subtotal>0 && total>subtotal){
+      const f=total/subtotal;
+      if(f>=1 && f<=1.30) return f;
+    }
+    if(subtotal>0 && iva>0){
+      const f=(subtotal+iva)/subtotal;
+      if(f>=1 && f<=1.30) return f;
+    }
+    return 1;
+  }
+  function parseFlexibleQuantity(v){
+    const n=Number(String(v??'').replace(',','.'));
+    if(!isFinite(n) || n<=0) return 1;
+    return Math.max(1, Math.round(n));
+  }
+  function normalizeUnitFromLine(item, parsed){
+    const qty=parseFlexibleQuantity(item.cantidad||1);
+    const rawUnit=num(item.valorUnitario);
+    const rawTotal=num(item.valorTotal);
+    const baseUnit=rawUnit>0 ? rawUnit : (rawTotal>0 ? rawTotal/qty : 0);
+    return roundMoney(baseUnit * invoiceTaxFactor(parsed));
+  }
+  function normalizeInvoiceItems(parsed){
+    const source=Array.isArray(parsed?.items)?parsed.items:[];
+    return source.map((it,idx)=>{
+      const qty=parseFlexibleQuantity(it.cantidad||1);
+      const unitInc=normalizeUnitFromLine(it, parsed);
+      return {...it, _itemIndex:idx+1, cantidadOriginal:qty, valorUnitarioIncImp:unitInc, valorTotalIncImp:roundMoney(unitInc*qty)};
+    }).filter(it=>String(it.descripcion||'').trim().length>4);
+  }
+  function summarizeOcrProducts(parsed){
+    const items=normalizeInvoiceItems(parsed);
+    const totalUnits=items.reduce((a,b)=>a+parseFlexibleQuantity(b.cantidadOriginal),0);
+    const multiQty=items.filter(x=>parseFlexibleQuantity(x.cantidadOriginal)>1).length;
+    return {productCount:items.length,totalUnits,multiQty};
+  }
+function classifyItem(desc){
     const d=norm(desc);
     if(/silla|escritorio|mesa|credenza|mueble|biblioteca|taburete|archivacion|estacion de trabajo|mampara|manpara|vidrio divisorio|cafeteria|lac(t|ch)ario|modular/.test(d)) return '03';
     if(/notebook|laptop|computador|probook|inspiron|lenovo|dynabook|tablet|celular|impresora|scanner|proyector|pantalla|camara|canon|gps|drone|software|licencia|antivirus|office|windows|adobe|creative cloud|teclado|mouse|memoria|pen drive|base ajustable|regulador|ups|router|switch|microfono|panel led|pedestal|bateria|filtro|estuche/.test(d)) return '07';
@@ -860,44 +953,90 @@
   }
   function buildPreFromInvoice(parsed,filename){
     state.preLocal=[];
+    const normalizedItems=normalizeInvoiceItems(parsed);
     const globalSeries=extractGlobalSerials(parsed.raw);
     let serieCursor=0;
-    parsed.items.forEach((item,idx)=>{
-      const qty=Math.max(1,parseInt(item.cantidad||1,10));
+    normalizedItems.forEach((item,idx)=>{
+      const qty=parseFlexibleQuantity(item.cantidadOriginal||item.cantidad||1);
+      const type=classifyItem(item.descripcion);
+      const cat=state.data.tipo.find(t=>String(t.CodigoTipoBien)===String(type));
+      const meta=extractBrandModel(item.descripcion,item.codigo);
+      const unit=roundMoney(num(item.valorUnitarioIncImp));
       for(let i=0;i<qty;i++){
-        const type=classifyItem(item.descripcion);
-        const unit=num(item.valorUnitario || (item.valorTotal?item.valorTotal/qty:0));
-        const code=generateNextCode(parsed.fecha||todayISO(),type,state.preLocal.length);
-        const cat=state.data.tipo.find(t=>String(t.CodigoTipoBien)===String(type));
-        const meta=extractBrandModel(item.descripcion,item.codigo);
-        const serie=(item.series && item.series[i]) || (item.series && item.series[0] && qty===1 ? item.series[0] : '') || (globalSeries[serieCursor]||'');
+        const itemSeries=Array.isArray(item.series)?item.series:[];
+        const serie=itemSeries[i] || (qty===1 ? itemSeries[0] : '') || (globalSeries[serieCursor]||'');
         if(serie) serieCursor++;
         const marca=item.marca || meta.marca || '';
         const modelo=item.modelo || meta.modelo || '';
         const clasificacion=unit>0 && unit<OCR_MIN_ASSET_VALUE ? 'CONTROL ADMINISTRATIVO' : 'ACTIVO FIJO';
-        const missing=[]; if(!serie && !/licencia|software|office|windows|antivirus|creative cloud/i.test(item.descripcion)) missing.push('serie'); if(!unit) missing.push('valor'); if(!marca) missing.push('marca'); if(!modelo) missing.push('modelo');
-        const obs=[`OCR ${item.origen||'factura'} · confianza ${item.confianza||0}%`, missing.length?`Validar: ${missing.join(', ')}`:'Validación sugerida OK', parsed.claveAcceso?`Clave acceso: ${parsed.claveAcceso}`:'', item.codigo?`Cod. proveedor: ${item.codigo}`:'', item.detalle?`Línea: ${item.detalle}`:''].filter(Boolean).join(' | ');
+        const missing=[];
+        if(!serie && !/licencia|software|office|windows|antivirus|creative cloud/i.test(item.descripcion)) missing.push('serie');
+        if(!unit) missing.push('valor con IVA');
+        if(!marca) missing.push('marca');
+        if(!modelo) missing.push('modelo');
+        const obs=[
+          `OCR ${item.origen||'factura'} · confianza ${item.confianza||0}%`,
+          qty>1?`Producto con cantidad ${qty}: unidad ${i+1} de ${qty} generada automáticamente`:'Producto unitario',
+          `Valor unitario con impuestos: ${money(unit)}`,
+          missing.length?`Validar: ${missing.join(', ')}`:'Validación sugerida OK',
+          parsed.claveAcceso?`Clave acceso: ${parsed.claveAcceso}`:'',
+          item.codigo?`Cod. proveedor: ${item.codigo}`:'',
+          item.detalle?`Línea: ${item.detalle}`:''
+        ].filter(Boolean).join(' | ');
         state.preLocal.push({
-          selected:true, IdPreRegistro:uuid('PRE'), Codigo:code, FechaCarga:todayISO(), Proveedor:parsed.proveedor, RucProveedor:parsed.ruc,
-          NumeroFacturaActa:parsed.numeroFactura, FechaCompra:parsed.fecha||todayISO(), Proyecto:parsed.proyecto||'FIAS',
-          DescripcionDetectada:item.descripcion, DescripcionValidada:item.descripcion, CantidadDetectada:item.cantidad, CantidadARegistrar:1,
-          TipoBienSugerido:type, TipoBienValidado:type, CategoriaBienSugerida:cat?.CategoriaBien||'', Clasificacion:clasificacion,
-          ValorUnitarioIncImp:unit, ValorTotalIncImp:unit, Marca:marca, Modelo:modelo, Serie:serie, Custodio:'', Ubicacion:'',
-          EstadoValidacion:missing.length?'Requiere revisión':'Pendiente de validación', Observaciones:obs, ArchivoOrigen:filename,
-          ConfianzaOCR:item.confianza||0, ClaveAcceso:parsed.claveAcceso||'', NumeroAutorizacion:parsed.numeroAutorizacion||'', CodigoProveedor:item.codigo||''
+          selected:true,
+          IdPreRegistro:uuid('PRE'),
+          Codigo:'',
+          FechaCarga:todayISO(),
+          Proveedor:parsed.proveedor,
+          RucProveedor:parsed.ruc,
+          NumeroFacturaActa:parsed.numeroFactura,
+          FechaCompra:parsed.fecha||todayISO(),
+          Proyecto:parsed.proyecto||'FIAS',
+          DescripcionDetectada:item.descripcion,
+          DescripcionValidada:item.descripcion,
+          CantidadDetectada:qty,
+          CantidadARegistrar:1,
+          ProductoFacturaIndex:item._itemIndex||idx+1,
+          UnidadItemFactura:i+1,
+          TotalUnidadesItem:qty,
+          TipoBienSugerido:type,
+          TipoBienValidado:type,
+          CategoriaBienSugerida:cat?.CategoriaBien||'',
+          Clasificacion:clasificacion,
+          ValorUnitarioIncImp:unit,
+          ValorTotalIncImp:unit,
+          ValorTotalLineaIncImp:roundMoney(unit*qty),
+          Marca:marca,
+          Modelo:modelo,
+          Serie:serie,
+          Custodio:'',
+          Ubicacion:'',
+          EstadoValidacion:missing.length?'Requiere revisión':'Pendiente de validación',
+          Observaciones:obs,
+          ArchivoOrigen:filename,
+          ConfianzaOCR:item.confianza||0,
+          ClaveAcceso:parsed.claveAcceso||'',
+          NumeroAutorizacion:parsed.numeroAutorizacion||'',
+          CodigoProveedor:item.codigo||''
         });
       }
     });
+    assignSequentialPreCodes();
   }
   function renderPreLocal(){
     const cont=$('preRegisterList'); if(!cont) return;
-    cont.innerHTML=state.preLocal.map((p,i)=>{
+    const totalProductos=[...new Set(state.preLocal.map(p=>`${p.NumeroFacturaActa}|${p.ProductoFacturaIndex||0}`))].length;
+    const totalBienes=state.preLocal.length;
+    const lineasMultiples=state.preLocal.filter(p=>Number(p.TotalUnidadesItem||1)>1).length;
+    const resumen = totalBienes ? `<div class="ocr-summary"><div><strong>Pre-registro OCR multiproducto</strong></div><div><span class="metric"><i class="fa-solid fa-box"></i>${totalProductos} productos detectados</span> <span class="metric"><i class="fa-solid fa-layer-group"></i>${totalBienes} bienes individuales</span> <span class="metric"><i class="fa-solid fa-clone"></i>${lineasMultiples} registros provienen de cantidades mayores a 1</span></div><div class="muted">Cada registro de abajo se guardará como un bien independiente con su propio código FIAS.</div></div>` : '';
+    cont.innerHTML=resumen+state.preLocal.map((p,i)=>{
       const sev=p.EstadoValidacion==='Requiere revisión'?'warning':(p.ConfianzaOCR>=80?'ok':'warning');
-      return `<div class="pre-row ${p.selected?'selected':''} row-${sev}"><div class="d-flex justify-content-between gap-2 flex-wrap"><div><input type="checkbox" ${p.selected?'checked':''} onchange="state.preLocal[${i}].selected=this.checked; renderPreLocal()"> <strong>${esc(p.Codigo)}</strong> ${badge(p.TipoBienValidado+' - '+p.CategoriaBienSugerida,'info')} ${badge('OCR '+(p.ConfianzaOCR||0)+'%',p.ConfianzaOCR>=80?'ok':'warn')} ${badge(p.Clasificacion,p.Clasificacion==='ACTIVO FIJO'?'ok':'darkb')}</div><strong>${money(p.ValorUnitarioIncImp)}</strong></div><div class="row g-2 mt-2"><div class="col-md-7"><label class="form-label">Descripción validada</label><input class="form-control form-control-sm" value="${esc(p.DescripcionValidada)}" onchange="state.preLocal[${i}].DescripcionValidada=this.value"></div><div class="col-md-2"><label class="form-label">Tipo</label><select class="form-select form-select-sm" onchange="state.preLocal[${i}].TipoBienValidado=this.value; updatePreCat(${i}); renderPreLocal()">${state.data.tipo.map(t=>`<option value="${esc(t.CodigoTipoBien)}" ${t.CodigoTipoBien==p.TipoBienValidado?'selected':''}>${esc(t.CodigoTipoBien)}</option>`).join('')}</select></div><div class="col-md-3"><label class="form-label">Proyecto</label><input class="form-control form-control-sm" value="${esc(p.Proyecto)}" onchange="state.preLocal[${i}].Proyecto=this.value"></div><div class="col-md-3"><label class="form-label">Clasificación</label><select class="form-select form-select-sm" onchange="state.preLocal[${i}].Clasificacion=this.value"><option ${p.Clasificacion==='ACTIVO FIJO'?'selected':''}>ACTIVO FIJO</option><option ${p.Clasificacion==='CONTROL ADMINISTRATIVO'?'selected':''}>CONTROL ADMINISTRATIVO</option></select></div><div class="col-md-3"><label class="form-label">Marca</label><input class="form-control form-control-sm" value="${esc(p.Marca)}" onchange="state.preLocal[${i}].Marca=this.value"></div><div class="col-md-3"><label class="form-label">Modelo</label><input class="form-control form-control-sm" value="${esc(p.Modelo)}" onchange="state.preLocal[${i}].Modelo=this.value"></div><div class="col-md-3"><label class="form-label">Serie</label><input class="form-control form-control-sm" value="${esc(p.Serie)}" onchange="state.preLocal[${i}].Serie=this.value"></div><div class="col-md-3"><label class="form-label">Valor inc. imp.</label><input type="number" step="0.01" class="form-control form-control-sm" value="${esc(p.ValorUnitarioIncImp)}" onchange="state.preLocal[${i}].ValorUnitarioIncImp=num(this.value); state.preLocal[${i}].ValorTotalIncImp=num(this.value)"></div></div><div class="muted mt-2">Factura: ${esc(p.NumeroFacturaActa)} · Proveedor: ${esc(p.Proveedor)} · RUC: ${esc(p.RucProveedor)} · Fecha: ${displayDate(p.FechaCompra)}</div><div class="muted mt-1"><strong>Observación OCR:</strong> ${esc(p.Observaciones)}</div></div>`;
+      return `<div class="pre-row ${p.selected?'selected':''} row-${sev}"><div class="d-flex justify-content-between gap-2 flex-wrap"><div><input type="checkbox" ${p.selected?'checked':''} onchange="state.preLocal[${i}].selected=this.checked; renderPreLocal()"> <strong>${esc(p.Codigo)}</strong> ${badge(p.TipoBienValidado+' - '+p.CategoriaBienSugerida,'info')} ${badge('OCR '+(p.ConfianzaOCR||0)+'%',p.ConfianzaOCR>=80?'ok':'warn')} ${badge(p.Clasificacion,p.Clasificacion==='ACTIVO FIJO'?'ok':'darkb')} ${Number(p.TotalUnidadesItem||1)>1?badge('Unidad '+p.UnidadItemFactura+' de '+p.TotalUnidadesItem,'warn'):badge('Unidad 1 de 1','darkb')}</div><strong>${money(p.ValorUnitarioIncImp)}</strong></div><div class="row g-2 mt-2"><div class="col-md-7"><label class="form-label">Descripción validada</label><input class="form-control form-control-sm" value="${esc(p.DescripcionValidada)}" onchange="state.preLocal[${i}].DescripcionValidada=this.value"></div><div class="col-md-2"><label class="form-label">Tipo</label><select class="form-select form-select-sm" onchange="state.preLocal[${i}].TipoBienValidado=this.value; updatePreCat(${i}); renderPreLocal()">${state.data.tipo.map(t=>`<option value="${esc(t.CodigoTipoBien)}" ${t.CodigoTipoBien==p.TipoBienValidado?'selected':''}>${esc(t.CodigoTipoBien)}</option>`).join('')}</select></div><div class="col-md-3"><label class="form-label">Proyecto</label><input class="form-control form-control-sm" value="${esc(p.Proyecto)}" onchange="state.preLocal[${i}].Proyecto=this.value"></div><div class="col-md-3"><label class="form-label">Clasificación</label><select class="form-select form-select-sm" onchange="state.preLocal[${i}].Clasificacion=this.value"><option ${p.Clasificacion==='ACTIVO FIJO'?'selected':''}>ACTIVO FIJO</option><option ${p.Clasificacion==='CONTROL ADMINISTRATIVO'?'selected':''}>CONTROL ADMINISTRATIVO</option></select></div><div class="col-md-3"><label class="form-label">Marca</label><input class="form-control form-control-sm" value="${esc(p.Marca)}" onchange="state.preLocal[${i}].Marca=this.value"></div><div class="col-md-3"><label class="form-label">Modelo</label><input class="form-control form-control-sm" value="${esc(p.Modelo)}" onchange="state.preLocal[${i}].Modelo=this.value"></div><div class="col-md-3"><label class="form-label">Serie</label><input class="form-control form-control-sm" value="${esc(p.Serie)}" onchange="state.preLocal[${i}].Serie=this.value"></div><div class="col-md-3"><label class="form-label">Valor inc. imp.</label><input type="number" step="0.01" class="form-control form-control-sm" value="${esc(p.ValorUnitarioIncImp)}" onchange="state.preLocal[${i}].ValorUnitarioIncImp=num(this.value); state.preLocal[${i}].ValorTotalIncImp=num(this.value)"></div></div><div class="pre-origin"><span class="pill">Producto factura #${esc(p.ProductoFacturaIndex||i+1)}</span><span class="pill">Cantidad detectada: ${esc(p.CantidadDetectada||1)}</span><span class="pill">Valor línea inc. imp.: ${money(p.ValorTotalLineaIncImp||p.ValorUnitarioIncImp)}</span><span class="pill">Código proveedor: ${esc(p.CodigoProveedor||'N/A')}</span></div><div class="muted mt-2">Factura: ${esc(p.NumeroFacturaActa)} · Proveedor: ${esc(p.Proveedor)} · RUC: ${esc(p.RucProveedor)} · Fecha: ${displayDate(p.FechaCompra)}</div><div class="muted mt-1"><strong>Observación OCR:</strong> ${esc(p.Observaciones)}</div></div>`;
     }).join('') || '<div class="alert alert-info">Aún no hay pre-registros. Cargue una factura o acta.</div>';
   }
   function updatePreCat(i){ const p=state.preLocal[i]; const cat=state.data.tipo.find(t=>String(t.CodigoTipoBien)===String(p.TipoBienValidado)); p.CategoriaBienSugerida=cat?.CategoriaBien||''; }
-  function regeneratePreCodes(){ const counters={}; state.preLocal.forEach(p=>{ const key=`${(toISO(p.FechaCompra)||todayISO()).slice(2,4)}-${p.TipoBienValidado}`; counters[key]=(counters[key]||0); p.Codigo=generateNextCode(p.FechaCompra,p.TipoBienValidado,counters[key]); counters[key]++; }); renderPreLocal(); }
+  function regeneratePreCodes(){ assignSequentialPreCodes(); renderPreLocal(); }
   async function savePreToExcel(){ if(!requireEditor('guardar pre-registros OCR')) return; const selected=state.preLocal.filter(p=>p.selected); if(!selected.length){alert('Seleccione al menos un pre-registro.');return;} try{ for(const p of selected){ await appendSheetRow('pre',{IdPreRegistro:p.IdPreRegistro,FechaCarga:todayISO(),Proveedor:p.Proveedor,RucProveedor:p.RucProveedor,NumeroFacturaActa:p.NumeroFacturaActa,FechaCompra:p.FechaCompra,Proyecto:p.Proyecto,DescripcionDetectada:p.DescripcionDetectada,DescripcionValidada:p.DescripcionValidada,CantidadDetectada:p.CantidadDetectada,CantidadARegistrar:1,TipoBienSugerido:p.TipoBienSugerido,TipoBienValidado:p.TipoBienValidado,Clasificacion:p.Clasificacion,ValorUnitarioIncImp:p.ValorUnitarioIncImp,ValorTotalIncImp:p.ValorTotalIncImp,Marca:p.Marca,Modelo:p.Modelo,Serie:p.Serie,Custodio:p.Custodio,Ubicacion:p.Ubicacion,EstadoValidacion:p.EstadoValidacion,Observaciones:p.Observaciones,ArchivoOrigen:p.ArchivoOrigen}); } await audit('CREATE','04_PreRegistroOCR','LOTE','Pre-registro OCR','','','OK',`${selected.length} registros guardados`); alert('Pre-registro OCR guardado en Excel.'); }catch(e){alert('No se pudo guardar pre-registro: '+(e.message||e));} }
   async function createAssetsFromPre(){ if(!requireEditor('registrar bienes desde OCR')) return; const selected=state.preLocal.filter(p=>p.selected); if(!selected.length){alert('Seleccione al menos un pre-registro.');return;} const missing=selected.filter(p=>!p.Serie || !p.DescripcionValidada || !p.TipoBienValidado || !p.Proyecto || !p.ValorUnitarioIncImp); if(missing.length && !confirm(`${missing.length} registros tienen datos pendientes (serie, descripción o valor). ¿Registrar de todas formas?`)) return; try{ regeneratePreCodes(); for(const p of selected){ const cat=state.data.tipo.find(t=>String(t.CodigoTipoBien)===String(p.TipoBienValidado)); const obj={IdBien:uuid('B'),Codigo:p.Codigo,CodigoAnio:(toISO(p.FechaCompra)||todayISO()).slice(2,4),CodigoTipoActual:p.TipoBienValidado,SecuencialActual:(p.Codigo.split('.')[3]||''),CodigoTipoSugerido:p.TipoBienValidado,CategoriaBienSugerida:cat?.CategoriaBien||'',ValidacionCodigo:'OK',Descripcion:p.DescripcionValidada,DescripcionAdicional:p.DescripcionDetectada,Cantidad:1,TipoBienOriginal:'',Clasificacion:p.Clasificacion,Proyecto:p.Proyecto,FechaCompra:p.FechaCompra,Donante:'',Proveedor:p.Proveedor,RucProveedor:p.RucProveedor,NumeroFacturaActa:p.NumeroFacturaActa,ValorBienIncImp:p.ValorUnitarioIncImp,Marca:p.Marca,Modelo:p.Modelo,NumeroSerie:p.Serie,CedulaCustodio:'',Custodio:p.Custodio,Institucion:'FIAS',Ubicacion:p.Ubicacion,Asegurado:'NO',InicioSeguro:'',FinSeguro:'',Aseguradora:'',NroPoliza:'',GarantiaTecnica:'N/A',InicioGarantia:'',FinGarantia:'',EstadoFisico:'BUENO',VidaUtilAnios:cat?.VidaUtilAnios||'',TasaAnual:cat?.TasaAnual||'',DepreciacionLinealAnual:'',DepreciacionMensual:'',ValorResidualSugerido:'',FechaBaja:'',MotivoBaja:'',Observaciones:'Registrado desde pre-registro OCR validado.',EstadoCalidad:'OK',FacturaDigitalLink:'',FotoLink:'',ActaEntregaLink:'',FuenteMigracion:'HTML OCR'}; await appendSheetRow('bienes',obj); await appendSheetRow('detalle',{IdDetalle:uuid('DET'),IdFactura:'',CodigoBien:obj.Codigo,NumeroFacturaActa:obj.NumeroFacturaActa,DescripcionItem:p.DescripcionDetectada,Cantidad:1,ValorUnitarioIncImp:p.ValorUnitarioIncImp,ValorTotalIncImp:p.ValorUnitarioIncImp,CodigoTipoSugerido:p.TipoBienValidado,CategoriaBienSugerida:obj.CategoriaBienSugerida,NumeroSerie:p.Serie,Marca:p.Marca,Modelo:p.Modelo,Origen:'OCR'}); } await audit('CREATE','01_Bienes','LOTE','Pre-registro OCR validado','','','OK',`${selected.length} bienes registrados`); state.preLocal=state.preLocal.filter(p=>!p.selected); renderAll(); alert('Bienes registrados correctamente.'); }catch(e){alert('No se pudieron registrar bienes: '+(e.message||e));} }
   function resetFilters(){ ['q','fTipo','fProyecto','fCustodio','fUbicacion','fEstado'].forEach(id=>$(id).value=''); renderInventory(); }

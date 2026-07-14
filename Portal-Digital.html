@@ -45,7 +45,12 @@
     }
 
     .portal-card {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
       transition: all 0.35s ease;
+      content-visibility: auto;
+      contain-intrinsic-size: 620px;
     }
 
     .portal-card:hover {
@@ -53,10 +58,36 @@
       box-shadow: 0 20px 35px rgba(0, 0, 0, 0.12);
     }
 
+    /*
+      Las imágenes originales tienen una proporción más alta que el encabezado
+      anterior. Con 3/2 y object-fit: contain se muestran completas, sin recortes
+      ni deformaciones, conservando una altura uniforme en todas las tarjetas.
+    */
     .tool-image {
-      height: 190px;
-      object-fit: cover;
+      display: block;
       width: 100%;
+      height: auto;
+      aspect-ratio: 3 / 2;
+      object-fit: contain;
+      object-position: center;
+      background: #f8fafc;
+    }
+
+    /* Mantiene alineados los botones inferiores aunque cambie el texto. */
+    .portal-card > .p-6 {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+    }
+
+    .portal-card > .p-6 > a {
+      margin-top: auto;
+    }
+
+    @media (max-width: 640px) {
+      .tool-image {
+        aspect-ratio: 16 / 10;
+      }
     }
 
     .section-title::after {
@@ -279,6 +310,9 @@
         <article class="portal-card bg-white rounded-2xl shadow-lg overflow-hidden border border-red-100">
           <img
             src="https://raw.githubusercontent.com/jaircruz1304/FIAS/refs/heads/main/img-portal/01.%20Seguimiento%20de%20Auditor%C3%ADa.png"
+            loading="lazy"
+            decoding="async"
+            fetchpriority="low"
             alt="Seguimiento de auditoría"
             class="tool-image"
           />
@@ -310,6 +344,9 @@
         <article class="portal-card bg-white rounded-2xl shadow-lg overflow-hidden border border-orange-100">
           <img
             src="https://raw.githubusercontent.com/jaircruz1304/FIAS/refs/heads/main/img-portal/02.%20Gestion%20de%20Riesgos.png"
+            loading="lazy"
+            decoding="async"
+            fetchpriority="low"
             alt="Gestión de riesgos"
             class="tool-image"
           />
@@ -341,6 +378,9 @@
         <article class="portal-card bg-white rounded-2xl shadow-lg overflow-hidden border border-blue-100">
           <img
             src="https://raw.githubusercontent.com/jaircruz1304/FIAS/refs/heads/main/img-portal/03.%20Mapa-Bienes.png"
+            loading="lazy"
+            decoding="async"
+            fetchpriority="low"
             alt="Mapa de activos"
             class="tool-image"
           />
@@ -372,6 +412,9 @@
         <article class="portal-card bg-white rounded-2xl shadow-lg overflow-hidden border border-green-100">
           <img
             src="https://raw.githubusercontent.com/jaircruz1304/FIAS/refs/heads/main/img-portal/04.%20Guia%20de%20procesos%20contratacion.png"
+            loading="lazy"
+            decoding="async"
+            fetchpriority="low"
             alt="Guía de contratación"
             class="tool-image"
           />
@@ -403,6 +446,9 @@
         <article class="portal-card bg-white rounded-2xl shadow-lg overflow-hidden border border-teal-100">
           <img
             src="https://raw.githubusercontent.com/jaircruz1304/FIAS/refs/heads/main/img-portal/05.%20Guia%20donacion%20de%20bienes.png"
+            loading="lazy"
+            decoding="async"
+            fetchpriority="low"
             alt="Donación de bienes"
             class="tool-image"
           />
@@ -434,6 +480,9 @@
         <article class="portal-card bg-white rounded-2xl shadow-lg overflow-hidden border border-indigo-100">
           <img
             src="https://raw.githubusercontent.com/jaircruz1304/FIAS/refs/heads/main/img-portal/06.%20Guia%20donacion%20de%20vehiculos.png"
+            loading="lazy"
+            decoding="async"
+            fetchpriority="low"
             alt="Donación vehicular"
             class="tool-image"
           />
@@ -465,6 +514,9 @@
         <article class="portal-card bg-white rounded-2xl shadow-lg overflow-hidden border border-cyan-100">
           <img
             src="https://raw.githubusercontent.com/jaircruz1304/FIAS/refs/heads/main/img-portal/09.%20Gesti%C3%B3n%20Vehicular.png"
+            loading="lazy"
+            decoding="async"
+            fetchpriority="low"
             alt="Gestión vehicular institucional"
             class="tool-image"
           />
@@ -497,6 +549,9 @@
         <article class="portal-card bg-white rounded-2xl shadow-lg overflow-hidden border border-emerald-100">
           <img
             src="https://raw.githubusercontent.com/jaircruz1304/FIAS/refs/heads/main/img-portal/08.%20Control%20de%20Donaciones.png"
+            loading="lazy"
+            decoding="async"
+            fetchpriority="low"
             alt="Gestión integral de donaciones"
             class="tool-image"
           />
@@ -529,6 +584,9 @@
         <article class="portal-card bg-white rounded-2xl shadow-lg overflow-hidden border border-violet-100">
           <img
             src="https://raw.githubusercontent.com/jaircruz1304/FIAS/refs/heads/main/img-portal/10.%20Seguros.png"
+            loading="lazy"
+            decoding="async"
+            fetchpriority="low"
             alt="Seguro vehicular institucional"
             class="tool-image"
           />
@@ -593,35 +651,4 @@
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
         <div>
           <img
-            src="https://fias.org.ec/wp-content/uploads/2021/11/Logo_FIAS_web.png"
-            alt="Logo FIAS"
-            class="h-11 mb-4"
-          />
-         <p class="text-sm text-gray-500 italic">
-            © 2026 Fondo de Inversión Ambiental Sostenible
-          </p>
-        </div>
-
-        <div class="text-sm text-gray-500">
-          <p class="font-bold text-gray-700 mb-3">Accesos destacados</p>
-          <ul class="space-y-2">
-            <li><a href="https://rrhh.fias.org.ec" target="_blank" class="hover:text-[#005596]">Talento Humano</a></li>
-            <li><a href="https://jaircruz1304.github.io/FIAS/Auditoria.html" target="_blank" class="hover:text-[#005596]">Seguimiento de Auditoría</a></li>
-            <li><a href="https://jaircruz1304.github.io/FIAS/Riesgos.html" target="_blank" class="hover:text-[#005596]">Gestión de Riesgos</a></li>
-            <li><a href="https://jaircruz1304.github.io/FIAS/Vehiculo-FIAS.html" target="_blank" rel="noopener noreferrer" class="hover:text-[#005596]">Gestión Vehicular</a></li>
-            <li><a href="https://jaircruz1304.github.io/FIAS-DONACIONES/Donaciones.html" target="_blank" rel="noopener noreferrer" class="hover:text-[#005596]">Gestión de Donaciones</a></li>
-            <li><a href="https://jaircruz1304.github.io/FIAS-SEGUROS/seguro-vehicular.html" target="_blank" rel="noopener noreferrer" class="hover:text-[#005596]">Seguro Vehicular</a></li>
-          </ul>
-        </div>
-
-        <div class="md:text-right">
-          <p class="text-sm text-gray-400 uppercase tracking-[0.2em] font-bold mb-2">Portal institucional</p>
-          
-         
-        </div>
-      </div>
-    </div>
-  </footer>
-
-</body>
-</html>
+            src="https://fias.org.ec/wp-content/uploads/2021/11/L

@@ -1,0 +1,473 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0b3b2a" />
+  <title>FIAS | Analítica de uso de vehículos institucionales</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    :root{
+      --green-950:#06281d;--green-900:#0b3b2a;--green-800:#145338;--green-700:#1f7a38;--green-600:#2c914b;--green-500:#39b864;--green-100:#e9f8ee;
+      --blue-700:#1d4ed8;--blue-100:#eaf1ff;--amber-700:#a15c00;--amber-100:#fff7df;--red-700:#b42318;--red-100:#ffebeb;
+      --slate-950:#0f172a;--slate-800:#1f2937;--slate-700:#344054;--slate-600:#667085;--slate-500:#7d899b;--slate-300:#d0d5dd;--slate-200:#e4e7ec;--slate-100:#f2f4f7;--white:#fff;--surface:#f5f7fa;
+      --shadow:0 18px 45px rgba(16,24,40,.12);--shadow-soft:0 8px 26px rgba(16,24,40,.08);--radius-xl:24px;--radius-lg:18px;--radius-md:13px;--sidebar:288px;
+    }
+    *{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;background:var(--surface);color:var(--slate-950);font-family:Inter,"Segoe UI",system-ui,-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif}
+    button,input,select{font:inherit} button{cursor:pointer} .hidden{display:none!important}
+    .app-shell{min-height:100vh;display:grid;grid-template-columns:var(--sidebar) minmax(0,1fr)}
+    .sidebar{position:sticky;top:0;height:100vh;overflow:auto;padding:22px;background:linear-gradient(180deg,var(--green-950),var(--green-900) 72%,#091d14);color:#fff;box-shadow:var(--shadow);z-index:30}
+    .brand{display:flex;align-items:center;gap:12px;margin-bottom:24px}.brand-mark{width:48px;height:48px;border-radius:16px;background:#fff;color:var(--green-800);display:grid;place-items:center;font-weight:950;box-shadow:0 8px 20px rgba(0,0,0,.18)}
+    .brand h1{font-size:1.02rem;line-height:1.14;margin:0;font-weight:950}.brand small{display:block;margin-top:4px;color:#b9dcc5}
+    .nav-group{margin:19px 0 9px;color:#9fd2ae;text-transform:uppercase;letter-spacing:.11em;font-size:.7rem;font-weight:900}
+    .nav-button{width:100%;display:flex;align-items:center;gap:10px;border:1px solid rgba(255,255,255,.08);border-radius:14px;background:rgba(255,255,255,.05);color:#edf9f0;padding:12px;margin:7px 0;text-align:left;font-weight:780;transition:.17s ease}
+    .nav-button:hover,.nav-button.active{background:#fff;color:var(--green-800);transform:translateX(3px)}.nav-button i{font-size:1.08rem}
+    .sidebar-card{margin-top:18px;border:1px solid rgba(255,255,255,.14);border-radius:18px;background:rgba(255,255,255,.07);padding:14px}.sidebar-card .muted{color:#b9d8c2;font-size:.82rem}.sidebar-card strong{display:block;margin-top:4px;line-height:1.35}
+    .main{min-width:0;padding:24px 28px 42px}.topbar{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:18px}.page-title h2{margin:0;font-size:clamp(1.65rem,2.35vw,2.4rem);line-height:1.05;letter-spacing:-.045em;font-weight:950}.page-title p{margin:8px 0 0;color:var(--slate-600);max-width:980px;line-height:1.52}
+    .actions{display:flex;gap:9px;align-items:center;justify-content:flex-end;flex-wrap:wrap}.btn{border:0;border-radius:12px;padding:10px 14px;display:inline-flex;align-items:center;gap:8px;font-weight:850;transition:.17s ease;white-space:nowrap}.btn:hover{transform:translateY(-1px)}
+    .btn-primary{background:linear-gradient(135deg,var(--green-700),var(--green-500));color:#fff;box-shadow:0 8px 18px rgba(31,122,56,.22)}.btn-dark{background:var(--slate-950);color:#fff}.btn-ghost{background:#fff;color:var(--slate-800);border:1px solid var(--slate-200)}.btn-danger{background:var(--red-100);color:var(--red-700);border:1px solid #ffc8c8}.btn-sm{padding:7px 10px;font-size:.84rem;border-radius:10px}
+    .session-chip{display:inline-flex;align-items:center;gap:7px;border:1px solid #b7e4c7;background:#f8fffa;color:var(--green-800);border-radius:999px;padding:9px 12px;font-size:.85rem;font-weight:900;max-width:280px}.session-chip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .auth-gate{min-height:100vh;display:flex;justify-content:center;align-items:center;padding:28px;background:radial-gradient(circle at 12% 15%,#dff8e7 0,transparent 35%),radial-gradient(circle at 88% 18%,#e6efff 0,transparent 34%),linear-gradient(135deg,#f6fff8,#fff)}
+    .auth-card{width:min(620px,100%);background:#fff;border:1px solid var(--slate-200);border-radius:28px;box-shadow:var(--shadow);padding:32px;text-align:center}.auth-logo{width:82px;height:82px;margin:0 auto 17px;border-radius:24px;background:linear-gradient(135deg,var(--green-900),var(--green-500));color:#fff;display:grid;place-items:center;font-size:1.25rem;font-weight:950}
+    .auth-card h2{margin:0;font-size:1.8rem;letter-spacing:-.04em}.auth-card p{color:var(--slate-600);line-height:1.58;margin:10px auto 20px;max-width:520px}.auth-actions{display:grid;gap:10px}.auth-actions .btn{justify-content:center;width:100%}.auth-note{margin-top:16px;text-align:left;border:1px solid #b7e4c7;background:#f7fffa;border-radius:16px;padding:12px;color:var(--green-800);font-size:.9rem;line-height:1.5}
+    .app-shell.locked{display:none!important}.module{display:none;animation:fadeIn .18s ease}.module.active{display:block}@keyframes fadeIn{from{opacity:.35;transform:translateY(4px)}to{opacity:1;transform:none}}
+    .hero-grid{display:grid;grid-template-columns:1.25fr .75fr;gap:16px;margin-bottom:16px}.hero-panel{position:relative;overflow:hidden;border-radius:var(--radius-xl);padding:23px;color:#fff;background:linear-gradient(135deg,#083421,#1f7a38 65%,#62d77f);box-shadow:var(--shadow)}.hero-panel:after{content:"";position:absolute;width:270px;height:270px;border-radius:50%;background:rgba(255,255,255,.12);right:-90px;top:-105px}.hero-panel h3{position:relative;z-index:1;margin:0;font-size:1.48rem;letter-spacing:-.03em;font-weight:950;max-width:840px}.hero-panel p{position:relative;z-index:1;margin:9px 0 0;max-width:900px;line-height:1.5;opacity:.94}
+    .connection-panel{background:#fff;border:1px solid var(--slate-200);border-radius:var(--radius-xl);padding:17px;box-shadow:var(--shadow-soft)}.connection-row{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px dashed var(--slate-200)}.connection-row:last-child{border-bottom:0}.connection-row span{color:var(--slate-600)}.connection-row strong{text-align:right;max-width:255px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.status-dot{display:inline-flex!important;align-items:center;gap:7px}.status-dot:before{content:"";width:9px;height:9px;border-radius:50%;background:#98a2b3;box-shadow:0 0 0 4px rgba(152,162,179,.18)}.status-dot.ok:before{background:var(--green-500);box-shadow:0 0 0 4px rgba(57,184,100,.16)}.status-dot.warn:before{background:#f59e0b;box-shadow:0 0 0 4px rgba(245,158,11,.14)}.status-dot.bad:before{background:#ef4444;box-shadow:0 0 0 4px rgba(239,68,68,.14)}
+    .filter-panel{background:#fff;border:1px solid var(--slate-200);border-radius:var(--radius-lg);box-shadow:var(--shadow-soft);padding:14px 16px;margin-bottom:16px}.filter-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:10px}.filter-head strong{font-size:.95rem}.filters{display:grid;grid-template-columns:1.5fr repeat(6,minmax(120px,1fr));gap:9px}.field{display:flex;flex-direction:column;gap:5px}.field label{font-size:.7rem;text-transform:uppercase;letter-spacing:.075em;color:var(--slate-600);font-weight:900}.field input,.field select{width:100%;border:1px solid var(--slate-200);background:#fff;color:var(--slate-950);border-radius:11px;padding:9px 10px;outline:0}.field input:focus,.field select:focus{border-color:#8fd39f;box-shadow:0 0 0 4px rgba(57,184,100,.12)}
+    .grid-kpi{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;margin-bottom:16px}.kpi{min-height:126px;background:#fff;border:1px solid var(--slate-200);border-radius:18px;padding:15px;box-shadow:var(--shadow-soft);display:flex;flex-direction:column;justify-content:space-between}.kpi-top{display:flex;align-items:flex-start;justify-content:space-between;gap:9px}.kpi-label{color:var(--slate-600);font-size:.71rem;text-transform:uppercase;letter-spacing:.08em;font-weight:900}.kpi-icon{width:40px;height:40px;border-radius:13px;background:var(--green-100);color:var(--green-700);display:grid;place-items:center;font-size:1.15rem}.kpi-value{font-size:1.62rem;font-weight:950;letter-spacing:-.04em;margin-top:6px;line-height:1.05}.kpi-sub{color:var(--slate-600);font-size:.8rem;margin-top:6px;line-height:1.35}
+    .section-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:15px}.span-12{grid-column:span 12}.span-8{grid-column:span 8}.span-7{grid-column:span 7}.span-6{grid-column:span 6}.span-5{grid-column:span 5}.span-4{grid-column:span 4}
+    .card{background:#fff;border:1px solid var(--slate-200);border-radius:var(--radius-lg);box-shadow:var(--shadow-soft);overflow:hidden}.card-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:15px 17px;border-bottom:1px solid var(--slate-200)}.card-head h3{margin:0;font-size:1rem;letter-spacing:-.02em;font-weight:950}.card-head p{margin:3px 0 0;color:var(--slate-600);font-size:.84rem;line-height:1.4}.card-body{padding:17px}.chart-box{height:310px;position:relative}.chart-box-sm{height:250px;position:relative}
+    .table-wrap{overflow:auto;border:1px solid var(--slate-200);border-radius:15px;background:#fff}.data-table{width:100%;border-collapse:separate;border-spacing:0;min-width:1040px}.data-table th{position:sticky;top:0;background:#f8fafb;color:#344054;text-align:left;font-size:.7rem;text-transform:uppercase;letter-spacing:.075em;padding:11px;border-bottom:1px solid var(--slate-200);z-index:1}.data-table td{padding:11px;border-bottom:1px solid #f0f2f5;vertical-align:middle;font-size:.9rem}.data-table tr:hover td{background:#fbfdfc}.num{text-align:right;font-variant-numeric:tabular-nums}.muted{color:var(--slate-600)}
+    .pill{display:inline-flex;align-items:center;border-radius:999px;padding:5px 9px;font-size:.75rem;font-weight:900;white-space:nowrap}.pill-ok{background:var(--green-100);color:#087343}.pill-warn{background:var(--amber-100);color:#946000}.pill-bad{background:var(--red-100);color:var(--red-700)}.pill-info{background:var(--blue-100);color:var(--blue-700)}.pill-neutral{background:var(--slate-100);color:var(--slate-800)}
+    .rank-list{display:grid;gap:9px}.rank-item{display:grid;grid-template-columns:32px 1fr auto;gap:10px;align-items:center;border:1px solid var(--slate-200);border-radius:14px;padding:10px;background:#fff}.rank-pos{width:32px;height:32px;border-radius:11px;background:var(--green-100);color:var(--green-800);display:grid;place-items:center;font-weight:950}.rank-item strong{display:block}.rank-item small{display:block;color:var(--slate-600);margin-top:2px}.rank-value{font-weight:950;color:var(--green-800)}
+    .insight-grid{display:grid;gap:10px}.insight{border:1px solid var(--slate-200);border-left:5px solid var(--green-500);border-radius:15px;padding:12px;background:#fff}.insight.warn{border-left-color:#f59e0b}.insight.bad{border-left-color:#ef4444}.insight h4{margin:0 0 4px;font-size:.92rem}.insight p{margin:0;color:var(--slate-600);line-height:1.5;font-size:.87rem}
+    #map{height:520px;border-radius:16px;overflow:hidden;border:1px solid var(--slate-200)}.map-tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:11px}.map-note{margin-top:10px;color:var(--slate-600);font-size:.84rem;line-height:1.5}.map-empty{height:520px;display:grid;place-items:center;text-align:center;border:1px dashed var(--slate-300);border-radius:16px;background:#fbfcfd;color:var(--slate-600);padding:24px}.map-empty i{font-size:2rem;color:var(--green-700);display:block;margin-bottom:8px}
+    .calendar-wrap{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.month-card{border:1px solid var(--slate-200);border-radius:15px;padding:10px;background:#fff}.month-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-weight:900}.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}.cal-head{text-align:center;font-size:.62rem;color:var(--slate-500);font-weight:900}.cal-cell{aspect-ratio:1;border-radius:5px;background:#f2f4f7;display:flex;align-items:center;justify-content:center;font-size:.64rem;color:#667085;position:relative}.cal-cell[data-level="1"]{background:#dcf6e4;color:#27663d}.cal-cell[data-level="2"]{background:#a9e7ba;color:#165b31}.cal-cell[data-level="3"]{background:#66cc83;color:#083f21}.cal-cell[data-level="4"]{background:#249b50;color:#fff}.cal-cell.empty{background:transparent}
+    .quality-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:11px}.quality-card{border:1px solid var(--slate-200);border-radius:16px;padding:13px;background:#fff}.quality-card span{display:block;color:var(--slate-600);font-size:.72rem;text-transform:uppercase;letter-spacing:.07em;font-weight:900}.quality-card strong{display:block;font-size:1.35rem;margin-top:5px}.progress{height:8px;background:#edf0f2;border-radius:999px;overflow:hidden;margin-top:10px}.progress>div{height:100%;background:var(--green-500);border-radius:999px}
+    .mapping-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.mapping-card{border:1px solid var(--slate-200);border-radius:14px;padding:10px;background:#fbfcfd}.mapping-card label{display:block;font-size:.72rem;color:var(--slate-600);text-transform:uppercase;letter-spacing:.07em;font-weight:900;margin-bottom:6px}.mapping-card select{width:100%;border:1px solid var(--slate-200);border-radius:10px;padding:8px;background:#fff}.mapping-card small{display:block;color:var(--slate-500);margin-top:5px;line-height:1.35}
+    .source-list{display:grid;gap:8px}.source-item{border:1px solid var(--slate-200);border-radius:14px;padding:11px;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;background:#fff}.source-item strong{display:block}.source-item small{display:block;color:var(--slate-600);margin-top:2px}.source-score{font-size:.78rem;font-weight:900;color:var(--green-800)}
+    .drawer{position:fixed;inset:0;background:rgba(15,23,42,.48);z-index:80;display:none;align-items:flex-end;justify-content:center;padding:20px}.drawer.open{display:flex}.drawer-panel{width:min(1120px,100%);max-height:92vh;background:#fff;border-radius:26px;box-shadow:var(--shadow);overflow:auto}.drawer-head{position:sticky;top:0;z-index:2;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:17px 19px;background:linear-gradient(135deg,var(--green-950),var(--green-700));color:#fff}.drawer-head h3{margin:0}.drawer-body{padding:18px}.detail-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.detail-cell{border:1px solid var(--slate-200);border-radius:13px;background:#fbfcfd;padding:10px}.detail-cell span{display:block;color:var(--slate-600);font-size:.68rem;text-transform:uppercase;letter-spacing:.07em;font-weight:900}.detail-cell strong{display:block;margin-top:4px;word-break:break-word}.raw-json{background:#0c111d;color:#d0d5dd;border-radius:15px;padding:13px;overflow:auto;max-height:340px;white-space:pre-wrap;font-family:"Cascadia Code",Consolas,monospace;font-size:.79rem}
+    .loading{position:fixed;inset:0;z-index:100;background:rgba(255,255,255,.88);display:none;align-items:center;justify-content:center;flex-direction:column;gap:12px;backdrop-filter:blur(4px)}.loading.open{display:flex}.spinner{width:44px;height:44px;border:4px solid #d9f1df;border-top-color:var(--green-700);border-radius:50%;animation:spin 1s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+    .toast-zone{position:fixed;right:18px;bottom:18px;z-index:120;display:grid;gap:9px}.toast{min-width:min(370px,90vw);background:#fff;border:1px solid var(--slate-200);border-left:5px solid var(--green-500);border-radius:14px;box-shadow:var(--shadow-soft);padding:12px 14px}.toast.warn{border-left-color:#f59e0b}.toast.bad{border-left-color:#ef4444}.toast h4{margin:0 0 3px;font-size:.94rem}.toast p{margin:0;color:var(--slate-600);font-size:.86rem;line-height:1.45}
+    .empty-state{text-align:center;padding:35px 18px;border:1px dashed var(--slate-300);border-radius:15px;background:#fbfcfd;color:var(--slate-600)}.empty-state i{font-size:1.8rem;color:var(--green-700);display:block;margin-bottom:7px}
+    @media(max-width:1380px){.grid-kpi{grid-template-columns:repeat(3,1fr)}.filters{grid-template-columns:repeat(4,1fr)}.filters .search-field{grid-column:span 2}.hero-grid{grid-template-columns:1fr}.span-8,.span-7,.span-6,.span-5,.span-4{grid-column:span 12}.quality-grid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:1050px){.app-shell{grid-template-columns:1fr}.sidebar{position:relative;height:auto}.main{padding:18px}.topbar{flex-direction:column}.actions{justify-content:flex-start}.calendar-wrap{grid-template-columns:repeat(2,1fr)}.mapping-grid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:700px){.grid-kpi,.quality-grid{grid-template-columns:1fr}.filters{grid-template-columns:1fr}.filters .search-field{grid-column:span 1}.calendar-wrap,.mapping-grid{grid-template-columns:1fr}.card-head{align-items:flex-start;flex-direction:column}.detail-grid{grid-template-columns:1fr 1fr}.auth-card{padding:23px}.drawer{padding:0}.drawer-panel{border-radius:22px 22px 0 0}}
+  </style>
+</head>
+<body>
+  <div class="loading" id="loading"><div class="spinner"></div><strong id="loadingText">Inicializando...</strong></div>
+  <div class="toast-zone" id="toastZone"></div>
+
+  <section class="auth-gate" id="authGate">
+    <div class="auth-card">
+      <div class="auth-logo">FIAS</div>
+      <h2>Analítica de uso de vehículos</h2>
+      <p>Inicie sesión con su cuenta institucional de Microsoft 365. La aplicación consulta directamente la lista autorizada de SharePoint y construye indicadores, tendencias, rankings y visualizaciones geográficas.</p>
+      <div class="auth-actions"><button class="btn btn-primary" id="btnGateLogin"><i class="bi bi-microsoft"></i> Iniciar sesión con Microsoft</button></div>
+      <div class="auth-note"><strong>Lectura institucional:</strong> la solución no almacena contraseñas. Los datos permanecen en Microsoft 365 y se consultan mediante Microsoft Graph con la sesión del usuario.</div>
+    </div>
+  </section>
+
+  <div class="app-shell locked" id="appShell">
+    <aside class="sidebar">
+      <div class="brand"><div class="brand-mark">FIAS</div><div><h1>Uso de Vehículos Institucionales</h1><small>SharePoint · Analítica · Movilizaciones</small></div></div>
+      <div class="nav-group">Analítica</div>
+      <button class="nav-button active" data-module="executive"><i class="bi bi-speedometer2"></i> Dashboard ejecutivo</button>
+      <button class="nav-button" data-module="mobility"><i class="bi bi-bar-chart-line"></i> Patrones de movilización</button>
+      <button class="nav-button" data-module="geography"><i class="bi bi-geo-alt"></i> Mapa y destinos</button>
+      <button class="nav-button" data-module="calendar"><i class="bi bi-calendar3"></i> Calendario de demanda</button>
+      <button class="nav-button" data-module="records"><i class="bi bi-table"></i> Registros y búsqueda</button>
+      <div class="nav-group">Control</div>
+      <button class="nav-button" data-module="quality"><i class="bi bi-shield-check"></i> Calidad de datos</button>
+      <button class="nav-button" data-module="settings"><i class="bi bi-sliders"></i> Fuente y mapeo</button>
+      <div class="sidebar-card"><div class="muted">Fuente</div><strong id="sideSource">SharePoint · RecursosAdministrativo</strong><div class="muted" id="sideList">Lista pendiente</div></div>
+      <div class="sidebar-card"><div class="muted">Última sincronización</div><strong id="sideSync">Sin sincronizar</strong><div class="muted" id="sideCount">0 registros</div></div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="page-title"><h2>Comando analítico de movilización institucional</h2><p>Transforma los registros operativos de SharePoint en información para seguimiento, planificación de flota y toma de decisiones administrativas.</p></div>
+        <div class="actions">
+          <span class="session-chip" id="sessionChip"><i class="bi bi-person-check"></i><span id="sessionChipText">Sesión activa</span></span>
+          <button class="btn btn-primary" id="btnSync"><i class="bi bi-arrow-repeat"></i> Sincronizar</button>
+          <button class="btn btn-ghost" id="btnSettings"><i class="bi bi-sliders"></i> Configurar</button>
+          <button class="btn btn-ghost" id="btnLogout"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</button>
+        </div>
+      </header>
+
+      <div class="hero-grid">
+        <section class="hero-panel"><h3>Uso real de la flota, destinos, frecuencia, kilometraje y demanda en una sola vista.</h3><p>El análisis se actualiza al sincronizar la lista de SharePoint. Los filtros afectan simultáneamente indicadores, gráficos, ranking, mapa, calendario y tabla de registros.</p></section>
+        <section class="connection-panel">
+          <div class="connection-row"><span>Estado</span><strong id="connState" class="status-dot warn">Pendiente</strong></div>
+          <div class="connection-row"><span>Usuario</span><strong id="userName">—</strong></div>
+          <div class="connection-row"><span>Lista activa</span><strong id="activeList">Auto detección</strong></div>
+          <div class="connection-row"><span>Registros cargados</span><strong id="loadedRows">0</strong></div>
+        </section>
+      </div>
+
+      <section class="filter-panel" id="globalFilters">
+        <div class="filter-head"><strong><i class="bi bi-funnel"></i> Filtros globales</strong><button class="btn btn-sm btn-ghost" id="btnResetFilters"><i class="bi bi-arrow-counterclockwise"></i> Limpiar</button></div>
+        <div class="filters">
+          <div class="field search-field"><label>Búsqueda</label><input id="fSearch" placeholder="Placa, conductor, usuario, destino, actividad..." /></div>
+          <div class="field"><label>Vehículo</label><select id="fVehicle"><option value="">Todos</option></select></div>
+          <div class="field"><label>Conductor</label><select id="fDriver"><option value="">Todos</option></select></div>
+          <div class="field"><label>Área</label><select id="fArea"><option value="">Todas</option></select></div>
+          <div class="field"><label>Proyecto / programa</label><select id="fProject"><option value="">Todos</option></select></div>
+          <div class="field"><label>Desde</label><input id="fFrom" type="date" /></div>
+          <div class="field"><label>Hasta</label><input id="fTo" type="date" /></div>
+        </div>
+      </section>
+
+      <section class="module active" id="executive">
+        <div class="grid-kpi" id="kpis"></div>
+        <div class="section-grid">
+          <article class="card span-8"><div class="card-head"><div><h3>Tendencia de utilización</h3><p>Movilizaciones por período, según la fecha registrada.</p></div></div><div class="card-body"><div class="chart-box"><canvas id="chartTrend"></canvas></div></div></article>
+          <article class="card span-4"><div class="card-head"><div><h3>Uso por proyecto / programa</h3><p>Distribución relativa de los desplazamientos.</p></div></div><div class="card-body"><div class="chart-box-sm"><canvas id="chartProject"></canvas></div></div></article>
+          <article class="card span-7"><div class="card-head"><div><h3>Lectura ejecutiva</h3><p>Hallazgos automáticos sobre concentración, demanda y aprovechamiento.</p></div></div><div class="card-body"><div class="insight-grid" id="executiveInsights"></div></div></article>
+          <article class="card span-5"><div class="card-head"><div><h3>Destinos más frecuentes</h3><p>Ranking de lugares registrados en la lista.</p></div></div><div class="card-body"><div class="rank-list" id="topDestinations"></div></div></article>
+        </div>
+      </section>
+
+      <section class="module" id="mobility">
+        <div class="section-grid">
+          <article class="card span-6"><div class="card-head"><div><h3>Frecuencia por vehículo</h3><p>Identifica unidades de mayor demanda.</p></div></div><div class="card-body"><div class="chart-box"><canvas id="chartVehicles"></canvas></div></div></article>
+          <article class="card span-6"><div class="card-head"><div><h3>Frecuencia por conductor</h3><p>Patrones de movilización por responsable de conducción.</p></div></div><div class="card-body"><div class="chart-box"><canvas id="chartDrivers"></canvas></div></div></article>
+          <article class="card span-6"><div class="card-head"><div><h3>Usuarios solicitantes</h3><p>Personas con mayor utilización registrada.</p></div></div><div class="card-body"><div class="chart-box"><canvas id="chartUsers"></canvas></div></div></article>
+          <article class="card span-6"><div class="card-head"><div><h3>Áreas / dependencias</h3><p>Demanda institucional agrupada por unidad.</p></div></div><div class="card-body"><div class="chart-box"><canvas id="chartAreas"></canvas></div></div></article>
+          <article class="card span-12"><div class="card-head"><div><h3>Actividad o motivo de movilización</h3><p>Principales finalidades registradas.</p></div></div><div class="card-body"><div class="chart-box"><canvas id="chartActivities"></canvas></div></div></article>
+        </div>
+      </section>
+
+      <section class="module" id="geography">
+        <div class="section-grid">
+          <article class="card span-8"><div class="card-head"><div><h3>Mapa interactivo de destinos</h3><p>Puntos y concentración geográfica cuando la lista contiene coordenadas.</p></div></div><div class="card-body"><div class="map-tools"><button class="btn btn-sm btn-primary" id="btnMapPoints"><i class="bi bi-geo"></i> Puntos</button><button class="btn btn-sm btn-ghost" id="btnMapHeat"><i class="bi bi-fire"></i> Calor</button><span class="pill pill-info" id="geoCoverage">0% georreferenciado</span></div><div id="map"></div><div id="mapEmpty" class="map-empty hidden"><div><i class="bi bi-geo-alt"></i><strong>La lista no aporta coordenadas utilizables.</strong><div>Puede mapear campos de latitud y longitud en “Fuente y mapeo”. Por privacidad, esta versión no envía destinos a servicios externos de geocodificación.</div></div></div><div class="map-note">Los recorridos reales requieren coordenadas de origen/destino o trazas GPS. Si la lista solo registra nombres de lugares, el sistema analiza la frecuencia del destino pero no inventa una ruta.</div></div></article>
+          <article class="card span-4"><div class="card-head"><div><h3>Concentración por destino</h3><p>Top geográfico y porcentaje sobre el total.</p></div></div><div class="card-body"><div class="rank-list" id="geoRanking"></div></div></article>
+        </div>
+      </section>
+
+      <section class="module" id="calendar">
+        <div class="section-grid">
+          <article class="card span-12"><div class="card-head"><div><h3>Calendario de utilización</h3><p>Intensidad diaria de movilizaciones para los últimos 12 meses presentes en los datos filtrados.</p></div></div><div class="card-body"><div class="calendar-wrap" id="calendarHeat"></div></div></article>
+          <article class="card span-6"><div class="card-head"><div><h3>Demanda por día de semana</h3><p>Distribución de salidas de lunes a domingo.</p></div></div><div class="card-body"><div class="chart-box"><canvas id="chartWeekday"></canvas></div></div></article>
+          <article class="card span-6"><div class="card-head"><div><h3>Demanda mensual</h3><p>Comparación de meses del año.</p></div></div><div class="card-body"><div class="chart-box"><canvas id="chartMonthOfYear"></canvas></div></div></article>
+        </div>
+      </section>
+
+      <section class="module" id="records">
+        <div class="card"><div class="card-head"><div><h3>Registros de movilización</h3><p>Vista operacional filtrable. Seleccione una fila para revisar el registro completo.</p></div><div><button class="btn btn-sm btn-ghost" id="btnExport"><i class="bi bi-download"></i> Exportar CSV</button></div></div><div class="card-body"><div class="table-wrap"><table class="data-table"><thead><tr><th>Detalle</th><th>Fecha</th><th>Vehículo / placa</th><th>Conductor</th><th>Usuario</th><th>Área</th><th>Destino</th><th>Proyecto</th><th>Actividad</th><th class="num">Km</th></tr></thead><tbody id="recordsBody"></tbody></table></div></div></div>
+      </section>
+
+      <section class="module" id="quality">
+        <div class="section-grid">
+          <article class="card span-12"><div class="card-head"><div><h3>Completitud y calidad para análisis</h3><p>Evalúa si los campos clave permiten construir indicadores confiables.</p></div></div><div class="card-body"><div class="quality-grid" id="qualityGrid"></div></div></article>
+          <article class="card span-6"><div class="card-head"><div><h3>Hallazgos de calidad</h3><p>Vacíos que reducen la capacidad analítica.</p></div></div><div class="card-body"><div class="insight-grid" id="qualityInsights"></div></div></article>
+          <article class="card span-6"><div class="card-head"><div><h3>Campos detectados</h3><p>Mapeo semántico utilizado actualmente.</p></div></div><div class="card-body"><div class="table-wrap"><table class="data-table" style="min-width:620px"><thead><tr><th>Concepto</th><th>Campo SharePoint</th><th>Cobertura</th></tr></thead><tbody id="mappingSummary"></tbody></table></div></div></article>
+        </div>
+      </section>
+
+      <section class="module" id="settings">
+        <div class="section-grid">
+          <article class="card span-6"><div class="card-head"><div><h3>Listas candidatas</h3><p>La plataforma puntúa automáticamente las listas del sitio según sus columnas.</p></div><button class="btn btn-sm btn-ghost" id="btnDiscover"><i class="bi bi-search"></i> Redescubrir</button></div><div class="card-body"><div class="source-list" id="sourceLists"></div></div></article>
+          <article class="card span-6"><div class="card-head"><div><h3>Conexión Microsoft 365</h3><p>Parámetros técnicos del sitio y la fuente activa.</p></div></div><div class="card-body"><div class="connection-row"><span>Host</span><strong id="cfgHost">—</strong></div><div class="connection-row"><span>Sitio</span><strong id="cfgSite">—</strong></div><div class="connection-row"><span>Site ID</span><strong id="cfgSiteId">—</strong></div><div class="connection-row"><span>List ID</span><strong id="cfgListId">—</strong></div><div class="connection-row"><span>Elementos</span><strong id="cfgItems">0</strong></div></div></article>
+          <article class="card span-12"><div class="card-head"><div><h3>Mapeo de campos</h3><p>Corrija aquí cualquier detección automática. Los cambios se aplican inmediatamente al análisis.</p></div><button class="btn btn-sm btn-primary" id="btnSaveMapping"><i class="bi bi-check2-circle"></i> Aplicar mapeo</button></div><div class="card-body"><div class="mapping-grid" id="mappingGrid"></div></div></article>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="drawer" id="detailDrawer" aria-hidden="true"><div class="drawer-panel"><div class="drawer-head"><h3 id="detailTitle">Detalle de movilización</h3><button class="btn btn-sm btn-ghost" id="btnCloseDetail"><i class="bi bi-x-lg"></i> Cerrar</button></div><div class="drawer-body"><div class="detail-grid" id="detailGrid"></div><h4>Registro completo de SharePoint</h4><div class="raw-json" id="detailJson"></div></div></div></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <script src="https://alcdn.msauth.net/browser/2.32.0/js/msal-browser.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
+  <script>
+  (()=>{
+    'use strict';
+
+    const CONFIG = {
+      tenantId: '5e23e4af-237d-4d97-bf6e-dca808015787',
+      clientId: 'c8a828c1-3a20-4876-96af-b4f30ce4abeb',
+      scopes: ['User.Read','Sites.ReadWrite.All'],
+      sharePointUrl: 'https://fiasec.sharepoint.com/:l:/s/RecursosAdministrativo/JABGnrxRvgAqSaT9aEcQZvFfAbrh1fNSrNx-i-ixKrm_kZw?e=K56ycM',
+      host: 'fiasec.sharepoint.com',
+      siteCandidates: ['/sites/RecursosAdministrativo','/teams/RecursosAdministrativo','/s/RecursosAdministrativo'],
+      maxItems: 12000
+    };
+
+    const SEMANTICS = {
+      date:{label:'Fecha',aliases:['fecha','fechamovilizacion','fechasalida','fechainicio','fechaviaje','fechaactividad','created']},
+      vehicle:{label:'Vehículo / placa',aliases:['vehiculo','vehículo','placa','vehicle','activo','unidadvehicular','automotor']},
+      driver:{label:'Conductor',aliases:['conductor','chofer','driver','responsableconduccion','responsablevehiculo']},
+      requester:{label:'Usuario solicitante',aliases:['usuario','solicitante','usuariosolicitante','funcionario','servidor','peticionario','requirente']},
+      area:{label:'Área / dependencia',aliases:['area','área','dependencia','unidad','departamento','direccion','dirección','facultad','coordinacion','coordinación']},
+      destination:{label:'Destino',aliases:['destino','lugar','lugardestino','ciudad','canton','cantón','provincia','ubicaciondestino']},
+      origin:{label:'Origen',aliases:['origen','lugarsalida','puntopartida','salida','ubicacionorigen']},
+      activity:{label:'Actividad / motivo',aliases:['actividad','motivo','objetomovilizacion','objetocomision','descripcion','descripción','detalle','finalidad','trabajoarealizar']},
+      project:{label:'Proyecto / programa',aliases:['proyecto','programa','proyectoprograma','centrocosto','fondo','componente']},
+      km:{label:'Kilometraje recorrido',aliases:['kilometrajerecorrido','kmrecorrido','kilometrosrecorridos','kilómetrosrecorridos','distancia','recorrido','totalkm']},
+      kmStart:{label:'Km inicial',aliases:['kminicial','kilometrajeinicial','odometroinicial','odómetroinicial','kmsalida']},
+      kmEnd:{label:'Km final',aliases:['kmfinal','kilometrajefinal','odometrofinal','odómetrofinal','kmllegada']},
+      latitude:{label:'Latitud destino',aliases:['latitud','latitude','lat','latituddestino','destinationlatitude']},
+      longitude:{label:'Longitud destino',aliases:['longitud','longitude','lng','lon','long','longituddestino','destinationlongitude']},
+      status:{label:'Estado',aliases:['estado','status','estadomovilizacion']}
+    };
+
+    const state={
+      msal:null,account:null,token:null,site:null,lists:[],activeList:null,columns:[],items:[],normalized:[],filtered:[],mapping:{},charts:{},map:null,mapLayer:null,mapMode:'points',lastSync:null,loading:false
+    };
+
+    const $=id=>document.getElementById(id);
+    const $$=(sel,root=document)=>[...root.querySelectorAll(sel)];
+    const esc=v=>String(v??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch]));
+    const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+    const fmtInt=n=>new Intl.NumberFormat('es-EC',{maximumFractionDigits:0}).format(Number(n)||0);
+    const fmtKm=n=>new Intl.NumberFormat('es-EC',{maximumFractionDigits:1}).format(Number(n)||0)+' km';
+    const pct=(a,b)=>b?Math.round((a/b)*100):0;
+
+    function decodeInternalName(v){ return String(v??'').replace(/_x([0-9a-fA-F]{4})_/g,(_,h)=>String.fromCharCode(parseInt(h,16))); }
+    function norm(v){return decodeInternalName(v).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]/g,'').trim();}
+    function text(v){
+      if(v===null||v===undefined) return '';
+      if(Array.isArray(v)) return v.map(text).filter(Boolean).join(', ');
+      if(typeof v==='object'){
+        if(v.DisplayName) return String(v.DisplayName);
+        if(v.displayName) return String(v.displayName);
+        if(v.Label) return String(v.Label);
+        if(v.label) return String(v.label);
+        if(v.LookupValue) return String(v.LookupValue);
+        return Object.values(v).filter(x=>typeof x!=='object').join(' · ');
+      }
+      return String(v).trim();
+    }
+    function num(v){
+      if(v===null||v===undefined||v==='') return 0;
+      if(typeof v==='number') return isFinite(v)?v:0;
+      let s=String(v).trim().replace(/\s+/g,'').replace(/[^0-9,.-]/g,'');
+      if(!s) return 0;
+      if(s.includes(',')&&s.includes('.')){ if(s.lastIndexOf(',')>s.lastIndexOf('.')) s=s.replace(/\./g,'').replace(',','.'); else s=s.replace(/,/g,''); }
+      else if(s.includes(',')) s=s.replace(',','.');
+      const n=Number(s);return isFinite(n)?n:0;
+    }
+    function isoDate(v){
+      if(!v) return '';
+      if(typeof v==='number'&&v>20000){const d=new Date(Math.round((v-25569)*86400*1000));return isNaN(d)?'':d.toISOString().slice(0,10);}
+      const s=String(v).trim();if(/^\d{4}-\d{2}-\d{2}/.test(s))return s.slice(0,10);
+      let m=s.match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})$/);if(m)return `${m[3]}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`;
+      const d=new Date(s);return isNaN(d)?'':d.toISOString().slice(0,10);
+    }
+    function showLoading(msg='Procesando...'){state.loading=true;$('loadingText').textContent=msg;$('loading').classList.add('open');}
+    function hideLoading(){state.loading=false;$('loading').classList.remove('open');}
+    function toast(title,body='',type='ok'){const e=document.createElement('div');e.className='toast '+(type==='warn'?'warn':type==='bad'?'bad':'');e.innerHTML=`<h4>${esc(title)}</h4><p>${esc(body)}</p>`;$('toastZone').appendChild(e);setTimeout(()=>e.remove(),6200);}
+    function setAuthView(ok){$('authGate').classList.toggle('hidden',ok);$('appShell').classList.toggle('locked',!ok);}
+
+    async function setupMsal(){
+      if(!window.msal) throw new Error('No se cargó MSAL. Revise el acceso a la CDN institucional.');
+      state.msal=new msal.PublicClientApplication({auth:{clientId:CONFIG.clientId,authority:`https://login.microsoftonline.com/${CONFIG.tenantId}`,redirectUri:window.location.origin+window.location.pathname},cache:{cacheLocation:'sessionStorage',storeAuthStateInCookie:false}});
+      if(typeof state.msal.initialize==='function') await state.msal.initialize();
+      const accounts=state.msal.getAllAccounts();if(accounts.length){state.account=accounts[0];try{await acquireToken();}catch(e){console.warn(e);}}
+      setAuthView(!!state.account);updateConnectionUi();
+    }
+    async function acquireToken(){
+      const account=state.account||(state.msal&&state.msal.getAllAccounts()[0]);if(!account)throw new Error('No existe una cuenta autenticada.');
+      try{const r=await state.msal.acquireTokenSilent({scopes:CONFIG.scopes,account});state.account=r.account||account;state.token=r.accessToken;return r.accessToken;}
+      catch(e){if(window.msal&&e instanceof msal.InteractionRequiredAuthError){const r=await state.msal.acquireTokenPopup({scopes:CONFIG.scopes,account});state.account=r.account||account;state.token=r.accessToken;return r.accessToken;}throw e;}
+    }
+    async function login(){
+      showLoading('Autenticando con Microsoft 365...');
+      try{if(!state.msal)await setupMsal();const r=await state.msal.loginPopup({scopes:CONFIG.scopes});state.account=r.account;state.token=r.accessToken;setAuthView(true);updateConnectionUi();await syncAll();}
+      catch(e){toast('No fue posible iniciar sesión',e.message||String(e),'bad');setAuthView(false);}finally{hideLoading();}
+    }
+    async function logout(){
+      const account=state.account||(state.msal&&state.msal.getAllAccounts()[0]);
+      try{state.account=null;state.token=null;setAuthView(false);if(state.msal&&account)await state.msal.logoutPopup({account,postLogoutRedirectUri:window.location.origin+window.location.pathname,mainWindowRedirectUri:window.location.origin+window.location.pathname});}catch(e){try{sessionStorage.clear();}catch(_){ }setAuthView(false);}finally{updateConnectionUi();}
+    }
+    async function graph(path,options={}){
+      let url=path.startsWith('http')?path:`https://graph.microsoft.com/v1.0${path}`;let attempts=0;
+      while(attempts<3){
+        const token=await acquireToken();const headers=Object.assign({Authorization:`Bearer ${token}`},options.headers||{});if(options.body&&!headers['Content-Type'])headers['Content-Type']='application/json';
+        const res=await fetch(url,Object.assign({},options,{headers}));
+        if([429,503,504].includes(res.status)){attempts++;await sleep(900*attempts);continue;}
+        if(!res.ok){const b=await res.text().catch(()=>res.statusText);throw new Error(`Graph ${res.status}: ${b}`);}if(res.status===204)return null;return await res.json();
+      }
+      throw new Error('Microsoft Graph no respondió luego de varios intentos.');
+    }
+
+    async function resolveSite(){
+      for(const p of CONFIG.siteCandidates){
+        try{const s=await graph(`/sites/${CONFIG.host}:${p}?$select=id,displayName,webUrl`);if(s&&s.id){state.site=s;return s;}}catch(e){console.warn('Sitio no resuelto',p,e.message);}
+      }
+      throw new Error('No se pudo resolver el sitio RecursosAdministrativo. Verifique la ruta del sitio o permisos de Microsoft Graph.');
+    }
+    async function discoverLists(){
+      if(!state.site)await resolveSite();
+      let url=`/sites/${encodeURIComponent(state.site.id)}/lists?$select=id,name,displayName,webUrl,list&$expand=columns($select=id,name,displayName,hidden,readOnly)&$top=200`;const all=[];
+      while(url){const r=await graph(url);all.push(...(r.value||[]));url=r['@odata.nextLink']||'';}
+      state.lists=all.filter(l=>!(l.list&&l.list.hidden)).map(l=>Object.assign(l,{score:scoreList(l)})).sort((a,b)=>b.score-a.score);
+      renderSourceLists();return state.lists;
+    }
+    function scoreList(l){
+      const cols=l.columns||[];const names=cols.flatMap(c=>[norm(c.name),norm(c.displayName)]);let score=0;
+      for(const key of ['date','vehicle','destination','driver','requester','activity','project','km']){if(SEMANTICS[key].aliases.some(a=>names.some(n=>n.includes(norm(a))||norm(a).includes(n))))score+=key==='vehicle'||key==='destination'?4:2;}
+      const title=norm(l.displayName||l.name);if(/vehicul|moviliz|transport|salida|comision/.test(title))score+=8;return score;
+    }
+    async function chooseActiveList(id){
+      const list=id?state.lists.find(x=>x.id===id):state.lists[0];if(!list)throw new Error('No se encontraron listas accesibles en el sitio.');
+      state.activeList=list;sessionStorage.setItem('fias_vehicle_list_id',list.id);state.columns=(list.columns||[]).filter(c=>!c.hidden);autoMapFields();await loadItems();renderSettings();
+    }
+    function autoMapFields(){
+      const savedKey=state.activeList?`fias_vehicle_mapping_${state.activeList.id}`:'';let saved={};try{saved=JSON.parse(savedKey?sessionStorage.getItem(savedKey)||'{}':'{}');}catch(_){ }
+      const cols=state.columns||[];const used=new Set();const mapping={};
+      for(const [key,meta] of Object.entries(SEMANTICS)){
+        if(saved[key]&&cols.some(c=>c.name===saved[key])){mapping[key]=saved[key];used.add(saved[key]);continue;}
+        let best=null,bestScore=0;
+        for(const c of cols){const cn=norm(c.name),cd=norm(c.displayName);for(const a0 of meta.aliases){const a=norm(a0);let sc=0;if(cn===a||cd===a)sc=100;else if(cn.includes(a)||cd.includes(a))sc=78;else if(a.includes(cn)||a.includes(cd))sc=48;if(sc>bestScore&&!used.has(c.name)){best=c.name;bestScore=sc;}}}
+        mapping[key]=bestScore>=48?best:'';if(mapping[key])used.add(mapping[key]);
+      }
+      state.mapping=mapping;
+    }
+    async function loadItems(){
+      if(!state.site||!state.activeList)return;showLoading('Leyendo registros de SharePoint...');
+      try{
+        let url=`/sites/${encodeURIComponent(state.site.id)}/lists/${encodeURIComponent(state.activeList.id)}/items?$expand=fields&$top=999`;const all=[];
+        while(url&&all.length<CONFIG.maxItems){const r=await graph(url);all.push(...(r.value||[]));url=r['@odata.nextLink']||'';}
+        state.items=all.slice(0,CONFIG.maxItems);normalizeItems();state.lastSync=new Date();populateFilters();applyFilters(false);updateConnectionUi();toast('Datos sincronizados',`${fmtInt(state.items.length)} registros leídos desde ${state.activeList.displayName||state.activeList.name}.`);
+      }finally{hideLoading();}
+    }
+    function fieldValue(fields,key){const name=state.mapping[key];return name?fields[name]:'';}
+    function normalizeItems(){
+      state.normalized=state.items.map(it=>{
+        const f=it.fields||{};let km=num(fieldValue(f,'km'));const ks=num(fieldValue(f,'kmStart')),ke=num(fieldValue(f,'kmEnd'));if(!km&&ke>=ks&&ke>0)km=ke-ks;
+        const lat=num(fieldValue(f,'latitude')),lon=num(fieldValue(f,'longitude'));
+        return {id:it.id,date:isoDate(fieldValue(f,'date')),vehicle:text(fieldValue(f,'vehicle')),driver:text(fieldValue(f,'driver')),requester:text(fieldValue(f,'requester')),area:text(fieldValue(f,'area')),destination:text(fieldValue(f,'destination')),origin:text(fieldValue(f,'origin')),activity:text(fieldValue(f,'activity')),project:text(fieldValue(f,'project')),km,kmStart:ks,kmEnd:ke,lat,lon,status:text(fieldValue(f,'status')),raw:f,webUrl:it.webUrl||''};
+      });
+    }
+
+    function uniqueValues(key){return [...new Set(state.normalized.map(r=>r[key]).filter(Boolean))].sort((a,b)=>String(a).localeCompare(String(b),'es'));}
+    function fillSelect(id,vals,label){const el=$(id),prev=el.value;el.innerHTML=`<option value="">${esc(label)}</option>`+vals.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');if(vals.includes(prev))el.value=prev;}
+    function populateFilters(){fillSelect('fVehicle',uniqueValues('vehicle'),'Todos');fillSelect('fDriver',uniqueValues('driver'),'Todos');fillSelect('fArea',uniqueValues('area'),'Todas');fillSelect('fProject',uniqueValues('project'),'Todos');}
+    function applyFilters(render=true){
+      const q=norm($('fSearch').value),vehicle=$('fVehicle').value,driver=$('fDriver').value,area=$('fArea').value,project=$('fProject').value,from=$('fFrom').value,to=$('fTo').value;
+      state.filtered=state.normalized.filter(r=>{
+        if(vehicle&&r.vehicle!==vehicle)return false;if(driver&&r.driver!==driver)return false;if(area&&r.area!==area)return false;if(project&&r.project!==project)return false;if(from&&(!r.date||r.date<from))return false;if(to&&(!r.date||r.date>to))return false;
+        if(q){const hay=norm([r.vehicle,r.driver,r.requester,r.area,r.destination,r.origin,r.activity,r.project,r.status].join(' '));if(!hay.includes(q))return false;}return true;
+      });if(render)renderAll();
+    }
+    function resetFilters(){$('fSearch').value='';$('fVehicle').value='';$('fDriver').value='';$('fArea').value='';$('fProject').value='';$('fFrom').value='';$('fTo').value='';applyFilters();}
+
+    function counts(key,rows=state.filtered,includeMissing=false){const m=new Map();for(const r of rows){const raw=r[key],v=raw||'Sin información';if(!includeMissing&&!raw)continue;m.set(v,(m.get(v)||0)+1);}return [...m.entries()].sort((a,b)=>b[1]-a[1]);}
+    function topLabel(key){const x=counts(key)[0];return x?x[0]:'—';}
+    function totalKm(){return state.filtered.reduce((s,r)=>s+(r.km||0),0);}
+    function renderKpis(){
+      const rows=state.filtered,n=rows.length;const k=[
+        ['Movilizaciones',fmtInt(n),n===state.normalized.length?'Total sincronizado':'Según filtros','bi-signpost-2'],
+        ['Vehículo más utilizado',topLabel('vehicle'),counts('vehicle')[0]?`${fmtInt(counts('vehicle')[0][1])} movilizaciones`:'Sin datos','bi-truck-front'],
+        ['Destino frecuente',topLabel('destination'),counts('destination')[0]?`${fmtInt(counts('destination')[0][1])} visitas`:'Sin datos','bi-geo-alt'],
+        ['Kilometraje',fmtKm(totalKm()),n?`${fmtKm(totalKm()/n)} promedio por registro`:'Sin datos','bi-speedometer2'],
+        ['Usuario con mayor uso',topLabel('requester'),counts('requester')[0]?`${fmtInt(counts('requester')[0][1])} registros`:'Sin datos','bi-person-workspace'],
+        ['Proyecto / programa',topLabel('project'),`${uniqueValuesFiltered('project').length} categorías en filtro`,'bi-diagram-3']
+      ];
+      $('kpis').innerHTML=k.map(x=>`<article class="kpi"><div class="kpi-top"><div><div class="kpi-label">${esc(x[0])}</div><div class="kpi-value">${esc(x[1])}</div></div><div class="kpi-icon"><i class="bi ${x[3]}"></i></div></div><div class="kpi-sub">${esc(x[2])}</div></article>`).join('');
+    }
+    function uniqueValuesFiltered(key){return [...new Set(state.filtered.map(r=>r[key]).filter(Boolean))];}
+    function chart(id,type,labels,data,opts={}){
+      if(state.charts[id])state.charts[id].destroy();const canvas=$(id);if(!canvas||!window.Chart)return;
+      state.charts[id]=new Chart(canvas,{type,data:{labels,datasets:[{label:opts.label||'Movilizaciones',data,borderWidth:type==='line'?2:1,fill:type==='line',tension:.28}]},options:{responsive:true,maintainAspectRatio:false,indexAxis:opts.horizontal?'y':'x',plugins:{legend:{display:opts.legend??(type==='doughnut')},tooltip:{callbacks:{label:c=>`${c.dataset.label||''}: ${fmtInt(c.raw)}`}}},scales:type==='doughnut'?{}:{y:{beginAtZero:true,ticks:{precision:0}},x:{grid:{display:false}}}}});
+    }
+    function renderExecutiveCharts(){
+      const monthly=new Map();for(const r of state.filtered){if(r.date){const k=r.date.slice(0,7);monthly.set(k,(monthly.get(k)||0)+1);}}const ms=[...monthly.entries()].sort((a,b)=>a[0].localeCompare(b[0]));chart('chartTrend','line',ms.map(x=>x[0]),ms.map(x=>x[1]),{label:'Movilizaciones',legend:false});
+      const pro=counts('project').slice(0,8);chart('chartProject','doughnut',pro.map(x=>x[0]),pro.map(x=>x[1]),{label:'Registros',legend:true});
+    }
+    function renderMobilityCharts(){for(const [id,key] of [['chartVehicles','vehicle'],['chartDrivers','driver'],['chartUsers','requester'],['chartAreas','area'],['chartActivities','activity']]){const c=counts(key).slice(0,id==='chartActivities'?15:10);chart(id,'bar',c.map(x=>x[0]),c.map(x=>x[1]),{horizontal:id!=='chartActivities',legend:false});}}
+    function renderWeekCharts(){
+      const days=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'],dc=Array(7).fill(0),mc=Array(12).fill(0);for(const r of state.filtered){if(!r.date)continue;const d=new Date(r.date+'T12:00:00');if(!isNaN(d)){dc[d.getDay()]++;mc[d.getMonth()]++;}}
+      chart('chartWeekday','bar',['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'],[dc[1],dc[2],dc[3],dc[4],dc[5],dc[6],dc[0]],{legend:false});chart('chartMonthOfYear','bar',['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'],mc,{legend:false});
+    }
+    function renderTopDestinations(){
+      const c=counts('destination').slice(0,8),n=state.filtered.length;$('topDestinations').innerHTML=c.length?c.map((x,i)=>`<div class="rank-item"><div class="rank-pos">${i+1}</div><div><strong>${esc(x[0])}</strong><small>${pct(x[1],n)}% del total filtrado</small></div><div class="rank-value">${fmtInt(x[1])}</div></div>`).join(''):'<div class="empty-state"><i class="bi bi-geo"></i>Sin destinos para el filtro actual.</div>';
+      $('geoRanking').innerHTML=$('topDestinations').innerHTML;
+    }
+    function renderInsights(){
+      const n=state.filtered.length;if(!n){$('executiveInsights').innerHTML='<div class="empty-state"><i class="bi bi-stars"></i>No existen registros para el filtro actual.</div>';return;}
+      const veh=counts('vehicle'),dest=counts('destination'),areas=counts('area'),dated=state.filtered.filter(r=>r.date);const insights=[];
+      if(veh[0])insights.push(['Concentración de flota',`${veh[0][0]} concentra ${pct(veh[0][1],n)}% de las movilizaciones filtradas. Revise si la carga está equilibrada entre unidades.`,'']);
+      if(dest[0])insights.push(['Destino dominante',`${dest[0][0]} es el destino más frecuente con ${fmtInt(dest[0][1])} registros (${pct(dest[0][1],n)}%). Esta frecuencia puede orientar programación y consolidación de viajes.`,'']);
+      if(areas[0])insights.push(['Demanda institucional',`${areas[0][0]} registra la mayor demanda (${fmtInt(areas[0][1])} movilizaciones). Úselo como referencia para planificación de disponibilidad.`,'']);
+      if(dated.length){const byDay=[0,0,0,0,0,0,0];dated.forEach(r=>byDay[new Date(r.date+'T12:00:00').getDay()]++);const names=['domingo','lunes','martes','miércoles','jueves','viernes','sábado'],mx=Math.max(...byDay),idx=byDay.indexOf(mx);insights.push(['Pico semanal',`El ${names[idx]} concentra la mayor cantidad de salidas (${fmtInt(mx)}). Puede ser útil reforzar disponibilidad y coordinación previa en ese día.`,'']);}
+      const missingKm=state.filtered.filter(r=>!r.km).length;if(missingKm>n*.3)insights.push(['Kilometraje incompleto',`${pct(missingKm,n)}% de los registros no permite calcular distancia recorrida. Este vacío limita indicadores de rendimiento y costo por uso.`,'warn']);
+      $('executiveInsights').innerHTML=insights.map(x=>`<div class="insight ${x[2]}"><h4>${esc(x[0])}</h4><p>${esc(x[1])}</p></div>`).join('');
+    }
+
+    function initMap(){if(state.map||!window.L)return;state.map=L.map('map',{zoomControl:true}).setView([-1.5,-78.2],7);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap contributors'}).addTo(state.map);}
+    function geoRows(){return state.filtered.filter(r=>isFinite(r.lat)&&isFinite(r.lon)&&Math.abs(r.lat)<=90&&Math.abs(r.lon)<=180&&(r.lat!==0||r.lon!==0));}
+    function renderMap(){
+      initMap();if(!state.map)return;const pts=geoRows();$('geoCoverage').textContent=`${pct(pts.length,state.filtered.length)}% georreferenciado`;$('map').classList.toggle('hidden',!pts.length);$('mapEmpty').classList.toggle('hidden',!!pts.length);if(!pts.length)return;
+      if(state.mapLayer){try{state.map.removeLayer(state.mapLayer);}catch(_){ }state.mapLayer=null;}
+      if(state.mapMode==='heat'&&L.heatLayer){state.mapLayer=L.heatLayer(pts.map(r=>[r.lat,r.lon,1]),{radius:28,blur:22,maxZoom:13}).addTo(state.map);}
+      else{const g=L.featureGroup();pts.forEach(r=>L.marker([r.lat,r.lon]).bindPopup(`<strong>${esc(r.destination||'Destino')}</strong><br>${esc(r.vehicle||'Vehículo sin dato')}<br>${esc(r.date||'Fecha sin dato')}`).addTo(g));g.addTo(state.map);state.mapLayer=g;}
+      const bounds=L.latLngBounds(pts.map(r=>[r.lat,r.lon]));if(bounds.isValid())state.map.fitBounds(bounds.pad(.18));setTimeout(()=>state.map.invalidateSize(),50);
+    }
+
+    function renderCalendar(){
+      const dated=state.filtered.filter(r=>r.date);if(!dated.length){$('calendarHeat').innerHTML='<div class="empty-state" style="grid-column:1/-1"><i class="bi bi-calendar-x"></i>No hay fechas utilizables.</div>';return;}
+      const countsByDate=new Map();dated.forEach(r=>countsByDate.set(r.date,(countsByDate.get(r.date)||0)+1));const dates=[...countsByDate.keys()].sort();const end=new Date(dates[dates.length-1]+'T12:00:00');const months=[];for(let i=11;i>=0;i--)months.push(new Date(end.getFullYear(),end.getMonth()-i,1));const max=Math.max(...countsByDate.values(),1);const monthNames=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+      $('calendarHeat').innerHTML=months.map(m=>{const y=m.getFullYear(),mo=m.getMonth(),first=new Date(y,mo,1),days=new Date(y,mo+1,0).getDate();let html=`<div class="month-card"><div class="month-title"><span>${monthNames[mo]} ${y}</span><small class="muted">${fmtInt([...countsByDate.entries()].filter(([d])=>d.startsWith(`${y}-${String(mo+1).padStart(2,'0')}`)).reduce((s,x)=>s+x[1],0))}</small></div><div class="cal-grid">${['L','M','X','J','V','S','D'].map(x=>`<div class="cal-head">${x}</div>`).join('')}`;let offset=(first.getDay()+6)%7;for(let i=0;i<offset;i++)html+='<div class="cal-cell empty"></div>';for(let d=1;d<=days;d++){const key=`${y}-${String(mo+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`,v=countsByDate.get(key)||0,level=v?Math.min(4,Math.max(1,Math.ceil(v/max*4))):0;html+=`<div class="cal-cell" data-level="${level}" title="${key}: ${v} movilizaciones">${d}</div>`;}return html+'</div></div>';}).join('');
+    }
+
+    function renderRecords(){
+      const rows=state.filtered.slice().sort((a,b)=>(b.date||'').localeCompare(a.date||''));$('recordsBody').innerHTML=rows.length?rows.map(r=>`<tr data-id="${esc(r.id)}"><td><button class="btn btn-sm btn-ghost btn-detail" data-id="${esc(r.id)}"><i class="bi bi-eye"></i></button></td><td>${esc(r.date||'—')}</td><td><strong>${esc(r.vehicle||'—')}</strong></td><td>${esc(r.driver||'—')}</td><td>${esc(r.requester||'—')}</td><td>${esc(r.area||'—')}</td><td>${esc(r.destination||'—')}</td><td>${esc(r.project||'—')}</td><td>${esc(r.activity||'—')}</td><td class="num">${r.km?esc(fmtKm(r.km)):'—'}</td></tr>`).join(''):'<tr><td colspan="10"><div class="empty-state"><i class="bi bi-table"></i>Sin registros para los filtros seleccionados.</div></td></tr>';
+      $$('.btn-detail').forEach(b=>b.addEventListener('click',()=>openDetail(b.dataset.id)));
+    }
+    function openDetail(id){const r=state.normalized.find(x=>String(x.id)===String(id));if(!r)return;const cells=[['Fecha',r.date],['Vehículo / placa',r.vehicle],['Conductor',r.driver],['Usuario',r.requester],['Área',r.area],['Origen',r.origin],['Destino',r.destination],['Proyecto / programa',r.project],['Actividad',r.activity],['Km recorrido',r.km?fmtKm(r.km):''],['Estado',r.status],['Coordenadas',(r.lat||r.lon)?`${r.lat}, ${r.lon}`:'']];$('detailTitle').textContent=`Movilización ${r.id}`;$('detailGrid').innerHTML=cells.map(x=>`<div class="detail-cell"><span>${esc(x[0])}</span><strong>${esc(x[1]||'—')}</strong></div>`).join('');$('detailJson').textContent=JSON.stringify(r.raw,null,2);$('detailDrawer').classList.add('open');$('detailDrawer').setAttribute('aria-hidden','false');}
+    function closeDetail(){$('detailDrawer').classList.remove('open');$('detailDrawer').setAttribute('aria-hidden','true');}
+
+    function coverage(key){const n=state.filtered.length;if(!n)return 0;return pct(state.filtered.filter(r=>r[key]!==''&&r[key]!==null&&r[key]!==undefined&&(key!=='km'||r.km>0)).length,n);}
+    function renderQuality(){
+      const metrics=[['Fecha',coverage('date')],['Vehículo / placa',coverage('vehicle')],['Conductor',coverage('driver')],['Destino',coverage('destination')],['Usuario',coverage('requester')],['Área',coverage('area')],['Kilometraje',coverage('km')],['Georreferencia',state.filtered.length?pct(geoRows().length,state.filtered.length):0]];
+      $('qualityGrid').innerHTML=metrics.map(x=>`<div class="quality-card"><span>${esc(x[0])}</span><strong>${x[1]}%</strong><div class="progress"><div style="width:${x[1]}%"></div></div></div>`).join('');
+      const issues=metrics.filter(x=>x[1]<80).sort((a,b)=>a[1]-b[1]);$('qualityInsights').innerHTML=issues.length?issues.map(x=>`<div class="insight ${x[1]<50?'bad':'warn'}"><h4>${esc(x[0])}: ${x[1]}% de cobertura</h4><p>Conviene completar este dato en SharePoint para mejorar segmentación, trazabilidad y confiabilidad de los indicadores.</p></div>`).join(''):'<div class="insight"><h4>Buena completitud</h4><p>Los principales campos analíticos superan el 80% de cobertura en el conjunto filtrado.</p></div>';
+      const rows=Object.entries(SEMANTICS);$('mappingSummary').innerHTML=rows.map(([k,m])=>{const cov=(k==='latitude'||k==='longitude')?(state.filtered.length?pct(geoRows().length,state.filtered.length):0):coverage(k);return `<tr><td>${esc(m.label)}</td><td>${esc(state.mapping[k]||'No mapeado')}</td><td>${cov}%</td></tr>`;}).join('');
+    }
+
+    function renderSourceLists(){
+      const active=state.activeList&&state.activeList.id;$('sourceLists').innerHTML=state.lists.length?state.lists.slice(0,20).map(l=>`<div class="source-item"><div><strong>${esc(l.displayName||l.name)}</strong><small>${esc((l.columns||[]).length)} columnas · ${esc(l.webUrl||'')}</small></div><div><span class="source-score">Puntaje ${l.score}</span><br><button class="btn btn-sm ${l.id===active?'btn-primary':'btn-ghost'} btn-use-list" data-id="${esc(l.id)}">${l.id===active?'Activa':'Usar'}</button></div></div>`).join(''):'<div class="empty-state"><i class="bi bi-list-ul"></i>No se han descubierto listas.</div>';
+      $$('.btn-use-list').forEach(b=>b.addEventListener('click',async()=>{showLoading('Cambiando lista de SharePoint...');try{await chooseActiveList(b.dataset.id);renderAll();}catch(e){toast('No se pudo cambiar la lista',e.message,'bad');}finally{hideLoading();}}));
+    }
+    function renderMappingGrid(){
+      const options=['<option value="">— No mapeado —</option>',...state.columns.map(c=>`<option value="${esc(c.name)}">${esc(c.displayName||c.name)} · ${esc(c.name)}</option>`)].join('');$('mappingGrid').innerHTML=Object.entries(SEMANTICS).map(([k,m])=>`<div class="mapping-card"><label>${esc(m.label)}</label><select data-map-key="${k}">${options}</select><small>Detección semántica; seleccione la columna real si es necesario.</small></div>`).join('');$$('[data-map-key]').forEach(s=>s.value=state.mapping[s.dataset.mapKey]||'');
+    }
+    function saveMapping(){const mp={};$$('[data-map-key]').forEach(s=>mp[s.dataset.mapKey]=s.value);state.mapping=mp;if(state.activeList)sessionStorage.setItem(`fias_vehicle_mapping_${state.activeList.id}`,JSON.stringify(mp));normalizeItems();populateFilters();applyFilters(false);renderAll();toast('Mapeo aplicado','Los indicadores fueron recalculados con los campos seleccionados.');}
+    function renderSettings(){renderSourceLists();renderMappingGrid();$('cfgHost').textContent=CONFIG.host;$('cfgSite').textContent=state.site?(state.site.displayName||state.site.webUrl):'—';$('cfgSiteId').textContent=state.site?state.site.id:'—';$('cfgListId').textContent=state.activeList?state.activeList.id:'—';$('cfgItems').textContent=fmtInt(state.items.length);}
+
+    function exportCsv(){
+      const rows=state.filtered;const header=['ID','Fecha','Vehiculo_Placa','Conductor','Usuario_Solicitante','Area_Dependencia','Origen','Destino','Proyecto_Programa','Actividad_Motivo','Km_Recorridos','Estado'];const out=[header,...rows.map(r=>[r.id,r.date,r.vehicle,r.driver,r.requester,r.area,r.origin,r.destination,r.project,r.activity,r.km,r.status])];const csv='\ufeff'+out.map(row=>row.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(';')).join('\r\n');const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`uso_vehiculos_${new Date().toISOString().slice(0,10)}.csv`;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},500);}
+
+    function updateConnectionUi(){
+      const logged=!!state.account;$('userName').textContent=state.account?(state.account.name||state.account.username||'Cuenta institucional'):'—';$('sessionChipText').textContent=state.account?(state.account.name||state.account.username||'Sesión activa'):'Sin sesión';$('connState').textContent=state.items.length?'Conectado':logged?'Autenticado':'Pendiente';$('connState').className='status-dot '+(state.items.length?'ok':logged?'warn':'bad');$('activeList').textContent=state.activeList?(state.activeList.displayName||state.activeList.name):'Auto detección';$('loadedRows').textContent=fmtInt(state.items.length);$('sideList').textContent=state.activeList?(state.activeList.displayName||state.activeList.name):'Lista pendiente';$('sideSync').textContent=state.lastSync?state.lastSync.toLocaleString('es-EC'):'Sin sincronizar';$('sideCount').textContent=`${fmtInt(state.items.length)} registros`;
+    }
+    function renderAll(){renderKpis();renderExecutiveCharts();renderMobilityCharts();renderWeekCharts();renderTopDestinations();renderInsights();renderCalendar();renderRecords();renderQuality();renderSettings();updateConnectionUi();if($('geography').classList.contains('active'))renderMap();}
+
+    async function syncAll(){
+      showLoading('Conectando con SharePoint...');
+      try{await resolveSite();await discoverLists();const saved=sessionStorage.getItem('fias_vehicle_list_id');const target=saved&&state.lists.some(x=>x.id===saved)?saved:(state.lists[0]&&state.lists[0].id);if(!target)throw new Error('No se encontró una lista candidata. Abra “Fuente y mapeo” para revisar permisos y listas disponibles.');await chooseActiveList(target);renderAll();}
+      catch(e){console.error(e);toast('No fue posible sincronizar',e.message||String(e),'bad');updateConnectionUi();throw e;}finally{hideLoading();}
+    }
+
+    function bind(){
+      $('btnGateLogin').addEventListener('click',login);$('btnLogout').addEventListener('click',logout);$('btnSync').addEventListener('click',()=>syncAll().catch(()=>{}));$('btnSettings').addEventListener('click',()=>activateModule('settings'));$('btnResetFilters').addEventListener('click',resetFilters);$('btnExport').addEventListener('click',exportCsv);$('btnCloseDetail').addEventListener('click',closeDetail);$('detailDrawer').addEventListener('click',e=>{if(e.target===$('detailDrawer'))closeDetail();});
+      ['fSearch','fVehicle','fDriver','fArea','fProject','fFrom','fTo'].forEach(id=>$(id).addEventListener(id==='fSearch'?'input':'change',()=>applyFilters()));
+      $$('.nav-button').forEach(b=>b.addEventListener('click',()=>activateModule(b.dataset.module)));$('btnMapPoints').addEventListener('click',()=>{state.mapMode='points';renderMap();});$('btnMapHeat').addEventListener('click',()=>{state.mapMode='heat';renderMap();});$('btnSaveMapping').addEventListener('click',saveMapping);$('btnDiscover').addEventListener('click',async()=>{showLoading('Explorando listas del sitio...');try{await discoverLists();renderSettings();toast('Exploración actualizada',`${state.lists.length} listas accesibles encontradas.`);}catch(e){toast('Error de exploración',e.message,'bad');}finally{hideLoading();}});
+      window.addEventListener('resize',()=>{if(state.map)setTimeout(()=>state.map.invalidateSize(),80);});
+    }
+    function activateModule(id){$$('.module').forEach(m=>m.classList.toggle('active',m.id===id));$$('.nav-button').forEach(b=>b.classList.toggle('active',b.dataset.module===id));if(id==='executive')setTimeout(()=>{renderExecutiveCharts();renderInsights();},60);if(id==='mobility')setTimeout(renderMobilityCharts,60);if(id==='calendar')setTimeout(()=>{renderWeekCharts();renderCalendar();},60);if(id==='geography')setTimeout(renderMap,80);if(id==='records')renderRecords();if(id==='quality')renderQuality();if(id==='settings')renderSettings();}
+
+    async function init(){bind();renderAll();try{await setupMsal();if(state.account)await syncAll();}catch(e){console.error(e);toast('Inicialización incompleta',e.message||String(e),'warn');setAuthView(!!state.account);}finally{hideLoading();}}
+    init();
+  })();
+  </script>
+</body>
+</html>

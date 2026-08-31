@@ -45,13 +45,13 @@ button,input{font:inherit}
 .top-progress>span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--green-600),#75b798);transition:width .12s linear}
 .sidebar{position:fixed;inset:0 auto 0 0;width:var(--sidebar);background:var(--green-950);color:white;display:flex;flex-direction:column;z-index:1000;box-shadow:8px 0 30px rgba(10,47,35,.12)}
 .brand{padding:28px 24px 22px;border-bottom:1px solid rgba(255,255,255,.12)}
-.brand-row{display:flex;align-items:center;gap:13px}.brand-mark{width:45px;height:45px;border-radius:14px;background:linear-gradient(145deg,#fff,#dff3e7);display:grid;place-items:center;color:var(--green-900);font-weight:900;letter-spacing:-.04em}.brand h1{font-size:15px;line-height:1.25;margin:0;font-weight:800}.brand p{margin:4px 0 0;color:#b9d6c8;font-size:12px}
+.brand-row{display:flex;align-items:center;gap:14px}.brand-mark{width:92px;min-width:92px;height:54px;border-radius:12px;background:#fff;display:flex;align-items:center;justify-content:center;padding:7px 9px;box-shadow:0 5px 16px rgba(0,0,0,.12)}.brand-logo{display:block;width:100%;height:100%;object-fit:contain}.brand h1{font-size:15px;line-height:1.25;margin:0;font-weight:800}.brand p{margin:4px 0 0;color:#b9d6c8;font-size:12px}
 .route-chip{margin-top:16px;padding:10px 12px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.06);border-radius:12px;font-size:11px;color:#d7eadf;text-transform:uppercase;letter-spacing:.08em;font-weight:800}
 .side-nav{padding:18px 14px;overflow:auto}.nav-title{padding:8px 12px;color:#87aa9b;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.14em}.nav-link{display:flex;align-items:center;gap:12px;text-decoration:none;padding:11px 12px;border-radius:11px;color:#dcebe4;font-size:13px;font-weight:650;margin:2px 0;transition:.2s}.nav-link:hover,.nav-link.active{background:rgba(255,255,255,.11);color:white}.nav-dot{width:8px;height:8px;border-radius:50%;background:#6aa58a;flex:0 0 auto}.nav-link.active .nav-dot{background:#b8e0c9;box-shadow:0 0 0 4px rgba(184,224,201,.12)}
 .side-footer{margin-top:auto;padding:18px 22px 24px;border-top:1px solid rgba(255,255,255,.12);font-size:11px;color:#9ebbad}.side-footer strong{display:block;color:#e6f1eb;margin-bottom:4px}
 .mobile-toggle{display:none;position:fixed;top:14px;left:14px;z-index:1100;width:44px;height:44px;border:0;border-radius:12px;background:var(--green-950);color:white;box-shadow:var(--shadow-soft);cursor:pointer}
 .main{margin-left:var(--sidebar);min-height:100vh}.content{max-width:1280px;margin:0 auto;padding:44px 44px 90px}
-.hero{position:relative;overflow:hidden;background:linear-gradient(126deg,var(--green-950) 0%,var(--green-800) 58%,#2d6b57 100%);border-radius:26px;color:white;padding:42px 44px;box-shadow:var(--shadow);margin-bottom:22px}.hero:after{content:"";position:absolute;width:360px;height:360px;border-radius:50%;right:-120px;top:-150px;background:rgba(255,255,255,.08);box-shadow:0 0 0 55px rgba(255,255,255,.03),0 0 0 110px rgba(255,255,255,.025)}
+.hero{position:relative;overflow:hidden;background:linear-gradient(126deg,var(--green-950) 0%,var(--green-800) 58%,#2d6b57 100%);border-radius:26px;color:white;padding:42px 44px;box-shadow:var(--shadow);margin-bottom:22px}.hero-brand{position:relative;z-index:2;display:inline-flex;align-items:center;background:#fff;border-radius:13px;padding:8px 12px;margin-bottom:20px;box-shadow:0 8px 22px rgba(0,0,0,.12)}.hero-brand img{display:block;width:132px;height:52px;object-fit:contain}.hero:after{content:"";position:absolute;width:360px;height:360px;border-radius:50%;right:-120px;top:-150px;background:rgba(255,255,255,.08);box-shadow:0 0 0 55px rgba(255,255,255,.03),0 0 0 110px rgba(255,255,255,.025)}
 .eyebrow{font-size:11px;font-weight:850;letter-spacing:.14em;text-transform:uppercase;color:#cce5d7;margin-bottom:12px}.hero h2{font-size:36px;line-height:1.12;max-width:900px;margin:0 0 14px;letter-spacing:-.035em}.hero p{font-size:16px;color:#dcebe4;max-width:860px;margin:0}.hero-badges{display:flex;gap:9px;flex-wrap:wrap;margin-top:25px}.hero-badge{padding:8px 11px;border-radius:999px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);font-size:11px;font-weight:800;letter-spacing:.03em}.hero-badge.light{background:#fff;color:var(--green-900);border-color:#fff}
 .entity-strip{display:grid;grid-template-columns:1fr 54px 1fr;gap:14px;align-items:stretch;margin-top:24px}.entity{background:white;border:1px solid var(--line);border-radius:18px;padding:20px 22px;display:flex;align-items:center;gap:15px}.entity.public{background:linear-gradient(135deg,#fff,#f7f9fd)}.entity-logo{width:50px;height:50px;border-radius:14px;display:grid;place-items:center;font-weight:900}.entity.fias .entity-logo{background:var(--green-100);color:var(--green-900)}.entity.public .entity-logo{background:var(--blue-100);color:var(--blue-900)}.entity small{display:block;color:var(--muted);font-size:11px;text-transform:uppercase;font-weight:800;letter-spacing:.07em}.entity strong{display:block;font-size:15px;margin-top:3px}.arrow-box{display:grid;place-items:center;color:var(--green-700);font-weight:900;font-size:22px}
 .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:18px 0 30px}.metric{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:var(--shadow-soft)}.metric .num{font-size:26px;font-weight:850;letter-spacing:-.04em;color:var(--green-900)}.metric .label{font-size:12px;font-weight:750;margin-top:2px}.metric .sub{font-size:11px;color:var(--muted);margin-top:5px}
@@ -113,7 +113,7 @@ button,input{font:inherit}
 <aside class="sidebar" id="sidebar">
   <div class="brand">
     <div class="brand-row">
-      <div class="brand-mark">FIAS</div>
+      <div class="brand-mark"><img class="brand-logo" src="https://fias.org.ec/wp-content/uploads/2021/11/Logo_FIAS_web.png" alt="Logo oficial FIAS"></div>
       <div><h1>Donación de Bienes</h1><p>Ruta institucional Enterprise</p></div>
     </div>
     <div class="route-chip">MAE + Privados · Flujo operativo diferenciado</div>
@@ -129,7 +129,7 @@ button,input{font:inherit}
     <a class="nav-link" href="#decisions"><span class="nav-dot"></span>Controles jurídicos</a>
     <a class="nav-link" href="#legal"><span class="nav-dot"></span>Base documental</a>
   </nav>
-  <div class="side-footer"><strong>Versión Enterprise 2026.08 · Operativa v4</strong>Ruta MAE detallada, convenio de proyecto como antecedente habilitante y ruta privada simplificada sin insinuación notarial.</div>
+  <div class="side-footer"><strong>Versión Enterprise 2026.08 · Operativa v5</strong>Ruta MAE detallada, convenio de proyecto como antecedente habilitante y ruta privada simplificada sin insinuación notarial. Logo oficial FIAS incorporado.</div>
 </aside>
 <main class="main">
 <div class="content">
@@ -137,6 +137,7 @@ button,input{font:inherit}
 
 <section id="overview" class="section">
   <div class="hero">
+    <div class="hero-brand"><img src="https://fias.org.ec/wp-content/uploads/2021/11/Logo_FIAS_web.png" alt="Logo oficial FIAS"></div>
     <div class="eyebrow">Guía Operativa Institucional · Ruta MAE detallada + ruta privada simplificada</div>
     <h2>Donación de bienes FIAS: procedimiento específico para MAE y procedimiento simplificado para entidades privadas</h2>
     <p>La ruta MAE parte de un <b>convenio de proyecto previamente suscrito</b> que faculta la donación de bienes al Ministerio. Ese convenio se trata como antecedente habilitante: si ya cubre la donación y se encuentra vigente/aplicable, <b>no se genera un segundo convenio de donación</b>. La ruta privada se mantiene separada y no incorpora insinuación notarial.</p>

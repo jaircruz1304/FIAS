@@ -1,740 +1,520 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guía Operativa: Donación de Bienes FIAS (Privado) a Público/Privado</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Añadido: AOS Library para animaciones -->
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0f3d2e">
+<title>FIAS | Guía Enterprise de Donación de Bienes · MAE y Entidades Privadas · Versión Operativa</title>
+<style>
+:root{
+  --green-950:#0a2f23;
+  --green-900:#0f3d2e;
+  --green-800:#155a41;
+  --green-700:#1d6f50;
+  --green-600:#2b8a62;
+  --green-100:#e9f6ef;
+  --green-50:#f4fbf7;
+  --blue-950:#17233f;
+  --blue-900:#1c2e55;
+  --blue-800:#284372;
+  --blue-100:#eaf0fb;
+  --blue-50:#f6f8fd;
+  --ink:#1d2939;
+  --muted:#667085;
+  --soft:#98a2b3;
+  --line:#e4e7ec;
+  --surface:#ffffff;
+  --canvas:#f4f6f8;
+  --warning:#b54708;
+  --warning-bg:#fffaeb;
+  --danger:#b42318;
+  --danger-bg:#fef3f2;
+  --success:#027a48;
+  --success-bg:#ecfdf3;
+  --radius:18px;
+  --shadow:0 12px 34px rgba(16,24,40,.08);
+  --shadow-soft:0 4px 14px rgba(16,24,40,.05);
+  --sidebar:300px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--canvas);color:var(--ink);font-family:Inter,Segoe UI,Arial,sans-serif;line-height:1.55}
+a{color:inherit}
+button,input{font:inherit}
+.top-progress{position:fixed;left:var(--sidebar);right:0;top:0;height:4px;background:#e9eef1;z-index:1001}
+.top-progress>span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--green-600),#75b798);transition:width .12s linear}
+.sidebar{position:fixed;inset:0 auto 0 0;width:var(--sidebar);background:var(--green-950);color:white;display:flex;flex-direction:column;z-index:1000;box-shadow:8px 0 30px rgba(10,47,35,.12)}
+.brand{padding:28px 24px 22px;border-bottom:1px solid rgba(255,255,255,.12)}
+.brand-row{display:flex;align-items:center;gap:13px}.brand-mark{width:45px;height:45px;border-radius:14px;background:linear-gradient(145deg,#fff,#dff3e7);display:grid;place-items:center;color:var(--green-900);font-weight:900;letter-spacing:-.04em}.brand h1{font-size:15px;line-height:1.25;margin:0;font-weight:800}.brand p{margin:4px 0 0;color:#b9d6c8;font-size:12px}
+.route-chip{margin-top:16px;padding:10px 12px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.06);border-radius:12px;font-size:11px;color:#d7eadf;text-transform:uppercase;letter-spacing:.08em;font-weight:800}
+.side-nav{padding:18px 14px;overflow:auto}.nav-title{padding:8px 12px;color:#87aa9b;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.14em}.nav-link{display:flex;align-items:center;gap:12px;text-decoration:none;padding:11px 12px;border-radius:11px;color:#dcebe4;font-size:13px;font-weight:650;margin:2px 0;transition:.2s}.nav-link:hover,.nav-link.active{background:rgba(255,255,255,.11);color:white}.nav-dot{width:8px;height:8px;border-radius:50%;background:#6aa58a;flex:0 0 auto}.nav-link.active .nav-dot{background:#b8e0c9;box-shadow:0 0 0 4px rgba(184,224,201,.12)}
+.side-footer{margin-top:auto;padding:18px 22px 24px;border-top:1px solid rgba(255,255,255,.12);font-size:11px;color:#9ebbad}.side-footer strong{display:block;color:#e6f1eb;margin-bottom:4px}
+.mobile-toggle{display:none;position:fixed;top:14px;left:14px;z-index:1100;width:44px;height:44px;border:0;border-radius:12px;background:var(--green-950);color:white;box-shadow:var(--shadow-soft);cursor:pointer}
+.main{margin-left:var(--sidebar);min-height:100vh}.content{max-width:1280px;margin:0 auto;padding:44px 44px 90px}
+.hero{position:relative;overflow:hidden;background:linear-gradient(126deg,var(--green-950) 0%,var(--green-800) 58%,#2d6b57 100%);border-radius:26px;color:white;padding:42px 44px;box-shadow:var(--shadow);margin-bottom:22px}.hero:after{content:"";position:absolute;width:360px;height:360px;border-radius:50%;right:-120px;top:-150px;background:rgba(255,255,255,.08);box-shadow:0 0 0 55px rgba(255,255,255,.03),0 0 0 110px rgba(255,255,255,.025)}
+.eyebrow{font-size:11px;font-weight:850;letter-spacing:.14em;text-transform:uppercase;color:#cce5d7;margin-bottom:12px}.hero h2{font-size:36px;line-height:1.12;max-width:900px;margin:0 0 14px;letter-spacing:-.035em}.hero p{font-size:16px;color:#dcebe4;max-width:860px;margin:0}.hero-badges{display:flex;gap:9px;flex-wrap:wrap;margin-top:25px}.hero-badge{padding:8px 11px;border-radius:999px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);font-size:11px;font-weight:800;letter-spacing:.03em}.hero-badge.light{background:#fff;color:var(--green-900);border-color:#fff}
+.entity-strip{display:grid;grid-template-columns:1fr 54px 1fr;gap:14px;align-items:stretch;margin-top:24px}.entity{background:white;border:1px solid var(--line);border-radius:18px;padding:20px 22px;display:flex;align-items:center;gap:15px}.entity.public{background:linear-gradient(135deg,#fff,#f7f9fd)}.entity-logo{width:50px;height:50px;border-radius:14px;display:grid;place-items:center;font-weight:900}.entity.fias .entity-logo{background:var(--green-100);color:var(--green-900)}.entity.public .entity-logo{background:var(--blue-100);color:var(--blue-900)}.entity small{display:block;color:var(--muted);font-size:11px;text-transform:uppercase;font-weight:800;letter-spacing:.07em}.entity strong{display:block;font-size:15px;margin-top:3px}.arrow-box{display:grid;place-items:center;color:var(--green-700);font-weight:900;font-size:22px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:18px 0 30px}.metric{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:var(--shadow-soft)}.metric .num{font-size:26px;font-weight:850;letter-spacing:-.04em;color:var(--green-900)}.metric .label{font-size:12px;font-weight:750;margin-top:2px}.metric .sub{font-size:11px;color:var(--muted);margin-top:5px}
+.section{scroll-margin-top:20px;margin-top:24px}.section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin:0 0 14px}.section-title{margin:0;font-size:23px;letter-spacing:-.025em}.section-desc{margin:4px 0 0;color:var(--muted);font-size:13px;max-width:820px}.pill{white-space:nowrap;border-radius:999px;padding:6px 10px;background:var(--green-100);color:var(--green-900);font-size:10px;font-weight:850;text-transform:uppercase;letter-spacing:.06em}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow-soft);overflow:hidden}.panel-pad{padding:24px}.note{display:flex;gap:13px;padding:15px 16px;border-radius:14px;font-size:12px}.note strong{display:block;margin-bottom:2px}.note.info{background:var(--blue-50);border:1px solid #d8e2f3}.note.warn{background:var(--warning-bg);border:1px solid #fedf89}.note.ok{background:var(--success-bg);border:1px solid #abefc6}.note-icon{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;flex:0 0 auto;font-weight:900}.note.info .note-icon{background:var(--blue-100);color:var(--blue-900)}.note.warn .note-icon{background:#fef0c7;color:var(--warning)}.note.ok .note-icon{background:#d1fadf;color:var(--success)}
+.roadmap{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.phase-card{position:relative;border:1px solid var(--line);border-radius:16px;padding:18px;background:white;min-height:170px}.phase-card:before{content:"";position:absolute;top:0;left:0;right:0;height:5px;background:var(--green-600);border-radius:16px 16px 0 0}.phase-card.public:before{background:var(--blue-800)}.phase-card.closure:before{background:#475467}.phase-no{font-size:10px;text-transform:uppercase;letter-spacing:.09em;font-weight:850;color:var(--muted)}.phase-card h4{font-size:15px;margin:7px 0 8px}.phase-card p{font-size:11px;color:var(--muted);margin:0}.phase-card .mini{margin-top:12px;font-size:10px;font-weight:800;color:var(--green-800)}
+.controls{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:12px;flex-wrap:wrap}.search{flex:1;min-width:240px;position:relative}.search input{width:100%;height:42px;border:1px solid var(--line);border-radius:12px;background:white;padding:0 14px 0 38px;outline:none}.search input:focus{border-color:#84c5a4;box-shadow:0 0 0 4px rgba(43,138,98,.08)}.search:before{content:"⌕";position:absolute;left:14px;top:8px;color:var(--soft);font-size:20px}.btn{border:1px solid var(--line);background:white;color:var(--ink);height:42px;border-radius:12px;padding:0 14px;font-weight:750;font-size:12px;cursor:pointer;transition:.2s}.btn:hover{transform:translateY(-1px);box-shadow:var(--shadow-soft)}.btn.primary{background:var(--green-900);color:white;border-color:var(--green-900)}.btn.secondary{background:var(--blue-900);color:white;border-color:var(--blue-900)}
+.steps{display:grid;gap:10px}.step{background:white;border:1px solid var(--line);border-radius:16px;overflow:hidden;transition:.18s}.step:hover{border-color:#cfd6dc;box-shadow:var(--shadow-soft)}.step-head{display:grid;grid-template-columns:50px 1fr auto auto;gap:13px;align-items:center;padding:16px 18px;cursor:pointer}.step-no{width:40px;height:40px;border-radius:12px;background:var(--green-100);color:var(--green-900);display:grid;place-items:center;font-weight:900}.step.mae .step-no{background:var(--blue-100);color:var(--blue-900)}.step-title h4{margin:0;font-size:14px}.step-title p{margin:3px 0 0;font-size:11px;color:var(--muted)}.owner{font-size:10px;text-transform:uppercase;letter-spacing:.06em;font-weight:850;padding:6px 9px;border-radius:999px;background:#f2f4f7;color:#475467;white-space:nowrap}.owner.fias{background:var(--green-100);color:var(--green-900)}.owner.mae{background:var(--blue-100);color:var(--blue-900)}.done{width:28px;height:28px;border:1px solid var(--line);border-radius:9px;background:white;display:grid;place-items:center;color:transparent;cursor:pointer}.done.checked{background:var(--success);color:white;border-color:var(--success)}.step-body{display:none;border-top:1px solid var(--line);padding:18px 20px 20px 68px;background:#fcfcfd}.step.open .step-body{display:block}.step-body p{font-size:12px;margin:0 0 11px}.step-body ul{font-size:12px;margin:8px 0;padding-left:20px}.output{display:inline-flex;gap:7px;align-items:center;padding:8px 10px;border-radius:10px;background:#f2f4f7;font-size:11px;font-weight:750}.critical{margin-top:10px;padding:10px 12px;border-radius:10px;background:var(--warning-bg);border-left:4px solid #f79009;font-size:11px;color:#7a2e0e}
+.legal-check{margin-top:10px;padding:12px 13px;border-radius:12px;background:#f8f5ff;border:1px solid #e4d7ff;border-left:4px solid #7f56d9;font-size:11px;color:#4a3275}.legal-check b{color:#53389e}
+.civil-tag{display:inline-block;margin-top:8px;padding:5px 8px;border-radius:999px;background:#f4ebff;color:#6941c6;font-size:9px;font-weight:850;text-transform:uppercase;letter-spacing:.05em}
+.rule-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}.rule-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px}.rule-card strong{display:block;font-size:12px;margin-bottom:4px}.rule-card p{font-size:10px;color:var(--muted);margin:0}.rule-card.warn{background:#fffaeb;border-color:#fedf89}.rule-card.civil{background:#faf8ff;border-color:#e4d7ff}
+.legal-links{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.legal-links a{text-decoration:none;padding:7px 9px;border-radius:9px;border:1px solid var(--line);background:#fff;font-size:10px;font-weight:800;color:#344054}.legal-links a:hover{border-color:#98a2b3}
+@media(max-width:820px){.rule-strip{grid-template-columns:1fr}}
 
-    <style>
-        :root {
-            --fias-primary: #2c7d32;      /* Verde Institucional */
-            --fias-secondary: #8bc34a;    /* Verde Claro */
-            --fias-light: #e8f5e9;        /* Fondo suave */
-            --fias-dark: #1b5e20;         /* Verde Oscuro */
-            --fias-accent: #ffc107;       /* Amarillo Alerta */
-            --text-main: #343a40;
-            --sidebar-width: 280px;
-            --legal-public: #007bff; /* Azul para Notaría/Legal Público */
-            --legal-private: #fd7e14; /* Naranja para Legal Privado */
-        }
+.tracker{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;padding:18px 20px;background:linear-gradient(90deg,#fff,#fbfcfc);border-bottom:1px solid var(--line)}.tracker strong{font-size:13px}.tracker small{display:block;color:var(--muted);font-size:11px;margin-top:2px}.progress-ring{font-size:19px;font-weight:900;color:var(--green-900)}
+.table-wrap{overflow:auto}.matrix{width:100%;border-collapse:collapse;min-width:900px}.matrix th{font-size:10px;text-transform:uppercase;letter-spacing:.07em;text-align:left;color:#475467;background:#f9fafb;padding:12px 14px;border-bottom:1px solid var(--line)}.matrix td{font-size:11px;padding:13px 14px;border-bottom:1px solid #eef0f2;vertical-align:top}.matrix tr:last-child td{border-bottom:0}.tag{display:inline-block;padding:4px 7px;border-radius:999px;font-size:9px;font-weight:850;text-transform:uppercase;letter-spacing:.04em}.tag.req{background:#ecfdf3;color:#027a48}.tag.cond{background:#fffaeb;color:#b54708}.tag.ctrl{background:#f2f4f7;color:#475467}
+.role-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.role-card{border:1px solid var(--line);border-radius:15px;padding:17px;background:white}.role-card .role-code{font-size:10px;text-transform:uppercase;font-weight:850;letter-spacing:.08em;color:var(--muted)}.role-card h4{margin:5px 0 7px;font-size:14px}.role-card p{margin:0;font-size:11px;color:var(--muted)}
+.legal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.legal{border:1px solid var(--line);border-radius:15px;padding:18px;background:white}.legal .source{font-size:10px;font-weight:850;color:var(--green-800);text-transform:uppercase;letter-spacing:.07em}.legal h4{font-size:14px;margin:6px 0 8px}.legal p{font-size:11px;color:var(--muted);margin:0}.legal.blue .source{color:var(--blue-800)}
+.decision-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.decision{border:1px solid var(--line);border-radius:15px;padding:17px;background:white}.decision strong{display:block;font-size:13px;margin-bottom:5px}.decision p{font-size:11px;color:var(--muted);margin:0}.decision .yes{display:inline-block;margin-top:10px;color:var(--success);font-size:10px;font-weight:850}.decision .alert{display:inline-block;margin-top:10px;color:var(--warning);font-size:10px;font-weight:850}
+.footer-card{margin-top:24px;border-radius:18px;background:var(--green-950);color:white;padding:23px 25px;display:flex;justify-content:space-between;gap:18px;align-items:center}.footer-card h3{margin:0 0 4px;font-size:16px}.footer-card p{margin:0;color:#bfd7cb;font-size:11px}.footer-actions{display:flex;gap:8px}.footer-card .btn{background:white;border:0}.footer-card .btn.secondary{background:#dcebe4;color:var(--green-950)}
 
-        body {
-            background-color: #f4f6f9;
-            font-family: 'Inter', sans-serif;
-            color: var(--text-main);
-            overflow-x: hidden;
-            scroll-behavior: smooth;
-        }
+/* --- DOBLE RUTA: MAE + PRIVADOS --- */
+.route-overview{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:24px}
+.route-option{position:relative;background:white;border:1px solid var(--line);border-radius:18px;padding:20px 22px;box-shadow:var(--shadow-soft);overflow:hidden}
+.route-option:before{content:"";position:absolute;inset:0 auto 0 0;width:5px;background:var(--blue-800)}
+.route-option.private:before{background:#d97706}
+.route-label{font-size:10px;text-transform:uppercase;letter-spacing:.09em;font-weight:850;color:var(--muted)}
+.route-path{display:flex;align-items:center;gap:10px;margin:9px 0 8px;font-size:16px;font-weight:850;letter-spacing:-.02em}
+.route-path .node{padding:7px 10px;border-radius:10px;background:var(--green-100);color:var(--green-900);font-size:12px}
+.route-option.mae .route-path .node:last-child{background:var(--blue-100);color:var(--blue-900)}
+.route-option.private .route-path .node:last-child{background:#fff7ed;color:#9a3412}
+.route-option p{margin:0;color:var(--muted);font-size:11px}
+.route-meta{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}.route-meta span{font-size:9px;font-weight:850;text-transform:uppercase;letter-spacing:.05em;padding:5px 8px;border-radius:999px;background:#f2f4f7;color:#475467}
+.route-meta .public-tag{background:var(--blue-100);color:var(--blue-900)}.route-meta .private-tag{background:#fff7ed;color:#9a3412}
+.private-panel{background:linear-gradient(135deg,#fff 0%,#fffaf4 100%);border:1px solid #fed7aa}
+.private-flow{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.private-step{position:relative;background:#fff;border:1px solid #f3e3d0;border-radius:16px;padding:18px;min-height:188px;box-shadow:var(--shadow-soft)}
+.private-step:before{content:"";position:absolute;left:0;top:17px;bottom:17px;width:4px;border-radius:0 4px 4px 0;background:#d97706}
+.private-step .pnum{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:#fff7ed;color:#9a3412;font-weight:900;font-size:12px;margin-bottom:11px}
+.private-step .powner{display:inline-block;font-size:9px;text-transform:uppercase;letter-spacing:.06em;font-weight:850;padding:5px 7px;border-radius:999px;background:#f2f4f7;color:#475467;margin-bottom:8px}
+.private-step h4{font-size:14px;margin:0 0 7px}.private-step p{font-size:11px;color:var(--muted);margin:0}.private-step .pout{display:block;margin-top:11px;padding-top:9px;border-top:1px solid #f2e9de;font-size:10px;font-weight:800;color:#9a3412}
+.private-docs{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:14px}.private-doc{background:white;border:1px solid #f3e3d0;border-radius:13px;padding:13px 14px;font-size:11px}.private-doc b{display:block;margin-bottom:3px}.private-doc span{color:var(--muted)}
+.pill.private-pill{background:#fff7ed;color:#9a3412}
+.note.private-note{background:#fff7ed;border:1px solid #fed7aa}.note.private-note .note-icon{background:#ffedd5;color:#9a3412}
+@media(max-width:1100px){.private-flow{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:820px){.route-overview{grid-template-columns:1fr}.private-flow,.private-docs{grid-template-columns:1fr}}
+@media print{.route-option,.private-step,.private-doc{box-shadow:none;break-inside:avoid}}
 
-        /* --- SIDEBAR NAVIGATION --- */
-        .sidebar {
-            position: fixed;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            z-index: 100;
-            padding: 0;
-            box-shadow: 4px 0 15px rgba(0,0,0,0.05);
-            width: var(--sidebar-width);
-            background: white;
-            display: flex;
-            flex-direction: column;
-            transition: transform 0.3s ease-in-out;
-            overflow-y: auto;
-        }
-
-        .sidebar-header {
-            background: white;
-            padding: 1.5rem;
-            text-align: center;
-            border-bottom: 1px solid #eee;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-            background-color: white;
-        }
-        
-        /* Logo style based on the uploaded file */
-        .logo-img {
-            max-width: 100%;
-            height: auto;
-            max-height: 80px;
-        }
-
-        .nav-link {
-            color: #555;
-            padding: 12px 20px;
-            font-weight: 500;
-            border-left: 4px solid transparent;
-            transition: all 0.3s;
-            position: relative;
-        }
-
-        .nav-link:hover, .nav-link.active {
-            background-color: var(--fias-light);
-            color: var(--fias-dark);
-            border-left-color: var(--fias-secondary);
-        }
-
-        .nav-link i { width: 25px; text-align: center; margin-right: 8px; }
-
-        /* Sidebar Footer (Credits) */
-        .sidebar-footer {
-            margin-top: auto;
-            padding: 1.5rem;
-            background: #f8f9fa;
-            border-top: 1px solid #eee;
-            font-size: 0.75rem;
-            color: #6c757d;
-        }
-        
-        /* --- MAIN CONTENT --- */
-        .main-content {
-            margin-left: var(--sidebar-width);
-            padding: 2rem 3rem;
-            width: calc(100% - var(--sidebar-width));
-        }
-
-        @media (max-width: 992px) {
-            .sidebar { transform: translateX(-100%); }
-            .main-content { margin-left: 0; width: 100%; padding: 1rem; }
-            .sidebar.show { transform: translateX(0); }
-        }
-
-        /* --- CARDS & SECTIONS --- */
-        .section-card {
-            background: white;
-            border-radius: 12px;
-            border: none;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-            margin-bottom: 2rem;
-            overflow: hidden;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .section-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        .section-header {
-            padding: 1.2rem 1.5rem;
-            border-bottom: 1px solid #eee;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            cursor: pointer;
-        }
-        
-        .header-phase-1 { border-left: 6px solid var(--legal-public); }
-        .header-phase-1-public { background-color: #e6f0ff; border-left: 4px solid var(--legal-public); }
-        .header-phase-1-private { background-color: #fff9e6; border-left: 4px solid var(--legal-private); }
-        
-        .header-phase-2 { border-left: 6px solid var(--fias-primary); }
-        .header-phase-3 { border-left: 6px solid var(--fias-dark); }
-
-        /* --- TIMELINE VERTICAL --- */
-        .timeline {
-            position: relative;
-            padding-left: 30px;
-            margin-top: 20px;
-        }
-
-        .timeline::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 10px;
-            bottom: 0;
-            width: 3px;
-            background: #e9ecef;
-        }
-
-        .timeline-item {
-            position: relative;
-            margin-bottom: 2.5rem;
-        }
-
-        .timeline-marker {
-            position: absolute;
-            left: -39px;
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            background: white;
-            border: 4px solid var(--legal-public); /* Color central por defecto (Público) */
-            z-index: 10;
-            transition: transform 0.3s;
-        }
-        
-        .timeline-item:hover .timeline-marker {
-            transform: scale(1.2);
-        }
-        
-        /* Marcador para la ruta privada */
-        .timeline-marker-private {
-            border-color: var(--legal-private) !important;
-        }
-
-        .timeline-content h5 {
-            font-weight: 700;
-            color: var(--fias-dark);
-            margin-bottom: 5px;
-        }
-
-        /* --- ROLE BADGES --- */
-        .badge-role {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            transition: all 0.3s;
-        }
-
-        .badge-role:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        .role-admin { background: #e3f2fd; color: #0d47a1; }
-        .role-legal { background: #e0f7fa; color: #00838f; }
-        .role-finance { background: #e8f5e9; color: #1b5e20; }
-        .role-bene-public { background: #e1f5fe; color: var(--legal-public); } /* Entidad Pública */
-        .role-bene-private { background: #ffe0b2; color: var(--legal-private); } /* Tercero Privado */
-        .role-notary { background: #e1f5fe; color: var(--legal-public); }
-        .role-legal-fias { background: #fff3cd; color: #856404; }
-
-        /* --- ALERTS & BOXES --- */
-        .alert-highlight {
-            background-color: #f7f7f7;
-            border-left: 4px solid var(--fias-accent);
-            transition: all 0.3s;
-        }
-        
-        .alert-highlight:hover {
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        
-        .badge-internal-focus {
-            background: var(--fias-secondary);
-            color: white;
-        }
-
-        .doc-box {
-            background-color: #fafafa;
-            border: 1px dashed #ccc;
-            padding: 10px 15px;
-            border-radius: 6px;
-            margin-top: 10px;
-            font-size: 0.9rem;
-            transition: all 0.3s;
-        }
-        
-        .doc-box:hover {
-            background-color: #f5f5f5;
-            border-color: #999;
-        }
-        
-        .doc-box strong { color: #555; display: block; margin-bottom: 5px; }
-        
-        /* New Styles for visual separation in Phase 1 */
-        .route-container {
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 20px;
-            transition: all 0.3s;
-            height: 100%;
-        }
-        
-        .route-container:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-        
-        .route-title {
-            font-weight: 700;
-            font-size: 1.1rem;
-            margin-bottom: 10px;
-        }
-        
-        /* Progress Bar */
-        .progress-container {
-            position: fixed;
-            top: 0;
-            left: var(--sidebar-width);
-            right: 0;
-            height: 5px;
-            background: #e9ecef;
-            z-index: 1000;
-        }
-        
-        .progress-bar {
-            height: 5px;
-            background: var(--fias-secondary);
-            width: 0%;
-            transition: width 0.3s;
-        }
-        
-        /* Navigation Buttons */
-        .nav-buttons {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 2rem;
-            padding-top: 1rem;
-            border-top: 1px solid #eee;
-        }
-        
-        /* Accordion */
-        .accordion-button:not(.collapsed) {
-            background-color: var(--fias-light);
-            color: var(--fias-dark);
-        }
-        
-        /* Tooltip custom */
-        .custom-tooltip {
-            --bs-tooltip-bg: var(--fias-primary);
-            --bs-tooltip-color: white;
-        }
-        
-        /* Floating Action Button */
-        .fab {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            z-index: 1000;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background-color: var(--fias-primary);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .fab:hover {
-            transform: scale(1.1);
-            background-color: var(--fias-dark);
-        }
-        
-        /* Text emphasis */
-        .text-emphasis {
-            font-weight: 600;
-            color: var(--fias-dark);
-        }
-        
-        /* Phase number styling */
-        .phase-number {
-            display: inline-block;
-            width: 30px;
-            height: 30px;
-            background-color: var(--fias-primary);
-            color: white;
-            border-radius: 50%;
-            text-align: center;
-            line-height: 30px;
-            margin-right: 10px;
-            font-weight: bold;
-        }
-        
-        /* Print Styles */
-        @media print {
-            .sidebar, .fab, .nav-buttons, .progress-container {
-                display: none !important;
-            }
-            .main-content {
-                margin-left: 0;
-                width: 100%;
-            }
-            .section-card {
-                box-shadow: none;
-                border: 1px solid #ddd;
-            }
-        }
-    </style>
+.hidden-by-search{display:none!important}.muted-line{font-size:10px;color:var(--muted);margin-top:8px}.source-list{display:grid;gap:8px}.source-item{padding:11px 13px;border:1px solid var(--line);border-radius:11px;background:#fbfcfd;font-size:11px}.source-item strong{display:block;font-size:11px;margin-bottom:2px}
+@media(max-width:1100px){.grid-4,.roadmap{grid-template-columns:repeat(2,1fr)}.role-grid,.legal-grid,.decision-grid{grid-template-columns:repeat(2,1fr)}.content{padding:35px 26px 70px}}
+@media(max-width:820px){:root{--sidebar:0px}.sidebar{transform:translateX(-100%);width:285px;transition:.25s}.sidebar.show{transform:translateX(0)}.mobile-toggle{display:block}.main{margin-left:0}.top-progress{left:0}.content{padding:72px 16px 60px}.hero{padding:30px 24px}.hero h2{font-size:28px}.entity-strip{grid-template-columns:1fr}.arrow-box{height:26px;transform:rotate(90deg)}.step-head{grid-template-columns:44px 1fr auto}.owner{grid-column:2/3;justify-self:start}.done{grid-row:1/3;grid-column:3}.step-body{padding-left:18px}.role-grid,.legal-grid,.decision-grid{grid-template-columns:1fr}.footer-card{align-items:flex-start;flex-direction:column}}
+@media(max-width:560px){.grid-4,.roadmap{grid-template-columns:1fr}.hero h2{font-size:25px}.section-head{align-items:flex-start;flex-direction:column}.footer-actions{width:100%;flex-direction:column}.footer-actions .btn{width:100%}}
+@media print{body{background:white}.sidebar,.mobile-toggle,.top-progress,.controls,.done,.footer-actions{display:none!important}.main{margin-left:0}.content{max-width:none;padding:0}.hero{box-shadow:none;border-radius:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}.panel,.metric,.step,.phase-card,.legal,.role-card,.decision{box-shadow:none;break-inside:avoid}.step-body{display:block!important}.section{break-inside:auto}.footer-card{background:#fff;color:#111;border:1px solid #ddd}.footer-card p{color:#555}}
+</style>
 </head>
 <body>
-    <!-- Progress Bar -->
-    <div class="progress-container">
-        <div class="progress-bar" id="readingProgress"></div>
+<div class="top-progress"><span id="readProgress"></span></div>
+<button class="mobile-toggle" id="mobileToggle" aria-label="Abrir menú">☰</button>
+<aside class="sidebar" id="sidebar">
+  <div class="brand">
+    <div class="brand-row">
+      <div class="brand-mark">FIAS</div>
+      <div><h1>Donación de Bienes</h1><p>Ruta institucional Enterprise</p></div>
     </div>
-    
-    <!-- Floating Action Button -->
-    <div class="fab" data-bs-toggle="modal" data-bs-target="#helpModal">
-        <i class="fas fa-question"></i>
-    </div>
+    <div class="route-chip">MAE + Privados · Flujo operativo diferenciado</div>
+  </div>
+  <nav class="side-nav">
+    <div class="nav-title">Navegación</div>
+    <a class="nav-link active" href="#overview"><span class="nav-dot"></span>Resumen ejecutivo</a>
+    <a class="nav-link" href="#roadmap"><span class="nav-dot"></span>Mapa del proceso</a>
+    <a class="nav-link" href="#procedure"><span class="nav-dot"></span>Ruta pública MAE</a>
+    <a class="nav-link" href="#private-route"><span class="nav-dot"></span>Ruta simplificada privada</a>
+    <a class="nav-link" href="#documents"><span class="nav-dot"></span>Matriz documental</a>
+    <a class="nav-link" href="#roles"><span class="nav-dot"></span>Responsables</a>
+    <a class="nav-link" href="#decisions"><span class="nav-dot"></span>Controles jurídicos</a>
+    <a class="nav-link" href="#legal"><span class="nav-dot"></span>Base documental</a>
+  </nav>
+  <div class="side-footer"><strong>Versión Enterprise 2026.08 · Operativa v4</strong>Ruta MAE detallada, convenio de proyecto como antecedente habilitante y ruta privada simplificada sin insinuación notarial.</div>
+</aside>
+<main class="main">
+<div class="content">
 
-    <div class="d-flex" id="wrapper">
-        <div class="sidebar" id="sidebar-wrapper">
-            <div class="sidebar-header">
-                <img src="https://raw.githubusercontent.com/jaircruz1304/FIAS/main/Logo_FIAS.png" alt="Logo FIAS" class="logo-img">
-                <h6 class="fw-bold mt-2" style="color: var(--fias-primary);">FIAS <i class="fas fa-arrow-right"></i> Donatario</h6>
-                <small class="text-muted">Transferencia de Dominio</small>
-            </div>
-            <div class="list-group list-group-flush flex-grow-1">
-                <a href="#intro" class="list-group-item list-group-item-action py-3 active">
-                    <i class="fas fa-info-circle"></i> Introducción
-                </a>
-                <a href="#phase1" class="list-group-item list-group-item-action py-3">
-                    <span class="phase-number">1</span> Fase 1: Preparación y Aprobación
-                </a>
-                <a href="#phase2" class="list-group-item list-group-item-action py-3">
-                    <span class="phase-number">2</span> Fase 2: Formalización Legal
-                </a>
-                <a href="#phase3" class="list-group-item list-group-item-action py-3">
-                    <span class="phase-number">3</span> Fase 3: Registro Contable
-                </a>
-            </div>
-            <div class="sidebar-footer">
-                <p class="mb-0">Guía Operativa Institucional. <br>Versión Donación (FIAS Privado) 25-11-2025.</p>
-            </div>
+
+<section id="overview" class="section">
+  <div class="hero">
+    <div class="eyebrow">Guía Operativa Institucional · Ruta MAE detallada + ruta privada simplificada</div>
+    <h2>Donación de bienes FIAS: procedimiento específico para MAE y procedimiento simplificado para entidades privadas</h2>
+    <p>La ruta MAE parte de un <b>convenio de proyecto previamente suscrito</b> que faculta la donación de bienes al Ministerio. Ese convenio se trata como antecedente habilitante: si ya cubre la donación y se encuentra vigente/aplicable, <b>no se genera un segundo convenio de donación</b>. La ruta privada se mantiene separada y no incorpora insinuación notarial.</p>
+    <div class="hero-badges">
+      <span class="hero-badge light">Ruta pública: FIAS → MAE</span>
+      <span class="hero-badge">Ruta privada simplificada</span>
+      <span class="hero-badge">Convenio de proyecto: no duplicar</span>
+      <span class="hero-badge">Bienes muebles no vehiculares</span>
+    </div>
+  </div>
+
+  <div class="route-overview">
+    <article class="route-option mae">
+      <div class="route-label">Ruta A · Entidad pública receptora</div>
+      <div class="route-path"><span class="node">FIAS</span><span>→</span><span class="node">MAE</span></div>
+      <p>Integra los 11 hitos comunicados por el MAE y los ordena en un flujo operativo concreto. El convenio de proyecto existente satisface el requisito de “Acuerdo o Convenio” cuando sus cláusulas efectivamente habilitan la donación; únicamente si no es suficiente se activa un instrumento complementario.</p>
+      <div class="route-meta"><span class="public-tag">13 controles integrados</span><span>11 hitos MAE + 2 controles FIAS/jurídicos</span></div>
+    </article>
+
+    <article class="route-option private">
+      <div class="route-label">Ruta B · Entidad privada</div>
+      <div class="route-path"><span class="node">FIAS</span><span>→</span><span class="node">Entidad privada</span></div>
+      <p>Se conserva como ruta simplificada: autorización y matriz, oferta, aceptación, convenio privado, acta de entrega y cierre contable. <b>No se incorpora trámite de insinuación notarial</b> dentro de esta ruta.</p>
+      <div class="route-meta"><span class="private-tag">6 pasos</span><span>Sin insinuación notarial</span></div>
+    </article>
+  </div>
+
+  <div class="grid-4">
+    <div class="metric"><div class="num">13</div><div class="label">Controles integrados · MAE</div><div class="sub">11 hitos MAE + habilitación FIAS + control civil condicionado.</div></div>
+    <div class="metric"><div class="num">2</div><div class="label">Rutas diferenciadas</div><div class="sub">MAE como entidad pública + proceso simplificado privado.</div></div>
+    <div class="metric"><div class="num">6</div><div class="label">Pasos de la ruta privada</div><div class="sub">Sin requisitos internos del MAE ni insinuación notarial.</div></div>
+    <div class="metric"><div class="num">1 convenio</div><div class="label">Regla de no duplicidad</div><div class="sub">Si el convenio del proyecto ya habilita la donación al MAE, se anexa y se cita; no se suscribe otro.</div></div>
+  </div>
+
+  <div class="note info"><div class="note-icon">i</div><div><strong>Regla documental principal</strong>El requisito del MAE de contar con un “Acuerdo o Convenio entre las partes” se gestiona primero verificando el <b>convenio del proyecto ya suscrito</b>. Si ese instrumento autoriza la donación de bienes al MAE y cubre el objeto de la entrega, se incorpora al expediente como documento habilitante y <b>se deja constancia de que no corresponde duplicarlo</b>.</div></div>
+
+  <div class="rule-strip">
+    <div class="rule-card"><strong>Convenio del proyecto suficiente</strong><p>Anexar copia o extracto de las cláusulas habilitantes, identificar número/fecha y continuar. No elaborar nuevo convenio.</p></div>
+    <div class="rule-card warn"><strong>Convenio insuficiente o silencioso</strong><p>Detener la formalización y solicitar criterio del Área Legal sobre adenda, convenio específico u otro instrumento complementario.</p></div>
+    <div class="rule-card civil"><strong>Carta de intención</strong><p>Es el acto administrativo de inicio hacia el MAE. No se notariza y no sustituye al convenio habilitante.</p></div>
+  </div>
+</section>
+
+
+<section id="roadmap" class="section">
+  <div class="section-head"><div><h3 class="section-title">Mapa ejecutivo · Ruta pública MAE</h3><p class="section-desc">Secuencia práctica desde la verificación del convenio del proyecto hasta la asignación al custodio final. Cada fase indica qué debe existir antes de avanzar para evitar reprocesos o documentos duplicados.</p></div><span class="pill">Ruta de extremo a extremo</span></div>
+  <div class="roadmap">
+    <article class="phase-card"><div class="phase-no">Fase 00 · Base habilitante</div><h4>Confirmar convenio y bienes</h4><p>Verificar que el convenio del proyecto faculte donar al MAE, validar competencia interna FIAS y consolidar la matriz definitiva.</p><div class="mini">Controles 00–02</div></article>
+    <article class="phase-card public"><div class="phase-no">Fase 01 · Evaluación MAE</div><h4>Justificar y decidir</h4><p>Unidad requirente emite informe; TICS interviene cuando corresponda; la autoridad competente acepta o niega la donación.</p><div class="mini">Controles 03–05</div></article>
+    <article class="phase-card public"><div class="phase-no">Fase 02 · Formalización</div><h4>Control jurídico y entrega</h4><p>Solo para la ruta MAE se mantiene el control civil de insinuación cuando corresponda; luego se suscribe el Acta de Entrega-Recepción. El acta no se protocoliza automáticamente.</p><div class="mini">Controles 06–07</div></article>
+    <article class="phase-card closure"><div class="phase-no">Fase 03 · Incorporación y cierre</div><h4>Registrar, asegurar y custodiar</h4><p>Ingreso patrimonial/eSBYE, contabilización, aseguramiento, codificación y acta al custodio final.</p><div class="mini">Controles 08–12</div></article>
+  </div>
+</section>
+
+
+<section id="procedure" class="section">
+  <div class="section-head"><div><h3 class="section-title">Ruta pública MAE · Procedimiento específico paso a paso</h3><p class="section-desc">Checklist de 13 controles. El flujo toma como base el procedimiento comunicado por el MAE y trata el convenio del proyecto ya suscrito como antecedente habilitante, evitando crear otro instrumento cuando no es necesario.</p></div><span class="pill">11 hitos MAE + 2 controles</span></div>
+  <div class="panel">
+    <div class="tracker"><div><strong>Avance del expediente FIAS → MAE</strong><small id="trackerText">0 de 13 controles marcados</small></div><div class="progress-ring" id="trackerPercent">0%</div></div>
+    <div class="panel-pad">
+      <div class="controls"><div class="search"><input id="stepSearch" type="search" placeholder="Buscar paso, responsable o documento..."></div><button class="btn" id="expandAll">Expandir todo</button><button class="btn" id="resetChecks">Limpiar avance</button></div>
+      <div class="steps" id="steps">
+
+        <article class="step fias" data-step="0" data-search="convenio proyecto existente habilitación FIAS facultad donar MAE cláusula vigencia autorización interna no duplicar">
+          <div class="step-head"><div class="step-no">00</div><div class="step-title"><h4>Verificar el convenio del proyecto y la habilitación interna de FIAS</h4><p>Este es el gate de entrada. Primero se confirma que ya existe sustento contractual para donar los bienes al MAE.</p></div><span class="owner fias">FIAS · Legal / Proyecto / Administración</span><button class="done" aria-label="Marcar control 0">✓</button></div>
+          <div class="step-body">
+            <p><b>Qué se debe hacer:</b> revisar el convenio suscrito que da origen al proyecto y ubicar la cláusula que permite la entrega, transferencia o donación de bienes al MAE. Paralelamente, verificar que el representante/órgano de FIAS tenga facultad interna para ejecutar esa disposición.</p>
+            <ul>
+              <li>Registrar nombre, número, fecha y partes del convenio del proyecto.</li>
+              <li>Citar la cláusula exacta que habilita donar o transferir los bienes al MAE.</li>
+              <li>Confirmar que el convenio se encuentre vigente o que sus obligaciones de cierre/transferencia sigan produciendo efectos.</li>
+              <li>Verificar que los bienes a donar correspondan al proyecto o estén comprendidos en la habilitación contractual.</li>
+              <li>Revisar Estatuto, MOP, poderes/delegaciones y autorización interna de FIAS para la disposición gratuita.</li>
+            </ul>
+            <div class="legal-check"><b>Regla de no duplicidad:</b> si el convenio del proyecto ya habilita suficientemente la donación, <b>NO se elabora ni se firma un nuevo convenio de donación</b>. Se incorpora una copia o extracto certificado/simple según corresponda y se referencia expresamente en la carta de intención y en el acta. Si la cláusula es insuficiente, ambigua o no cubre los bienes, Legal define antes de continuar si corresponde adenda o instrumento específico.</div>
+            <span class="output">Salida: ficha de habilitación + copia/extracto del convenio + autorización interna FIAS</span>
+          </div>
+        </article>
+
+        <article class="step fias" data-step="1" data-search="carta intención matriz marca modelo serie color dimensiones valor factura convenio proyecto cláusula MAE">
+          <div class="step-head"><div class="step-no">01</div><div class="step-title"><h4>Preparar la matriz definitiva y la Carta de Intención</h4><p>FIAS individualiza los bienes y formaliza la oferta al MAE.</p></div><span class="owner fias">FIAS · Proyecto / Bienes / Dirección Ejecutiva</span><button class="done" aria-label="Marcar control 1">✓</button></div>
+          <div class="step-body">
+            <p><b>Matriz:</b> levantar un solo listado definitivo, sin diferencias entre carta, acta y registros posteriores. Para cada bien incluir, como mínimo, descripción, marca, modelo, serie/inventario, color, dimensiones, valor monetario, estado, cantidad y clasificación preliminar (larga duración, control administrativo o existencia, según corresponda).</p>
+            <p><b>Carta:</b> dirigir al MAE la intención de donar, identificar el proyecto, citar el convenio habilitante y su cláusula, describir el objetivo de la entrega y adjuntar la matriz. La copia de factura puede adjuntarse cuando exista, pues el memorando MAE la contempla como opcional.</p>
+            <div class="legal-check"><b>No notarizar:</b> la Carta de Intención es un documento administrativo de inicio. No equivale a insinuación y no requiere notarización.</div>
+            <span class="output">Salida: Carta de Intención + matriz definitiva + copia de factura (opcional)</span>
+          </div>
+        </article>
+
+        <article class="step fias" data-step="2" data-search="acuerdo convenio requisito MAE convenio proyecto existente no nuevo convenio documento habilitante cláusula">
+          <div class="step-head"><div class="step-no">02</div><div class="step-title"><h4>Acreditar el “Acuerdo o Convenio” exigido por el procedimiento MAE</h4><p>No crear un documento nuevo si el convenio del proyecto ya cumple esa función.</p></div><span class="owner fias">FIAS · Legal / Proyecto</span><button class="done" aria-label="Marcar control 2">✓</button></div>
+          <div class="step-body">
+            <p>Incorporar al expediente del trámite la copia del <b>convenio del proyecto previamente suscrito</b> y señalar de forma visible la cláusula que justifica/faculta la donación de los bienes al MAE.</p>
+            <ul>
+              <li><b>Si el convenio cubre la donación:</b> marcar “CUMPLE – CONVENIO EXISTENTE” y continuar.</li>
+              <li><b>Si el convenio requiere precisión:</b> Legal determina si basta una certificación/criterio de alcance o si se necesita una adenda.</li>
+              <li><b>Si no existe habilitación:</b> no avanzar a la entrega; gestionar el instrumento jurídico que corresponda.</li>
+            </ul>
+            <div class="critical"><b>No duplicar el proceso:</b> este paso es documental, no una nueva negociación. Su finalidad es demostrar al MAE que el requisito de “Acuerdo o Convenio entre las partes” ya está respaldado por el convenio del proyecto.</div>
+            <span class="output">Salida: convenio del proyecto incorporado al expediente + referencia de cláusula habilitante</span>
+          </div>
+        </article>
+
+        <article class="step mae" data-step="3" data-search="unidad requirente informe necesidad aceptación negación uso ubicación custodio MAE">
+          <div class="step-head"><div class="step-no">03</div><div class="step-title"><h4>Informe de la Unidad Requirente del MAE</h4><p>El área que utilizará los bienes debe justificar por qué el MAE necesita recibirlos.</p></div><span class="owner mae">MAE · Unidad requirente</span><button class="done" aria-label="Marcar control 3">✓</button></div>
+          <div class="step-body">
+            <p>La unidad requirente revisa la carta, matriz y convenio habilitante y emite un informe que permita decidir la aceptación o negación.</p>
+            <ul>
+              <li>Identificar proyecto/origen de la donación y bienes ofrecidos.</li>
+              <li>Justificar la necesidad institucional y el uso previsto.</li>
+              <li>Indicar unidad beneficiaria, ubicación prevista y potencial custodio.</li>
+              <li>Pronunciarse sobre la pertinencia de recibir la totalidad o solo parte de los bienes.</li>
+              <li>Cuando existan bienes tecnológicos, solicitar o coordinar el informe TICS.</li>
+            </ul>
+            <span class="output">Salida: informe motivado de necesidad y recomendación de aceptar/negar</span>
+          </div>
+        </article>
+
+        <article class="step mae" data-step="4" data-search="aceptación negación máxima autoridad delegado MAE COGEAF notificación FIAS">
+          <div class="step-head"><div class="step-no">04</div><div class="step-title"><h4>Resolución / respuesta de aceptación o negación del MAE</h4><p>La autoridad competente decide formalmente sobre los bienes ofrecidos.</p></div><span class="owner mae">MAE · Máxima autoridad o delegado</span><button class="done" aria-label="Marcar control 4">✓</button></div>
+          <div class="step-body">
+            <p>Con base en el expediente, la Máxima Autoridad o su delegado emite la respuesta formal. La aceptación debe identificar el trámite y, de preferencia, referir la matriz de bienes para que no exista duda sobre el objeto aceptado.</p>
+            <ul>
+              <li>Verificar competencia/delegación vigente del firmante.</li>
+              <li>Precisar si se acepta la totalidad o parte de los bienes.</li>
+              <li>Notificar formalmente la aceptación a FIAS y archivar evidencia de recepción.</li>
+            </ul>
+            <div class="critical"><b>Delegación:</b> el Acuerdo Ministerial 025 aportado contiene una delegación relevante en materia de transferencia/traspaso de bienes a la Coordinación General Administrativa Financiera; antes de la firma se debe verificar su vigencia y aplicabilidad en la estructura actual del MAE.</div>
+            <span class="output">Salida: aceptación/negación oficial + constancia de notificación a FIAS</span>
+          </div>
+        </article>
+
+        <article class="step mae" data-step="5" data-search="TICS tecnológico informe técnico estado físico tecnológico marca modelo serie operativo obsolescencia">
+          <div class="step-head"><div class="step-no">05</div><div class="step-title"><h4>Informe técnico TICS, cuando existan bienes tecnológicos</h4><p>Control condicionado antes de la incorporación patrimonial.</p></div><span class="owner mae">MAE · TICS</span><button class="done" aria-label="Marcar control 5">✓</button></div>
+          <div class="step-body">
+            <p>Para equipos tecnológicos, TICS debe emitir el informe que avale el estado físico y tecnológico. El informe debe poder conciliarse con la matriz por marca, modelo y serie.</p>
+            <ul>
+              <li>Identificación individual del equipo.</li>
+              <li>Estado físico y estado operativo/tecnológico.</li>
+              <li>Observaciones relevantes para uso, compatibilidad u obsolescencia.</li>
+              <li>Conclusión técnica sobre recepción/uso institucional.</li>
+            </ul>
+            <p>Si no existen bienes tecnológicos, dejar el control expresamente como <b>“NO APLICA”</b>.</p>
+            <span class="output">Salida: informe TICS o constancia N.A.</span>
+          </div>
+        </article>
+
+        <article class="step fias" data-step="6" data-search="insinuación donación 800 artículo 1417 MAE ruta pública persona jurídica FIAS notario">
+          <div class="step-head"><div class="step-no">06</div><div class="step-title"><h4>Control civil de insinuación — solo ruta MAE</h4><p>Control jurídico condicionado por cuantía; no forma parte de la ruta privada simplificada.</p></div><span class="owner fias">FIAS · Área Legal</span><button class="done" aria-label="Marcar control 6">✓</button></div>
+          <div class="step-body">
+            <p>Cuando el valor de la donación al MAE supere el umbral previsto en el art. 1417 del Código Civil, el Área Legal debe dejar resuelta y documentada la procedencia del trámite de insinuación antes de ejecutar la entrega.</p>
+            <div class="legal-check"><b>Importante:</b> no se confunde este control con la Carta de Intención y tampoco implica protocolizar el Acta de Entrega-Recepción. Por la naturaleza jurídica de FIAS como persona jurídica, la vía concreta debe quedar sustentada por Legal.</div>
+            <span class="output">Salida: actuación/certificación jurídica correspondiente para la ruta MAE, cuando aplique</span>
+          </div>
+        </article>
+
+        <article class="step mae" data-step="7" data-search="acta entrega recepción FIAS MAE bienes larga duración control administrativo series cantidades valor no protocolizar">
+          <div class="step-head"><div class="step-no">07</div><div class="step-title"><h4>Entrega física y Acta de Entrega-Recepción FIAS → MAE</h4><p>La entrega se ejecuta únicamente cuando el expediente previo está completo.</p></div><span class="owner mae">FIAS + MAE · Bienes/Administrativa</span><button class="done" aria-label="Marcar control 7">✓</button></div>
+          <div class="step-body">
+            <p><b>Antes de firmar:</b> verificar carta, matriz, convenio habilitante, informe de necesidad, aceptación, TICS cuando aplique y control jurídico de la ruta MAE cuando corresponda.</p>
+            <p><b>En el Acta:</b> identificar convenio/proyecto y carta de intención, detallar bienes por cantidad, descripción, marca, modelo, serie/inventario, estado y valor; indicar fecha/lugar; dejar constancia expresa de entrega por FIAS y recepción por los servidores MAE designados.</p>
+            <div class="legal-check"><b>Protocolización:</b> para bienes muebles ordinarios esta guía no trata la protocolización del Acta como requisito automático. Solo se activa si existe una norma especial, exigencia expresa del MAE o criterio jurídico específico.</div>
+            <span class="output">Salida: Acta de Entrega-Recepción definitiva + bienes físicamente entregados</span>
+          </div>
+        </article>
+
+        <article class="step mae" data-step="8" data-search="eSBYE ingreso bienes larga duración control administrativo existencias Dirección Administrativa MAE">
+          <div class="step-head"><div class="step-no">08</div><div class="step-title"><h4>Ingreso / movimiento en eSBYE</h4><p>Registrar patrimonialmente los bienes recibidos según su clasificación.</p></div><span class="owner mae">MAE · Dirección Administrativa / Bienes</span><button class="done" aria-label="Marcar control 8">✓</button></div>
+          <div class="step-body">
+            <p>Con el Acta suscrita, la Dirección Administrativa gestiona el registro correspondiente. Para bienes de larga duración o control administrativo, el procedimiento MAE dispone el ingreso en eSBYE. Para existencias, aplicar el movimiento que corresponda conforme al sistema/procedimiento vigente y conservar su soporte.</p>
+            <ul><li>Conciliar descripción, serie y valor con la matriz y el Acta.</li><li>Evitar crear registros duplicados.</li><li>Guardar comprobante/reporte del movimiento efectuado.</li></ul>
+            <span class="output">Salida: comprobante o reporte eSBYE / movimiento de existencias</span>
+          </div>
+        </article>
+
+        <article class="step mae" data-step="9" data-search="contabilización donación MAE Dirección Financiera FIAS baja contable acta valor">
+          <div class="step-head"><div class="step-no">09</div><div class="step-title"><h4>Contabilización MAE y baja contable FIAS</h4><p>Ambas partes reflejan la operación con el mismo soporte documental.</p></div><span class="owner mae">MAE · Financiera + FIAS · Contabilidad</span><button class="done" aria-label="Marcar control 9">✓</button></div>
+          <div class="step-body">
+            <p>La Dirección Financiera del MAE contabiliza la recepción de la donación utilizando el Acta, valor aceptado y registro patrimonial. FIAS efectúa la baja/registro contable de los activos efectivamente entregados.</p>
+            <ul><li>Conciliar valor de matriz, Acta, eSBYE y comprobantes contables.</li><li>Registrar únicamente los bienes efectivamente recibidos.</li><li>Archivar comprobantes de alta/registro MAE y baja FIAS.</li></ul>
+            <span class="output">Salida: contabilización MAE + comprobante de baja/registro FIAS</span>
+          </div>
+        </article>
+
+        <article class="step mae" data-step="10" data-search="aseguramiento póliza bienes MAE cobertura no aplica">
+          <div class="step-head"><div class="step-no">10</div><div class="step-title"><h4>Aseguramiento de los bienes</h4><p>Incorporar a cobertura cuando la naturaleza del bien y la política institucional lo requieran.</p></div><span class="owner mae">MAE · Dirección Administrativa</span><button class="done" aria-label="Marcar control 10">✓</button></div>
+          <div class="step-body"><p>Verificar si los bienes deben incluirse en pólizas o coberturas institucionales. Registrar número de póliza/endoso o dejar constancia “N.A.” cuando no corresponda.</p><span class="output">Salida: constancia de aseguramiento / actualización de póliza / N.A.</span></div>
+        </article>
+
+        <article class="step mae" data-step="11" data-search="codificación patrimonial etiqueta código bien serie eSBYE MAE">
+          <div class="step-head"><div class="step-no">11</div><div class="step-title"><h4>Codificación patrimonial</h4><p>Asignar código institucional y vincularlo con la identificación física del bien.</p></div><span class="owner mae">MAE · Bienes</span><button class="done" aria-label="Marcar control 11">✓</button></div>
+          <div class="step-body"><p>Asignar código/etiqueta patrimonial, relacionarlo con serie, registro eSBYE, ubicación y estado. Verificar físicamente que cada etiqueta corresponda al bien correcto.</p><span class="output">Salida: bienes codificados + registro patrimonial conciliado</span></div>
+        </article>
+
+        <article class="step mae" data-step="12" data-search="custodio final acta usuario responsable ubicación MAE cierre expediente">
+          <div class="step-head"><div class="step-no">12</div><div class="step-title"><h4>Acta al custodio final y cierre del expediente</h4><p>El MAE asigna la custodia individual y se consolida la trazabilidad completa.</p></div><span class="owner mae">MAE · Bienes / Custodio final</span><button class="done" aria-label="Marcar control 12">✓</button></div>
+          <div class="step-body">
+            <p>Suscribir el acta interna de entrega-recepción al custodio final, identificar unidad/ubicación y fecha de asignación. El expediente MAE debe vincular la documentación de origen con el registro patrimonial y la custodia.</p>
+            <p>FIAS cierra su expediente con: autorización/habilitación, convenio del proyecto, carta + matriz, aceptación del MAE, actuación jurídica de la ruta MAE cuando aplique, Acta de Entrega-Recepción y comprobante contable de baja.</p>
+            <span class="output">Salida: custodio asignado + expediente MAE y expediente FIAS cerrados</span>
+          </div>
+        </article>
+
+      </div>
+      <div class="note warn" style="margin-top:16px"><div class="note-icon">!</div><div><strong>Regla para el convenio del proyecto</strong>El Memorando MAE exige “Acuerdo o Convenio entre las partes”. En esta guía ese requisito se cumple con el convenio del proyecto ya suscrito <b>si su contenido efectivamente faculta la donación</b>. No se debe generar un segundo convenio solo para repetir una autorización ya existente. Si el instrumento base no cubre la entrega, Legal define el documento complementario antes de continuar.</div></div>
+    </div>
+  </div>
+</section>
+
+
+<section id="private-route" class="section">
+  <div class="section-head"><div><h3 class="section-title">Ruta simplificada para entidades privadas</h3><p class="section-desc">Proceso independiente y deliberadamente más corto. No se trasladan los controles internos del MAE y <b>no se incorpora insinuación ante notaría</b> dentro de esta ruta operativa.</p></div><span class="pill private-pill">Ruta B · 6 pasos</span></div>
+  <div class="panel private-panel">
+    <div class="panel-pad">
+      <div class="note private-note"><div class="note-icon">B</div><div><strong>Regla de separación</strong>Para donaciones de bienes muebles ordinarios a entidades privadas, esta guía utiliza el procedimiento simplificado FIAS: autorización interna, oferta, aceptación, convenio privado, entrega y cierre contable. <b>Se excluye del flujo la insinuación notarial.</b></div></div>
+
+      <div class="private-flow" style="margin-top:16px">
+        <article class="private-step"><div class="pnum">01</div><span class="powner">FIAS · Legal / Bienes</span><h4>Autorización interna + matriz</h4><p>Verificar facultad para donar, autorización interna y disponibilidad de los bienes. Consolidar descripción, serie/inventario, valor, cantidad y estado.</p><span class="pout">Salida: autorización interna + matriz de bienes</span></article>
+        <article class="private-step"><div class="pnum">02</div><span class="powner">FIAS · Dirección Ejecutiva</span><h4>Carta / oferta de donación</h4><p>Remitir al beneficiario privado la intención de donar e identificar claramente los bienes mediante la matriz anexa.</p><span class="pout">Documento administrativo simple · sin notarización</span></article>
+        <article class="private-step"><div class="pnum">03</div><span class="powner">Entidad privada beneficiaria</span><h4>Aceptación expresa</h4><p>El representante competente de la entidad privada acepta formalmente los bienes ofrecidos y FIAS conserva la constancia de recepción de esa aceptación.</p><span class="pout">Salida: aceptación escrita + constancia de recepción</span></article>
+        <article class="private-step"><div class="pnum">04</div><span class="powner">FIAS + Donatario privado</span><h4>Convenio de Donación</h4><p>Suscribir el instrumento privado que establece la gratuidad, identifica los bienes, determina su valor/finalidad y fija las condiciones de entrega.</p><span class="pout">No se incorpora insinuación notarial en esta ruta</span></article>
+        <article class="private-step"><div class="pnum">05</div><span class="powner">FIAS + Donatario privado</span><h4>Entrega física + Acta de Entrega-Recepción</h4><p>Entregar los bienes y conciliar en el Acta las cantidades, series/inventarios, estado y valor. Para bienes muebles ordinarios, la guía no contempla protocolización automática del Acta.</p><span class="pout">Salida: Acta suscrita + bienes entregados</span></article>
+        <article class="private-step"><div class="pnum">06</div><span class="powner">FIAS + Beneficiario</span><h4>Cierre contable y documental</h4><p>FIAS registra la baja de los bienes efectivamente entregados; el beneficiario registra el alta conforme a sus políticas. Ambas partes archivan convenio, acta y soportes.</p><span class="pout">Salida: baja FIAS + alta del beneficiario + expediente cerrado</span></article>
+      </div>
+
+      <div class="legal-check" style="margin-top:16px"><b>Alcance de la simplificación:</b> la exclusión de la insinuación notarial corresponde al diseño operativo de esta ruta privada. Si el objeto cambia a inmueble, vehículo, bien sujeto a registro especial o una donación con condición/carga que requiera formalidad especial, el caso sale de esta ruta y pasa a revisión jurídica específica.</div>
+
+      <div style="margin-top:18px"><div class="route-label">Expediente mínimo · Ruta privada</div>
+        <div class="private-docs">
+          <div class="private-doc"><b>1. Autorización interna + matriz</b><span>Competencia para donar y detalle de los bienes.</span></div>
+          <div class="private-doc"><b>2. Carta / oferta de donación</b><span>Manifestación formal de FIAS al beneficiario.</span></div>
+          <div class="private-doc"><b>3. Aceptación escrita</b><span>Respuesta expresa del beneficiario.</span></div>
+          <div class="private-doc"><b>4. Convenio de Donación</b><span>Título privado de la transferencia.</span></div>
+          <div class="private-doc"><b>5. Acta de Entrega-Recepción</b><span>Constancia de entrega material y conciliación.</span></div>
+          <div class="private-doc"><b>6. Registros contables</b><span>Baja FIAS, alta del beneficiario y expediente final.</span></div>
         </div>
-        <main id="page-content-wrapper" class="main-content">
-            
-            <section id="intro" class="section-card p-4 p-md-5" data-aos="fade-up">
-                <h1 class="fw-bold text-dark">Guía Operativa: Donación de Bienes y Transferencia de Dominio</h1>
-                <p class="text-muted lead">Procedimiento legal y administrativo para la <span class="text-emphasis">Donación de Bienes (Activos Fijos NO Vehiculares)</span> de FIAS (Privado) a una <span class="text-emphasis">Entidad Pública</span> o <span class="text-emphasis">Privada</span>.</p>
-                <div class="d-flex gap-2 mt-3 flex-wrap">
-                    <span class="badge badge-internal-focus"><i class="fas fa-balance-scale me-1"></i> GESTIÓN DE DONACIÓN</span>
-                    <span class="badge bg-danger">TRANSFERENCIA DE DOMINIO DE PRIVADO A TERCEROS</span>
-                </div>
-                
-                <div class="accordion mt-4" id="introAccordion">
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="headingOne">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                <i class="fas fa-info-circle me-2"></i> Principio Clave: Formalización de la Transferencia
-                            </button>
-                        </h2>
-                        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#introAccordion">
-                            <div class="accordion-body">
-                                La transferencia de dominio requiere un instrumento formal. Su naturaleza (<span class="text-emphasis">Público</span> o <span class="text-emphasis">Privado</span>) dependerá de la institución beneficiaria y el valor de los bienes, siendo más estricta para <span class="text-emphasis">Entidades Públicas</span> (Ministerios, GADs, etc.).
-                            </div>
-                        </div>
-                    </div>
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="headingTwo">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                <i class="fas fa-exclamation-triangle me-2"></i> EXCEPCIÓN - BIENES VEHICULARES
-                            </button>
-                        </h2>
-                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#introAccordion">
-                            <div class="accordion-body">
-                                Este procedimiento aplica para bienes muebles (equipos, mobiliario, etc.) y <span class="text-emphasis">NO INCLUYE VEHÍCULOS</span>. Los vehículos poseen un procedimiento de Donación con requisitos notariales específicos ante la ANT (Escritura Pública) que deben tramitarse por separado y bajo su normativa especial.
-                                <a href="https://jaircruz1304.github.io/FIAS/Guia-Donacion-Vehiculos-FIAS.html" target="_blank" class="btn btn-sm btn-warning mt-2 fw-bold">
-                                    <i class="fas fa-car me-1"></i> Ver Guía de Donación Vehicular
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="nav-buttons">
-                    <div></div> <!-- Empty div for spacing -->
-                    <a href="#phase1" class="btn btn-primary">
-                        Siguiente: Fase 1 <i class="fas fa-arrow-right ms-1"></i>
-                    </a>
-                </div>
-            </section>
-
-            <section id="phase1" class="section-card" data-aos="fade-up">
-                <div class="section-header header-phase-1" data-bs-toggle="collapse" data-bs-target="#phase1Content">
-                    <h3 class="h5 mb-0 fw-bold text-primary">
-                        <span class="phase-number">1</span> FASE 1: Preparación y Aprobación Interna (Ruta Común)
-                    </h3>
-                    <span class="badge bg-primary">Pre-legal</span>
-                </div>
-                <div class="card-body p-4 collapse show" id="phase1Content">
-                    <p class="text-muted mb-4">Esta fase es indispensable para formalizar la voluntad de las partes <span class="text-emphasis">antes</span> de la transferencia legal, independientemente de la naturaleza del beneficiario (Público o Privado).</p>
-                    <div class="timeline">
-                        <div class="timeline-item">
-                            <div class="timeline-marker" style="border-color: var(--fias-dark);"></div>
-                            <div class="timeline-content">
-                                <span class="badge-role role-admin">Admin. Proyecto / Resp. Bienes</span>
-                                <h5>1. Identificación y Revisión de MOP</h5>
-                                <p>Se seleccionan los bienes no vehiculares para donación. Se prepara la documentación de respaldo para el Área Legal/DE:</p>
-                                <div class="doc-box">
-                                    <strong><i class="fas fa-folder-open"></i> Entregables al Área Legal/DE:</strong>
-                                    <ul class="mb-0 ps-3 small">
-                                        <li>Matriz de bienes a donar (Descripción, Nro. Serie/Inventario, Valor, Estado).</li>
-                                        <li>Borrador del Acta de Entrega-Recepción.</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="timeline-item">
-                            <div class="timeline-marker" style="border-color: var(--fias-dark);"></div>
-                            <div class="timeline-content">
-                                <span class="badge-role role-legal">Dirección Ejecutiva (DE)</span>
-                                <h5>2. Insinuación de Donación</h5>
-                                <p>La DE envía un oficio formal ("Insinuación de donación") al <span class="text-emphasis">Donatario</span> (Público o Privado), adjuntando el borrador de los documentos y la matriz de bienes.</p>
-                            </div>
-                        </div>
-
-                        <div class="timeline-item">
-                            <div class="timeline-marker" style="border-color: var(--fias-dark);"></div>
-                            <div class="timeline-content">
-                                <span class="badge-role role-bene-public">Donatario (Público/Privado)</span>
-                                <h5>3. Aceptación Oficial</h5>
-                                <p>El Donatario debe responder oficialmente al oficio de Insinuación con la <span class="text-emphasis">Carta de Aceptación expresa de la donación</span>.</p>
-                                <div class="alert alert-highlight p-3 rounded">
-                                    <span class="text-emphasis">Diferencia de Requisitos:</span> Los requisitos legales anexos (Cédula, Nombramiento, RUC) varían en rigurosidad, siendo más exigentes para la <span class="text-emphasis">Entidad Pública</span>.
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="timeline-item">
-                            <div class="timeline-marker" style="border-color: var(--fias-dark);"></div>
-                            <div class="timeline-content">
-                                <span class="badge-role role-legal-fias">Área Legal FIAS</span>
-                                <h5>4. Firma de Acta y Definición de Ruta Legal</h5>
-                                <p>Se suscribe el <span class="text-emphasis">Acta de Entrega-Recepción</span> por las partes y se define si se requiere <span class="text-emphasis">Protocolización Notarial (Público)</span> o si basta con el <span class="text-emphasis">Acta (Privado)</span>.</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="nav-buttons">
-                        <a href="#intro" class="btn btn-outline-primary">
-                            <i class="fas fa-arrow-left me-1"></i> Anterior: Introducción
-                        </a>
-                        <a href="#phase2" class="btn btn-primary">
-                            Siguiente: Fase 2 <i class="fas fa-arrow-right ms-1"></i>
-                        </a>
-                    </div>
-                </div>
-            </section>
-
-            <section id="phase2" class="section-card" data-aos="fade-up">
-                <div class="section-header header-phase-2" data-bs-toggle="collapse" data-bs-target="#phase2Content">
-                    <h3 class="h5 mb-0 fw-bold" style="color: var(--legal-public);">
-                        <span class="phase-number">2</span> FASE 2: Formalización Legal y Notarial
-                    </h3>
-                    <span class="badge bg-primary">Transferencia de Dominio (Diferenciada)</span>
-                </div>
-                <div class="card-body p-4 collapse show" id="phase2Content">
-                    <h4 class="fw-bold mb-4 text-center">Seleccione la Ruta de Formalización según el Beneficiario</h4>
-                    <div class="row">
-                        
-                        <div class="col-md-6">
-                            <div class="route-container header-phase-1-public h-100">
-                                <p class="route-title text-primary"><i class="fas fa-building me-2"></i> RUTA A: ENTIDAD PÚBLICA (Ministerio, GAD, Empresa Pública, etc.)</p>
-                                <div class="timeline">
-                                    <div class="timeline-item">
-                                        <div class="timeline-marker" style="border-color: var(--legal-public);"></div>
-                                        <div class="timeline-content">
-                                            <span class="badge-role role-notary">Notaría Pública</span>
-                                            <h5>1. Protocolización Notarial (Escritura Pública)</h5>
-                                            <p>El Área Legal prepara la <span class="text-emphasis">Minuta de Donación</span>. Los Representantes comparecen ante <span class="text-emphasis">Notaría Pública</span> para solicitar la protocolización (Instrumento Público). Este es el <span class="text-emphasis">título legal</span>.</p>
-                                            <div class="alert alert-danger p-2 rounded small mt-2">
-                                                <i class="fas fa-exclamation-triangle me-1"></i> <span class="text-emphasis">OBLIGATORIO</span> para que la entidad pública registre formalmente los bienes en su sistema de control patrimonial.
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="timeline-item">
-                                        <div class="timeline-marker" style="border-color: var(--fias-secondary);"></div>
-                                        <div class="timeline-content">
-                                            <span class="badge-role role-admin">Logística Donatario Público y FIAS</span>
-                                            <h5>2. Entrega Física Definitiva</h5>
-                                            <p>Entrega material del bien. Título de soporte: <span class="text-emphasis">Escritura Pública/Acuerdo Protocolizado</span>.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="route-container header-phase-1-private h-100">
-                                <p class="route-title" style="color: var(--legal-private);"><i class="fas fa-handshake me-2"></i> RUTA B: INSTITUCIÓN PRIVADA (ONG, Fundación, Empresa Privada)</p>
-                                <div class="timeline">
-                                    <div class="timeline-item">
-                                        <div class="timeline-marker timeline-marker-private" style="border-color: var(--legal-private);"></div>
-                                        <div class="timeline-content">
-                                            <span class="badge-role role-legal-fias">Área Legal FIAS</span>
-                                            <h5>1. Legalización por Instrumento Privado</h5>
-                                            <p>La transferencia de dominio se formaliza con el <span class="text-emphasis">Acta de Entrega-Recepción Definitiva</span> o un <span class="text-emphasis">Convenio de Donación</span> (Instrumento Privado) firmado por los representantes legales.</p>
-                                            <div class="alert alert-warning p-2 rounded small mt-2">
-                                                <i class="fas fa-info-circle me-1"></i> La Protocolización <span class="text-emphasis">NO ES REQUERIDA</span>; el Acta es el soporte del título legal para la contabilidad de ambas partes.
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="timeline-item">
-                                        <div class="timeline-marker timeline-marker-private" style="border-color: var(--fias-secondary);"></div>
-                                        <div class="timeline-content">
-                                            <span class="badge-role role-admin">Logística Donatario y FIAS</span>
-                                            <h5>2. Entrega Física Definitiva</h5>
-                                            <p>Entrega material del bien. Título de soporte: <span class="text-emphasis">Acta de Entrega-Recepción/Convenio Simple</span>.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="nav-buttons">
-                        <a href="#phase1" class="btn btn-outline-primary">
-                            <i class="fas fa-arrow-left me-1"></i> Anterior: Fase 1
-                        </a>
-                        <a href="#phase3" class="btn btn-primary">
-                            Siguiente: Fase 3 <i class="fas fa-arrow-right ms-1"></i>
-                        </a>
-                    </div>
-                </div>
-            </section>
-
-            <section id="phase3" class="section-card" data-aos="fade-up">
-                <div class="section-header header-phase-3" data-bs-toggle="collapse" data-bs-target="#phase3Content">
-                    <h3 class="h5 mb-0 fw-bold" style="color: var(--fias-primary);">
-                        <span class="phase-number">3</span> FASE 3: Registro Contable (Baja y Alta)
-                    </h3>
-                    <span class="badge bg-primary">Financiero (Ruta Común)</span>
-                </div>
-                <div class="card-body p-4 collapse show" id="phase3Content">
-                    <p class="text-muted mb-4">El proceso contable se realiza utilizando el instrumento legal definido en la Fase 2 como documento de respaldo.</p>
-                    <div class="d-flex mb-4">
-                        <div class="me-3 text-center" style="min-width: 60px;">
-                            <div class="bg-light rounded p-2 fw-bold text-secondary">Paso 1</div>
-                        </div>
-                        <div class="flex-grow-1">
-                            <h6 class="fw-bold"><span class="badge-role role-finance">FIAS (Contabilidad)</span> Baja Contable del Donante</h6>
-                            <p class="small mb-1">FIAS registra la <span class="text-emphasis">baja definitiva</span> de los activos en sus libros (egreso patrimonial), respaldada por el <span class="text-emphasis">Acuerdo Protocolizado (Ruta Pública)</span> o el <span class="text-emphasis">Acta de Entrega-Recepción (Ruta Privada)</span>.</p>
-                            <div class="text-success fw-bold small"><i class="fas fa-check"></i> Output FIAS: Comprobante Contable de Egreso por Donación.</div>
-                        </div>
-                    </div>
-                    
-                    <div class="d-flex mb-4">
-                        <div class="me-3 text-center" style="min-width: 60px;">
-                            <div class="bg-light rounded p-2 fw-bold text-secondary">Paso 2</div>
-                        </div>
-                        <div class="flex-grow-1">
-                            <h6 class="fw-bold"><span class="badge-role role-finance">Donatario (Contabilidad / Bienes)</span> Alta Contable</h6>
-                            <p class="small mb-1">El Donatario registra el <span class="text-emphasis">alta</span> de los bienes, utilizando el valor y el instrumento de donación (Escritura o Acta).</p>
-                        </div>
-                    </div>
-                    
-                    <div class="nav-buttons">
-                        <a href="#phase2" class="btn btn-outline-primary">
-                            <i class="fas fa-arrow-left me-1"></i> Anterior: Fase 2
-                        </a>
-                        <div></div> <!-- Empty div for spacing -->
-                    </div>
-                    
-                    <div class="text-center mt-5">
-                        <button class="btn btn-dark btn-lg" onclick="window.print()">
-                            <i class="fas fa-print me-2"></i> Imprimir Guía Operativa
-                        </button>
-                    </div>
-                </div>
-            </section>
-
-        </main>
+      </div>
     </div>
+  </div>
+</section>
 
-    <!-- Help Modal -->
-    <div class="modal fade" id="helpModal" tabindex="-1" aria-labelledby="helpModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="helpModalLabel"><i class="fas fa-question-circle me-2"></i> Ayuda de Navegación</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <h6>Características de esta guía:</h6>
-                    <ul>
-                        <li><strong>Barra de progreso:</strong> Muestra tu avance en la lectura de la guía</li>
-                        <li><strong>Navegación por secciones:</strong> Haz clic en los enlaces del menú lateral para ir directamente a cada sección</li>
-                        <li><strong>Acordeones:</strong> Algunas secciones se pueden expandir/contraer para mejor organización</li>
-                        <li><strong>Navegación entre fases:</strong> Usa los botones al final de cada sección para navegar entre fases</li>
-                        <li><strong>Efectos visuales:</strong> Pasa el cursor sobre elementos para ver efectos sutiles</li>
-                    </ul>
-                    <p class="text-muted small">Esta guía está optimizada para impresión. Usa el botón "Imprimir Guía Operativa" al final.</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Entendido</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Añadido: AOS Library para animaciones -->
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    
-    <script>
-        // Inicializar AOS (Animate On Scroll)
-        AOS.init({
-            duration: 800,
-            once: true,
-            offset: 100
-        });
-        
-        // Actualizar barra de progreso de lectura
-        window.addEventListener('scroll', function() {
-            const winHeight = window.innerHeight;
-            const docHeight = document.documentElement.scrollHeight;
-            const scrollTop = window.pageYOffset;
-            const scrollPercent = (scrollTop / (docHeight - winHeight)) * 100;
-            document.getElementById('readingProgress').style.width = scrollPercent + '%';
-        });
-        
-        // Resaltar sección activa en el menú
-        const sections = document.querySelectorAll('section');
-        const navLinks = document.querySelectorAll('.sidebar .nav-link');
-        
-        window.addEventListener('scroll', function() {
-            let current = '';
-            
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop;
-                const sectionHeight = section.clientHeight;
-                if (scrollY >= (sectionTop - 200)) {
-                    current = section.getAttribute('id');
-                }
-            });
-            
-            navLinks.forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('href') === '#' + current) {
-                    link.classList.add('active');
-                }
-            });
-        });
-        
-        // Tooltips de Bootstrap
-        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-        const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-            return new bootstrap.Tooltip(tooltipTriggerEl);
-        });
-        
-        // Navegación suave para enlaces internos
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                
-                const targetId = this.getAttribute('href');
-                if (targetId === '#') return;
-                
-                const targetElement = document.querySelector(targetId);
-                if (targetElement) {
-                    window.scrollTo({
-                        top: targetElement.offsetTop - 20,
-                        behavior: 'smooth'
-                    });
-                }
-            });
-        });
-    </script>
+<section id="documents" class="section">
+  <div class="section-head"><div><h3 class="section-title">Matriz documental de control · Ruta MAE</h3><p class="section-desc">Qué documento debe existir, quién lo produce y en qué momento. El convenio del proyecto se acredita como antecedente habilitante y no se duplica cuando ya satisface el requisito del MAE.</p></div><span class="pill">Expediente integrado</span></div>
+  <div class="panel table-wrap">
+    <table class="matrix">
+      <thead><tr><th>#</th><th>Documento / registro</th><th>Responsable principal</th><th>Condición</th><th>Control concreto</th></tr></thead>
+      <tbody>
+        <tr><td>00</td><td><b>Ficha de habilitación FIAS + convenio del proyecto</b></td><td>FIAS · Legal/Proyecto</td><td><span class="tag req">Previo</span></td><td>Citar cláusula que faculta donar al MAE. Si cubre la operación, NO suscribir un nuevo convenio.</td></tr>
+        <tr><td>1</td><td><b>Carta de Intención + matriz definitiva</b></td><td>FIAS</td><td><span class="tag req">Requerido MAE</span></td><td>Marca, modelo, serie, color, dimensiones, valor; referencia del proyecto/convenio.</td></tr>
+        <tr><td>2</td><td><b>Copia/extracto del Acuerdo o Convenio habilitante</b></td><td>FIAS</td><td><span class="tag req">Requerido MAE</span></td><td>Usar el convenio del proyecto existente cuando sea suficiente; adenda/nuevo instrumento solo si Legal determina insuficiencia.</td></tr>
+        <tr><td>3</td><td><b>Informe de necesidad</b></td><td>Unidad requirente MAE</td><td><span class="tag req">Requerido MAE</span></td><td>Necesidad, uso previsto, unidad beneficiaria, ubicación y recomendación de aceptación/negación.</td></tr>
+        <tr><td>4</td><td><b>Aceptación o negación oficial</b></td><td>Máxima autoridad/delegado MAE</td><td><span class="tag req">Requerido MAE</span></td><td>Identificar bienes aceptados y conservar evidencia de notificación a FIAS.</td></tr>
+        <tr><td>5</td><td><b>Informe técnico TICS</b></td><td>TICS MAE</td><td><span class="tag cond">Solo tecnológicos</span></td><td>Conciliar por marca/modelo/serie; si no aplica, dejar N.A.</td></tr>
+        <tr><td>6</td><td><b>Control jurídico de insinuación</b></td><td>FIAS · Legal</td><td><span class="tag cond">Solo ruta MAE / cuando aplique</span></td><td>No se confunde con carta de intención ni con protocolización del Acta.</td></tr>
+        <tr><td>7</td><td><b>Acta de Entrega-Recepción FIAS → MAE</b></td><td>FIAS + MAE</td><td><span class="tag req">Entrega</span></td><td>Identificar convenio/proyecto, bienes, series, cantidades, estado, valor, fecha y responsables. Sin protocolización automática.</td></tr>
+        <tr><td>8</td><td><b>Registro/movimiento eSBYE</b></td><td>MAE · Dirección Administrativa/Bienes</td><td><span class="tag ctrl">Registro</span></td><td>Ingreso para larga duración/control administrativo y movimiento aplicable a existencias.</td></tr>
+        <tr><td>9</td><td><b>Registros contables</b></td><td>MAE Financiera + FIAS Contabilidad</td><td><span class="tag ctrl">Registro</span></td><td>Alta/registro MAE y baja FIAS conciliadas con matriz, Acta y eSBYE.</td></tr>
+        <tr><td>10</td><td><b>Aseguramiento</b></td><td>MAE · Administrativa</td><td><span class="tag cond">Según bien/póliza</span></td><td>Incluir en cobertura o dejar N.A. documentado.</td></tr>
+        <tr><td>11</td><td><b>Codificación patrimonial</b></td><td>MAE · Bienes</td><td><span class="tag ctrl">Control</span></td><td>Vincular código/etiqueta con serie, registro y ubicación.</td></tr>
+        <tr><td>12</td><td><b>Acta al custodio final</b></td><td>MAE · Bienes/Custodio</td><td><span class="tag req">Cierre</span></td><td>Asignación individual, ubicación, fecha y cierre del expediente.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="roles" class="section">
+  <div class="section-head"><div><h3 class="section-title">Responsables · Ruta pública MAE</h3><p class="section-desc">Los roles de esta sección corresponden al flujo FIAS → MAE y se muestran por función para que la guía siga siendo válida aunque cambien nombres de servidores.</p></div><span class="pill">Gobernanza del flujo</span></div>
+  <div class="role-grid">
+    <article class="role-card"><div class="role-code">Donante</div><h4>FIAS</h4><p>Verifica el convenio del proyecto y sus facultades internas, consolida matriz, remite Carta de Intención, acredita el convenio habilitante, gestiona el control jurídico de la ruta MAE cuando corresponda, entrega los bienes y ejecuta su baja/cierre documental.</p></article>
+    <article class="role-card"><div class="role-code">Necesidad institucional</div><h4>Unidad requirente MAE</h4><p>Justifica el uso, necesidad y conveniencia de recibir los bienes; recomienda aceptación o negación.</p></article>
+    <article class="role-card"><div class="role-code">Decisión / competencia</div><h4>Máxima autoridad o delegado</h4><p>Emite la aceptación o negación. El Acuerdo 025 aportado documenta una delegación relevante a COGEAF para procesos de bienes.</p></article>
+    <article class="role-card"><div class="role-code">Control técnico</div><h4>TICS MAE</h4><p>Evalúa estado físico y tecnológico cuando la donación incorpora equipos tecnológicos.</p></article>
+    <article class="role-card"><div class="role-code">Administración patrimonial</div><h4>Dirección Administrativa / Bienes</h4><p>Gestiona acta, eSBYE, aseguramiento, codificación y asignación al custodio.</p></article>
+    <article class="role-card"><div class="role-code">Reconocimiento económico</div><h4>Dirección Financiera MAE</h4><p>Contabiliza la donación, transferencia o traspaso con los respaldos habilitantes.</p></article>
+  </div>
+</section>
+
+
+<section id="decisions" class="section">
+  <div class="section-head"><div><h3 class="section-title">Controles de decisión · antes de avanzar</h3><p class="section-desc">Gates concretos para evitar duplicidad documental y activar solo los requisitos que realmente corresponden.</p></div><span class="pill">Gates operativos</span></div>
+  <div class="decision-grid">
+    <article class="decision"><strong>¿El convenio del proyecto ya faculta donar al MAE?</strong><p>Revisar cláusula, alcance y vigencia. Si cubre la operación, anexarlo y continuar; no suscribir un nuevo convenio.</p><span class="yes">SÍ → acreditar convenio existente</span></article>
+    <article class="decision"><strong>¿El convenio es ambiguo o no cubre estos bienes?</strong><p>No duplicar por rutina. Legal define si procede adenda, certificación de alcance o instrumento específico.</p><span class="alert">SÍ → revisión Legal antes de continuar</span></article>
+    <article class="decision"><strong>¿Ruta MAE y cuantía activa control del art. 1417?</strong><p>Resolver el control de insinuación únicamente dentro de la ruta MAE de esta guía.</p><span class="alert">SÍ → Área Legal FIAS</span></article>
+    <article class="decision"><strong>¿Es un bien tecnológico?</strong><p>Activar informe TICS que permita identificar estado físico y tecnológico del equipo.</p><span class="yes">SÍ → TICS / NO → N.A.</span></article>
+    <article class="decision"><strong>¿Es larga duración o control administrativo?</strong><p>Acta de Entrega-Recepción + ingreso en eSBYE conforme al procedimiento MAE.</p><span class="yes">SÍ → Acta + eSBYE</span></article>
+    <article class="decision"><strong>¿Se pretende protocolizar el Acta?</strong><p>No tratar la protocolización como requisito automático para bienes muebles ordinarios. Exigir sustento especial antes de incorporarla al flujo.</p><span class="yes">SIN REQUISITO ESPECIAL → Acta simple suscrita</span></article>
+  </div>
+  <div class="note warn" style="margin-top:12px"><div class="note-icon">!</div><div><strong>Ruta privada</strong>La ruta privada simplificada de esta versión no incorpora insinuación notarial. Si se trata de inmuebles, vehículos u otros bienes sujetos a registro/solemnidad especial, el caso sale de la ruta simplificada y requiere revisión específica.</div></div>
+</section>
+
+<section id="legal" class="section">
+  <div class="section-head"><div><h3 class="section-title">Base documental y normativa incorporada</h3><p class="section-desc">Se distingue el procedimiento comunicado por el MAE, el convenio de proyecto como antecedente habilitante indicado por FIAS y los controles jurídicos aplicables a la ruta pública.</p></div><span class="pill">Trazabilidad normativa</span></div>
+  <div class="legal-grid">
+    <article class="legal blue"><div class="source">Documento rector del flujo MAE</div><h4>Memorando MAE-COGEAF-2026-0367-ME</h4><p>31 de marzo de 2026. Comunica carta intención, acuerdo/convenio, informe de necesidad, aceptación/negación, TICS, acta, eSBYE, contabilización, aseguramiento, codificación y entrega al custodio final.</p></article>
+    <article class="legal"><div class="source">Delegación en procesos de bienes</div><h4>Acuerdo Ministerial MEM-MEM-2022-0025-AM · Art. 8</h4><p>Documento aportado que contiene una delegación relevante a la Coordinación General Administrativa Financiera para procesos de bienes. Debe verificarse su vigencia/aplicabilidad al momento de firma.</p></article>
+    <article class="legal"><div class="source">Reglamento citado por MAE</div><h4>Bienes e Inventarios del Sector Público</h4><p>El memorando invoca, entre otros, el art. 41 para actas de entrega-recepción y el art. 131 para informes técnicos de determinados bienes.</p></article>
+    <article class="legal blue"><div class="source">Normativa civil externa</div><h4>Código Civil · Arts. 1416–1419</h4><p>Art. 1416: solemnidad de escritura pública e inscripción para bienes raíces. Art. 1417: control de insinuación sobre USD 800. Arts. 1419–1420: formalidades especiales para donaciones a plazo/condición o con causa onerosa.</p></article>
+    <article class="legal blue"><div class="source">Aceptación de la donación</div><h4>Código Civil · Arts. 1427–1428</h4><p>Controlan quién puede aceptar y la necesidad de notificar la aceptación al donante. La evidencia de notificación debe conservarse en el expediente.</p></article>
+    <article class="legal blue"><div class="source">Actuación notarial</div><h4>Ley Notarial · Art. 18 numeral 11</h4><p>Prevé la declaración juramentada de suficiencia de bienes con dos testigos. El Catálogo de Servicios Notariales del Consejo de la Judicatura mantiene la “Insinuación para la donación”. Para FIAS, por ser persona jurídica, la procedencia concreta debe ser validada por Legal.</p></article>
+    <article class="legal"><div class="source" style="color:#9a3412">Proceso privado conservado</div><h4>Ruta B · Entidades privadas</h4><p>Se mantiene el tratamiento simplificado: autorización/matriz, oferta, aceptación, convenio privado, Acta de Entrega-Recepción y cierre contable. Esta versión no incorpora insinuación notarial para privados.</p></article>
+  </div>
+  <div class="legal-links">
+    <a href="https://www.gob.ec/sites/default/files/regulations/2021-07/CODIGO_CIVIL.pdf" target="_blank" rel="noopener">Código Civil · fuente oficial</a>
+    <a href="https://www.gob.ec/sites/default/files/regulations/2018-10/Ley%20Notarial.pdf" target="_blank" rel="noopener">Ley Notarial · fuente oficial</a>
+    <a href="https://www.funcionjudicial.gob.ec/pesnot/catalogo-servicios-notariales/" target="_blank" rel="noopener">Consejo de la Judicatura · servicios notariales</a>
+  </div>
+  <div class="note info" style="margin-top:12px"><div class="note-icon">i</div><div><strong>Alcance jurídico</strong>Esta guía se concentra en bienes muebles ordinarios. Inmuebles, vehículos, bienes sujetos a registro especial, cargas o condiciones especiales deben tramitarse por una ruta jurídica específica. En la ruta MAE, cualquier duda sobre el control civil de insinuación de FIAS como persona jurídica debe resolverse antes de la entrega.</div></div>
+</section>
+
+<div class="footer-card">
+  <div><h3>Guía Enterprise · FIAS → MAE / Entidades Privadas</h3><p>Versión operativa v4: ruta MAE detallada, convenio del proyecto sin duplicidad y ruta privada simplificada sin insinuación notarial. Última actualización: 31-08-2026.</p></div>
+  <div class="footer-actions"><button class="btn secondary" id="openAllPrint">Preparar impresión</button><button class="btn" onclick="window.print()">Imprimir / Guardar PDF</button></div>
+</div>
+
+</div>
+</main>
+<script>
+const sidebar=document.getElementById('sidebar');
+document.getElementById('mobileToggle').addEventListener('click',()=>sidebar.classList.toggle('show'));
+document.querySelectorAll('.nav-link').forEach(a=>a.addEventListener('click',()=>sidebar.classList.remove('show')));
+
+function updateReadProgress(){
+  const h=document.documentElement;
+  const max=h.scrollHeight-h.clientHeight;
+  const pct=max>0?(h.scrollTop/max)*100:0;
+  document.getElementById('readProgress').style.width=pct+'%';
+}
+window.addEventListener('scroll',updateReadProgress,{passive:true});updateReadProgress();
+
+const navLinks=[...document.querySelectorAll('.nav-link')];
+const sections=[...document.querySelectorAll('section[id]')];
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){navLinks.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+e.target.id));}})
+},{rootMargin:'-25% 0px -65% 0px'});
+sections.forEach(s=>obs.observe(s));
+
+const steps=[...document.querySelectorAll('.step')];
+steps.forEach(step=>{
+  step.querySelector('.step-head').addEventListener('click',ev=>{
+    if(ev.target.closest('.done')) return;
+    step.classList.toggle('open');
+  });
+  const btn=step.querySelector('.done');
+  const key='fias-mae-v4-step-'+step.dataset.step;
+  if(localStorage.getItem(key)==='1') btn.classList.add('checked');
+  btn.addEventListener('click',()=>{
+    btn.classList.toggle('checked');
+    localStorage.setItem(key,btn.classList.contains('checked')?'1':'0');
+    updateTracker();
+  });
+});
+function updateTracker(){
+  const done=document.querySelectorAll('.done.checked').length;
+  const total=steps.length;
+  const pct=Math.round(done/total*100);
+  document.getElementById('trackerText').textContent=`${done} de ${total} controles marcados`;
+  document.getElementById('trackerPercent').textContent=pct+'%';
+}
+updateTracker();
+
+document.getElementById('resetChecks').addEventListener('click',()=>{
+  steps.forEach(step=>{step.querySelector('.done').classList.remove('checked');localStorage.removeItem('fias-mae-v4-step-'+step.dataset.step)});updateTracker();
+});
+let expanded=false;
+document.getElementById('expandAll').addEventListener('click',e=>{
+  expanded=!expanded;steps.forEach(s=>s.classList.toggle('open',expanded));e.currentTarget.textContent=expanded?'Contraer todo':'Expandir todo';
+});
+document.getElementById('openAllPrint').addEventListener('click',()=>{steps.forEach(s=>s.classList.add('open'));window.scrollTo({top:0,behavior:'smooth'});});
+
+document.getElementById('stepSearch').addEventListener('input',e=>{
+  const q=e.target.value.trim().toLowerCase();
+  steps.forEach(s=>{
+    const hay=(s.dataset.search+' '+s.innerText).toLowerCase();
+    s.classList.toggle('hidden-by-search',q && !hay.includes(q));
+  });
+});
+</script>
 </body>
 </html>

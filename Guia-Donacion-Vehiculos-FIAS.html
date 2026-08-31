@@ -1,588 +1,444 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manual Interactivo: Donación Vehicular FIAS</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-
-    <style>
-        :root {
-            --fias-primary: #2c7d32;      /* Verde Institucional */
-            --fias-secondary: #8bc34a;    /* Verde Claro */
-            --fias-light: #e8f5e9;        /* Fondo suave */
-            --fias-dark: #1b5e20;         /* Verde Oscuro */
-            --fias-accent: #ffc107;       /* Amarillo Alerta */
-            --text-main: #343a40;
-            --sidebar-width: 280px;
-        }
-
-        body {
-            background-color: #f4f6f9;
-            font-family: 'Inter', sans-serif;
-            color: var(--text-main);
-            overflow-x: hidden;
-        }
-
-        /* --- SIDEBAR NAVIGATION --- */
-        .sidebar {
-            position: fixed;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            z-index: 100;
-            padding: 0;
-            box-shadow: 4px 0 15px rgba(0,0,0,0.05);
-            width: var(--sidebar-width);
-            background: white;
-            display: flex;
-            flex-direction: column;
-            transition: transform 0.3s ease-in-out;
-        }
-
-        .sidebar-header {
-            background: white; /* Fondo blanco para el logo */
-            padding: 1.5rem;
-            text-align: center;
-            border-bottom: 1px solid #eee;
-        }
-
-        .logo-img {
-            max-width: 100%;
-            height: auto;
-            max-height: 80px;
-        }
-
-        .nav-link {
-            color: #555;
-            padding: 12px 20px;
-            font-weight: 500;
-            border-left: 4px solid transparent;
-            transition: all 0.3s;
-        }
-
-        .nav-link:hover, .nav-link.active {
-            background-color: var(--fias-light);
-            color: var(--fias-dark);
-            border-left-color: var(--fias-secondary);
-        }
-
-        .nav-link i { width: 25px; text-align: center; margin-right: 8px; }
-
-        /* Sidebar Footer (Credits) */
-        .sidebar-footer {
-            margin-top: auto;
-            padding: 1.5rem;
-            background: #f8f9fa;
-            border-top: 1px solid #eee;
-            font-size: 0.75rem;
-            color: #6c757d;
-        }
-
-        .sidebar-footer a {
-            color: var(--fias-primary);
-            text-decoration: none;
-            font-weight: 600;
-        }
-        
-        .sidebar-footer a:hover { text-decoration: underline; }
-
-        /* --- MAIN CONTENT --- */
-        .main-content {
-            margin-left: var(--sidebar-width);
-            padding: 2rem 3rem;
-            width: calc(100% - var(--sidebar-width));
-        }
-
-        @media (max-width: 992px) {
-            .sidebar { transform: translateX(-100%); }
-            .main-content { margin-left: 0; width: 100%; padding: 1rem; }
-            .sidebar.show { transform: translateX(0); }
-        }
-
-        /* --- CARDS & SECTIONS --- */
-        .section-card {
-            background: white;
-            border-radius: 12px;
-            border: none;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-            margin-bottom: 2rem;
-            overflow: hidden;
-        }
-
-        .section-header {
-            padding: 1.2rem 1.5rem;
-            border-bottom: 1px solid #eee;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        
-        .header-phase-0 { border-left: 6px solid #6c757d; }
-        .header-phase-1 { border-left: 6px solid var(--fias-secondary); }
-        .header-phase-2 { border-left: 6px solid var(--fias-primary); }
-        .header-phase-3 { border-left: 6px solid var(--fias-dark); }
-
-        /* --- TIMELINE VERTICAL --- */
-        .timeline {
-            position: relative;
-            padding-left: 30px;
-            margin-top: 20px;
-        }
-
-        .timeline::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 10px;
-            bottom: 0;
-            width: 3px;
-            background: #e9ecef;
-        }
-
-        .timeline-item {
-            position: relative;
-            margin-bottom: 2.5rem;
-        }
-
-        .timeline-marker {
-            position: absolute;
-            left: -39px;
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            background: white;
-            border: 4px solid var(--fias-primary);
-            z-index: 10;
-        }
-
-        .timeline-content h5 { font-weight: 700; color: var(--fias-dark); margin-bottom: 5px; }
-        
-        /* --- ROLE BADGES --- */
-        .badge-role {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-        }
-        .role-admin { background: #e3f2fd; color: #0d47a1; }
-        .role-legal { background: #f3e5f5; color: #4a148c; }
-        .role-finance { background: #e8f5e9; color: #1b5e20; }
-        .role-bene { background: #fff3cd; color: #856404; }
-
-        /* --- ALERTS & BOXES --- */
-        .doc-box {
-            background-color: #fafafa;
-            border: 1px dashed #ccc;
-            padding: 10px 15px;
-            border-radius: 6px;
-            margin-top: 10px;
-            font-size: 0.9rem;
-        }
-        .doc-box strong { color: #555; display: block; margin-bottom: 5px; }
-
-        .alert-highlight {
-            border-left: 4px solid var(--fias-accent);
-            background: #fffdeb;
-            color: #5a4a05;
-        }
-        
-        /* Toggle Switch Style */
-        .switch-container {
-            background: #f1f3f5;
-            padding: 5px;
-            border-radius: 30px;
-            display: inline-flex;
-            position: relative;
-            margin-bottom: 20px;
-        }
-        .switch-btn {
-            padding: 8px 20px;
-            border-radius: 25px;
-            border: none;
-            background: transparent;
-            color: #666;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .switch-btn.active {
-            background: white;
-            color: var(--fias-primary);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        
-        /* Animation */
-        .animate-fade {
-            animation: fadeIn 0.5s ease-in;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FIAS | Donación de Vehículos al MAE - Guía Operativa Enterprise</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --fias-primary:#2c7d32;
+      --fias-dark:#185b26;
+      --fias-secondary:#8bc34a;
+      --fias-soft:#edf7ee;
+      --mae-blue:#154f86;
+      --mae-soft:#edf5fc;
+      --ink:#1f2937;
+      --muted:#6b7280;
+      --line:#e5e7eb;
+      --warning:#f59e0b;
+      --danger:#b42318;
+      --success:#16794b;
+      --sidebar:300px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{font-family:'Inter',sans-serif;background:#f5f7fa;color:var(--ink);margin:0}
+    a{text-decoration:none}
+    .sidebar{position:fixed;inset:0 auto 0 0;width:var(--sidebar);background:#fff;border-right:1px solid var(--line);z-index:1000;display:flex;flex-direction:column;box-shadow:6px 0 25px rgba(31,41,55,.04);overflow-y:auto}
+    .brand{padding:24px 22px 18px;border-bottom:1px solid var(--line);text-align:center;background:#fff;position:sticky;top:0;z-index:2}
+    .brand img{max-height:72px;max-width:210px;width:auto}
+    .brand .route{font-size:.78rem;font-weight:800;letter-spacing:.08em;color:var(--fias-primary);margin-top:12px;text-transform:uppercase}
+    .brand .sub{font-size:.76rem;color:var(--muted);margin-top:4px}
+    .nav-wrap{padding:14px 12px}
+    .side-link{display:flex;gap:11px;align-items:center;padding:11px 12px;border-radius:9px;color:#4b5563;font-size:.9rem;font-weight:600;margin-bottom:4px}
+    .side-link i{width:22px;text-align:center;color:#738095}
+    .side-link:hover,.side-link.active{background:var(--fias-soft);color:var(--fias-dark)}
+    .side-link:hover i,.side-link.active i{color:var(--fias-primary)}
+    .sidebar-footer{margin-top:auto;padding:18px 20px;background:#f9fafb;border-top:1px solid var(--line);font-size:.73rem;color:var(--muted)}
+    .main{margin-left:var(--sidebar);padding:28px 38px 56px;max-width:1550px}
+    .mobile-head{display:none}
+    .hero{background:linear-gradient(135deg,#fff 0%,#f7fbf7 58%,#eef6fd 100%);border:1px solid var(--line);border-radius:20px;padding:34px 36px;margin-bottom:26px;box-shadow:0 10px 30px rgba(15,23,42,.04);position:relative;overflow:hidden}
+    .hero:after{content:"";position:absolute;width:260px;height:260px;border-radius:50%;right:-90px;top:-90px;background:rgba(44,125,50,.06)}
+    .hero-logo{height:54px;margin-bottom:18px}
+    .eyebrow{font-size:.75rem;font-weight:800;letter-spacing:.12em;color:var(--mae-blue);text-transform:uppercase}
+    .hero h1{font-size:2rem;font-weight:800;line-height:1.15;margin:8px 0 10px;max-width:900px}
+    .hero p{color:var(--muted);max-width:960px;margin-bottom:18px}
+    .pill{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 11px;font-size:.76rem;font-weight:700;margin:3px 5px 3px 0}
+    .pill.green i{color:var(--fias-primary)} .pill.blue i{color:var(--mae-blue)} .pill.orange i{color:#d97706}
+    .section{background:#fff;border:1px solid var(--line);border-radius:16px;margin-bottom:24px;box-shadow:0 5px 18px rgba(15,23,42,.035);overflow:hidden}
+    .section-head{padding:20px 24px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .section-head h2{font-size:1.08rem;margin:0;font-weight:800}
+    .section-head .label{font-size:.7rem;text-transform:uppercase;font-weight:800;letter-spacing:.08em;border-radius:999px;padding:6px 9px;background:#f3f4f6;color:#667085;white-space:nowrap}
+    .section-body{padding:24px}
+    .phase-green{border-left:5px solid var(--fias-primary)}
+    .phase-blue{border-left:5px solid var(--mae-blue)}
+    .phase-orange{border-left:5px solid var(--warning)}
+    .phase-dark{border-left:5px solid #344054}
+    .phase-success{border-left:5px solid var(--success)}
+    .callout{border-radius:12px;padding:16px 17px;margin:14px 0;border:1px solid var(--line);font-size:.88rem}
+    .callout strong{font-weight:800}
+    .callout.info{background:#f5faff;border-color:#d8e9f7}.callout.success{background:#f0faf5;border-color:#ccebdc}.callout.warn{background:#fff9eb;border-color:#f9e2ae}.callout.danger{background:#fff4f2;border-color:#f6d4cf}
+    .callout .title{display:flex;align-items:center;gap:8px;font-weight:800;margin-bottom:5px}
+    .timeline{position:relative;margin-left:9px;padding-left:31px}
+    .timeline:before{content:"";position:absolute;left:9px;top:7px;bottom:8px;width:2px;background:#e4e7ec}
+    .step{position:relative;padding:0 0 28px}
+    .step:last-child{padding-bottom:0}
+    .step-dot{position:absolute;left:-31px;top:2px;width:20px;height:20px;border-radius:50%;background:#fff;border:4px solid var(--fias-primary);z-index:1}
+    .step-dot.blue{border-color:var(--mae-blue)} .step-dot.orange{border-color:var(--warning)} .step-dot.dark{border-color:#344054}.step-dot.success{border-color:var(--success)}
+    .step-top{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:7px}
+    .step h3{font-size:1rem;font-weight:800;margin:0}
+    .role{font-size:.67rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em;padding:5px 8px;border-radius:6px}
+    .role.fias{background:#eaf5eb;color:#1e6b2d}.role.mae{background:#e9f2fb;color:#154f86}.role.legal{background:#f3e8ff;color:#6941c6}.role.fin{background:#e8f7ef;color:#18794e}.role.ext{background:#fff3e5;color:#b45309}
+    .step p{font-size:.88rem;color:#4b5563;margin:0 0 8px;line-height:1.55}
+    .output{display:flex;gap:7px;align-items:flex-start;margin-top:9px;font-size:.79rem;font-weight:700;color:var(--success)}
+    .docbox{margin-top:10px;background:#fafafa;border:1px dashed #cfd4dc;border-radius:10px;padding:12px 14px;font-size:.82rem}
+    .docbox .doc-title{font-weight:800;color:#475467;margin-bottom:6px}
+    .docbox ul{margin:0;padding-left:18px}.docbox li{margin:3px 0;color:#596273}
+    .decision{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+    .decision-card{border:1px solid var(--line);border-radius:12px;padding:15px;background:#fff}
+    .decision-card.yes{border-top:4px solid var(--success)}.decision-card.no{border-top:4px solid var(--warning)}
+    .decision-card h4{font-size:.88rem;font-weight:800;margin-bottom:7px}.decision-card p{font-size:.8rem;margin:0;color:#667085}
+    .matrix{width:100%;border-collapse:separate;border-spacing:0;font-size:.79rem;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+    .matrix th{background:#f8fafc;font-weight:800;color:#475467}.matrix td,.matrix th{padding:10px 11px;border-bottom:1px solid var(--line);vertical-align:top}.matrix tr:last-child td{border-bottom:none}
+    .gate{display:flex;gap:14px;align-items:flex-start;padding:15px;border:1px solid #dce3eb;border-radius:12px;background:#fbfcfd;margin-bottom:12px}
+    .gate .num{width:34px;height:34px;flex:0 0 34px;border-radius:9px;display:grid;place-items:center;background:#eef2f6;color:#344054;font-weight:800}.gate h4{font-size:.9rem;font-weight:800;margin:0 0 4px}.gate p{font-size:.8rem;color:#667085;margin:0}
+    .branch{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .branch-box{border:1px solid var(--line);border-radius:13px;padding:18px}.branch-box h3{font-size:.95rem;font-weight:800}.branch-box.public{background:#f7fbff;border-top:4px solid var(--mae-blue)}.branch-box.asset{background:#f7fcf8;border-top:4px solid var(--fias-primary)}
+    .checklist .form-check{padding:10px 12px 10px 36px;border-bottom:1px solid #eef0f3;margin:0}.checklist .form-check:last-child{border-bottom:0}.checklist label{font-size:.82rem;cursor:pointer}.checklist input{margin-top:.25rem}
+    .progress{height:9px;background:#eef1f4}.progress-bar{background:var(--fias-primary)}
+    .small-note{font-size:.74rem;color:#667085}
+    .source-list{font-size:.8rem;color:#596273}.source-list li{margin:6px 0}
+    .sticky-tools{position:fixed;right:24px;bottom:24px;z-index:999;display:flex;flex-direction:column;gap:9px}.tool-btn{width:48px;height:48px;border-radius:50%;border:0;display:grid;place-items:center;background:#fff;box-shadow:0 5px 16px rgba(0,0,0,.13);color:var(--fias-dark)}
+    @media(max-width:1050px){.sidebar{transform:translateX(-100%);transition:.25s}.sidebar.show{transform:translateX(0)}.main{margin-left:0;padding:18px}.mobile-head{display:flex;position:sticky;top:0;z-index:990;background:#fff;border-bottom:1px solid var(--line);padding:9px 14px;align-items:center;justify-content:space-between}.mobile-head img{height:37px}.decision,.branch{grid-template-columns:1fr}}
+    @media(max-width:640px){.hero{padding:24px 20px}.hero h1{font-size:1.55rem}.section-body{padding:18px}.section-head{padding:17px 18px}.main{padding:12px}.sticky-tools{right:14px;bottom:14px}}
+    @media print{.sidebar,.mobile-head,.sticky-tools{display:none!important}.main{margin:0;padding:0;max-width:none}.hero,.section{box-shadow:none;break-inside:avoid}.section{border:1px solid #bbb}.hero{border:1px solid #bbb}.form-check-input{display:none}}
+  </style>
 </head>
-<body data-bs-spy="scroll" data-bs-target="#sidebar-nav" data-bs-offset="100">
+<body data-bs-spy="scroll" data-bs-target="#sideNav" data-bs-offset="100">
+  <div class="mobile-head">
+    <img src="https://fias.org.ec/wp-content/uploads/2021/11/Logo_FIAS_web.png" alt="FIAS">
+    <button class="btn btn-sm btn-outline-success" onclick="document.querySelector('.sidebar').classList.toggle('show')"><i class="fa-solid fa-bars"></i> Menú</button>
+  </div>
 
-    <div class="d-lg-none p-3 bg-white shadow-sm sticky-top d-flex justify-content-between align-items-center">
-        <img src="https://raw.githubusercontent.com/jaircruz1304/FIAS/main/Logo_FIAS.png" alt="Logo FIAS" height="40">
-        <button class="btn btn-outline-success btn-sm" onclick="document.querySelector('.sidebar').classList.toggle('show')">
-            <i class="fas fa-bars"></i> Menú
-        </button>
+  <aside class="sidebar">
+    <div class="brand">
+      <img src="https://fias.org.ec/wp-content/uploads/2021/11/Logo_FIAS_web.png" alt="Logo oficial FIAS">
+      <div class="route">FIAS → MAE</div>
+      <div class="sub">Donación de vehículos · flujo especializado</div>
     </div>
-
-    <div class="wrapper d-flex">
-        
-        <nav class="sidebar" id="sidebar-nav">
-            <div class="sidebar-header">
-                <img src="https://raw.githubusercontent.com/jaircruz1304/FIAS/main/Logo_FIAS.png" alt="Logo FIAS" class="logo-img">
-            </div>
-            
-            <div class="nav flex-column py-3">
-                <a class="nav-link active" href="#intro"><i class="fas fa-home"></i> Inicio</a>
-                <a class="nav-link" href="#phase0"><i class="fas fa-clipboard-check"></i> 0. Preparación</a>
-                <a class="nav-link" href="#phase1"><i class="fas fa-file-signature"></i> 1. Legalización</a>
-                <a class="nav-link" href="#phase2"><i class="fas fa-car"></i> 2. Operativa (SRI/ANT)</a>
-                <a class="nav-link" href="#phase3"><i class="fas fa-flag-checkered"></i> 3. Cierre</a>
-                <div class="mt-4 px-4">
-                    <div class="alert alert-info small">
-                        <i class="fas fa-info-circle"></i> <strong>Soporte:</strong><br>
-                        Dudas contactar a Jair Cruz (jcruzg@fias.org.ec)
-                    </div>
-                </div>
-            </div>
-
-            <div class="sidebar-footer">
-                <p class="fw-bold mb-1 text-dark">FIAS - Fondo de Inversión Ambiental Sostenible</p>
-                <p class="mb-2">Versión 2.0 - 2025</p>
-                <p class="mb-0">Desarrollado por:<br> 
-                    <a href="https://www.linkedin.com/in/jair-cruz-gallegos-65998776/" target="_blank">
-                        <i class="fab fa-linkedin me-1"></i> Jair Cruz Gallegos
-                    </a>
-                </p>
-            </div>
-        </nav>
-
-        <main class="main-content">
-            
-            <section id="intro" class="mb-5">
-                <h1 class="fw-bold text-dark">Procedimiento de Transferencia de Vehículos</h1>
-                <p class="text-muted lead">Guía paso a paso para la donación de vehículos desde FIAS hacia instituciones beneficiarias</p>
-                <div class="d-flex gap-2 mt-3">
-                    <span class="badge bg-success">Vigente 2025</span>
-                    <span class="badge bg-secondary">Todos los Programas</span>
-                </div>
-            </section>
-
-            <section id="phase0" class="section-card">
-                <div class="section-header header-phase-0">
-                    <h3 class="h5 mb-0 fw-bold text-secondary"><i class="fas fa-list-ol me-2"></i> FASE 0: Preparación y Aprobación</h3>
-                    <span class="badge bg-secondary">Interna</span>
-                </div>
-                <div class="card-body p-4">
-                    <p class="text-muted mb-4">Esta fase es indispensable para formalizar la voluntad de las partes antes de cualquier trámite notarial.</p>
-
-                    <div class="timeline">
-                        <div class="timeline-item">
-                            <div class="timeline-marker"></div>
-                            <div class="timeline-content">
-                                <span class="badge-role role-admin">Admin. Proyecto / Resp. Bienes</span>
-                                <h5>1. Identificación y Revisión de MOP</h5>
-                                <p>Se seleccionan los vehículos para donación basándose en el <strong>Manual Operativo (MOP)</strong> del proyecto y/o los convenios vigentes.</p>
-                                <div class="doc-box">
-                                    <strong><i class="fas fa-folder-open"></i> Entregables digitales al Área Legal/DE mediante oficio/memorando del PyP:</strong>
-                                    <ul class="mb-0 ps-3 small">
-                                        <li>Matriz de bienes a donar (Marca, Modelo, Placa, Valor, Nro.Motor-Chasis)-Legalizada por el Admin. Proyecto / Resp. Bienes del FIAS o PyP.</li>
-                                        <li>Borrador del Acta de Entrega-Recepción.</li>
-                                        <li>Expediente digital de los bienes a donar {Facturas, Garantias(si estan vigentes)}.</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="timeline-item">
-                            <div class="timeline-marker"></div>
-                            <div class="timeline-content">
-                                <span class="badge-role role-admin">Dirección Ejecutiva (DE)</span>
-                                <h5>2. Insinuación de Donación</h5>
-                                <p>La DE envía un oficio formal ("Insinuación de donación") al potencial beneficiario a recibir la donación, adjuntando mediante link de acceso el borrador del acta, la matriz de bienes y el expediente.</p>
-                            </div>
-                        </div>
-
-                        <div class="timeline-item">
-                            <div class="timeline-marker"></div>
-                            <div class="timeline-content">
-                                <span class="badge-role role-bene">Institución Beneficiaria</span>
-                                <h5>3. Aceptación y Validación</h5>
-                                <p>El Beneficiario debe responder oficialmente al oficio de Insinuación.</p>
-                                <div class="alert alert-highlight p-3 rounded">
-                                    <strong>⚠️ Requisito Crítico:</strong> La respuesta debe incluir:
-                                    <ul class="mb-0 mt-1">
-                                        <li>Carta de Aceptación expresa de la donación.</li>
-                                        <li>Copia de Cédula y Nombramiento del Representante Legal.</li>
-<li>Delegación a tercero por parte del Representante legal para recibir donaciones(Si aplica).</li>
-                                        <li>RUC activo de la institución pública.</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="timeline-item">
-                            <div class="timeline-marker"></div>
-                            <div class="timeline-content">
-                                <span class="badge-role role-legal">Área Legal FIAS</span>
-                                <h5>4. Firma de Acta y Minuta</h5>
-                                <p>Se suscribe el Acta de Donación y Legal prepara la minuta para la notaría.</p>
-<div class="alert alert-highlight p-3 rounded">
-                                    <strong>Firmantes:</strong>
-                                    <ul class="mb-0 mt-1">
-                                        <li>Director ejecutivo FIAS</li>
-                                        <li>Gerente/coordinador de programa o proyecto FIAS</li>
-<li>Represenante legal de la institución beneficiaria o su delegado</li>
-                                        <li>(Otros: Director administrativo financiero/responsable de bienes/bodega/servicios generales de la entidad beneficiaria</li>
-                                    </ul>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section id="phase1" class="section-card">
-                <div class="section-header header-phase-1">
-                    <h3 class="h5 mb-0 fw-bold" style="color: var(--fias-secondary);"><i class="fas fa-gavel me-2"></i> FASE 1: Legalización</h3>
-                    <span class="badge bg-success">Notarial</span>
-                </div>
-                <div class="card-body p-4">
-                    <div class="row">
-                        <div class="col-md-7">
-                            <div class="timeline">
-                                <div class="timeline-item">
-                                    <div class="timeline-marker" style="border-color: var(--fias-secondary);"></div>
-                                    <div class="timeline-content">
-                                        <h5>Protocolización de la Escritura</h5>
-                                       <div class="alert alert-highlight p-3 rounded">
-                                    <strong>Gasto:</strong>
-                                    <ul class="mb-0 mt-1">
-                                       
-                                        <li>Debe ser asumido por la unidad requirente de la donación (Proyecto/Programa) , cabe indicar que cada copia de requerirla tiene un costo adicional.</li>
-                                    </ul>
-                                </div>
-
-                                    </div>
-                                </div>
-                                <div class="timeline-item">
-                                    <div class="timeline-marker" style="border-color: var(--fias-secondary);"></div>
-                                    <div class="timeline-content">
-                                        <h5>Entrega Física del Bien</h5>
-                                        <p>Entrega de llaves, vehículo y matrícula original al beneficiario.</p>
-                                        <span class="badge bg-danger">Punto de No Retorno</span> <small>Desde aquí, cualquier multa, sanción o infracción que se genere posteriormente será responsabilidad exclusiva de la institución beneficiaria..</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-5">
-                            <div class="card bg-danger text-white shadow-sm">
-                                <div class="card-body">
-                                    <h5 class="card-title"><i class="fas fa-exclamation-circle"></i> ¡AVISO!</h5>
-                                    <p class="card-text small">
-                                        Si la donación incluye varios vehículos, es <strong>OBLIGATORIO</strong> solicitar en Notaría:
-                                    </p>
-                                    <div class="bg-white text-danger p-2 rounded text-center fw-bold mb-2">
-                                        COPIAS CERTIFICADAS INDIVIDUALES
-                                    </div>
-                                    <p class="card-text small">
-                                        El SRI y la ANT procesan trámites <em>por placa</em>. Una sola escritura global no permitira continuar con el trámite administrativo.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section id="phase2" class="section-card">
-                <div class="section-header header-phase-2">
-                    <h3 class="h5 mb-0 fw-bold" style="color: var(--fias-primary);"><i class="fas fa-exchange-alt me-2"></i> FASE 2: Trámite Operativo (Responsabilidad del Beneficiario)</h3>
-                    <span class="badge bg-primary">SRI & ANT</span>
-                </div>
-                <div class="card-body p-4">
-                    
-                    <div class="text-center mb-4">
-                        <p class="mb-2 text-muted">Seleccione su ubicación para ver el flujo correspondiente:</p>
-                        <div class="switch-container shadow-sm">
-                            <button class="switch-btn active" onclick="switchView('central')" id="btn-central">
-                                <i class="fas fa-building"></i> Planta Central (Quito)
-                            </button>
-                            <button class="switch-btn" onclick="switchView('zonal')" id="btn-zonal">
-                                <i class="fas fa-map-marked-alt"></i> Desconcentrado
-                            </button>
-                        </div>
-                    </div>
-
-                    <div id="view-central" class="animate-fade">
-                        <h5 class="text-success border-bottom pb-2 mb-3">Flujo Planta Central</h5>
-                        
-                        <div class="d-flex mb-4">
-                            <div class="me-3 text-center" style="min-width: 60px;">
-                                <div class="bg-light rounded p-2 fw-bold text-secondary">Paso 1</div>
-                            </div>
-                            <div class="flex-grow-1">
-                                <h6 class="fw-bold"><span class="badge-role role-admin">Área de Servicios Institucionales</span> Solicita Trámite</h6>
-                                <p class="small mb-1">Elabora solicitud de Registro de Propietario y envía a la Dirección Financiera.</p>
-                                <div class="doc-box py-1 px-2 d-inline-block"><small>Adjunta: Escritura Protocolizada + Datos Vehículo</small></div>
-                            </div>
-                        </div>
-
-                        <div class="d-flex mb-4">
-                            <div class="me-3 text-center" style="min-width: 60px;">
-                                <div class="bg-light rounded p-2 fw-bold text-secondary">Paso 2</div>
-                            </div>
-                            <div class="flex-grow-1">
-                                <h6 class="fw-bold"><span class="badge-role role-finance">Dirección Financiera</span> Gestión SRI</h6>
-                                <p class="small mb-1">Realiza el registro de transferencia (Formulario 106/109) ante el SRI.</p>
-                                <div class="text-success fw-bold small"><i class="fas fa-check"></i> Output: Certificado de Transferencia de Dominio (Validez 30 días).</div>
-                            </div>
-                        </div>
-
-                         <div class="d-flex mb-4">
-                            <div class="me-3 text-center" style="min-width: 60px;">
-                                <div class="bg-light rounded p-2 fw-bold text-secondary">Paso 3</div>
-                            </div>
-                            <div class="flex-grow-1">
-                                <h6 class="fw-bold"><span class="badge-role role-admin">Área de Servicios</span> Gestión ANT/AMT</h6>
-                                <p class="small mb-1">Ejecuta el traspaso final.</p>
-                                <ul class="small text-muted mt-2">
-                                    <li><i class="fas fa-caret-right text-success"></i> Verificar RTV y Multas.</li>
-                                    <li><i class="fas fa-caret-right text-success"></i> Agendar turno para <strong>Improntas</strong> (Motor/Chasis).</li>
-                                    <li><i class="fas fa-caret-right text-success"></i> Ingresar carpeta en AMT.</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="view-zonal" class="d-none animate-fade">
-                        <h5 class="text-info border-bottom pb-2 mb-3">Flujo Desconcentrado / En Territorio</h5>
-                        <div class="alert alert-light border-info">
-                            <i class="fas fa-info-circle text-info"></i> El <strong>Administrador/responsable de Bienes</strong> coordina directamente con el <strong>Contador/Financiero</strong> de la entidad beneficiaria.
-                        </div>
-
-                        <div class="timeline">
-                            <div class="timeline-item">
-                                <div class="timeline-marker bg-info border-0"></div>
-                                <div class="timeline-content">
-                                    <span class="badge-role role-admin">Resp. Bienes</span>
-                                    <strong>Inicia el proceso:</strong> Envía copias certificadas del acta y documentos legales a su Dirección Contable asignada.
-                                </div>
-                            </div>
-                            <div class="timeline-item">
-                                <div class="timeline-marker bg-info border-0"></div>
-                                <div class="timeline-content">
-                                    <span class="badge-role role-finance">Dir. Contable / Financiera</span>
-                                    <strong>Trámite SRI:</strong> Gestiona (vía Quipux, Web o Ventanilla Zonal) el cambio de nombre tributario.
-                                    <br><em>Entrega: Certificado de Transferencia SRI.</em>
-                                </div>
-                            </div>
-                            <div class="timeline-item">
-                                <div class="timeline-marker bg-info border-0"></div>
-                                <div class="timeline-content">
-                                    <span class="badge-role role-admin">Resp. Bienes</span>
-                                    <strong>Trámite GAD/ANT:</strong> Con el papel del SRI, acude al GAD o Agencia de Tránsito local para:
-                                    <ol class="small mt-2">
-                                        <li>Obtener CUV (Certificado Único Vehicular).</li>
-                                        <li>Validar rodaje provincial.</li>
-                                        <li>Tomar improntas y recibir nueva matrícula.</li>
-                                    </ol>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </section>
-
-            <section id="phase3" class="section-card">
-                <div class="section-header header-phase-3">
-                    <h3 class="h5 mb-0 fw-bold text-dark"><i class="fas fa-check-double me-2"></i> FASE 3: Cierre y Archivo</h3>
-                </div>
-                <div class="card-body p-4">
-                    <div class="row g-4">
-                        <div class="col-md-6">
-                            <div class="p-3 bg-light rounded border h-100">
-                                <h6 class="fw-bold text-dark"><i class="fas fa-tags text-warning"></i> 1. Placas Estatales</h6>
-                                <p class="small text-muted">Si el vehículo pasa de uso privado a público, el Beneficiario debe entregar las placas viejas(en la ANT) y recibir las placas color naranja/oro.</p>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="p-3 bg-light rounded border h-100">
-                                <h6 class="fw-bold text-dark"><i class="fas fa-file-contract text-success"></i> 2. Baja Contable</h6>
-                                <p class="small text-muted">Con copia del acta de donación legalizada la unidad requiriente solicita la baja de activo fijo al area contable correspondiente</p>
-                                
-                                <p class="small text-muted">El expediente debe resposar en el area administrativa del Programa / Proyecto, para respaldo de auditoria.</p>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="p-3 bg-light rounded border h-100">
-                                <h6 class="fw-bold text-dark"><i class="fas fa-file-contract text-success"></i> 3. Cierre de donación</h6>
-                                <p class="small text-muted">El Beneficiario envía escaneada la <strong>Nueva Matrícula a su nombre</strong> con esto se cierra el tramite de donación. Cabe idicar el seguimiento obligatorioa para que el beneficiario haga el traspaso de dominio.</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="text-center mt-5">
-                        <button class="btn btn-dark btn-lg" onclick="window.print()">
-                            <i class="fas fa-print me-2"></i> Imprimir Guía Operativa
-                        </button>
-                    </div>
-                </div>
-            </section>
-
-        </main>
+    <nav class="nav-wrap" id="sideNav">
+      <a class="side-link active" href="#inicio"><i class="fa-solid fa-house"></i> Inicio</a>
+      <a class="side-link" href="#criterios"><i class="fa-solid fa-circle-info"></i> Criterios clave</a>
+      <a class="side-link" href="#fase0"><i class="fa-solid fa-folder-open"></i> 0. Habilitación FIAS</a>
+      <a class="side-link" href="#fase1"><i class="fa-solid fa-building-columns"></i> 1. Gestión MAE</a>
+      <a class="side-link" href="#fase2"><i class="fa-solid fa-file-signature"></i> 2. Formalización vehicular</a>
+      <a class="side-link" href="#fase3"><i class="fa-solid fa-landmark"></i> 3. SRI / ANT / GAD</a>
+      <a class="side-link" href="#fase4"><i class="fa-solid fa-box-archive"></i> 4. Registro patrimonial</a>
+      <a class="side-link" href="#cierre"><i class="fa-solid fa-flag-checkered"></i> 5. Cierre FIAS</a>
+      <a class="side-link" href="#check"><i class="fa-solid fa-list-check"></i> Checklist</a>
+      <a class="side-link" href="#base"><i class="fa-solid fa-scale-balanced"></i> Base documental</a>
+    </nav>
+    <div class="sidebar-footer">
+      <strong>FIAS · Fondo de Inversión Ambiental Sostenible</strong><br>
+      Guía operativa Enterprise · Vehículos<br>
+      Versión 4.0 · 2026
     </div>
+  </aside>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <script>
-        function switchView(view) {
-            const centralDiv = document.getElementById('view-central');
-            const zonalDiv = document.getElementById('view-zonal');
-            const btnCentral = document.getElementById('btn-central');
-            const btnZonal = document.getElementById('btn-zonal');
+  <main class="main">
+    <section class="hero" id="inicio">
+      <img class="hero-logo" src="https://fias.org.ec/wp-content/uploads/2021/11/Logo_FIAS_web.png" alt="FIAS">
+      <div class="eyebrow">Guía operativa especializada</div>
+      <h1>Donación de vehículos de FIAS al Ministerio del Ambiente y Energía (MAE)</h1>
+      <p>Flujo específico para vehículos. Integra las directrices internas comunicadas por el MAE con la formalización notarial y los trámites de cambio de propietario ante SRI, ANT y la autoridad de matriculación competente.</p>
+      <div>
+        <span class="pill green"><i class="fa-solid fa-car-side"></i> Solo vehículos</span>
+        <span class="pill blue"><i class="fa-solid fa-building-columns"></i> Receptor: MAE</span>
+        <span class="pill orange"><i class="fa-solid fa-stamp"></i> Legalización vehicular diferenciada</span>
+      </div>
+    </section>
 
-            if (view === 'central') {
-                centralDiv.classList.remove('d-none');
-                zonalDiv.classList.add('d-none');
-                btnCentral.classList.add('active');
-                btnZonal.classList.remove('active');
-            } else {
-                centralDiv.classList.add('d-none');
-                zonalDiv.classList.remove('d-none');
-                btnCentral.classList.remove('active');
-                btnZonal.classList.add('active');
-            }
+    <section class="section phase-orange" id="criterios">
+      <div class="section-head"><h2><i class="fa-solid fa-triangle-exclamation me-2"></i>Criterios que evitan duplicidad y errores</h2><span class="label">Leer primero</span></div>
+      <div class="section-body">
+        <div class="callout success">
+          <div class="title"><i class="fa-solid fa-file-shield"></i> Convenio del proyecto: requisito habilitante, no documento a duplicar</div>
+          Si el <strong>Convenio del Proyecto ya suscrito</strong> autoriza expresamente la entrega, transferencia o donación de los vehículos al MAE, se incorpora al expediente como antecedente habilitante y <strong>no se genera un segundo convenio de cooperación o donación con el mismo objeto</strong>. Legal únicamente deja constancia de la cláusula, vigencia, alcance y facultad aplicable. Si la cláusula no cubre la donación o es insuficiente, se define el instrumento complementario que corresponda.
+        </div>
+        <div class="callout info">
+          <div class="title"><i class="fa-solid fa-envelope-open-text"></i> Carta de intención ≠ actuación notarial</div>
+          La comunicación inicial a MAE se denomina <strong>Carta de intención de donación vehicular</strong>. No debe llamarse “insinuación” y <strong>no se notariza</strong>. La actuación notarial se aplica posteriormente al <strong>instrumento que respalda la transferencia vehicular</strong> para su registro ante SRI/ANT, según el canal y requisito aplicable.
+        </div>
+        <div class="callout warn">
+          <div class="title"><i class="fa-solid fa-car-burst"></i> Vehículos requieren control técnico propio</div>
+          Por tratarse de automotores, el expediente debe incorporar un <strong>informe técnico del estado físico/mecánico y documental</strong>, además de la verificación de placa, motor, chasis/VIN, matrícula, multas, gravámenes, revisión técnica cuando aplique y valores pendientes. Este control es distinto al informe TICS previsto para equipos tecnológicos.
+        </div>
+        <div class="callout danger">
+          <div class="title"><i class="fa-solid fa-ban"></i> El proceso no termina con la entrega física</div>
+          Para FIAS, el cierre debe ocurrir únicamente cuando exista evidencia del <strong>cambio registral del propietario</strong> y MAE haya completado el ingreso patrimonial, contable y asignación al custodio. La nueva matrícula o documento equivalente de registro constituye evidencia crítica de cierre vehicular.
+        </div>
+      </div>
+    </section>
+
+    <section class="section phase-green" id="fase0">
+      <div class="section-head"><h2>FASE 0 · Habilitación interna y expediente FIAS</h2><span class="label">Donante</span></div>
+      <div class="section-body">
+        <div class="timeline">
+          <div class="step">
+            <div class="step-dot"></div>
+            <div class="step-top"><span class="role fias">Programa / Proyecto FIAS</span><h3>0.1 Verificar la base que faculta la donación</h3></div>
+            <p>Revisar el convenio del proyecto, MOP, presupuesto/plan de cierre y demás documentos que regulen el destino final de los activos. Identificar expresamente la cláusula que permite donar o transferir los vehículos al MAE.</p>
+            <div class="decision">
+              <div class="decision-card yes"><h4><i class="fa-solid fa-check-circle text-success me-1"></i> El convenio ya faculta la donación</h4><p>Adjuntar convenio + extracto/cláusula habilitante + constancia de vigencia. Marcar como <strong>“requisito de convenio cumplido”</strong>. No duplicar instrumento.</p></div>
+              <div class="decision-card no"><h4><i class="fa-solid fa-triangle-exclamation text-warning me-1"></i> No existe o la cláusula es insuficiente</h4><p>Remitir a Legal para determinar adenda, autorización específica u otro instrumento habilitante antes de ofertar el vehículo al MAE.</p></div>
+            </div>
+            <div class="output"><i class="fa-solid fa-circle-check"></i>Salida: Certificación/nota interna de habilitación del proyecto.</div>
+          </div>
+
+          <div class="step">
+            <div class="step-dot"></div>
+            <div class="step-top"><span class="role fias">Responsable de Bienes / Adm. Proyecto</span><h3>0.2 Armar expediente individual por vehículo</h3></div>
+            <p>Cada vehículo debe poder ser identificado sin ambigüedad desde la primera comunicación hasta la matrícula final.</p>
+            <div class="docbox">
+              <div class="doc-title"><i class="fa-solid fa-folder-tree me-1"></i>Expediente mínimo por placa</div>
+              <ul>
+                <li>Matriz vehicular: marca, modelo, año, placa, color, clase/tipo, motor, chasis/VIN, kilometraje, valor contable y estado.</li>
+                <li>Matrícula vigente y documento de propiedad disponible.</li>
+                <li>Factura o documento de adquisición y valor histórico, cuando conste en archivo.</li>
+                <li>Certificación de no gravamen/prohibición o verificación registral disponible.</li>
+                <li>Consulta de multas, obligaciones SRI/ANT/GAD y revisión técnica vehicular cuando corresponda.</li>
+                <li>Informe técnico/mecánico y registro fotográfico.</li>
+              </ul>
+            </div>
+            <div class="output"><i class="fa-solid fa-circle-check"></i>Salida: Expediente digital + matriz maestra vehicular.</div>
+          </div>
+
+          <div class="step">
+            <div class="step-dot"></div>
+            <div class="step-top"><span class="role legal">Legal FIAS</span><h3>0.3 Control de titularidad y facultades de firma</h3></div>
+            <p>Confirmar que el vehículo se encuentre jurídicamente disponible para donar y que la Dirección Ejecutiva/representante autorizado tenga competencia conforme al marco interno y al convenio del proyecto.</p>
+            <div class="output"><i class="fa-solid fa-circle-check"></i>Salida: Visto bueno jurídico para iniciar gestión con MAE.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section phase-blue" id="fase1">
+      <div class="section-head"><h2>FASE 1 · Gestión de aceptación dentro del MAE</h2><span class="label">Directriz MAE</span></div>
+      <div class="section-body">
+        <div class="timeline">
+          <div class="step">
+            <div class="step-dot blue"></div>
+            <div class="step-top"><span class="role fias">Dirección Ejecutiva FIAS</span><h3>1.1 Emitir Carta de intención de donación vehicular</h3></div>
+            <p>Dirigir la carta al MAE identificando el proyecto, la base habilitante y el propósito de la donación. No usar el término “insinuación notarial”.</p>
+            <div class="docbox">
+              <div class="doc-title">La carta debe contener o adjuntar:</div>
+              <ul>
+                <li>Identificación de FIAS y del proyecto/programa.</li>
+                <li>Referencia al convenio vigente y cláusula que faculta la donación.</li>
+                <li>Finalidad pública que atenderán los vehículos.</li>
+                <li>Matriz por vehículo con marca, modelo, placa, año, motor, chasis/VIN, color, valor y estado.</li>
+                <li>Enlace al expediente digital y persona de contacto para coordinación.</li>
+              </ul>
+            </div>
+            <div class="output"><i class="fa-solid fa-circle-check"></i>Salida: Carta de intención ingresada oficialmente al MAE.</div>
+          </div>
+
+          <div class="step">
+            <div class="step-dot blue"></div>
+            <div class="step-top"><span class="role mae">Unidad requirente MAE</span><h3>1.2 Emitir informe de necesidad y pertinencia</h3></div>
+            <p>La unidad que utilizará los automotores debe justificar por qué requiere los vehículos, el uso institucional previsto, ubicación, capacidad operativa y aceptación técnica preliminar.</p>
+            <div class="docbox"><div class="doc-title">Contenido mínimo recomendado</div><ul><li>Necesidad institucional y relación con funciones/competencias.</li><li>Vehículos que se recomienda aceptar o rechazar, por placa.</li><li>Unidad de destino y custodio propuesto.</li><li>Capacidad para operación, mantenimiento y aseguramiento.</li></ul></div>
+            <div class="output"><i class="fa-solid fa-circle-check"></i>Salida: Informe de necesidad favorable o desfavorable.</div>
+          </div>
+
+          <div class="step">
+            <div class="step-dot blue"></div>
+            <div class="step-top"><span class="role mae">Dirección Administrativa / Bienes MAE</span><h3>1.3 Validación física y técnica de los vehículos</h3></div>
+            <p>Coordinar la constatación física de cada vehículo con FIAS. El número de placa, motor y chasis/VIN debe coincidir con la matriz, matrícula y documento de donación. Registrar el estado real y observaciones.</p>
+            <div class="docbox"><div class="doc-title">Control técnico vehicular</div><ul><li>Estado mecánico y operativo.</li><li>Carrocería, accesorios y llaves.</li><li>Motor y chasis/VIN legibles y coincidentes.</li><li>Kilometraje.</li><li>Matrícula, RTV y obligaciones pendientes.</li><li>Registro fotográfico.</li></ul></div>
+            <div class="output"><i class="fa-solid fa-circle-check"></i>Salida: Informe/acta de constatación técnica para decisión de aceptación.</div>
+          </div>
+
+          <div class="step">
+            <div class="step-dot blue"></div>
+            <div class="step-top"><span class="role mae">Máxima Autoridad / Delegado competente MAE</span><h3>1.4 Emitir aceptación formal de la donación</h3></div>
+            <p>Con base en el informe de necesidad y la validación técnica, la autoridad competente del MAE emite la respuesta de aceptación o negación. La aceptación debe identificar los vehículos por placa y notificarse a FIAS.</p>
+            <div class="callout info"><div class="title"><i class="fa-solid fa-user-shield"></i>Control de delegación</div>El expediente debe incorporar el instrumento de delegación vigente que habilita a la autoridad que acepta y suscribe los documentos de transferencia a favor del MAE.</div>
+            <div class="output"><i class="fa-solid fa-circle-check"></i>Salida: Oficio/resolución de aceptación formal notificada a FIAS.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section phase-orange" id="fase2">
+      <div class="section-head"><h2>FASE 2 · Formalización jurídica y notarial del vehículo</h2><span class="label">Título vehicular</span></div>
+      <div class="section-body">
+        <div class="timeline">
+          <div class="step">
+            <div class="step-dot orange"></div>
+            <div class="step-top"><span class="role legal">Legal FIAS + MAE</span><h3>2.1 Confirmar que el convenio del proyecto no debe duplicarse</h3></div>
+            <p>Si el convenio existente ya contiene la facultad de transferir/donar al MAE, su función en este proceso es <strong>habilitante</strong>. No se prepara otro convenio de cooperación por el mismo objeto. El expediente citará número, fecha, partes, vigencia y cláusula aplicable.</p>
+            <div class="output"><i class="fa-solid fa-circle-check"></i>Salida: “Convenio habilitante verificado / requisito cumplido”.</div>
+          </div>
+
+          <div class="step">
+            <div class="step-dot orange"></div>
+            <div class="step-top"><span class="role legal">Área Legal FIAS</span><h3>2.2 Preparar el instrumento específico de donación vehicular</h3></div>
+            <p>Este instrumento es distinto del convenio del proyecto. Su finalidad es documentar la transferencia de dominio del automotor para los registros SRI/ANT. Debe identificar inequívocamente cada vehículo y la aceptación del MAE.</p>
+            <div class="docbox"><div class="doc-title">Contenido mínimo</div><ul><li>Comparecientes y facultades.</li><li>Antecedente: convenio del proyecto y carta/aceptación MAE.</li><li>Manifestación expresa de donación y aceptación.</li><li>Detalle por placa, motor, chasis/VIN, marca, modelo, año, color y valor.</li><li>Estado del vehículo y entrega de matrícula/llaves/accesorios.</li><li>Destino público y ausencia de contraprestación.</li><li>Responsabilidad de completar el cambio registral.</li></ul></div>
+          </div>
+
+          <div class="step">
+            <div class="step-dot orange"></div>
+            <div class="step-top"><span class="role ext">Notaría</span><h3>2.3 Legalización notarial del documento de transferencia</h3></div>
+            <p><strong>No se notariza la carta de intención.</strong> Para el trámite vehicular, el documento de donación debe presentarse en la forma aceptada por SRI/ANT. Los requisitos vigentes del SRI para sociedades contemplan, en donaciones, documento protocolizado o con reconocimiento de firmas; para trámite electrónico señalan “Escritura de Donación”.</p>
+            <div class="callout warn"><div class="title"><i class="fa-solid fa-copy"></i>Varios vehículos</div>Organizar el expediente por placa y obtener las copias certificadas/legalizadas necesarias para que cada trámite SRI/ANT pueda procesarse individualmente. No depender de un único ejemplar físico para todos los automotores.</div>
+            <div class="output"><i class="fa-solid fa-circle-check"></i>Salida: Instrumento de donación vehicular legalizado + copias por placa.</div>
+          </div>
+
+          <div class="step">
+            <div class="step-dot orange"></div>
+            <div class="step-top"><span class="role fias">FIAS + MAE</span><h3>2.4 Suscribir Acta de Entrega-Recepción de vehículos</h3></div>
+            <p>El acta deja constancia de la entrega material. Debe reflejar exactamente la misma identificación de los vehículos del instrumento de donación y de la matriz maestra.</p>
+            <div class="docbox"><div class="doc-title">Registrar en el acta</div><ul><li>Fecha, lugar y hora de entrega.</li><li>Placa, motor, chasis/VIN, kilometraje y estado.</li><li>Llaves, matrícula original, accesorios y documentos entregados.</li><li>Observaciones y pendientes, si los hubiere.</li><li>Responsables FIAS y MAE que entregan/reciben.</li></ul></div>
+            <div class="output"><i class="fa-solid fa-circle-check"></i>Salida: Acta de Entrega-Recepción firmada.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section phase-dark" id="fase3">
+      <div class="section-head"><h2>FASE 3 · Cambio de propietario: SRI → ANT / GAD de matriculación</h2><span class="label">Por placa</span></div>
+      <div class="section-body">
+        <div class="callout info"><div class="title"><i class="fa-solid fa-route"></i>Secuencia operativa</div>Una vez formalizada la donación, el beneficiario debe completar el registro tributario y de tránsito. Cada vehículo se procesa individualmente. Los requisitos pueden variar por autoridad de matriculación territorial; antes de presentar carpeta se debe validar la lista vigente.</div>
+
+        <div class="timeline">
+          <div class="step">
+            <div class="step-dot dark"></div>
+            <div class="step-top"><span class="role fin">MAE · Dirección Financiera</span><h3>3.1 Control tributario previo de la donación</h3></div>
+            <p>Verificar la obligación declarativa y el tratamiento tributario aplicable a la adquisición a título gratuito. El SRI señala que, cuando corresponde, la declaración de donaciones debe cumplirse antes de la inscripción o celebración del acto pertinente. <strong>No presumir automáticamente pago o exoneración:</strong> documentar el criterio aplicado al MAE.</p>
+            <div class="output"><i class="fa-solid fa-circle-check"></i>Salida: Declaración/constancia tributaria o criterio documentado de tratamiento aplicable.</div>
+          </div>
+
+          <div class="step">
+            <div class="step-dot dark"></div>
+            <div class="step-top"><span class="role fin">MAE · Financiero / responsable autorizado</span><h3>3.2 Registrar la transferencia de dominio en el SRI</h3></div>
+            <p>Ingresar el trámite de transferencia de dominio vehicular en el canal vigente para sociedades. Para donaciones, adjuntar el soporte notarial correspondiente y los requisitos generales/específicos del SRI.</p>
+            <div class="callout success"><div class="title"><i class="fa-solid fa-building-circle-check"></i>Ruta alternativa que debe verificarse antes de presentar</div>El SRI mantiene además una ficha específica para <strong>vehículos transferidos a nombre de una institución pública</strong>, en la que se contempla Acta de Entrega-Recepción o certificado de la institución que posee el vehículo. Legal/Financiero MAE debe confirmar cuál categoría corresponde al caso concreto FIAS → MAE y usar una sola ruta, evitando documentos contradictorios.</div>
+            <div class="output"><i class="fa-solid fa-circle-check"></i>Salida: Vehículo registrado a favor del MAE en la base tributaria / constancia SRI.</div>
+          </div>
+
+          <div class="step">
+            <div class="step-dot dark"></div>
+            <div class="step-top"><span class="role mae">MAE · Servicios Institucionales / Bienes</span><h3>3.3 Preparar carpeta para ANT / autoridad de matriculación</h3></div>
+            <div class="docbox"><div class="doc-title">Control previo por placa</div><ul><li>Soporte de donación debidamente legalizado.</li><li>Acta de Entrega-Recepción.</li><li>Registro de propietario/constancia SRI.</li><li>Matrícula original.</li><li>Identificación y habilitantes de los comparecientes/delegados.</li><li>Valores pendientes de ANT/GAD/SRI verificados y gestionados.</li><li>RTV vigente cuando sea exigible.</li><li>Improntas de motor y chasis/VIN según procedimiento de la autoridad competente.</li></ul></div>
+          </div>
+
+          <div class="step">
+            <div class="step-dot dark"></div>
+            <div class="step-top"><span class="role ext">ANT / GAD competente</span><h3>3.4 Registrar el cambio de dominio y emitir nueva matrícula</h3></div>
+            <p>Completar el proceso de matriculación del vehículo a nombre del MAE, incluida la verificación de improntas y la sustitución/regularización de placas cuando corresponda al régimen de vehículo estatal.</p>
+            <div class="output"><i class="fa-solid fa-circle-check"></i>Salida crítica: Nueva matrícula / registro vehicular a nombre del MAE.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section phase-success" id="fase4">
+      <div class="section-head"><h2>FASE 4 · Registro patrimonial, contable y asignación dentro del MAE</h2><span class="label">Directriz MAE</span></div>
+      <div class="section-body">
+        <div class="branch">
+          <div class="branch-box asset">
+            <h3><i class="fa-solid fa-boxes-stacked me-2"></i>Rama patrimonial MAE</h3>
+            <div class="gate"><div class="num">1</div><div><h4>Ingreso en eSBYE</h4><p>Dirección Administrativa registra el vehículo como bien de larga duración/control administrativo con la información del acta y soporte jurídico.</p></div></div>
+            <div class="gate"><div class="num">2</div><div><h4>Contabilización</h4><p>Dirección Financiera reconoce el ingreso por donación/transferencia conforme al valor y soporte aplicable.</p></div></div>
+            <div class="gate"><div class="num">3</div><div><h4>Aseguramiento</h4><p>Gestionar inclusión del vehículo en la póliza institucional desde la fecha de recepción/registro que corresponda.</p></div></div>
+            <div class="gate"><div class="num">4</div><div><h4>Codificación patrimonial</h4><p>Asignar código institucional y vincularlo con placa, motor, chasis/VIN y ubicación.</p></div></div>
+            <div class="gate"><div class="num">5</div><div><h4>Custodio final</h4><p>Suscribir el acta interna de entrega al custodio/servidor responsable de uso.</p></div></div>
+          </div>
+
+          <div class="branch-box public">
+            <h3><i class="fa-solid fa-car-on me-2"></i>Rama registral vehicular</h3>
+            <div class="gate"><div class="num">A</div><div><h4>SRI</h4><p>Propietario actualizado / constancia de transferencia.</p></div></div>
+            <div class="gate"><div class="num">B</div><div><h4>ANT / GAD</h4><p>Cambio de dominio, improntas y matrícula.</p></div></div>
+            <div class="gate"><div class="num">C</div><div><h4>Placa estatal</h4><p>Regularizar la placa/tipo de servicio aplicable a vehículo institucional público.</p></div></div>
+            <div class="gate"><div class="num">D</div><div><h4>Archivo del expediente por placa</h4><p>Integrar documentos MAE, SRI, ANT/GAD, matrícula y póliza.</p></div></div>
+          </div>
+        </div>
+        <div class="callout warn mt-3"><div class="title"><i class="fa-solid fa-code-branch"></i>Ambas ramas deben cerrarse</div>No considerar finalizado el proceso porque el vehículo ya esté físicamente en MAE. El cierre requiere tanto la <strong>regularización patrimonial interna</strong> como el <strong>cambio registral vehicular</strong>.</div>
+      </div>
+    </section>
+
+    <section class="section phase-green" id="cierre">
+      <div class="section-head"><h2>FASE 5 · Baja FIAS, seguimiento y cierre del expediente</h2><span class="label">Cierre</span></div>
+      <div class="section-body">
+        <div class="timeline">
+          <div class="step"><div class="step-dot success"></div><div class="step-top"><span class="role fin">Contabilidad FIAS</span><h3>5.1 Baja contable del vehículo</h3></div><p>Registrar la baja utilizando el instrumento de donación, el Acta de Entrega-Recepción y los soportes definidos por el área financiera. La placa y el código de activo deben coincidir con el expediente.</p><div class="output"><i class="fa-solid fa-circle-check"></i>Salida: Comprobante contable de baja.</div></div>
+          <div class="step"><div class="step-dot success"></div><div class="step-top"><span class="role fias">Programa / Proyecto FIAS</span><h3>5.2 Seguimiento obligatorio al cambio de matrícula</h3></div><p>Solicitar al MAE la evidencia de matrícula/registro a su nombre. Mantener seguimiento hasta recibirla; la entrega física no sustituye este control.</p><div class="output"><i class="fa-solid fa-circle-check"></i>Salida: Nueva matrícula o documento equivalente archivado en FIAS.</div></div>
+          <div class="step"><div class="step-dot success"></div><div class="step-top"><span class="role fias">Administrativo FIAS</span><h3>5.3 Cerrar expediente individual por vehículo</h3></div><p>Ordenar el expediente por placa: habilitación del convenio, matriz, carta de intención, aceptación MAE, informes, documento notarial, acta, SRI, ANT/GAD, matrícula, baja contable y correspondencia de seguimiento.</p><div class="output"><i class="fa-solid fa-circle-check"></i>Salida: Expediente cerrado y disponible para auditoría.</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="check">
+      <div class="section-head"><h2><i class="fa-solid fa-list-check me-2"></i>Checklist de control por vehículo</h2><span class="label" id="progressLabel">0%</span></div>
+      <div class="section-body">
+        <div class="progress mb-3"><div class="progress-bar" id="progressBar" style="width:0%"></div></div>
+        <div class="checklist border rounded-3 overflow-hidden" id="checklist">
+          <div class="form-check"><input class="form-check-input ck" type="checkbox" id="c1"><label class="form-check-label" for="c1">Convenio del proyecto revisado y cláusula de donación a MAE identificada.</label></div>
+          <div class="form-check"><input class="form-check-input ck" type="checkbox" id="c2"><label class="form-check-label" for="c2">Expediente técnico y matriz maestra por placa completos.</label></div>
+          <div class="form-check"><input class="form-check-input ck" type="checkbox" id="c3"><label class="form-check-label" for="c3">Carta de intención de donación vehicular enviada al MAE.</label></div>
+          <div class="form-check"><input class="form-check-input ck" type="checkbox" id="c4"><label class="form-check-label" for="c4">Informe de necesidad de la unidad requirente MAE.</label></div>
+          <div class="form-check"><input class="form-check-input ck" type="checkbox" id="c5"><label class="form-check-label" for="c5">Constatación/informe técnico vehicular realizado.</label></div>
+          <div class="form-check"><input class="form-check-input ck" type="checkbox" id="c6"><label class="form-check-label" for="c6">Aceptación formal de la autoridad/delegado competente del MAE.</label></div>
+          <div class="form-check"><input class="form-check-input ck" type="checkbox" id="c7"><label class="form-check-label" for="c7">Instrumento específico de donación vehicular preparado y legalizado notarialmente.</label></div>
+          <div class="form-check"><input class="form-check-input ck" type="checkbox" id="c8"><label class="form-check-label" for="c8">Acta de Entrega-Recepción firmada y documentos/llaves entregados.</label></div>
+          <div class="form-check"><input class="form-check-input ck" type="checkbox" id="c9"><label class="form-check-label" for="c9">Control tributario y registro de transferencia en SRI completados.</label></div>
+          <div class="form-check"><input class="form-check-input ck" type="checkbox" id="c10"><label class="form-check-label" for="c10">ANT/GAD: cambio de dominio, improntas y matrícula completados.</label></div>
+          <div class="form-check"><input class="form-check-input ck" type="checkbox" id="c11"><label class="form-check-label" for="c11">Ingreso eSBYE y contabilización MAE.</label></div>
+          <div class="form-check"><input class="form-check-input ck" type="checkbox" id="c12"><label class="form-check-label" for="c12">Aseguramiento, codificación y custodio final MAE.</label></div>
+          <div class="form-check"><input class="form-check-input ck" type="checkbox" id="c13"><label class="form-check-label" for="c13">Baja contable FIAS.</label></div>
+          <div class="form-check"><input class="form-check-input ck" type="checkbox" id="c14"><label class="form-check-label" for="c14">Nueva matrícula/registro a nombre del MAE recibido por FIAS.</label></div>
+          <div class="form-check"><input class="form-check-input ck" type="checkbox" id="c15"><label class="form-check-label" for="c15">Expediente final por placa cerrado y archivado.</label></div>
+        </div>
+        <p class="small-note mt-2 mb-0">El avance se guarda localmente en este navegador.</p>
+      </div>
+    </section>
+
+    <section class="section" id="base">
+      <div class="section-head"><h2><i class="fa-solid fa-scale-balanced me-2"></i>Base documental utilizada para estructurar el flujo</h2><span class="label">Control normativo</span></div>
+      <div class="section-body">
+        <ul class="source-list">
+          <li><strong>MAE-COGEAF-2026-0367-ME (31-03-2026):</strong> directrices para carta de intención, acuerdo/convenio, informe de necesidad, aceptación, acta de entrega-recepción, eSBYE, contabilización, aseguramiento, codificación y custodio final.</li>
+          <li><strong>Acuerdo Ministerial 025 – delegaciones:</strong> revisar el instrumento vigente de delegación para actos de transferencia/traspaso de bienes a favor del Ministerio.</li>
+          <li><strong>SRI – Transferencias de dominio / Sociedades:</strong> requisitos generales y específicos para donaciones y transferencias a instituciones públicas.</li>
+          <li><strong>ANT / autoridad de matriculación:</strong> requisitos vigentes para transferencia de dominio por donación, legalización del soporte, improntas y emisión de matrícula.</li>
+          <li><strong>Convenio del Proyecto FIAS:</strong> antecedente habilitante principal para determinar la facultad de donar los vehículos al MAE; debe verificarse en cada proyecto antes de iniciar.</li>
+        </ul>
+        <div class="callout info mb-0"><div class="title"><i class="fa-solid fa-rotate"></i>Regla de actualización</div>Antes de presentar trámites ante SRI, ANT o GAD, verificar la ficha vigente del canal utilizado. Los requisitos operativos de matriculación pueden variar por territorio y actualización del sistema.</div>
+      </div>
+    </section>
+  </main>
+
+  <div class="sticky-tools">
+    <button class="tool-btn" title="Imprimir" onclick="window.print()"><i class="fa-solid fa-print"></i></button>
+    <button class="tool-btn" title="Ir arriba" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="fa-solid fa-arrow-up"></i></button>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const checks=[...document.querySelectorAll('.ck')];
+    const key='fias-mae-vehiculos-check-v4';
+    function updateProgress(){
+      const done=checks.filter(c=>c.checked).length;
+      const pct=Math.round((done/checks.length)*100);
+      document.getElementById('progressBar').style.width=pct+'%';
+      document.getElementById('progressLabel').textContent=pct+'%';
+      localStorage.setItem(key,JSON.stringify(checks.map(c=>c.checked)));
+    }
+    try{
+      const saved=JSON.parse(localStorage.getItem(key)||'[]');
+      checks.forEach((c,i)=>{if(typeof saved[i]==='boolean')c.checked=saved[i]});
+    }catch(e){}
+    checks.forEach(c=>c.addEventListener('change',updateProgress));
+    updateProgress();
+
+    const links=[...document.querySelectorAll('.side-link')];
+    const sections=links.map(a=>document.querySelector(a.getAttribute('href'))).filter(Boolean);
+    const obs=new IntersectionObserver(entries=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting){
+          links.forEach(a=>a.classList.remove('active'));
+          const a=links.find(x=>x.getAttribute('href')==='#'+e.target.id);
+          if(a)a.classList.add('active');
         }
-    </script>
+      })
+    },{rootMargin:'-30% 0px -60% 0px'});
+    sections.forEach(s=>obs.observe(s));
+  </script>
 </body>
-
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

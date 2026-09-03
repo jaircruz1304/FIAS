@@ -70,6 +70,9 @@
     .btn-warning{background:#fff7df;color:#986500;border:1px solid #fbdc85}
     .btn-danger{background:#ffebeb;color:var(--red-700);border:1px solid #ffc8c8}
     .btn-sm{padding:7px 10px;font-size:.86rem;border-radius:10px}
+    .doc-actions{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+    .doc-actions .btn{min-height:34px}
+    .doc-note{margin-top:8px;color:var(--gray-600);font-size:.85rem}
     .hero-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:18px;margin-bottom:18px}
     .hero-panel{position:relative;overflow:hidden;background:linear-gradient(135deg,#083421,#1f7a38 66%,#5ad77d);color:#fff;border-radius:var(--radius-xl);padding:24px;box-shadow:var(--shadow)}
     .hero-panel:after{content:"";position:absolute;right:-80px;top:-80px;width:260px;height:260px;background:rgba(255,255,255,.14);border-radius:50%}
@@ -294,7 +297,7 @@
               </div>
             </div>
             <div class="maintenance-gallery" id="maintCards"></div>
-            <div class="table-wrap"><table class="data-table" id="maintTable"><thead><tr><th>Detalle</th><th>ID</th><th>Fecha</th><th>Placa</th><th>Orden</th><th>Factura</th><th>Km</th><th>Tipo</th><th>Proveedor/Agencia</th><th class="num">Total</th><th>Estado</th><th>Control</th></tr></thead><tbody></tbody></table></div>
+            <div class="table-wrap"><table class="data-table" id="maintTable"><thead><tr><th>Detalle</th><th>ID</th><th>Fecha</th><th>Placa</th><th>Orden</th><th>Factura</th><th>Documentos</th><th>Km</th><th>Tipo</th><th>Proveedor/Agencia</th><th class="num">Total</th><th>Estado</th><th>Control</th></tr></thead><tbody></tbody></table></div>
           </div>
         </div>
       </section>
@@ -388,6 +391,8 @@
           <div class="field"><label>Kilometraje</label><input id="fKm" type="number" min="0"></div>
           <div class="field"><label>Orden reparación</label><input id="fOrder" placeholder="A340859"></div>
           <div class="field"><label>Factura</label><input id="fInvoice" placeholder="005-502-000119306"></div>
+          <div class="field"><label>Enlace factura SharePoint</label><input id="fInvoiceLink" type="url" placeholder="https://...sharepoint.com/..."></div>
+          <div class="field"><label>Enlace soporte / expediente del mantenimiento</label><input id="fDocumentLink" type="url" placeholder="https://...sharepoint.com/..."></div>
           <div class="field"><label>Tipo mantenimiento</label><select id="fType"><option>Preventivo</option><option>Correctivo</option><option>Repuestos/Materiales</option><option>Neumáticos</option><option>Accesorios</option><option>Emergente</option></select></div>
           <div class="field"><label>Categoría</label><input id="fCategory" placeholder="Mantenimiento por kilometraje"></div>
           <div class="field"><label>Agencia / proveedor</label><input id="fAgency" placeholder="CASABACA S.A. / CARRION"></div>
@@ -1010,7 +1015,8 @@
     function vehicles(){ return data('vehicles'); }
     function details(){ return data('maintenanceDetail'); }
     function invoices(){ return data('invoices'); }
-    function consistencies(){ return data('consistency'); }
+    function consistencies(){ return data('consistency').filter(r => r && r.ID_Control); }
+    function documents(){ return data('documents').filter(r => r && r.ID_Documento); }
     function ocrRows(){ return data('ocr'); }
 
     function renderAll(){
@@ -1078,6 +1084,50 @@
       );
     }
 
+    function vehicleForMaintenance(r){
+      return vehicles().find(v =>
+        (r.ID_Activo && v.ID_Activo === r.ID_Activo) ||
+        (r.Placa && v.Placa === r.Placa)
+      ) || {};
+    }
+
+    function safeExternalUrl(value){
+      const raw = String(value || '').trim();
+      if(!raw) return '';
+      try{
+        const u = new URL(raw);
+        return (u.protocol === 'https:' || u.protocol === 'http:') ? u.href : '';
+      }catch(_){ return ''; }
+    }
+
+    function documentLinksFor(r){
+      const inv = invoiceFor(r);
+      const vehicle = vehicleForMaintenance(r);
+      const invoiceDoc = documents().find(d => d.Link_SharePoint && (
+        (r.Factura_Nro && String(d.Observaciones || '').includes(r.Factura_Nro)) ||
+        (inv.Archivo_Origen && d.Archivo_Origen === inv.Archivo_Origen)
+      )) || {};
+      const expedienteDoc = documents().find(d => d.Link_SharePoint && normalizeText(d.Tipo_Documento).includes('expediente')) || {};
+      const invoiceUrl = safeExternalUrl(inv.Link_SharePoint || invoiceDoc.Link_SharePoint || (r.Factura_Nro ? r.Link_Documento_SharePoint : ''));
+      const expedienteUrl = safeExternalUrl(vehicle.Link_Carpeta_SharePoint || expedienteDoc.Link_SharePoint);
+      const supportUrl = safeExternalUrl(r.Link_Documento_SharePoint);
+      return {
+        invoiceUrl,
+        expedienteUrl,
+        supportUrl: supportUrl && supportUrl !== invoiceUrl ? supportUrl : ''
+      };
+    }
+
+    function documentActionHtml(r, compact=true){
+      const {invoiceUrl, expedienteUrl, supportUrl} = documentLinksFor(r);
+      const actions = [];
+      if(invoiceUrl) actions.push(`<a class="btn btn-sm btn-ghost doc-link" href="${escapeHtml(invoiceUrl)}" target="_blank" rel="noopener noreferrer"><i class="bi bi-receipt"></i> Factura</a>`);
+      if(expedienteUrl) actions.push(`<a class="btn btn-sm btn-ghost doc-link" href="${escapeHtml(expedienteUrl)}" target="_blank" rel="noopener noreferrer"><i class="bi bi-folder2-open"></i> Expediente</a>`);
+      if(supportUrl) actions.push(`<a class="btn btn-sm btn-ghost doc-link" href="${escapeHtml(supportUrl)}" target="_blank" rel="noopener noreferrer"><i class="bi bi-file-earmark-text"></i> Soporte</a>`);
+      if(!actions.length) return '<span class="muted">Sin enlace</span>';
+      return `<div class="doc-actions${compact ? ' compact' : ''}">${actions.join('')}</div>`;
+    }
+
     function maintenanceSearchBlob(r){
       const det = maintenanceDetailsFor(r).map(d => [d.Tipo_Item,d.Descripcion,d.Categoria_Item,d.Observaciones,d.Fuente,d.Valor_Total].join(' ')).join(' ');
       const inv = invoiceFor(r);
@@ -1085,7 +1135,7 @@
       return normalizeText([
         r.ID_Mantenimiento,r.ID_Activo,r.Placa,r.Orden_Reparacion,r.Factura_Nro,r.Fecha_Recepcion,r.Fecha_Facturacion_Emision,r.Km,r.Tipo_Mantenimiento,r.Categoria,r.Agencia,r.Asesor_Vendedor,
         r.Ingreso_Observacion,r.Cierre_Observacion,r.Estado_Registro,r.Validacion_Km,r.Validacion_Duplicado,r.Validacion_Cuadre_Factura,r.Observacion_Control,r.Total_Control,
-        inv.Proveedor,inv.RUC_Proveedor,inv.Clave_Acceso,inv.Forma_Pago,inv.Observaciones,det,invDet
+        inv.Proveedor,inv.RUC_Proveedor,inv.Clave_Acceso,inv.Forma_Pago,inv.Observaciones,inv.Link_SharePoint,r.Link_Documento_SharePoint,det,invDet
       ].join(' '));
     }
 
@@ -1165,8 +1215,8 @@
       body.innerHTML = rows.map(r => {
         const control = rowControlStatus(r);
         const detailCount = maintenanceDetailsFor(r).length || invoiceDetailsFor(r).length;
-        return `<tr class="interactive-row" data-id="${escapeHtml(r.ID_Mantenimiento)}"><td><button class="btn btn-sm btn-primary btn-view-maint" type="button" data-id="${escapeHtml(r.ID_Mantenimiento)}"><i class="bi bi-eye"></i> Ver ${detailCount ? '('+detailCount+')' : ''}</button></td><td class="mono">${highlight(r.ID_Mantenimiento)}</td><td>${formatDate(r.Fecha_Facturacion_Emision || r.Fecha_Recepcion)}</td><td><strong>${highlight(r.Placa)}</strong></td><td class="mono">${highlight(r.Orden_Reparacion)}</td><td class="mono">${highlight(r.Factura_Nro || '—')}</td><td class="num">${integer(r.Km)}</td><td>${pill(r.Tipo_Mantenimiento, typePill(r.Tipo_Mantenimiento))}</td><td>${highlight(r.Agencia || '')}</td><td class="num"><strong>${money(r.Total_Control || r.Total_Con_IVA || r.Subtotal_Sin_IVA)}</strong></td><td>${pill(r.Estado_Registro, statusPill(r.Estado_Registro))}</td><td>${control}</td></tr>`;
-      }).join('') || `<tr><td colspan="12"><div class="empty-state"><i class="bi bi-inbox"></i><br>No existen registros con los filtros aplicados. Pruebe con términos como aceite, filtro, frenos, llanta, orden o factura.</div></td></tr>`;
+        return `<tr class="interactive-row" data-id="${escapeHtml(r.ID_Mantenimiento)}"><td><button class="btn btn-sm btn-primary btn-view-maint" type="button" data-id="${escapeHtml(r.ID_Mantenimiento)}"><i class="bi bi-eye"></i> Ver ${detailCount ? '('+detailCount+')' : ''}</button></td><td class="mono">${highlight(r.ID_Mantenimiento)}</td><td>${formatDate(r.Fecha_Facturacion_Emision || r.Fecha_Recepcion)}</td><td><strong>${highlight(r.Placa)}</strong></td><td class="mono">${highlight(r.Orden_Reparacion)}</td><td class="mono">${highlight(r.Factura_Nro || '—')}</td><td>${documentActionHtml(r,true)}</td><td class="num">${integer(r.Km)}</td><td>${pill(r.Tipo_Mantenimiento, typePill(r.Tipo_Mantenimiento))}</td><td>${highlight(r.Agencia || '')}</td><td class="num"><strong>${money(r.Total_Control || r.Total_Con_IVA || r.Subtotal_Sin_IVA)}</strong></td><td>${pill(r.Estado_Registro, statusPill(r.Estado_Registro))}</td><td>${control}</td></tr>`;
+      }).join('') || `<tr><td colspan="13"><div class="empty-state"><i class="bi bi-inbox"></i><br>No existen registros con los filtros aplicados. Pruebe con términos como aceite, filtro, frenos, llanta, orden o factura.</div></td></tr>`;
       $$('.btn-view-maint', body).forEach(btn => btn.addEventListener('click', e => { e.stopPropagation(); openMaintenanceDetail(btn.dataset.id); }));
       $$('.interactive-row', body).forEach(row => row.addEventListener('dblclick', () => openMaintenanceDetail(row.dataset.id)));
     }
@@ -1182,6 +1232,7 @@
           <div class="maint-card-head"><div><div class="maint-title">${highlight(r.Placa || 'N/D')} · ${highlight(r.Orden_Reparacion || 'Sin orden')}</div><div class="maint-sub">${formatDate(r.Fecha_Facturacion_Emision || r.Fecha_Recepcion)} · ${highlight(r.Factura_Nro || 'Sin factura')}</div></div>${pill(r.Tipo_Mantenimiento || r.Categoria, typePill(r.Tipo_Mantenimiento || r.Categoria))}</div>
           <div class="maint-metrics"><div class="mini-metric"><span>Km</span><strong>${integer(r.Km)}</strong></div><div class="mini-metric"><span>Total</span><strong>${money(r.Total_Control || r.Total_Con_IVA || r.Subtotal_Sin_IVA)}</strong></div><div class="mini-metric"><span>Detalle</span><strong>${all.length}</strong></div></div>
           <div class="item-snippets">${snippets}</div>
+          <div class="mt-2">${documentActionHtml(r,true)}</div>
           <button class="btn btn-sm btn-ghost btn-view-maint-card" type="button" data-id="${escapeHtml(r.ID_Mantenimiento)}"><i class="bi bi-layout-text-window"></i> Abrir ficha detallada</button>
         </article>`;
       }).join('') || `<div class="empty-state" style="grid-column:1/-1"><i class="bi bi-search"></i><br>No hay tarjetas para mostrar con los filtros aplicados.</div>`;
@@ -1733,6 +1784,8 @@
       $('fKm').value = e.km || '';
       $('fOrder').value = e.orden || '';
       $('fInvoice').value = e.factura || '';
+      $('fInvoiceLink').value = '';
+      $('fDocumentLink').value = '';
       $('fType').value = e.tipoMantenimiento || 'Preventivo';
       $('fCategory').value = e.categoria || 'Mantenimiento por factura electrónica';
       $('fAgency').value = [e.proveedor, e.agencia].filter(Boolean).join(' / ');
@@ -1779,13 +1832,15 @@
       const parts = numberValue($('fParts').value);
       const iva = numberValue($('fIva').value);
       const total = numberValue($('fTotal').value) || (labor + parts + iva);
+      const subtotalSinIva = round2(total - iva);
+      const documentLink = safeExternalUrl($('fDocumentLink') ? $('fDocumentLink').value : '');
       return {
         ID_Mantenimiento:id, ID_Activo: vehicle.ID_Activo || '', Placa: vehicle.Placa || '', Orden_Reparacion: order, Factura_Nro: invoice, Fecha_Recepcion: date, Fecha_Facturacion_Emision: invDate,
         Año: Number(date.slice(0,4)), Mes: date.slice(0,7), Km: km, Km_Anterior: prevKm, Delta_Km: km - prevKm,
         Tipo_Mantenimiento: $('fType').value, Categoria: $('fCategory').value.trim(), Agencia: $('fAgency').value.trim(), Asesor_Vendedor: $('fAdvisor').value.trim(),
         Ingreso_Observacion: $('fIngress').value.trim(), Cierre_Observacion: $('fClose').value.trim(), Subtotal_Mano_Obra: labor, Subtotal_Repuestos: parts,
-        Subtotal_Sin_IVA: labor + parts, IVA: iva, Total_Con_IVA: total, Total_Control: total, Fuente_Principal: 'Registro HTML Enterprise', Archivo_Origen: state.lastOcr ? state.lastOcr.archivo : '', Hash_Documento: state.lastOcr ? state.lastOcr.hash : '',
-        Estado_Registro: 'REGISTRADO_HTML', Validacion_Km: km >= prevKm ? 'OK' : 'ERROR_KM_DECREMENTO', Validacion_Duplicado: hasDuplicate(vehicle.Placa, order, invoice) ? 'DUPLICADO_POTENCIAL' : 'OK', Validacion_Cuadre_Factura: invoice ? 'PENDIENTE_VALIDACION' : 'SIN_FACTURA', Requiere_Revision: 'SI', Fecha_Carga: nowIso(), Usuario_Carga: state.account ? state.account.username : 'usuario', Version_Registro: 1, Link_Documento_SharePoint: '', Observacion_Control: 'Registro generado desde plataforma HTML Enterprise.'
+        Subtotal_Sin_IVA: subtotalSinIva, IVA: iva, Total_Con_IVA: total, Total_Control: total, Fuente_Principal: 'Registro HTML Enterprise', Archivo_Origen: state.lastOcr ? state.lastOcr.archivo : '', Hash_Documento: state.lastOcr ? state.lastOcr.hash : '',
+        Estado_Registro: 'REGISTRADO_HTML', Validacion_Km: km >= prevKm ? 'OK' : 'ERROR_KM_DECREMENTO', Validacion_Duplicado: hasDuplicate(vehicle.Placa, order, invoice) ? 'DUPLICADO_POTENCIAL' : 'OK', Validacion_Cuadre_Factura: invoice ? 'PENDIENTE_VALIDACION' : 'SIN_FACTURA', Requiere_Revision: 'SI', Fecha_Carga: nowIso(), Usuario_Carga: state.account ? state.account.username : 'usuario', Version_Registro: 1, Link_Documento_SharePoint: documentLink, Observacion_Control: 'Registro generado desde plataforma HTML Enterprise.'
       };
     }
 
@@ -1811,6 +1866,8 @@
       if(rec.Factura_Nro && !/^\d{3}-\d{3}-\d{9}$/.test(rec.Factura_Nro)) warnings.push({level:'Medio',title:'Formato factura',text:'La factura debería cumplir 000-000-000000000.'});
       if(rec.Km < rec.Km_Anterior) warnings.push({level:'Alto',title:'Kilometraje inconsistente',text:`El km ingresado ${integer(rec.Km)} es menor al anterior ${integer(rec.Km_Anterior)}.`});
       if(rec.Validacion_Duplicado !== 'OK') warnings.push({level:'Alto',title:'Duplicado potencial',text:'Existe coincidencia de orden o factura para este vehículo.'});
+      if($('fInvoiceLink').value.trim() && !safeExternalUrl($('fInvoiceLink').value)) warnings.push({level:'Medio',title:'Enlace de factura inválido',text:'Use una URL http/https válida de SharePoint.'});
+      if($('fDocumentLink').value.trim() && !safeExternalUrl($('fDocumentLink').value)) warnings.push({level:'Medio',title:'Enlace de expediente inválido',text:'Use una URL http/https válida de SharePoint.'});
       $('formWarnings').innerHTML = renderAlertList(warnings, 'Formulario validado sin observaciones críticas.');
       return warnings;
     }
@@ -1823,7 +1880,7 @@
         Subtotal_Mano_Obra: e.subtotalManoObra || rec.Subtotal_Mano_Obra || 0, Subtotal_Repuestos: e.subtotalRepuestos || rec.Subtotal_Repuestos || 0,
         Subtotal_Sin_IVA: e.subtotalSinIva || rec.Subtotal_Sin_IVA || 0, IVA_15: e.iva || rec.IVA || 0, Total_Factura: e.total || rec.Total_Con_IVA || 0,
         Forma_Pago: e.formaPago || 'OTROS CON UTILIZACION DEL SISTEMA FINANCIERO', Estado_Validacion: 'PRE_REGISTRO_VALIDADO_USUARIO', Archivo_Origen: e.archivo || rec.Archivo_Origen || '',
-        Hash_SHA256: e.hash || rec.Hash_Documento || '', Link_SharePoint: '', Fecha_Carga: nowIso(), Usuario_Carga: state.account ? state.account.username : 'usuario',
+        Hash_SHA256: e.hash || rec.Hash_Documento || '', Link_SharePoint: safeExternalUrl($('fInvoiceLink') ? $('fInvoiceLink').value : ''), Fecha_Carga: nowIso(), Usuario_Carga: state.account ? state.account.username : 'usuario',
         Observaciones: `Factura mapeada automáticamente a mantenimiento ${rec.ID_Mantenimiento}. Validar detalle contable si aplica.`
       };
     }
@@ -1933,6 +1990,8 @@
             <div class="detail-cell"><span>Clave de acceso</span><strong class="mono">${escapeHtml(inv.Clave_Acceso || '—')}</strong></div>
             <div class="detail-cell"><span>IVA / Total factura</span><strong>${money(inv.IVA_15 || r.IVA)} · ${money(inv.Total_Factura || r.Total_Con_IVA)}</strong></div>
           </div>
+          <div class="mt-3">${documentActionHtml(r,false)}</div>
+          <div class="doc-note">Los enlaces se abren en una pestaña nueva. SharePoint puede solicitar autenticación institucional.</div>
           <div class="mt-3">${renderDetailTable(invDet, 'invoice')}</div>
         </div>`;
       $('maintenanceDetailModal').classList.add('open');

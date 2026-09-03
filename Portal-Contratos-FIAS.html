@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#123b32" />
 <meta name="color-scheme" content="light" />
 <meta name="description" content="Portal institucional FIAS para consulta directa de la base de contratos almacenada en Microsoft 365." />
-<title>FIAS | Portal Institucional de Contratos</title>
+<title>FIAS | Portal Enterprise de Inteligencia Contractual</title>
 <link rel="preconnect" href="https://alcdn.msauth.net" crossorigin>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <style>
@@ -93,10 +93,38 @@ button,input,select{font:inherit}button{cursor:pointer}a{color:inherit}
 .loading{position:fixed;inset:0;z-index:100;background:rgba(248,250,249,.88);display:none;align-items:center;justify-content:center;flex-direction:column;gap:12px;backdrop-filter:blur(5px)}.loading.open{display:flex}.spinner{width:42px;height:42px;border:4px solid #dcebe4;border-top-color:var(--forest-2);border-radius:50%;animation:spin .9s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}.loading strong{font-size:.88rem;color:var(--forest)}
 .toast-zone{position:fixed;right:16px;bottom:16px;z-index:120;display:grid;gap:8px}.toast{width:min(390px,calc(100vw - 32px));background:#fff;border:1px solid var(--line);border-left:4px solid #489575;border-radius:12px;box-shadow:var(--shadow);padding:11px 12px}.toast.warn{border-left-color:#d49a32}.toast.bad{border-left-color:#c24a46}.toast strong{display:block;font-size:.78rem}.toast p{margin:3px 0 0;color:var(--muted);font-size:.7rem;line-height:1.4}
 
-@media(max-width:1180px){.metric-strip{grid-template-columns:repeat(3,1fr)}.intro{grid-template-columns:1fr}.source-meta{grid-template-columns:repeat(4,1fr)}.explorer{grid-template-columns:270px minmax(0,1fr)}.search-row{grid-template-columns:1fr 150px}.search-row .page-size-field{display:none}}
-@media(max-width:900px){.masthead-inner{width:min(100% - 20px);min-height:70px}.brand-divider,.brand-title span,.session-pill{display:none}.brand-zone img{width:120px}.workspace{width:calc(100% - 20px);padding-top:15px}.metric-strip{grid-template-columns:1fr 1fr}.explorer{grid-template-columns:1fr}.filter-panel{position:static}.filter-body{grid-template-columns:1fr 1fr}.filter-actions{grid-template-columns:1fr 1fr}.year-brief{display:none}.search-row{grid-template-columns:1fr}.search-row .page-size-field{display:block}.table-wrap{display:none}.card-list{display:grid}.intro-main{padding:20px}.source-meta{grid-template-columns:1fr 1fr}}
-@media(max-width:570px){.masthead-inner{align-items:center}.brand-zone img{width:108px}.top-actions .btn span{display:none}.top-actions .btn{width:38px;padding:0}.intro h1{font-size:1.8rem}.metric-strip{grid-template-columns:1fr}.filter-body{grid-template-columns:1fr}.amount-grid{grid-template-columns:1fr 1fr}.smart-hint{align-items:flex-start;flex-direction:column}.result-actions{width:100%;justify-content:space-between}.detail-grid{grid-template-columns:1fr}.detail-cell.wide{grid-column:auto}.auth-body{padding:28px 22px}}
-@media print{.auth-gate,.masthead,.filter-panel,.search-card,.result-actions,.pagination,.drawer,.toast-zone,.loading{display:none!important}.workspace{width:100%;padding:0}.intro{display:block}.source-card{margin-top:10px;background:#fff;color:#000;border:1px solid #ccc;box-shadow:none}.source-card p,.source-label{color:#555}.source-meta div{border-color:#ddd}.source-meta span{color:#777}.source-meta strong{color:#000}.metric-strip{grid-template-columns:repeat(5,1fr)}.explorer{display:block}.results-card,.intro-main,.metric{box-shadow:none}.table-wrap{display:block;max-height:none}.data-table{min-width:0}.card-list{display:none}}
+
+/* ===== Inteligencia contractual / Business Intelligence ===== */
+.bi-suite{margin-bottom:16px;background:#fff;border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow-sm);overflow:hidden}
+.bi-head{padding:18px 20px;border-bottom:1px solid var(--line-2);display:flex;align-items:flex-end;justify-content:space-between;gap:18px;flex-wrap:wrap;background:linear-gradient(180deg,#fff,#fbfdfc)}
+.bi-kicker{font-size:.68rem;text-transform:uppercase;letter-spacing:.095em;font-weight:950;color:var(--forest-2)}
+.bi-head h2{margin:5px 0 3px;font-size:1.3rem;letter-spacing:-.035em}.bi-head p{margin:0;color:var(--muted);font-size:.76rem;line-height:1.45;max-width:850px}
+.bi-actions{display:flex;gap:8px;flex-wrap:wrap}.bi-grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:12px;padding:12px}
+.bi-card{border:1px solid var(--line);border-radius:16px;background:#fff;min-width:0;overflow:hidden}
+.bi-card.span-12{grid-column:span 12}.bi-card.span-8{grid-column:span 8}.bi-card.span-7{grid-column:span 7}.bi-card.span-6{grid-column:span 6}.bi-card.span-5{grid-column:span 5}.bi-card.span-4{grid-column:span 4}
+.bi-card-head{padding:13px 14px 9px;display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.bi-card-head h3{margin:0;font-size:.86rem;letter-spacing:-.015em}.bi-card-head p{margin:3px 0 0;color:var(--muted);font-size:.67rem;line-height:1.4}
+.bi-tag{display:inline-flex;align-items:center;gap:5px;border-radius:999px;background:var(--mint-2);border:1px solid #d6e9df;color:var(--forest-2);padding:5px 8px;font-size:.62rem;font-weight:900;white-space:nowrap}
+.bi-chart{height:280px;padding:2px 12px 12px;position:relative}.bi-chart.tall{height:320px}.bi-chart.compact{height:250px}
+.bi-insights{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(280px,.6fr);gap:12px;padding:0 12px 12px}
+.insight-narrative{border:1px solid var(--line);border-radius:15px;background:linear-gradient(180deg,#fbfdfc,#fff);padding:15px}
+.insight-narrative h3{margin:0 0 9px;font-size:.9rem}.insight-list{display:grid;gap:8px}.insight-item{display:flex;gap:9px;align-items:flex-start;font-size:.76rem;line-height:1.48;color:#40504a}.insight-item:before{content:"";width:7px;height:7px;border-radius:50%;background:#3f9271;margin-top:5px;flex:0 0 7px}
+.insight-item.warn:before{background:#d49a32}.insight-item strong{color:var(--forest)}
+.ranking-panel{border:1px solid var(--line);border-radius:15px;overflow:hidden}.ranking-head{padding:11px 12px;background:#f7f9f8;border-bottom:1px solid var(--line);font-size:.72rem;font-weight:950}.ranking-list{display:grid}.ranking-row{display:grid;grid-template-columns:24px minmax(0,1fr) auto;gap:8px;align-items:center;padding:9px 11px;border-bottom:1px solid var(--line-2);font-size:.69rem}.ranking-row:last-child{border-bottom:0}.ranking-index{width:22px;height:22px;border-radius:7px;background:#eef4f1;display:grid;place-items:center;color:var(--forest);font-weight:950}.ranking-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ranking-value{text-align:right;font-weight:900;color:#294a3e;white-space:nowrap}
+.analytics-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;padding:0 12px 12px}.analytics-mini{border:1px solid var(--line);border-radius:13px;padding:10px;background:#fbfcfb}.analytics-mini span{display:block;color:var(--muted);font-size:.61rem;text-transform:uppercase;letter-spacing:.075em;font-weight:900}.analytics-mini strong{display:block;margin-top:4px;font-size:.98rem;letter-spacing:-.025em}.analytics-mini small{display:block;color:var(--muted);font-size:.63rem;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* Reporte analítico ejecutivo */
+.report-modal{position:fixed;inset:0;z-index:95;background:rgba(18,31,27,.48);display:none;align-items:center;justify-content:center;padding:18px;backdrop-filter:blur(4px)}.report-modal.open{display:flex}
+.report-dialog{width:min(1080px,100%);max-height:92vh;background:#fff;border-radius:24px;box-shadow:0 28px 80px rgba(18,31,27,.24);display:flex;flex-direction:column;overflow:hidden}
+.report-head{padding:17px 20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:14px;align-items:flex-start}.report-head h2{margin:4px 0 0;font-size:1.2rem;letter-spacing:-.03em}.report-body{padding:18px 20px;overflow:auto}.report-actions{display:flex;gap:8px;flex-wrap:wrap}
+.report-cover{border-radius:17px;background:linear-gradient(125deg,var(--forest),#266b58);color:#fff;padding:18px}.report-cover small{opacity:.72;text-transform:uppercase;letter-spacing:.09em;font-weight:900}.report-cover h3{margin:6px 0 4px;font-size:1.3rem}.report-cover p{margin:0;opacity:.82;font-size:.76rem}
+.report-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:12px}.report-kpi{border:1px solid var(--line);border-radius:13px;padding:10px}.report-kpi span{display:block;color:var(--muted);font-size:.61rem;text-transform:uppercase;font-weight:900;letter-spacing:.07em}.report-kpi strong{display:block;margin-top:4px;font-size:1.05rem}
+.report-section{margin-top:14px;border:1px solid var(--line);border-radius:15px;overflow:hidden}.report-section h4{margin:0;padding:11px 13px;background:#f7f9f8;border-bottom:1px solid var(--line);font-size:.78rem}.report-section-body{padding:12px 13px;font-size:.75rem;line-height:1.55;color:#40504a}.report-table{width:100%;border-collapse:collapse}.report-table th,.report-table td{padding:7px 8px;border-bottom:1px solid var(--line-2);font-size:.69rem;text-align:left}.report-table th{color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-size:.6rem}.report-table td:last-child,.report-table th:last-child{text-align:right}.report-table tr:last-child td{border-bottom:0}
+
+@media(max-width:1180px){.metric-strip{grid-template-columns:repeat(4,1fr)}.bi-card.span-8,.bi-card.span-7,.bi-card.span-6,.bi-card.span-5,.bi-card.span-4{grid-column:span 6}.bi-insights{grid-template-columns:1fr}.analytics-strip{grid-template-columns:1fr 1fr}.intro{grid-template-columns:1fr}.source-meta{grid-template-columns:repeat(4,1fr)}.explorer{grid-template-columns:270px minmax(0,1fr)}.search-row{grid-template-columns:1fr 150px}.search-row .page-size-field{display:none}}
+@media(max-width:900px){.bi-card.span-12,.bi-card.span-8,.bi-card.span-7,.bi-card.span-6,.bi-card.span-5,.bi-card.span-4{grid-column:span 12}.bi-chart{height:260px}.report-kpis{grid-template-columns:1fr 1fr}.masthead-inner{width:min(100% - 20px);min-height:70px}.brand-divider,.brand-title span,.session-pill{display:none}.brand-zone img{width:120px}.workspace{width:calc(100% - 20px);padding-top:15px}.metric-strip{grid-template-columns:1fr 1fr}.explorer{grid-template-columns:1fr}.filter-panel{position:static}.filter-body{grid-template-columns:1fr 1fr}.filter-actions{grid-template-columns:1fr 1fr}.year-brief{display:none}.search-row{grid-template-columns:1fr}.search-row .page-size-field{display:block}.table-wrap{display:none}.card-list{display:grid}.intro-main{padding:20px}.source-meta{grid-template-columns:1fr 1fr}}
+@media(max-width:570px){.analytics-strip,.report-kpis{grid-template-columns:1fr}.bi-grid{padding:8px}.bi-head{padding:15px}.bi-actions{width:100%}.bi-actions .btn{flex:1}.bi-chart{height:235px}.masthead-inner{align-items:center}.brand-zone img{width:108px}.top-actions .btn span{display:none}.top-actions .btn{width:38px;padding:0}.intro h1{font-size:1.8rem}.metric-strip{grid-template-columns:1fr}.filter-body{grid-template-columns:1fr}.amount-grid{grid-template-columns:1fr 1fr}.smart-hint{align-items:flex-start;flex-direction:column}.result-actions{width:100%;justify-content:space-between}.detail-grid{grid-template-columns:1fr}.detail-cell.wide{grid-column:auto}.auth-body{padding:28px 22px}}
+@media print{.auth-gate,.masthead,.filter-panel,.search-card,.result-actions,.pagination,.drawer,.toast-zone,.loading,.report-modal{display:none!important}body.report-print .portal{display:none!important}body.report-print .report-modal{position:static!important;display:block!important;background:#fff!important;padding:0!important}body.report-print .report-dialog{width:100%!important;max-height:none!important;box-shadow:none!important;border-radius:0!important;overflow:visible!important}body.report-print .report-head{display:none!important}body.report-print .report-body{padding:0!important;overflow:visible!important}.workspace{width:100%;padding:0}.intro{display:block}.source-card{margin-top:10px;background:#fff;color:#000;border:1px solid #ccc;box-shadow:none}.source-card p,.source-label{color:#555}.source-meta div{border-color:#ddd}.source-meta span{color:#777}.source-meta strong{color:#000}.metric-strip{grid-template-columns:repeat(5,1fr)}.explorer{display:block}.results-card,.intro-main,.metric{box-shadow:none}.table-wrap{display:block;max-height:none}.data-table{min-width:0}.card-list{display:none}}
 </style>
 </head>
 <body>
@@ -109,7 +137,7 @@ button,input,select{font:inherit}button{cursor:pointer}a{color:inherit}
     <div class="auth-body">
       <img class="auth-logo" src="https://fias.org.ec/wp-content/uploads/2021/11/Logo_FIAS_web.png" alt="Logo oficial FIAS" />
       <div class="auth-eyebrow">Consulta institucional segura</div>
-      <h1>Portal Institucional de Contratos</h1>
+      <h1>Portal Enterprise de Contratos</h1>
       <p>Acceda con su cuenta corporativa de Microsoft 365. La información se consulta directamente desde el Excel institucional y no se almacena en archivos JSON intermedios.</p>
       <button class="auth-btn" id="loginBtn" type="button">▣&nbsp; Iniciar sesión con Microsoft 365</button>
       <div class="auth-note"><strong>Modelo de acceso:</strong> solo lectura. Los permisos efectivos siguen dependiendo del acceso que cada usuario tenga al archivo dentro de Microsoft 365.</div>
@@ -123,7 +151,7 @@ button,input,select{font:inherit}button{cursor:pointer}a{color:inherit}
       <div class="brand-zone">
         <img src="https://fias.org.ec/wp-content/uploads/2021/11/Logo_FIAS_web.png" alt="FIAS" />
         <div class="brand-divider"></div>
-        <div class="brand-title"><strong>Portal Institucional de Contratos</strong><span>Consulta directa de Base Contrato.xlsx · Microsoft 365</span></div>
+        <div class="brand-title"><strong>Inteligencia Contractual FIAS</strong><span>Dashboard Enterprise · Base Contrato.xlsx · Microsoft 365</span></div>
       </div>
       <div class="top-actions">
         <div class="session-pill" id="sessionPill"><span id="sessionText">Sesión institucional</span></div>
@@ -138,8 +166,8 @@ button,input,select{font:inherit}button{cursor:pointer}a{color:inherit}
     <section class="intro">
       <article class="intro-main">
         <div class="eyebrow">Repositorio contractual FIAS</div>
-        <h1>Una sola vista para explorar la contratación institucional.</h1>
-        <p>Busque por proveedor, objeto, proyecto, método o número; combine filtros y obtenga una lectura consolidada sin copiar ni transformar previamente la base de datos.</p>
+        <h1>Contratación institucional convertida en inteligencia para decisión.</h1>
+        <p>Consulte el detalle contractual y analice tendencias, concentración, proyectos, proveedores, métodos y calidad de datos desde una única experiencia conectada directamente con Microsoft 365.</p>
       </article>
       <aside class="source-card">
         <div>
@@ -155,13 +183,80 @@ button,input,select{font:inherit}button{cursor:pointer}a{color:inherit}
       </aside>
     </section>
 
-    <section class="metric-strip" aria-label="Indicadores">
+    <section class="metric-strip" aria-label="Indicadores clave de desempeño">
       <article class="metric primary"><span>Contratos visibles</span><strong id="kpiRecords">0</strong><small id="kpiRecordsSub">de 0 registros cargados</small></article>
-      <article class="metric"><span>Monto visible</span><strong id="kpiAmount">$0,00</strong><small id="kpiAmountSub">Suma de registros con monto</small></article>
+      <article class="metric"><span>Monto visible</span><strong id="kpiAmount">$0,00</strong><small id="kpiAmountSub">Suma contractual filtrada</small></article>
+      <article class="metric"><span>Ticket promedio</span><strong id="kpiAverage">$0,00</strong><small>Promedio por contrato con monto</small></article>
+      <article class="metric"><span>Mediana contractual</span><strong id="kpiMedian">$0,00</strong><small>Valor central de los contratos</small></article>
       <article class="metric"><span>Proveedores</span><strong id="kpiProviders">0</strong><small>Oferentes contratados distintos</small></article>
       <article class="metric"><span>Proyectos</span><strong id="kpiProjects">0</strong><small>Proyectos en la consulta actual</small></article>
-      <article class="metric"><span>Años</span><strong id="kpiYears">0</strong><small id="kpiYearsSub">Cobertura temporal</small></article>
+      <article class="metric"><span>Concentración Top 5</span><strong id="kpiConcentration">0%</strong><small>Participación de los 5 mayores proveedores</small></article>
+      <article class="metric"><span>Calidad de datos</span><strong id="kpiQuality">100%</strong><small id="kpiQualitySub">Registros sin incidencias básicas</small></article>
+      <article class="metric hidden"><span>Años</span><strong id="kpiYears">0</strong><small id="kpiYearsSub">Cobertura temporal</small></article>
     </section>
+
+
+    <section class="bi-suite" id="biSuite">
+      <div class="bi-head">
+        <div>
+          <div class="bi-kicker">Business Intelligence · Contratación FIAS</div>
+          <h2>Cuadro de mando ejecutivo e inteligencia contractual</h2>
+          <p>Los indicadores y visualizaciones responden a los filtros activos. Puede pulsar años, proyectos, métodos o tipos de adquisición para profundizar el análisis.</p>
+        </div>
+        <div class="bi-actions">
+          <button class="btn btn-soft" id="biResetBtn" type="button">Restablecer análisis</button>
+          <button class="btn btn-primary" id="reportBtn" type="button">Reporte analítico</button>
+        </div>
+      </div>
+
+      <div class="analytics-strip">
+        <div class="analytics-mini"><span>Proyecto líder</span><strong id="biTopProject">—</strong><small id="biTopProjectSub">Sin datos</small></div>
+        <div class="analytics-mini"><span>Mayor contrato</span><strong id="biLargestAmount">$0,00</strong><small id="biLargestSub">—</small></div>
+        <div class="analytics-mini"><span>Variación último año</span><strong id="biYoY">—</strong><small id="biYoYSub">Monto contractual anual</small></div>
+        <div class="analytics-mini"><span>Índice de concentración</span><strong id="biHHI">—</strong><small id="biHHISub">Participación por proveedor</small></div>
+      </div>
+
+      <div class="bi-grid">
+        <article class="bi-card span-8">
+          <div class="bi-card-head"><div><h3>Evolución anual de contratación</h3><p>Monto contratado y número de registros por año.</p></div><span class="bi-tag">Clic en un año para filtrar</span></div>
+          <div class="bi-chart tall"><canvas id="chartAnnual"></canvas></div>
+        </article>
+        <article class="bi-card span-4">
+          <div class="bi-card-head"><div><h3>Composición por tipo</h3><p>Bienes, servicios, consultoría y demás categorías.</p></div><span class="bi-tag">Interactivo</span></div>
+          <div class="bi-chart tall"><canvas id="chartTypes"></canvas></div>
+        </article>
+
+        <article class="bi-card span-6">
+          <div class="bi-card-head"><div><h3>Proyectos por monto contratado</h3><p>Ranking de los principales proyectos de la consulta.</p></div><span class="bi-tag">Top 10</span></div>
+          <div class="bi-chart"><canvas id="chartProjects"></canvas></div>
+        </article>
+        <article class="bi-card span-6">
+          <div class="bi-card-head"><div><h3>Métodos de contratación</h3><p>Distribución por número de procesos y valor asociado.</p></div><span class="bi-tag">Clic para filtrar</span></div>
+          <div class="bi-chart"><canvas id="chartMethods"></canvas></div>
+        </article>
+
+        <article class="bi-card span-7">
+          <div class="bi-card-head"><div><h3>Concentración de proveedores</h3><p>Proveedores con mayor monto acumulado en la selección actual.</p></div><span class="bi-tag">Top 10</span></div>
+          <div class="bi-chart"><canvas id="chartSuppliers"></canvas></div>
+        </article>
+        <article class="bi-card span-5">
+          <div class="bi-card-head"><div><h3>Distribución de tamaño contractual</h3><p>Segmentación de contratos por rangos de valor.</p></div><span class="bi-tag">Perfil de cartera</span></div>
+          <div class="bi-chart"><canvas id="chartSize"></canvas></div>
+        </article>
+      </div>
+
+      <div class="bi-insights">
+        <div class="insight-narrative">
+          <h3>Lectura ejecutiva automática</h3>
+          <div class="insight-list" id="executiveInsights"><div class="insight-item">Sin información cargada para generar conclusiones.</div></div>
+        </div>
+        <div class="ranking-panel">
+          <div class="ranking-head">Principales proveedores por monto</div>
+          <div class="ranking-list" id="supplierRanking"></div>
+        </div>
+      </div>
+    </section>
+
 
     <section class="explorer">
       <aside class="filter-panel">
@@ -219,8 +314,24 @@ button,input,select{font:inherit}button{cursor:pointer}a{color:inherit}
   </div>
 </div>
 
+
+<div class="report-modal" id="reportModal" aria-hidden="true">
+  <div class="report-dialog" role="dialog" aria-modal="true" aria-labelledby="reportTitle">
+    <div class="report-head">
+      <div><div class="drawer-kicker">Inteligencia contractual</div><h2 id="reportTitle">Reporte analítico ejecutivo</h2></div>
+      <div class="report-actions">
+        <button class="btn btn-primary" id="printReportBtn" type="button">Imprimir / PDF</button>
+        <button class="btn btn-outline" id="closeReportBtn" type="button">Cerrar</button>
+      </div>
+    </div>
+    <div class="report-body" id="reportBody"></div>
+  </div>
+</div>
+
+
 <script src="https://alcdn.msauth.net/browser/2.32.0/js/msal-browser.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 <script>
 (() => {
 'use strict';
@@ -246,7 +357,8 @@ const state = {
   lastSync: null,
   refreshTimer: null,
   sourceSheet: CONFIG.preferredSheet,
-  searchCache: new Map()
+  searchCache: new Map(),
+  charts: {}
 };
 
 const $ = id => document.getElementById(id);
@@ -342,7 +454,7 @@ async function login(){
 async function logout(){
   clearInterval(state.refreshTimer); state.refreshTimer=null;
   const account=state.account;
-  state.records=[];state.filtered=[];state.driveItem=null;state.token='';state.account=null;state.searchCache.clear();renderAll();updateAuthUi();
+  state.records=[];state.filtered=[];state.driveItem=null;state.token='';state.account=null;state.searchCache.clear();Object.keys(state.charts).forEach(destroyChart);renderAll();updateAuthUi();
   try{ if(state.msal && account) await state.msal.logoutPopup({account,postLogoutRedirectUri:currentRedirectUri(),mainWindowRedirectUri:currentRedirectUri()}); }
   catch(err){toast('Sesión local cerrada','Microsoft mantuvo la cuenta en el navegador; puede cerrar la pestaña si lo requiere.','warn')}
 }
@@ -480,8 +592,9 @@ function friendlyError(err){
 }
 
 function uniq(field){return [...new Set(state.records.map(r=>r[field]).filter(has))].sort((a,b)=>String(a).localeCompare(String(b),'es',{numeric:true,sensitivity:'base'}))}
+function uniqNormalized(field){const map=new Map();state.records.forEach(r=>{if(!has(r[field]))return;const key=norm(r[field]);if(key&&!map.has(key))map.set(key,String(r[field]).trim())});return [...map.values()].sort((a,b)=>a.localeCompare(b,'es',{numeric:true,sensitivity:'base'}))}
 function fillSelect(id,values,label){const n=$(id);const current=n.value;n.innerHTML=`<option value="">${safe(label)}</option>`+values.map(v=>`<option value="${safe(v)}">${safe(v)}</option>`).join('');if([...n.options].some(o=>o.value===current))n.value=current}
-function populateFilters(){fillSelect('yearFilter',uniq('anio').map(String),'Todos los años');fillSelect('projectFilter',uniq('proyecto'),'Todos los proyectos');fillSelect('unitFilter',uniq('unidad'),'Todas las unidades');fillSelect('methodFilter',uniq('metodo'),'Todos los métodos');fillSelect('typeFilter',uniq('tipo'),'Todos los tipos')}
+function populateFilters(){fillSelect('yearFilter',uniq('anio').map(String),'Todos los años');fillSelect('projectFilter',uniq('proyecto'),'Todos los proyectos');fillSelect('unitFilter',uniq('unidad'),'Todas las unidades');fillSelect('methodFilter',uniqNormalized('metodo'),'Todos los métodos');fillSelect('typeFilter',uniqNormalized('tipo'),'Todos los tipos')}
 function searchBlob(r){if(state.searchCache.has(r.id))return state.searchCache.get(r.id);const blob=norm([r.anio,r.nro,r.fecha,r.unidad,r.proyecto,r.metodo,r.tipo,r.proveedor,r.objeto,r.monto,r.unidades,r.observaciones].join(' '));state.searchCache.set(r.id,blob);return blob}
 function relevance(r,query){
   const q=norm(query);if(!q)return 0;const terms=q.split(' ').filter(Boolean);const blob=searchBlob(r);if(!terms.every(t=>blob.includes(t)))return -1;
@@ -493,7 +606,7 @@ function activeFilterData(){return{year:$('yearFilter').value,project:$('project
 function filterRecords(){
   const f=activeFilterData();const scored=[];
   state.records.forEach(r=>{
-    if(f.year&&String(r.anio)!==f.year)return;if(f.project&&r.proyecto!==f.project)return;if(f.unit&&r.unidad!==f.unit)return;if(f.method&&r.metodo!==f.method)return;if(f.type&&r.tipo!==f.type)return;
+    if(f.year&&String(r.anio)!==f.year)return;if(f.project&&r.proyecto!==f.project)return;if(f.unit&&r.unidad!==f.unit)return;if(f.method&&norm(r.metodo)!==norm(f.method))return;if(f.type&&norm(r.tipo)!==norm(f.type))return;
     if(f.min!==null&&(r.monto===null||r.monto<f.min))return;if(f.max!==null&&(r.monto===null||r.monto>f.max))return;if(f.quality&&!r.hasIssue)return;
     const score=relevance(r,f.q);if(score<0)return;scored.push({r,score});
   });
@@ -509,8 +622,233 @@ function filterRecords(){
   });
   state.filtered=scored.map(x=>x.r);
 }
-function summary(rows){const amounts=rows.map(r=>r.monto).filter(v=>v!==null&&Number.isFinite(Number(v))).map(Number);return{count:rows.length,amount:amounts.reduce((s,v)=>s+v,0),providers:new Set(rows.map(r=>norm(r.proveedor)).filter(Boolean)).size,projects:new Set(rows.map(r=>r.proyecto).filter(Boolean)).size,years:[...new Set(rows.map(r=>r.anio).filter(Boolean))].sort()}}
-function renderKpis(){const s=summary(state.filtered);$('kpiRecords').textContent=integer.format(s.count);$('kpiRecordsSub').textContent=`de ${integer.format(state.records.length)} registros cargados`;$('kpiAmount').textContent=money.format(s.amount);$('kpiProviders').textContent=integer.format(s.providers);$('kpiProjects').textContent=integer.format(s.projects);$('kpiYears').textContent=integer.format(s.years.length);$('kpiYearsSub').textContent=s.years.length?`${s.years[0]} – ${s.years[s.years.length-1]}`:'Sin información';$('resultCount').textContent=`${integer.format(s.count)} ${s.count===1?'contrato':'contratos'}`;$('resultAmount').textContent=`Monto visible: ${money.format(s.amount)}`}
+function median(values){if(!values.length)return 0;const a=[...values].sort((x,y)=>x-y),m=Math.floor(a.length/2);return a.length%2?a[m]:(a[m-1]+a[m])/2}
+function aggregate(rows,field){
+  const map=new Map();
+  rows.forEach(r=>{
+    const raw=r[field];if(!has(raw))return;
+    const key=norm(raw);if(!key)return;
+    if(!map.has(key))map.set(key,{key,label:String(raw).trim(),count:0,amount:0,missingAmount:0});
+    const g=map.get(key);g.count+=1;if(r.monto===null)g.missingAmount+=1;else g.amount+=Number(r.monto)||0;
+  });
+  return [...map.values()];
+}
+function providerStats(rows){
+  const groups=aggregate(rows,'proveedor').sort((a,b)=>b.amount-a.amount||b.count-a.count);
+  const total=groups.reduce((s,g)=>s+g.amount,0);
+  const top5=groups.slice(0,5).reduce((s,g)=>s+g.amount,0);
+  const hhi=total?groups.reduce((s,g)=>{const share=g.amount/total;return s+(share*share*10000)},0):0;
+  return{groups,total,top5Share:total?top5/total*100:0,hhi};
+}
+function summary(rows){
+  const amounts=rows.map(r=>r.monto).filter(v=>v!==null&&Number.isFinite(Number(v))).map(Number);
+  const amount=amounts.reduce((s,v)=>s+v,0);
+  const p=providerStats(rows);
+  const issues=rows.filter(r=>r.hasIssue).length;
+  return{
+    count:rows.length,amount,average:amounts.length?amount/amounts.length:0,median:median(amounts),
+    providers:p.groups.length,projects:new Set(rows.map(r=>norm(r.proyecto)).filter(Boolean)).size,
+    years:[...new Set(rows.map(r=>r.anio).filter(Boolean))].sort((a,b)=>a-b),
+    top5Share:p.top5Share,hhi:p.hhi,issues,quality:rows.length?Math.max(0,(rows.length-issues)/rows.length*100):100
+  };
+}
+function renderKpis(){
+  const s=summary(state.filtered);
+  $('kpiRecords').textContent=integer.format(s.count);$('kpiRecordsSub').textContent=`de ${integer.format(state.records.length)} registros cargados`;
+  $('kpiAmount').textContent=money.format(s.amount);$('kpiAverage').textContent=money.format(s.average);$('kpiMedian').textContent=money.format(s.median);
+  $('kpiProviders').textContent=integer.format(s.providers);$('kpiProjects').textContent=integer.format(s.projects);
+  $('kpiConcentration').textContent=`${s.top5Share.toFixed(1)}%`;
+  $('kpiQuality').textContent=`${s.quality.toFixed(1)}%`;$('kpiQualitySub').textContent=s.issues?`${integer.format(s.issues)} registros visibles con incidencias básicas`:'Sin incidencias básicas en la selección';
+  $('kpiYears').textContent=integer.format(s.years.length);$('kpiYearsSub').textContent=s.years.length?`${s.years[0]} – ${s.years[s.years.length-1]}`:'Sin información';
+  $('resultCount').textContent=`${integer.format(s.count)} ${s.count===1?'contrato':'contratos'}`;$('resultAmount').textContent=`Monto visible: ${money.format(s.amount)}`;
+}
+
+function groupSorted(rows,field,metric='amount',limit=10){
+  const arr=aggregate(rows,field);
+  arr.sort((a,b)=>metric==='count'?(b.count-a.count||b.amount-a.amount):(b.amount-a.amount||b.count-a.count));
+  return limit?arr.slice(0,limit):arr;
+}
+function yearStats(rows){
+  const m=new Map();
+  rows.forEach(r=>{if(!r.anio)return;const y=String(r.anio);if(!m.has(y))m.set(y,{year:Number(r.anio),count:0,amount:0});const g=m.get(y);g.count++;if(r.monto!==null)g.amount+=Number(r.monto)||0});
+  return [...m.values()].sort((a,b)=>a.year-b.year);
+}
+function sizeBuckets(rows){
+  const defs=[
+    {label:'< $1 mil',min:0,max:1000},{label:'$1–5 mil',min:1000,max:5000},{label:'$5–20 mil',min:5000,max:20000},
+    {label:'$20–50 mil',min:20000,max:50000},{label:'$50–100 mil',min:50000,max:100000},{label:'> $100 mil',min:100000,max:Infinity}
+  ];
+  return defs.map(d=>({...d,count:rows.filter(r=>r.monto!==null&&Number(r.monto)>=d.min&&Number(r.monto)<d.max).length,amount:rows.filter(r=>r.monto!==null&&Number(r.monto)>=d.min&&Number(r.monto)<d.max).reduce((s,r)=>s+Number(r.monto||0),0)}));
+}
+function destroyChart(id){if(state.charts[id]){state.charts[id].destroy();delete state.charts[id]}}
+function moneyShort(v){
+  const n=Number(v)||0;const a=Math.abs(n);
+  if(a>=1e6)return `$${(n/1e6).toFixed(a>=1e7?1:2)} M`;
+  if(a>=1e3)return `$${(n/1e3).toFixed(a>=1e5?0:1)} mil`;
+  return money.format(n);
+}
+function chartCommon(extra={}){
+  return Object.assign({
+    responsive:true,maintainAspectRatio:false,animation:{duration:260},
+    plugins:{legend:{labels:{boxWidth:10,boxHeight:10,usePointStyle:true,font:{size:10}}},tooltip:{padding:10,titleFont:{size:11},bodyFont:{size:10}}},
+    scales:{x:{grid:{color:'rgba(70,90,82,.06)'},ticks:{font:{size:9},color:'#68756f'}},y:{grid:{color:'rgba(70,90,82,.06)'},ticks:{font:{size:9},color:'#68756f'}}}
+  },extra);
+}
+function applyChartFilter(field,value){
+  if(!has(value))return;
+  const map={anio:'yearFilter',proyecto:'projectFilter',metodo:'methodFilter',tipo:'typeFilter',unidad:'unitFilter'};
+  const id=map[field];
+  if(id){
+    const select=$(id);const exact=[...select.options].find(o=>o.value===String(value))||[...select.options].find(o=>norm(o.value)===norm(value));
+    if(exact){select.value=exact.value;state.page=1;renderAll();return}
+  }
+  if(field==='proveedor'){$('searchBox').value=String(value);$('sortSelect').value='relevance';state.page=1;renderAll()}
+}
+function renderBiMini(rows){
+  const projects=groupSorted(rows,'proyecto','amount',1),largest=rows.filter(r=>r.monto!==null).sort((a,b)=>Number(b.monto)-Number(a.monto))[0];
+  const ys=yearStats(rows),s=summary(rows);
+  $('biTopProject').textContent=projects[0]?.label||'—';$('biTopProjectSub').textContent=projects[0]?`${moneyShort(projects[0].amount)} · ${integer.format(projects[0].count)} contratos`:'Sin datos';
+  $('biLargestAmount').textContent=largest?money.format(largest.monto):money.format(0);$('biLargestSub').textContent=largest?`${largest.proyecto||'Sin proyecto'} · N.º ${largest.nro||'—'} / ${largest.anio||'—'}`:'Sin datos';
+  if(ys.length>=2){
+    const a=ys[ys.length-2],b=ys[ys.length-1],pct=a.amount?((b.amount-a.amount)/a.amount*100):null;
+    $('biYoY').textContent=pct===null?'N/D':`${pct>=0?'+':''}${pct.toFixed(1)}%`;$('biYoYSub').textContent=`${b.year} vs. ${a.year} · variación nominal`;
+  }else{$('biYoY').textContent='N/D';$('biYoYSub').textContent='Se requieren al menos dos años visibles'}
+  $('biHHI').textContent=s.hhi?integer.format(Math.round(s.hhi)):'0';$('biHHISub').textContent=`Escala 0–10.000 · Top 5: ${s.top5Share.toFixed(1)}%`;
+}
+function renderSupplierRanking(rows){
+  const top=providerStats(rows).groups.slice(0,5);
+  $('supplierRanking').innerHTML=top.length?top.map((g,i)=>`<button class="ranking-row" type="button" data-supplier-rank="${safe(g.label)}" style="border:0;width:100%;background:#fff;text-align:left"><span class="ranking-index">${i+1}</span><span class="ranking-name" title="${safe(g.label)}">${safe(g.label)}</span><span class="ranking-value">${moneyShort(g.amount)}</span></button>`).join(''):'<div style="padding:18px;color:var(--muted);font-size:.72rem">Sin datos de proveedores.</div>';
+  document.querySelectorAll('[data-supplier-rank]').forEach(b=>b.onclick=()=>applyChartFilter('proveedor',b.dataset.supplierRank));
+}
+function executiveInsightData(rows){
+  const s=summary(rows),projects=groupSorted(rows,'proyecto','amount',3),providers=providerStats(rows).groups,methods=groupSorted(rows,'metodo','count',3),types=groupSorted(rows,'tipo','count',3),ys=yearStats(rows);
+  const items=[];
+  if(!rows.length)return[{text:'No existen registros con los criterios actuales.',warn:true}];
+  if(projects[0]){const share=s.amount?projects[0].amount/s.amount*100:0;items.push({html:`El proyecto <strong>${safe(projects[0].label)}</strong> concentra ${share.toFixed(1)}% del monto visible (${moneyShort(projects[0].amount)}).`})}
+  if(providers[0]){const share=s.amount?providers[0].amount/s.amount*100:0;items.push({html:`El proveedor con mayor monto acumulado es <strong>${safe(providers[0].label)}</strong>, con ${moneyShort(providers[0].amount)} (${share.toFixed(1)}% del total visible).`,warn:share>=25})}
+  if(methods[0])items.push({html:`El método más frecuente es <strong>${safe(methods[0].label)}</strong>, utilizado en ${integer.format(methods[0].count)} registros.`});
+  if(types[0])items.push({html:`La categoría de adquisición predominante es <strong>${safe(types[0].label)}</strong>, con ${integer.format(types[0].count)} contratos.`});
+  if(s.average>0&&s.median>0){const ratio=s.average/s.median;items.push({html:`El ticket promedio es ${moneyShort(s.average)} y la mediana ${moneyShort(s.median)}${ratio>=2?', lo que evidencia una distribución influida por contratos de alto valor.':'.'}`,warn:ratio>=2})}
+  if(ys.length>=2){const a=ys[ys.length-2],b=ys[ys.length-1];if(a.amount){const pct=(b.amount-a.amount)/a.amount*100;items.push({html:`El monto del año más reciente visible (${b.year}) es ${pct>=0?'superior':'inferior'} en ${Math.abs(pct).toFixed(1)}% al de ${a.year}. La comparación es nominal y no ajusta por avance del ejercicio.`,warn:true})}}
+  if(s.issues)items.push({html:`La calidad básica de la selección es <strong>${s.quality.toFixed(1)}%</strong>; ${integer.format(s.issues)} registros presentan al menos una incidencia de integridad detectada.`,warn:true});
+  else items.push({html:`La selección actual no presenta incidencias básicas de integridad según los controles automáticos del portal.`});
+  return items.slice(0,7);
+}
+function renderInsights(rows){
+  const items=executiveInsightData(rows);
+  $('executiveInsights').innerHTML=items.map(x=>`<div class="insight-item ${x.warn?'warn':''}">${x.html||safe(x.text)}</div>`).join('');
+}
+function renderCharts(rows){
+  if(!window.Chart){return}
+  const colors=['#1d5b4a','#245c93','#a96f1f','#4b7d6b','#6e7f91','#8f6b43','#5d8e9e','#7d6b91','#4f7b45','#9a5f5f'];
+  const ys=yearStats(rows);
+  destroyChart('annual');
+  state.charts.annual=new Chart($('chartAnnual'),{
+    type:'bar',
+    data:{labels:ys.map(x=>String(x.year)),datasets:[
+      {label:'Monto contratado',data:ys.map(x=>x.amount),backgroundColor:'#2f735f',borderRadius:7,yAxisID:'yMoney'},
+      {type:'line',label:'N.º contratos',data:ys.map(x=>x.count),borderColor:'#a96f1f',backgroundColor:'#a96f1f',pointRadius:4,pointHoverRadius:6,tension:.28,yAxisID:'yCount'}
+    ]},
+    options:Object.assign(chartCommon(),{
+      onClick:(e,elements)=>{if(elements[0])applyChartFilter('anio',ys[elements[0].index].year)},
+      scales:{x:{grid:{display:false},ticks:{font:{size:10},color:'#68756f'}},yMoney:{position:'left',grid:{color:'rgba(70,90,82,.06)'},ticks:{callback:v=>moneyShort(v),font:{size:9},color:'#68756f'}},yCount:{position:'right',grid:{drawOnChartArea:false},ticks:{precision:0,font:{size:9},color:'#8a6a38'}}},
+      plugins:{legend:{labels:{boxWidth:10,usePointStyle:true,font:{size:10}}},tooltip:{callbacks:{label:ctx=>ctx.dataset.yAxisID==='yMoney'?` ${ctx.dataset.label}: ${money.format(ctx.raw)}`:` ${ctx.dataset.label}: ${integer.format(ctx.raw)}`}}}
+    })
+  });
+
+  const types=groupSorted(rows,'tipo','count',8);
+  destroyChart('types');
+  state.charts.types=new Chart($('chartTypes'),{type:'doughnut',data:{labels:types.map(x=>x.label),datasets:[{data:types.map(x=>x.count),backgroundColor:colors.slice(0,types.length),borderWidth:2,borderColor:'#fff',hoverOffset:7}]},options:{responsive:true,maintainAspectRatio:false,cutout:'62%',onClick:(e,els)=>{if(els[0])applyChartFilter('tipo',types[els[0].index].label)},plugins:{legend:{position:'bottom',labels:{boxWidth:9,usePointStyle:true,font:{size:9},padding:12}},tooltip:{callbacks:{label:ctx=>{const g=types[ctx.dataIndex];return ` ${g.label}: ${integer.format(g.count)} · ${moneyShort(g.amount)}`}}}}}});
+
+  const projects=groupSorted(rows,'proyecto','amount',10);
+  destroyChart('projects');
+  state.charts.projects=new Chart($('chartProjects'),{
+    type:'bar',
+    data:{labels:projects.map(x=>x.label),datasets:[{label:'Monto',data:projects.map(x=>x.amount),backgroundColor:'#245c93',borderRadius:6}]},
+    options:Object.assign(chartCommon(),{
+      indexAxis:'y',
+      onClick:(e,els)=>{if(els[0])applyChartFilter('proyecto',projects[els[0].index].label)},
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` ${money.format(ctx.raw)}`}}},
+      scales:{x:{grid:{color:'rgba(70,90,82,.06)'},ticks:{callback:v=>moneyShort(v),font:{size:9}}},y:{grid:{display:false},ticks:{font:{size:9},autoSkip:false}}}
+    })
+  });
+
+  const methods=groupSorted(rows,'metodo','count',9);
+  destroyChart('methods');
+  state.charts.methods=new Chart($('chartMethods'),{
+    type:'bar',
+    data:{labels:methods.map(x=>x.label),datasets:[{label:'Procesos',data:methods.map(x=>x.count),backgroundColor:'#4b7d6b',borderRadius:6}]},
+    options:Object.assign(chartCommon(),{
+      indexAxis:'y',
+      onClick:(e,els)=>{if(els[0])applyChartFilter('metodo',methods[els[0].index].label)},
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>{const g=methods[ctx.dataIndex];return ` ${integer.format(g.count)} procesos · ${moneyShort(g.amount)}`}}}},
+      scales:{x:{grid:{color:'rgba(70,90,82,.06)'},ticks:{precision:0,font:{size:9}}},y:{grid:{display:false},ticks:{font:{size:9},autoSkip:false}}}
+    })
+  });
+
+  const suppliers=providerStats(rows).groups.slice(0,10);
+  destroyChart('suppliers');
+  state.charts.suppliers=new Chart($('chartSuppliers'),{
+    type:'bar',
+    data:{labels:suppliers.map(x=>x.label),datasets:[{label:'Monto',data:suppliers.map(x=>x.amount),backgroundColor:'#a96f1f',borderRadius:6}]},
+    options:Object.assign(chartCommon(),{
+      indexAxis:'y',
+      onClick:(e,els)=>{if(els[0])applyChartFilter('proveedor',suppliers[els[0].index].label)},
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` ${money.format(ctx.raw)} · ${integer.format(suppliers[ctx.dataIndex].count)} contratos`}}},
+      scales:{x:{grid:{color:'rgba(70,90,82,.06)'},ticks:{callback:v=>moneyShort(v),font:{size:9}}},y:{grid:{display:false},ticks:{font:{size:9},autoSkip:false}}}
+    })
+  });
+
+  const buckets=sizeBuckets(rows);
+  destroyChart('size');
+  state.charts.size=new Chart($('chartSize'),{
+    type:'bar',
+    data:{labels:buckets.map(x=>x.label),datasets:[{label:'Contratos',data:buckets.map(x=>x.count),backgroundColor:['#d9ebe4','#afd4c5','#7eb6a0','#558f7a','#356d5b','#1d5b4a'],borderRadius:6}]},
+    options:Object.assign(chartCommon(),{
+      onClick:(e,els)=>{if(!els[0])return;const b=buckets[els[0].index];$('amountMin').value=Number.isFinite(b.min)&&b.min>0?b.min:'';$('amountMax').value=Number.isFinite(b.max)?b.max:'';state.page=1;renderAll()},
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` ${integer.format(ctx.raw)} contratos · ${moneyShort(buckets[ctx.dataIndex].amount)}`}}},
+      scales:{x:{grid:{display:false},ticks:{font:{size:9},maxRotation:0,minRotation:0}},y:{grid:{color:'rgba(70,90,82,.06)'},ticks:{precision:0,font:{size:9}}}}
+    })
+  });
+}
+function renderBI(){const rows=state.filtered;renderBiMini(rows);renderCharts(rows);renderInsights(rows);renderSupplierRanking(rows)}
+function filterDescription(){
+  const f=activeFilterData(),parts=[];
+  if(f.year)parts.push(`Año: ${f.year}`);if(f.project)parts.push(`Proyecto: ${f.project}`);if(f.unit)parts.push(`Unidad: ${f.unit}`);if(f.method)parts.push(`Método: ${f.method}`);if(f.type)parts.push(`Tipo: ${f.type}`);
+  if(f.min!==null||f.max!==null)parts.push(`Monto: ${f.min!==null?money.format(f.min):'sin mínimo'} – ${f.max!==null?money.format(f.max):'sin máximo'}`);
+  if(f.quality)parts.push('Solo incidencias de integridad');if(norm(f.q))parts.push(`Búsqueda: “${f.q.trim()}”`);
+  return parts.length?parts.join(' · '):'Base contractual completa';
+}
+function reportRows(groups,metric='amount',limit=10){
+  return groups.slice(0,limit).map((g,i)=>`<tr><td>${i+1}</td><td>${safe(g.label??g.year)}</td><td>${metric==='count'?integer.format(g.count):money.format(g.amount)}</td></tr>`).join('');
+}
+function buildExecutiveReport(){
+  const rows=state.filtered,s=summary(rows),ys=yearStats(rows),projects=groupSorted(rows,'proyecto','amount',10),providers=providerStats(rows).groups.slice(0,10),methods=groupSorted(rows,'metodo','count',10),insights=executiveInsightData(rows);
+  const quality=rows.filter(r=>r.hasIssue).length;
+  const generated=new Date().toLocaleString('es-EC');
+  $('reportBody').innerHTML=`
+    <div class="report-cover"><small>Fondo de Inversión Ambiental Sostenible</small><h3>Reporte analítico ejecutivo de contratación</h3><p>${safe(filterDescription())} · Generado ${safe(generated)}</p></div>
+    <div class="report-kpis">
+      <div class="report-kpi"><span>Contratos</span><strong>${integer.format(s.count)}</strong></div>
+      <div class="report-kpi"><span>Monto</span><strong>${money.format(s.amount)}</strong></div>
+      <div class="report-kpi"><span>Promedio</span><strong>${money.format(s.average)}</strong></div>
+      <div class="report-kpi"><span>Mediana</span><strong>${money.format(s.median)}</strong></div>
+      <div class="report-kpi"><span>Proveedores</span><strong>${integer.format(s.providers)}</strong></div>
+      <div class="report-kpi"><span>Proyectos</span><strong>${integer.format(s.projects)}</strong></div>
+      <div class="report-kpi"><span>Top 5 proveedores</span><strong>${s.top5Share.toFixed(1)}%</strong></div>
+      <div class="report-kpi"><span>Calidad básica</span><strong>${s.quality.toFixed(1)}%</strong></div>
+    </div>
+    <section class="report-section"><h4>Lectura ejecutiva</h4><div class="report-section-body">${insights.map(x=>`<p style="margin:0 0 8px">${x.html||safe(x.text)}</p>`).join('')}</div></section>
+    <section class="report-section"><h4>Evolución anual</h4><div class="report-section-body"><table class="report-table"><thead><tr><th>Año</th><th>Contratos</th><th>Monto</th></tr></thead><tbody>${ys.map(y=>`<tr><td>${y.year}</td><td>${integer.format(y.count)}</td><td>${money.format(y.amount)}</td></tr>`).join('')}</tbody></table></div></section>
+    <section class="report-section"><h4>Top 10 proyectos por monto</h4><div class="report-section-body"><table class="report-table"><thead><tr><th>#</th><th>Proyecto</th><th>Monto</th></tr></thead><tbody>${reportRows(projects,'amount')}</tbody></table></div></section>
+    <section class="report-section"><h4>Top 10 proveedores por monto</h4><div class="report-section-body"><table class="report-table"><thead><tr><th>#</th><th>Proveedor</th><th>Monto</th></tr></thead><tbody>${reportRows(providers,'amount')}</tbody></table></div></section>
+    <section class="report-section"><h4>Métodos más utilizados</h4><div class="report-section-body"><table class="report-table"><thead><tr><th>#</th><th>Método</th><th>Procesos</th></tr></thead><tbody>${reportRows(methods,'count')}</tbody></table></div></section>
+    <section class="report-section"><h4>Gobernanza y calidad de la fuente</h4><div class="report-section-body">Fuente: ${safe(state.driveItem?.name||'Base Contrato.xlsx')} / ${safe(state.sourceSheet||CONFIG.preferredSheet)}. Última lectura: ${safe(state.lastSync?state.lastSync.toLocaleString('es-EC'):'—')}. Registros con incidencias básicas en la selección: ${integer.format(quality)}. El reporte no altera ni corrige la fuente institucional.</div></section>`;
+}
+function openReport(){buildExecutiveReport();$('reportModal').classList.add('open');$('reportModal').setAttribute('aria-hidden','false');document.body.style.overflow='hidden'}
+function closeReport(){$('reportModal').classList.remove('open');$('reportModal').setAttribute('aria-hidden','true');document.body.style.overflow=''}
+function printReport(){buildExecutiveReport();document.body.classList.add('report-print');window.print();setTimeout(()=>document.body.classList.remove('report-print'),300)}
+
 function renderYearBars(){const groups={};state.records.forEach(r=>{if(r.anio)groups[r.anio]=(groups[r.anio]||0)+1});const max=Math.max(1,...Object.values(groups));$('yearBars').innerHTML=Object.keys(groups).sort().map(y=>`<div class="year-row"><button type="button" data-year="${safe(y)}">${safe(y)}</button><div class="year-track"><div class="year-fill" style="width:${(groups[y]/max)*100}%"></div></div><div class="year-value">${integer.format(groups[y])}</div></div>`).join('');document.querySelectorAll('[data-year]').forEach(b=>b.onclick=()=>{$('yearFilter').value=String(b.dataset.year);state.page=1;renderAll()})}
 function qualityStats(){const missing=state.records.filter(r=>r.issueMissingAmount).length,dupes=state.records.filter(r=>r.issueDuplicate).length,core=state.records.filter(r=>r.issueMissingCore).length;return{missing,dupes,core,total:state.records.filter(r=>r.hasIssue).length}}
 function renderQuality(){const q=qualityStats();const b=$('qualityBanner');if(!q.total){b.classList.remove('show');return}b.classList.add('show');$('qualityTitle').textContent='La fuente contiene registros que conviene revisar';const parts=[];if(q.missing)parts.push(`${q.missing} sin monto`);if(q.dupes)parts.push(`${q.dupes} asociados a números repetidos dentro del mismo año`);if(q.core)parts.push(`${q.core} con algún dato principal vacío`);$('qualityText').textContent=parts.join(' · ')+'. El portal no altera estos datos; únicamente los identifica para control.'}
@@ -521,7 +859,7 @@ function issueMark(r){return r.hasIssue?'<span class="issue-dot" title="Registro
 function rowHtml(r){return `<tr><td class="col-ref"><span class="ref-code">N.º ${safe(r.nro||'—')}${issueMark(r)}</span><span class="ref-year">${safe(r.anio||'Sin año')}</span></td><td>${safe(displayDate(r.fecha))}</td><td><span class="project-chip" title="${safe(r.proyecto)}">${safe(r.proyecto||'Sin proyecto')}</span></td><td class="method">${safe(r.metodo||'—')}<br><span style="color:#7c8985;font-size:.65rem">${safe(r.tipo||'')}</span></td><td class="provider">${safe(r.proveedor||'—')}</td><td class="object">${safe(r.objeto||'—')}</td><td class="amount ${r.monto===null?'missing':''}">${r.monto===null?'Sin monto':money.format(r.monto)}</td><td><button class="row-action" type="button" data-id="${safe(r.id)}">Detalle</button></td></tr>`}
 function cardHtml(r){return `<article class="contract-card"><div class="card-top"><div><div class="card-ref">${safe(r.anio||'—')} · N.º ${safe(r.nro||'—')}${issueMark(r)}</div><div class="card-project"><span class="project-chip">${safe(r.proyecto||'Sin proyecto')}</span></div></div><div class="card-amount">${r.monto===null?'—':money.format(r.monto)}</div></div><div class="card-provider">${safe(r.proveedor||'—')}</div><div class="card-object">${safe(r.objeto||'—')}</div><div class="card-foot"><span>${safe(displayDate(r.fecha))} · ${safe(r.tipo||'Sin tipo')}</span><button class="row-action" type="button" data-id="${safe(r.id)}">Detalle</button></div></article>`}
 function renderResults(){const p=pageData();$('tableBody').innerHTML=p.rows.length?p.rows.map(rowHtml).join(''):`<tr><td colspan="8" style="padding:42px;text-align:center;color:#71807a">No existen contratos con los criterios aplicados.</td></tr>`;$('cardList').innerHTML=p.rows.length?p.rows.map(cardHtml).join(''):`<div style="padding:30px;text-align:center;color:#71807a">No existen contratos con los criterios aplicados.</div>`;document.querySelectorAll('.row-action[data-id]').forEach(b=>b.onclick=()=>openDetail(b.dataset.id));const from=state.filtered.length?p.start+1:0,to=Math.min(p.start+p.size,state.filtered.length);$('pageInfo').textContent=`${integer.format(from)}–${integer.format(to)} de ${integer.format(state.filtered.length)} · Página ${p.pages?state.page:0} de ${p.pages}`;$('firstPage').disabled=$('prevPage').disabled=state.page<=1;$('nextPage').disabled=$('lastPage').disabled=state.page>=p.pages}
-function renderAll(){filterRecords();renderKpis();renderYearBars();renderQuality();renderHints();renderResults();$('footer').textContent=`Fondo de Inversión Ambiental Sostenible · ${integer.format(state.records.length)} registros cargados directamente desde ${state.driveItem?.name||'Base Contrato.xlsx'} / ${state.sourceSheet||CONFIG.preferredSheet}`}
+function renderAll(){filterRecords();renderKpis();renderBI();renderYearBars();renderQuality();renderHints();renderResults();$('footer').textContent=`Fondo de Inversión Ambiental Sostenible · ${integer.format(state.records.length)} registros cargados directamente desde ${state.driveItem?.name||'Base Contrato.xlsx'} / ${state.sourceSheet||CONFIG.preferredSheet}`}
 function clearFilters(){['yearFilter','projectFilter','unitFilter','methodFilter','typeFilter'].forEach(id=>$(id).value='');$('amountMin').value='';$('amountMax').value='';$('qualityOnly').checked=false;$('searchBox').value='';$('sortSelect').value='date-desc';state.page=1;renderAll()}
 function goPage(n){const size=Math.max(1,Number($('pageSize').value)||25);const pages=Math.max(1,Math.ceil(state.filtered.length/size));state.page=Math.max(1,Math.min(pages,n));renderResults();document.querySelector('.results-card')?.scrollIntoView({behavior:'smooth',block:'start'})}
 function csvCell(v){const s=String(v??'');return /[";,\n\r]/.test(s)?`"${s.replace(/"/g,'""')}"`:s}
@@ -529,13 +867,14 @@ function exportCSV(){if(!state.filtered.length){toast('Sin registros','No existe
 function openDetail(id){const r=state.records.find(x=>x.id===id);if(!r)return;$('drawerTitle').textContent=`${r.anio||'Sin año'} · Contrato N.º ${r.nro||'—'}`;const flags=[];if(r.issueDuplicate)flags.push('Número repetido en el mismo año');if(r.issueMissingAmount)flags.push('Monto no registrado');if(r.issueMissingCore)flags.push('Dato principal incompleto');$('drawerBody').innerHTML=`<div class="detail-grid"><div class="detail-cell"><span>Año</span><strong>${safe(r.anio||'—')}</strong></div><div class="detail-cell"><span>Fecha</span><strong>${safe(displayDate(r.fecha))}</strong></div><div class="detail-cell"><span>Número</span><strong>${safe(r.nro||'—')}</strong></div><div class="detail-cell"><span>Monto</span><strong>${safe(displayMoney(r.monto))}</strong></div><div class="detail-cell wide"><span>Unidad administrativa</span><strong>${safe(r.unidad||'—')}</strong></div><div class="detail-cell"><span>Proyecto</span><strong>${safe(r.proyecto||'—')}</strong></div><div class="detail-cell"><span>Unidades</span><strong>${safe(r.unidades??'—')}</strong></div><div class="detail-cell"><span>Método de contratación</span><strong>${safe(r.metodo||'—')}</strong></div><div class="detail-cell"><span>Tipo de adquisición</span><strong>${safe(r.tipo||'—')}</strong></div><div class="detail-cell wide"><span>Oferente contratado</span><strong>${safe(r.proveedor||'—')}</strong></div>${has(r.observaciones)?`<div class="detail-cell wide"><span>Observaciones</span><p>${safe(r.observaciones)}</p></div>`:''}${flags.length?`<div class="detail-cell wide" style="border-color:#ecd7ae;background:#fffaf1"><span>Control de integridad</span><p>${safe(flags.join(' · '))}</p></div>`:''}</div><div class="detail-object"><span>Objeto contractual</span><p>${safe(r.objeto||'—')}</p></div>`;$('detailDrawer').classList.add('open');$('detailDrawer').setAttribute('aria-hidden','false');document.body.style.overflow='hidden'}
 function closeDetail(){$('detailDrawer').classList.remove('open');$('detailDrawer').setAttribute('aria-hidden','true');document.body.style.overflow=''}
 function bind(){
-  $('loginBtn').onclick=login;$('syncBtn').onclick=()=>syncExcel(true);$('logoutBtn').onclick=logout;$('clearBtn').onclick=clearFilters;$('exportBtn').onclick=exportCSV;$('closeDrawer').onclick=closeDetail;$('detailDrawer').addEventListener('click',e=>{if(e.target===$('detailDrawer'))closeDetail()});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDetail()});
+  $('loginBtn').onclick=login;$('syncBtn').onclick=()=>syncExcel(true);$('logoutBtn').onclick=logout;$('clearBtn').onclick=clearFilters;$('exportBtn').onclick=exportCSV;$('biResetBtn').onclick=clearFilters;$('reportBtn').onclick=openReport;$('closeReportBtn').onclick=closeReport;$('printReportBtn').onclick=printReport;
+  $('closeDrawer').onclick=closeDetail;$('detailDrawer').addEventListener('click',e=>{if(e.target===$('detailDrawer'))closeDetail()});$('reportModal').addEventListener('click',e=>{if(e.target===$('reportModal'))closeReport()});document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeDetail();closeReport()}});
   const deb=debounce(()=>{state.page=1;renderAll()},160);['searchBox','amountMin','amountMax'].forEach(id=>$(id).addEventListener('input',deb));['yearFilter','projectFilter','unitFilter','methodFilter','typeFilter','qualityOnly','sortSelect','pageSize'].forEach(id=>$(id).addEventListener('change',()=>{state.page=1;renderAll()}));
   $('firstPage').onclick=()=>goPage(1);$('prevPage').onclick=()=>goPage(state.page-1);$('nextPage').onclick=()=>goPage(state.page+1);$('lastPage').onclick=()=>goPage(999999);
   document.addEventListener('visibilitychange',()=>{if(!document.hidden&&state.account&&state.lastSync&&Date.now()-state.lastSync.getTime()>CONFIG.autoRefreshMinutes*60*1000)syncExcel(false)});
 }
 async function boot(){
-  bind();$('openExcelBtn').href=CONFIG.shareUrl;$('drawerExcelLink').href=CONFIG.shareUrl;renderAll();
+  bind();window.addEventListener('afterprint',()=>document.body.classList.remove('report-print'));$('openExcelBtn').href=CONFIG.shareUrl;$('drawerExcelLink').href=CONFIG.shareUrl;renderAll();
   try{await setupMsal();if(state.account){updateAuthUi();await syncExcel(false)}}catch(err){toast('Configuración de acceso',friendlyError(err),'bad');$('loginBtn').disabled=false}
 }
 

@@ -548,8 +548,8 @@ button, .area-card, #top10Body tr { -webkit-tap-highlight-color:transparent; }
 }
 .leaflet-popup.fap-popup .leaflet-popup-content {
   margin:0!important;
-  width:min(860px,78vw)!important;
-  max-width:min(860px,78vw)!important;
+  width:auto;
+  max-width:min(860px,calc(100vw - 36px))!important;
 }
 .leaflet-popup.fap-popup .leaflet-popup-tip { background:#fff; }
 /* El popup queda por encima de los controles del mapa, pero por debajo de los KPIs. */
@@ -557,7 +557,7 @@ button, .area-card, #top10Body tr { -webkit-tap-highlight-color:transparent; }
 .popup-shell {
   width:100%;
   max-width:100%;
-  max-height:calc(100vh - 220px);
+  max-height:var(--popup-max-height, calc(100vh - 220px));
   padding:17px 18px 15px;
   overflow:hidden;
   background:linear-gradient(180deg,#fff 0%,#fbfcfd 100%);
@@ -568,10 +568,10 @@ button, .area-card, #top10Body tr { -webkit-tap-highlight-color:transparent; }
   width:100%;
   max-width:100%;
   min-height:0;
-  flex:0 1 230px;
+  flex:0 0 auto;
   overflow-x:hidden;
   overflow-y:auto;
-  max-height:230px;
+  max-height:var(--popup-table-max-height, 300px);
   margin-top:11px;
   border:1px solid #e7ebef;
   border-radius:11px;
@@ -661,9 +661,9 @@ button, .area-card, #top10Body tr { -webkit-tap-highlight-color:transparent; }
   .floating-card .sub { font-size:.51rem; }
   .legend { padding:8px 9px; min-width:0; max-width:154px; }
   .legend .rowi { font-size:.65rem; }
-  .leaflet-popup.fap-popup .leaflet-popup-content { width:min(94vw,680px)!important; max-width:min(94vw,680px)!important; }
-  .popup-shell { padding:13px; max-height:calc(100vh - 190px); }
-  .popup-shell .popup-table-wrap { max-height:200px; }
+  .leaflet-popup.fap-popup .leaflet-popup-content { max-width:calc(100vw - 20px)!important; }
+  .popup-shell { padding:13px; max-height:var(--popup-max-height, calc(100vh - 190px)); }
+  .popup-shell .popup-table-wrap { max-height:var(--popup-table-max-height, 200px); }
   .popup-shell .popup-table th, .popup-shell .popup-table td { font-size:.68rem; padding:6px; }
 }
 
@@ -845,18 +845,48 @@ function getPopupViewportPadding() {
   };
 }
 
+function getPopupSizing(rowCount = 0) {
+  const mapWidth = map.getContainer().clientWidth || window.innerWidth;
+  const viewportCap = Math.max(280, Math.min(mapWidth - 28, window.innerWidth - 28));
+  const idealWidth = rowCount <= 2 ? 650 : rowCount <= 5 ? 740 : 860;
+  return {
+    width: Math.min(idealWidth, viewportCap),
+    density: rowCount <= 2 ? 'compact' : rowCount <= 5 ? 'medium' : 'extended'
+  };
+}
+
 function keepPopupInViewport(popup) {
   if (!popup) return;
   const padding = getPopupViewportPadding();
+  const rowCount = Number(popup._fapRowCount || 0);
+  const sizing = getPopupSizing(rowCount);
+  const mapHeight = map.getContainer().clientHeight || window.innerHeight;
+  const availableHeight = Math.max(240, mapHeight - padding.topLeft.y - padding.bottomRight.y);
+  const tableMaxHeight = Math.max(96, Math.min(320, availableHeight - (window.innerWidth <= 700 ? 185 : 205)));
+
   popup.options.autoPan = true;
   popup.options.keepInView = true;
+  popup.options.minWidth = sizing.width;
+  popup.options.maxWidth = sizing.width;
   popup.options.autoPanPaddingTopLeft = padding.topLeft;
   popup.options.autoPanPaddingBottomRight = padding.bottomRight;
 
-  // El popup ya está montado cuando se dispara popupopen. update() vuelve a
-  // ejecutar el cálculo de posición y auto-pan usando el padding actualizado.
+  // El alto se adapta al contenido. Solo las tablas extensas alcanzan este
+  // límite y activan scroll; las tablas cortas conservan su altura natural.
+  if (popup._container) {
+    popup._container.style.setProperty('--popup-max-height', `${availableHeight}px`);
+    popup._container.style.setProperty('--popup-table-max-height', `${tableMaxHeight}px`);
+    popup._container.dataset.popupDensity = sizing.density;
+  }
+
+  // Dos ciclos permiten que Leaflet mida primero el contenido natural y luego
+  // ejecute el auto-pan con las dimensiones finales del popup.
   requestAnimationFrame(() => {
-    if (popup.isOpen && popup.isOpen()) popup.update();
+    if (!(popup.isOpen && popup.isOpen())) return;
+    popup.update();
+    requestAnimationFrame(() => {
+      if (popup.isOpen && popup.isOpen()) popup.update();
+    });
   });
 }
 
@@ -1159,15 +1189,18 @@ function render() {
     const isSelected = !selectedAreaName || a.nombre_area === selectedAreaName;
     if (isSelected && a.latitud != null && a.longitud != null) {
       const popupPadding = getPopupViewportPadding();
+      const popupRowCount = (displayArea.detail_visible || displayArea.detail || []).length;
+      const popupSizing = getPopupSizing(popupRowCount);
       const marker = L.marker([a.latitud, a.longitud], { icon:createIcon(displayArea) }).bindPopup(popupHtml(displayArea), {
-        maxWidth: 900,
-        minWidth: 420,
+        maxWidth: popupSizing.width,
+        minWidth: popupSizing.width,
         className: 'fap-popup',
         autoPan: true,
         keepInView: true,
         autoPanPaddingTopLeft: popupPadding.topLeft,
         autoPanPaddingBottomRight: popupPadding.bottomRight
       });
+      marker.getPopup()._fapRowCount = popupRowCount;
       marker.on('click', () => {
         selectedAreaName = a.nombre_area;
         highlightCard(a.nombre_area);

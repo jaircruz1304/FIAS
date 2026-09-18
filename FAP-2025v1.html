@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <title>Mapa Ejecutivo FAP 2025</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
@@ -404,7 +405,7 @@ button, .area-card, #top10Body tr { -webkit-tap-highlight-color:transparent; }
 
 /* Mapa e indicadores ejecutivos */
 #map-wrap { position:relative; min-width:0; min-height:0; overflow:hidden; background:#dfe7e4; }
-#map { width:100%; height:100%; }
+#map { width:100%; height:100%; background:linear-gradient(135deg,#e7efec 0%,#f3f6f5 100%); }
 #floating {
   position:absolute;
   top:14px;
@@ -418,7 +419,7 @@ button, .area-card, #top10Body tr { -webkit-tap-highlight-color:transparent; }
   align-items:start;
 }
 .floating-card {
-  pointer-events:auto;
+  pointer-events:none;
   min-width:0;
   min-height:56px;
   display:flex;
@@ -553,7 +554,7 @@ button, .area-card, #top10Body tr { -webkit-tap-highlight-color:transparent; }
 }
 .leaflet-popup.fap-popup .leaflet-popup-tip { background:#fff; }
 /* El popup queda por encima de los controles del mapa, pero por debajo de los KPIs. */
-.leaflet-popup-pane { z-index:950; }
+.leaflet-popup-pane { z-index:1100; }
 .popup-shell {
   width:100%;
   max-width:100%;
@@ -564,6 +565,7 @@ button, .area-card, #top10Body tr { -webkit-tap-highlight-color:transparent; }
   display:flex;
   flex-direction:column;
 }
+.popup-shell.is-visual { overflow-y:auto; }
 .popup-shell .popup-table-wrap {
   width:100%;
   max-width:100%;
@@ -605,6 +607,275 @@ button, .area-card, #top10Body tr { -webkit-tap-highlight-color:transparent; }
 .popup-shell .popup-table th:nth-child(3), .popup-shell .popup-table td:nth-child(3),
 .popup-shell .popup-table th:nth-child(4), .popup-shell .popup-table td:nth-child(4) { width:20%; }
 .popup-shell .popup-table th:nth-child(5), .popup-shell .popup-table td:nth-child(5) { width:10%; text-align:right; }
+
+
+/* Analítica dentro del popup */
+.popup-head {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:10px;
+}
+.popup-title-wrap { display:flex; align-items:center; gap:10px; min-width:0; }
+.popup-logo {
+  width:42px;
+  height:42px;
+  flex:0 0 42px;
+  border-radius:12px;
+  object-fit:cover;
+  background:#f3f6f5;
+  border:1px solid #e4e9e7;
+  box-shadow:0 2px 7px rgba(16,24,40,.08);
+}
+.popup-name {
+  color:var(--navy-900);
+  font-weight:780;
+  line-height:1.15;
+  font-size:1rem;
+  letter-spacing:-.018em;
+}
+.popup-meta { margin-top:3px; color:#7b8797; font-size:.72rem; line-height:1.25; }
+.popup-tabs {
+  display:flex;
+  gap:5px;
+  padding:4px;
+  margin:0 0 10px;
+  border:1px solid #e5eaf0;
+  border-radius:12px;
+  background:#f5f7f9;
+}
+.popup-tab-btn {
+  position:relative;
+  z-index:3;
+  flex:1 1 0;
+  min-height:34px;
+  border:0;
+  border-radius:9px;
+  background:transparent;
+  color:#667085;
+  font-size:.7rem;
+  font-weight:730;
+  letter-spacing:.005em;
+  cursor:pointer;
+  pointer-events:auto;
+  touch-action:manipulation;
+  user-select:none;
+  transition:background .16s ease,color .16s ease,box-shadow .16s ease;
+}
+.popup-tab-btn:hover { color:var(--navy-900); }
+.popup-tab-btn.active {
+  color:var(--brand-800);
+  background:#fff;
+  box-shadow:0 1px 3px rgba(16,24,40,.08), inset 0 0 0 1px #e1e8e5;
+}
+.popup-tab-panel[hidden] { display:none!important; }
+.popup-tab-panel {
+  min-height:0;
+  max-height:var(--popup-panel-max-height, 430px);
+  overflow:auto;
+  overscroll-behavior:contain;
+  scrollbar-width:thin;
+  scrollbar-color:#cbd5df transparent;
+}
+.popup-kpis {
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:7px;
+  margin-bottom:9px;
+}
+.popup-kpi {
+  min-width:0;
+  padding:9px 10px;
+  border:1px solid #e5eaf0;
+  border-radius:12px;
+  background:linear-gradient(150deg,#fff 0%,#f8fbfa 100%);
+}
+.popup-kpi .pk-label {
+  color:#7b8797;
+  font-size:.56rem;
+  line-height:1.15;
+  text-transform:uppercase;
+  font-weight:750;
+  letter-spacing:.04em;
+  margin-bottom:4px;
+}
+.popup-kpi .pk-value {
+  color:#243244;
+  font-size:.78rem;
+  line-height:1.1;
+  font-weight:820;
+  letter-spacing:-.015em;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.popup-visual-grid {
+  display:grid;
+  grid-template-columns:minmax(180px,.72fr) minmax(0,1.8fr);
+  gap:9px;
+  align-items:stretch;
+}
+.popup-chart-card {
+  min-width:0;
+  border:1px solid #e5eaf0;
+  border-radius:13px;
+  background:#fff;
+  padding:10px 11px;
+}
+.popup-chart-title {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  color:#344054;
+  font-size:.68rem;
+  line-height:1.2;
+  font-weight:760;
+  margin-bottom:8px;
+}
+.popup-chart-title i { color:var(--brand-700); }
+.popup-chart-sub { color:#98a2b3; font-size:.57rem; font-weight:600; white-space:nowrap; }
+.execution-ring-wrap {
+  min-height:155px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.execution-ring {
+  --p:0;
+  --ring-color:var(--brand-600);
+  position:relative;
+  width:132px;
+  height:132px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:conic-gradient(var(--ring-color) calc(var(--p) * 1%), #e9eef2 0);
+  box-shadow:inset 0 0 0 1px rgba(16,24,40,.03);
+}
+.execution-ring::after {
+  content:"";
+  position:absolute;
+  inset:15px;
+  border-radius:50%;
+  background:#fff;
+  box-shadow:0 0 0 1px #eef1f4;
+}
+.execution-ring-inner {
+  position:relative;
+  z-index:1;
+  text-align:center;
+  line-height:1.05;
+}
+.execution-ring-value { color:#1f2d3d; font-weight:850; font-size:1.28rem; letter-spacing:-.04em; }
+.execution-ring-label { margin-top:5px; color:#98a2b3; font-size:.58rem; text-transform:uppercase; font-weight:750; letter-spacing:.045em; }
+.popup-mini-stats {
+  display:flex;
+  justify-content:center;
+  gap:14px;
+  padding-top:7px;
+  border-top:1px solid #eef1f4;
+  color:#667085;
+  font-size:.61rem;
+}
+.popup-mini-stats strong { color:#344054; }
+.source-chart {
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  max-height:192px;
+  overflow:auto;
+  padding-right:2px;
+  scrollbar-width:thin;
+  scrollbar-color:#d1dae3 transparent;
+}
+.source-row { min-width:0; }
+.source-row-head {
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:10px;
+  align-items:end;
+  margin-bottom:4px;
+}
+.source-name {
+  min-width:0;
+  color:#475467;
+  font-size:.62rem;
+  line-height:1.15;
+  font-weight:650;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.source-pct { color:#344054; font-size:.61rem; font-weight:800; }
+.source-track {
+  position:relative;
+  height:8px;
+  overflow:hidden;
+  border-radius:999px;
+  background:#e9eef2;
+}
+.source-fill {
+  position:absolute;
+  inset:0 auto 0 0;
+  width:var(--w,0%);
+  border-radius:inherit;
+  background:linear-gradient(90deg,var(--brand-700),var(--brand-500));
+  transition:width .35s ease;
+}
+.source-row:hover .source-fill { filter:saturate(1.12) brightness(.98); }
+.source-values {
+  display:flex;
+  justify-content:space-between;
+  gap:8px;
+  margin-top:3px;
+  color:#98a2b3;
+  font-size:.54rem;
+  line-height:1.1;
+}
+.popup-insight {
+  display:flex;
+  align-items:flex-start;
+  gap:7px;
+  margin-top:8px;
+  padding:7px 9px;
+  border-radius:10px;
+  color:#667085;
+  background:#f7f9fb;
+  border:1px solid #edf0f3;
+  font-size:.61rem;
+  line-height:1.35;
+}
+.popup-insight i { margin-top:1px; color:var(--brand-700); }
+.popup-detail-head {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:7px;
+  color:#475467;
+  font-size:.65rem;
+}
+.popup-detail-head strong { color:#344054; }
+.popup-shell .popup-tab-panel .popup-table-wrap { margin-top:0; }
+
+@media (max-width:700px) {
+  .popup-head { align-items:flex-start; }
+  .popup-logo { width:38px; height:38px; flex-basis:38px; border-radius:10px; }
+  .popup-name { font-size:.9rem; }
+  .popup-meta { font-size:.65rem; }
+  .popup-kpis { grid-template-columns:repeat(2,minmax(0,1fr)); gap:5px; }
+  .popup-kpi { padding:7px 8px; }
+  .popup-kpi .pk-value { font-size:.73rem; }
+  .popup-visual-grid { grid-template-columns:1fr; gap:7px; }
+  .execution-ring-wrap { min-height:126px; }
+  .execution-ring { width:112px; height:112px; }
+  .execution-ring::after { inset:13px; }
+  .execution-ring-value { font-size:1.08rem; }
+  .source-chart { max-height:145px; }
+  .popup-chart-card { padding:8px 9px; }
+}
 
 /* Tablet */
 @media (max-width:1100px) {
@@ -766,7 +1037,7 @@ button, .area-card, #top10Body tr { -webkit-tap-highlight-color:transparent; }
         <div id="cards"></div>
       </div>
     </div>
-    <div class="footer-note">Versión ajustada a la data nueva y a la estructura visual del mapa base de referencia.</div>
+    <div class="footer-note">Versión ejecutiva con analítica visual integrada en mapas y ventanas emergentes.</div>
   </aside>
 
   <main id="map-wrap">
@@ -817,10 +1088,50 @@ const AREAS = [{"codigo_fap": 200.0, "nombre_area": "IMPLEMENTACION EN TERRITORI
 const stateOrder = {'Alto':4,'Medio':3,'Bajo':2,'Crítico':1,'Critico':1};
 const map = L.map('map', { zoomControl:false }).setView([-1.8, -78.2], 6);
 L.control.zoom({ position:'topright' }).addTo(map);
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  attribution:'&copy; OpenStreetMap contributors',
+// Mapa base SIN API KEY.
+// Se utiliza el servidor comunitario de OpenStreetMap Alemania, que no requiere
+// token de acceso. Si los mosaicos no estuvieran disponibles, el reporte conserva
+// el mapa funcional con un fondo neutro, evitando mensajes 403 o "API key required".
+const transparentTile = 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=';
+
+const osmDeBaseLayer = L.tileLayer('https://tile.openstreetmap.de/{z}/{x}/{y}.png', {
+  attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap contributors</a> · Tiles: OpenStreetMap.de',
+  maxZoom:19,
+  crossOrigin:true,
+  errorTileUrl:transparentTile,
+  updateWhenIdle:true,
+  keepBuffer:2
+});
+
+let activeBaseLayer = osmDeBaseLayer;
+let baseTileErrors = 0;
+osmDeBaseLayer.addTo(map);
+
+// Fondo local de contingencia: no usa internet ni credenciales.
+// Se activa únicamente si el servidor de mosaicos presenta varios errores.
+const localFallbackLayer = L.gridLayer({
+  attribution:'Visualización geográfica FIAS',
+  tileSize:256,
+  minZoom:2,
   maxZoom:19
-}).addTo(map);
+});
+localFallbackLayer.createTile = function(coords) {
+  const tile = document.createElement('div');
+  tile.style.width = '256px';
+  tile.style.height = '256px';
+  tile.style.background = '#e8efec';
+  tile.style.border = '1px solid rgba(92,117,108,.08)';
+  tile.style.boxSizing = 'border-box';
+  return tile;
+};
+
+osmDeBaseLayer.on('tileerror', () => {
+  baseTileErrors += 1;
+  if (baseTileErrors < 4 || activeBaseLayer === localFallbackLayer) return;
+  if (map.hasLayer(osmDeBaseLayer)) map.removeLayer(osmDeBaseLayer);
+  activeBaseLayer = localFallbackLayer;
+  localFallbackLayer.addTo(map);
+});
 
 const cluster = L.markerClusterGroup();
 map.addLayer(cluster);
@@ -862,7 +1173,7 @@ function keepPopupInViewport(popup) {
   const sizing = getPopupSizing(rowCount);
   const mapHeight = map.getContainer().clientHeight || window.innerHeight;
   const availableHeight = Math.max(240, mapHeight - padding.topLeft.y - padding.bottomRight.y);
-  const tableMaxHeight = Math.max(96, Math.min(320, availableHeight - (window.innerWidth <= 700 ? 185 : 205)));
+  const tableMaxHeight = Math.max(96, Math.min(360, availableHeight - (window.innerWidth <= 700 ? 155 : 175)));
 
   popup.options.autoPan = true;
   popup.options.keepInView = true;
@@ -876,6 +1187,7 @@ function keepPopupInViewport(popup) {
   if (popup._container) {
     popup._container.style.setProperty('--popup-max-height', `${availableHeight}px`);
     popup._container.style.setProperty('--popup-table-max-height', `${tableMaxHeight}px`);
+    popup._container.style.setProperty('--popup-panel-max-height', `${Math.max(160, availableHeight - 118)}px`);
     popup._container.dataset.popupDensity = sizing.density;
   }
 
@@ -890,9 +1202,74 @@ function keepPopupInViewport(popup) {
   });
 }
 
+function bindPopupInteractions(popup) {
+  if (!popup || !popup._container) return;
+  const root = popup._container.querySelector('.popup-shell');
+  if (!root || root.dataset.bound === '1') return;
+  root.dataset.bound = '1';
+
+  // Evita que Leaflet, el mapa o cualquier capa superpuesta capture los clics
+  // destinados a los controles del popup.
+  L.DomEvent.disableClickPropagation(root);
+  L.DomEvent.disableScrollPropagation(root);
+
+  const activatePopupTab = (target) => {
+    const buttons = [...root.querySelectorAll('.popup-tab-btn')];
+    const panels = [...root.querySelectorAll('.popup-tab-panel')];
+    if (!buttons.length || !panels.length) return;
+
+    buttons.forEach(button => {
+      const active = button.dataset.popupTab === target;
+      button.classList.toggle('active', active);
+      button.setAttribute('aria-selected', active ? 'true' : 'false');
+      button.tabIndex = active ? 0 : -1;
+    });
+
+    panels.forEach(panel => {
+      const active = panel.dataset.popupPanel === target;
+      panel.hidden = !active;
+      panel.setAttribute('aria-hidden', active ? 'false' : 'true');
+    });
+
+    root.classList.toggle('is-visual', target === 'visual');
+    root.classList.toggle('is-detail', target === 'detail');
+    popup._fapMode = target;
+
+    requestAnimationFrame(() => {
+      if (popup.isOpen && popup.isOpen()) {
+        keepPopupInViewport(popup);
+        popup.update();
+      }
+    });
+  };
+
+  // Delegación: sigue funcionando aunque Leaflet recalcule internamente el popup.
+  root.addEventListener('click', (event) => {
+    const btn = event.target.closest('.popup-tab-btn');
+    if (!btn || !root.contains(btn)) return;
+    event.preventDefault();
+    event.stopPropagation();
+    activatePopupTab(btn.dataset.popupTab || 'visual');
+  }, true);
+
+  root.addEventListener('keydown', (event) => {
+    const btn = event.target.closest('.popup-tab-btn');
+    if (!btn) return;
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      event.stopPropagation();
+      activatePopupTab(btn.dataset.popupTab || 'visual');
+    }
+  }, true);
+
+  activatePopupTab(popup._fapMode || 'visual');
+}
+
 let activePopup = null;
 map.on('popupopen', (event) => {
   activePopup = event.popup;
+  event.popup._fapMode = event.popup._fapMode || 'visual';
+  bindPopupInteractions(event.popup);
   keepPopupInViewport(event.popup);
 });
 map.on('popupclose', (event) => {
@@ -1087,8 +1464,60 @@ function createIcon(a) {
   return L.divIcon({html, className:'', iconSize:[46,46], iconAnchor:[23,23], popupAnchor:[0,-20]});
 }
 
+function clampPct(value) {
+  const n = Number(value) || 0;
+  return Math.max(0, Math.min(100, n * 100));
+}
+
+function aggregateSources(details) {
+  const grouped = new Map();
+  (details || []).forEach((d, idx) => {
+    const name = String(d.fuente_financiamiento || d.aportante || d.nombre || `Fuente ${idx + 1}`).trim() || `Fuente ${idx + 1}`;
+    const current = grouped.get(name) || { name, asignado:0, ejecutado:0, saldo:0 };
+    current.asignado += Number(d.total_asignado_2025) || 0;
+    current.ejecutado += Number(d.total_ejecutado_2025) || 0;
+    current.saldo += Number(d.saldo_no_ejecutado_2025) || 0;
+    grouped.set(name, current);
+  });
+  return [...grouped.values()]
+    .map(item => ({ ...item, porcentaje: item.asignado ? item.ejecutado / item.asignado : 0 }))
+    .sort((a,b) => b.asignado - a.asignado);
+}
+
+function buildSourceBars(details) {
+  const sources = aggregateSources(details);
+  if (!sources.length) {
+    return '<div class="text-muted small py-3 text-center">Sin detalle de fuentes para graficar.</div>';
+  }
+  return sources.map(s => {
+    const width = clampPct(s.porcentaje);
+    const title = `${s.name}: ${pct(s.porcentaje)} ejecutado · ${money(s.ejecutado)} de ${money(s.asignado)}`;
+    return `
+      <div class="source-row" title="${esc(title)}">
+        <div class="source-row-head">
+          <div class="source-name">${esc(s.name)}</div>
+          <div class="source-pct">${pct(s.porcentaje)}</div>
+        </div>
+        <div class="source-track" aria-label="${esc(title)}"><div class="source-fill" style="--w:${width.toFixed(2)}%"></div></div>
+        <div class="source-values"><span>${money(s.ejecutado)} ejecutado</span><span>${money(s.asignado)} asignado</span></div>
+      </div>`;
+  }).join('');
+}
+
+function buildPopupInsight(a, details) {
+  const sources = aggregateSources(details);
+  if (!sources.length) return 'No existen registros de detalle para el filtro seleccionado.';
+  const best = [...sources].sort((x,y) => y.porcentaje - x.porcentaje)[0];
+  const pending = [...sources].sort((x,y) => y.saldo - x.saldo)[0];
+  const parts = [];
+  if (best) parts.push(`Mayor avance: ${best.name} (${pct(best.porcentaje)}).`);
+  if (pending && pending.saldo > 0) parts.push(`Mayor saldo pendiente: ${pending.name} (${money(pending.saldo)}).`);
+  return parts.join(' ');
+}
+
 function popupHtml(a) {
-  const rows = (a.detail_visible || a.detail || []).map(d => `
+  const details = a.detail_visible || a.detail || [];
+  const rows = details.map(d => `
     <tr>
       <td>${esc(d.aportante || '')}</td>
       <td>${esc(d.fuente_financiamiento || d.nombre || '')}</td>
@@ -1098,37 +1527,81 @@ function popupHtml(a) {
     </tr>
   `).join('');
 
+  const sourceBars = buildSourceBars(details);
+  const executionVisual = clampPct(a.porcentaje_ejecucion);
+  const aportantes = new Set(details.map(d => d.aportante).filter(Boolean)).size;
+  const fuentes = new Set(details.map(d => d.fuente_financiamiento).filter(Boolean)).size;
+  const insight = buildPopupInsight(a, details);
+  const ringColor = a.estado_ejecucion === 'Crítico' || a.estado_ejecucion === 'Critico'
+    ? 'var(--critico)'
+    : a.estado_ejecucion === 'Bajo'
+      ? 'var(--bajo)'
+      : a.estado_ejecucion === 'Medio'
+        ? 'var(--medio)'
+        : 'var(--alto)';
+
   return `
-    <div class="popup-shell">
-      <div class="d-flex align-items-center gap-2 mb-2">
-        <img src="${esc(a.url_img || '')}" onerror="this.style.display='none'" style="width:38px;height:38px;border-radius:50%;object-fit:cover;background:#f3f4f6;flex:0 0 38px;">
-        <div style="min-width:0;">
-          <div style="font-weight:700;line-height:1.1;font-size:1rem;">${esc(a.nombre_area)}</div>
-          <div style="font-size:.82rem;color:#6b7280;">${esc(a.tipo_registro.replaceAll('_',' '))} · ${esc(a.region || '')}</div>
+    <div class="popup-shell is-visual">
+      <div class="popup-head">
+        <div class="popup-title-wrap">
+          <img class="popup-logo" src="${esc(a.url_img || '')}" onerror="this.style.display='none'">
+          <div style="min-width:0;">
+            <div class="popup-name">${esc(a.nombre_area)}</div>
+            <div class="popup-meta">${esc((a.tipo_registro || '').replaceAll('_',' '))} · ${esc(a.region || '')}</div>
+          </div>
         </div>
-      </div>
-      <div class="mb-2">
         <span class="badge-state state-${esc(a.estado_ejecucion)}">${esc(a.estado_ejecucion)}</span>
       </div>
-      <div class="small mb-2" style="font-size:.92rem;">
-        <div><strong>Asignado:</strong> ${money(a.total_asignado_2025)}</div>
-        <div><strong>Ejecutado:</strong> ${money(a.total_ejecutado_2025)}</div>
-        <div><strong>Saldo:</strong> ${money(a.saldo_no_ejecutado_2025)}</div>
-        <div><strong>% ejecución:</strong> ${pct(a.porcentaje_ejecucion)}</div>
+
+      <div class="popup-tabs" role="tablist" aria-label="Vista del reporte">
+        <button type="button" class="popup-tab-btn active" data-popup-tab="visual" role="tab" aria-selected="true"><i class="fas fa-chart-pie me-1"></i>Resumen visual</button>
+        <button type="button" class="popup-tab-btn" data-popup-tab="detail" role="tab" aria-selected="false"><i class="fas fa-table-list me-1"></i>Detalle</button>
       </div>
-      <div class="popup-table-wrap">
-        <table class="table table-sm popup-table">
-          <thead>
-            <tr>
-              <th>Aportante</th>
-              <th>Fuente</th>
-              <th class="text-end">Asignado</th>
-              <th class="text-end">Ejecutado</th>
-              <th class="text-end">%</th>
-            </tr>
-          </thead>
-          <tbody>${rows}</tbody>
-        </table>
+
+      <div class="popup-tab-panel" data-popup-panel="visual">
+        <div class="popup-kpis">
+          <div class="popup-kpi"><div class="pk-label">Asignado</div><div class="pk-value" title="${money(a.total_asignado_2025)}">${money(a.total_asignado_2025)}</div></div>
+          <div class="popup-kpi"><div class="pk-label">Ejecutado</div><div class="pk-value" title="${money(a.total_ejecutado_2025)}">${money(a.total_ejecutado_2025)}</div></div>
+          <div class="popup-kpi"><div class="pk-label">Saldo</div><div class="pk-value" title="${money(a.saldo_no_ejecutado_2025)}">${money(a.saldo_no_ejecutado_2025)}</div></div>
+          <div class="popup-kpi"><div class="pk-label">% ejecución</div><div class="pk-value">${pct(a.porcentaje_ejecucion)}</div></div>
+        </div>
+
+        <div class="popup-visual-grid">
+          <section class="popup-chart-card" aria-label="Indicador de ejecución presupuestaria">
+            <div class="popup-chart-title"><span><i class="fas fa-chart-pie me-1"></i>Ejecución presupuestaria</span><span class="popup-chart-sub">2025</span></div>
+            <div class="execution-ring-wrap">
+              <div class="execution-ring" style="--p:${executionVisual.toFixed(2)};--ring-color:${ringColor};" title="${pct(a.porcentaje_ejecucion)} de ejecución">
+                <div class="execution-ring-inner"><div class="execution-ring-value">${pct(a.porcentaje_ejecucion)}</div><div class="execution-ring-label">ejecutado</div></div>
+              </div>
+            </div>
+            <div class="popup-mini-stats"><span><strong>${aportantes}</strong> aportante${aportantes === 1 ? '' : 's'}</span><span><strong>${fuentes}</strong> fuente${fuentes === 1 ? '' : 's'}</span></div>
+          </section>
+
+          <section class="popup-chart-card" aria-label="Ejecución por fuente de financiamiento">
+            <div class="popup-chart-title"><span><i class="fas fa-chart-bar me-1"></i>Ejecución por fuente</span><span class="popup-chart-sub">Ejecutado / asignado</span></div>
+            <div class="source-chart">${sourceBars}</div>
+          </section>
+        </div>
+
+        <div class="popup-insight"><i class="fas fa-lightbulb"></i><span>${esc(insight)}</span></div>
+      </div>
+
+      <div class="popup-tab-panel" data-popup-panel="detail" hidden>
+        <div class="popup-detail-head"><span><strong>Detalle financiero</strong> por aportante y fuente</span><span>${details.length} registro${details.length === 1 ? '' : 's'}</span></div>
+        <div class="popup-table-wrap">
+          <table class="table table-sm popup-table">
+            <thead>
+              <tr>
+                <th>Aportante</th>
+                <th>Fuente</th>
+                <th class="text-end">Asignado</th>
+                <th class="text-end">Ejecutado</th>
+                <th class="text-end">%</th>
+              </tr>
+            </thead>
+            <tbody>${rows || '<tr><td colspan="5" class="text-center text-muted py-3">Sin registros para el filtro seleccionado.</td></tr>'}</tbody>
+          </table>
+        </div>
       </div>
     </div>
   `;

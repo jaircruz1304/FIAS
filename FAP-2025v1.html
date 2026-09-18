@@ -662,14 +662,39 @@ button, .area-card, #top10Body tr { -webkit-tap-highlight-color:transparent; }
   touch-action:manipulation;
   user-select:none;
   transition:background .16s ease,color .16s ease,box-shadow .16s ease;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
 }
 .popup-tab-btn:hover { color:var(--navy-900); }
-.popup-tab-btn.active {
+
+/* Tabs nativos: el cambio Resumen/Detalle NO depende del click JavaScript. */
+.popup-tab-controller { position:relative; min-height:0; }
+.popup-tab-radio {
+  position:absolute;
+  inline-size:1px;
+  block-size:1px;
+  opacity:0;
+  pointer-events:none;
+  overflow:hidden;
+}
+.popup-tab-controller > .popup-tab-panel { display:none; }
+.popup-tab-radio.tab-visual:checked ~ .popup-tabs .popup-tab-btn[data-popup-tab="visual"],
+.popup-tab-radio.tab-detail:checked ~ .popup-tabs .popup-tab-btn[data-popup-tab="detail"] {
   color:var(--brand-800);
   background:#fff;
   box-shadow:0 1px 3px rgba(16,24,40,.08), inset 0 0 0 1px #e1e8e5;
 }
-.popup-tab-panel[hidden] { display:none!important; }
+.popup-tab-radio.tab-visual:focus-visible ~ .popup-tabs .popup-tab-btn[data-popup-tab="visual"],
+.popup-tab-radio.tab-detail:focus-visible ~ .popup-tabs .popup-tab-btn[data-popup-tab="detail"] {
+  outline:2px solid rgba(25,133,107,.35);
+  outline-offset:1px;
+}
+.popup-tab-radio.tab-visual:checked ~ .popup-tab-panel[data-popup-panel="visual"],
+.popup-tab-radio.tab-detail:checked ~ .popup-tab-panel[data-popup-panel="detail"] {
+  display:block;
+}
 .popup-tab-panel {
   min-height:0;
   max-height:var(--popup-panel-max-height, 430px);
@@ -1208,32 +1233,28 @@ function bindPopupInteractions(popup) {
   if (!root || root.dataset.bound === '1') return;
   root.dataset.bound = '1';
 
-  // Evita que Leaflet, el mapa o cualquier capa superpuesta capture los clics
-  // destinados a los controles del popup.
+  // El selector Resumen/Detalle funciona de forma nativa mediante radio + CSS.
+  // Leaflet solo queda aislado para que no arrastre/cierre el mapa al interactuar.
   L.DomEvent.disableClickPropagation(root);
   L.DomEvent.disableScrollPropagation(root);
 
-  const activatePopupTab = (target) => {
-    const buttons = [...root.querySelectorAll('.popup-tab-btn')];
-    const panels = [...root.querySelectorAll('.popup-tab-panel')];
-    if (!buttons.length || !panels.length) return;
+  const controller = root.querySelector('.popup-tab-controller');
+  if (!controller) return;
 
-    buttons.forEach(button => {
-      const active = button.dataset.popupTab === target;
-      button.classList.toggle('active', active);
-      button.setAttribute('aria-selected', active ? 'true' : 'false');
-      button.tabIndex = active ? 0 : -1;
-    });
+  const restoreMode = popup._fapMode === 'detail' ? 'detail' : 'visual';
+  const restoreRadio = controller.querySelector(`.popup-tab-radio.tab-${restoreMode}`);
+  if (restoreRadio) restoreRadio.checked = true;
+  root.classList.toggle('is-visual', restoreMode === 'visual');
+  root.classList.toggle('is-detail', restoreMode === 'detail');
 
-    panels.forEach(panel => {
-      const active = panel.dataset.popupPanel === target;
-      panel.hidden = !active;
-      panel.setAttribute('aria-hidden', active ? 'false' : 'true');
-    });
+  controller.addEventListener('change', (event) => {
+    const radio = event.target.closest('.popup-tab-radio');
+    if (!radio || !controller.contains(radio) || !radio.checked) return;
 
-    root.classList.toggle('is-visual', target === 'visual');
-    root.classList.toggle('is-detail', target === 'detail');
-    popup._fapMode = target;
+    const mode = radio.classList.contains('tab-detail') ? 'detail' : 'visual';
+    popup._fapMode = mode;
+    root.classList.toggle('is-visual', mode === 'visual');
+    root.classList.toggle('is-detail', mode === 'detail');
 
     requestAnimationFrame(() => {
       if (popup.isOpen && popup.isOpen()) {
@@ -1241,28 +1262,7 @@ function bindPopupInteractions(popup) {
         popup.update();
       }
     });
-  };
-
-  // Delegación: sigue funcionando aunque Leaflet recalcule internamente el popup.
-  root.addEventListener('click', (event) => {
-    const btn = event.target.closest('.popup-tab-btn');
-    if (!btn || !root.contains(btn)) return;
-    event.preventDefault();
-    event.stopPropagation();
-    activatePopupTab(btn.dataset.popupTab || 'visual');
-  }, true);
-
-  root.addEventListener('keydown', (event) => {
-    const btn = event.target.closest('.popup-tab-btn');
-    if (!btn) return;
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      event.stopPropagation();
-      activatePopupTab(btn.dataset.popupTab || 'visual');
-    }
-  }, true);
-
-  activatePopupTab(popup._fapMode || 'visual');
+  });
 }
 
 let activePopup = null;
@@ -1515,7 +1515,10 @@ function buildPopupInsight(a, details) {
   return parts.join(' ');
 }
 
+let popupInstanceCounter = 0;
+
 function popupHtml(a) {
+  const popupInstanceId = `fap-popup-tabs-${++popupInstanceCounter}`;
   const details = a.detail_visible || a.detail || [];
   const rows = details.map(d => `
     <tr>
@@ -1553,12 +1556,16 @@ function popupHtml(a) {
         <span class="badge-state state-${esc(a.estado_ejecucion)}">${esc(a.estado_ejecucion)}</span>
       </div>
 
-      <div class="popup-tabs" role="tablist" aria-label="Vista del reporte">
-        <button type="button" class="popup-tab-btn active" data-popup-tab="visual" role="tab" aria-selected="true"><i class="fas fa-chart-pie me-1"></i>Resumen visual</button>
-        <button type="button" class="popup-tab-btn" data-popup-tab="detail" role="tab" aria-selected="false"><i class="fas fa-table-list me-1"></i>Detalle</button>
-      </div>
+      <div class="popup-tab-controller">
+        <input class="popup-tab-radio tab-visual" type="radio" name="${popupInstanceId}" id="${popupInstanceId}-visual" checked>
+        <input class="popup-tab-radio tab-detail" type="radio" name="${popupInstanceId}" id="${popupInstanceId}-detail">
 
-      <div class="popup-tab-panel" data-popup-panel="visual">
+        <div class="popup-tabs" role="tablist" aria-label="Vista del reporte">
+          <label class="popup-tab-btn" data-popup-tab="visual" for="${popupInstanceId}-visual" role="tab"><i class="fas fa-chart-pie me-1"></i>Resumen visual</label>
+          <label class="popup-tab-btn" data-popup-tab="detail" for="${popupInstanceId}-detail" role="tab"><i class="fas fa-table-list me-1"></i>Detalle</label>
+        </div>
+
+        <div class="popup-tab-panel" data-popup-panel="visual">
         <div class="popup-kpis">
           <div class="popup-kpi"><div class="pk-label">Asignado</div><div class="pk-value" title="${money(a.total_asignado_2025)}">${money(a.total_asignado_2025)}</div></div>
           <div class="popup-kpi"><div class="pk-label">Ejecutado</div><div class="pk-value" title="${money(a.total_ejecutado_2025)}">${money(a.total_ejecutado_2025)}</div></div>
@@ -1586,8 +1593,8 @@ function popupHtml(a) {
         <div class="popup-insight"><i class="fas fa-lightbulb"></i><span>${esc(insight)}</span></div>
       </div>
 
-      <div class="popup-tab-panel" data-popup-panel="detail" hidden>
-        <div class="popup-detail-head"><span><strong>Detalle financiero</strong> por aportante y fuente</span><span>${details.length} registro${details.length === 1 ? '' : 's'}</span></div>
+        <div class="popup-tab-panel" data-popup-panel="detail">
+          <div class="popup-detail-head"><span><strong>Detalle financiero</strong> por aportante y fuente</span><span>${details.length} registro${details.length === 1 ? '' : 's'}</span></div>
         <div class="popup-table-wrap">
           <table class="table table-sm popup-table">
             <thead>
@@ -1601,6 +1608,7 @@ function popupHtml(a) {
             </thead>
             <tbody>${rows || '<tr><td colspan="5" class="text-center text-muted py-3">Sin registros para el filtro seleccionado.</td></tr>'}</tbody>
           </table>
+          </div>
         </div>
       </div>
     </div>

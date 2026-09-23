@@ -320,6 +320,127 @@
       .nav-button{width:38px;height:38px;justify-content:center;padding:0}
     }
 
+
+
+    /* ===== Evolución UX + seguridad + mantenimiento predictivo · 23/09/2026 ===== */
+    :root{
+      --sidebar:286px;
+      --brand-lime:#b8dc54;
+      --brand-cyan:#69c8d5;
+      --ink:#11202d;
+    }
+    .sidebar{
+      padding:18px 16px 16px;
+      background:
+        radial-gradient(circle at 15% 8%, rgba(105,200,213,.13), transparent 24%),
+        radial-gradient(circle at 100% 88%, rgba(184,220,84,.10), transparent 28%),
+        linear-gradient(180deg,#063426 0%,#073b2b 58%,#062d22 100%);
+      border-right:1px solid rgba(255,255,255,.08);
+      display:flex;
+      flex-direction:column;
+    }
+    .brand-compact{
+      display:block;
+      margin:0 0 18px;
+      padding:12px;
+      border:1px solid rgba(255,255,255,.11);
+      border-radius:20px;
+      background:rgba(255,255,255,.055);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
+    }
+    .brand-logo-wrap{
+      width:100%;height:68px;flex:none;padding:9px 14px;border-radius:14px;
+      background:#fff;box-shadow:0 8px 22px rgba(0,0,0,.13);overflow:hidden;
+    }
+    .brand-logo{width:100%;height:100%;max-height:none;object-fit:contain;image-rendering:auto;transform:translateZ(0)}
+    .brand-copy{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;margin-top:10px;padding:0 2px}
+    .brand-copy h1{font-size:1.01rem;white-space:normal;line-height:1.12;color:#fff;letter-spacing:-.01em}
+    .brand-copy small{font-size:.68rem;margin:0 0 1px;padding:4px 7px;border-radius:999px;background:rgba(184,220,84,.14);color:#dff2aa;border:1px solid rgba(184,220,84,.22);letter-spacing:.09em}
+    .nav-group{margin:2px 8px 8px;color:#a9cfb5;font-size:.67rem}
+    .nav-section-label{margin:13px 8px 6px;color:#7fb293;font-size:.62rem;font-weight:900;letter-spacing:.14em;text-transform:uppercase}
+    .nav-scroll{gap:5px}
+    .nav-button{
+      min-height:45px;padding:9px 10px;border-radius:13px;color:#d9eee1;font-size:.91rem;font-weight:780;
+      border:1px solid transparent;position:relative;overflow:hidden;
+    }
+    .nav-button .bi{width:34px;height:34px;display:grid;place-items:center;flex:0 0 34px;border-radius:10px;background:rgba(255,255,255,.07);font-size:1rem}
+    .nav-button:hover{background:rgba(255,255,255,.075);border-color:rgba(255,255,255,.08)}
+    .nav-button.active{background:#fff;color:#15543a;border-color:#fff;box-shadow:0 10px 24px rgba(0,0,0,.17)}
+    .nav-button.active .bi{background:#e9f8ee;color:#167042}
+    .nav-button.active::after{content:"";position:absolute;left:0;top:9px;bottom:9px;width:3px;border-radius:0 4px 4px 0;background:linear-gradient(180deg,var(--brand-lime),var(--brand-cyan))}
+    .sidebar-access{margin-top:auto;padding:12px;border:1px solid rgba(255,255,255,.1);border-radius:16px;background:rgba(255,255,255,.055)}
+    .sidebar-access-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+    .sidebar-access .access-label{color:#a9cfb5;font-size:.65rem;font-weight:900;text-transform:uppercase;letter-spacing:.1em}
+    .role-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 8px;border-radius:999px;font-size:.72rem;font-weight:900;background:rgba(255,255,255,.1);color:#e9f6ed}
+    .role-badge.editor{background:rgba(184,220,84,.15);border:1px solid rgba(184,220,84,.24);color:#e5f6b8}
+    .sidebar-user{display:block;margin-top:8px;color:#dbece2;font-size:.76rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .sidebar-access-note{margin-top:6px;color:#9bc4a9;font-size:.68rem;line-height:1.35}
+
+    #sessionChip{display:none!important}
+    .topbar{padding:2px 0 0;margin-bottom:10px}
+    .page-title p{max-width:660px;color:#667085}
+    .system-strip{grid-template-columns:minmax(170px,.8fr) minmax(240px,1.2fr);max-width:660px;margin-bottom:15px}
+    .system-item{padding:9px 12px}
+    .system-item-wide{border-right:0}
+    .system-technical-hidden{display:none!important}
+    .read-only-note{display:none;margin:0 0 14px;padding:10px 12px;border:1px solid #d8e7de;background:#f6fbf8;border-radius:12px;color:#3a5b47;font-size:.84rem}
+    .read-only-note.show{display:flex;align-items:center;gap:9px}
+    .read-only-note i{font-size:1.05rem;color:#1f7a38}
+
+    .smart-plan-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .smart-plan-head .field{min-width:220px;max-width:310px}
+    .smart-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-bottom:12px}
+    .smart-metric{border:1px solid var(--gray-200);border-radius:13px;background:#fbfcfd;padding:11px 12px}
+    .smart-metric span{display:block;color:var(--gray-600);font-size:.67rem;font-weight:900;text-transform:uppercase;letter-spacing:.07em}
+    .smart-metric strong{display:block;margin-top:3px;font-size:1.18rem;color:var(--ink)}
+    .smart-metric small{display:block;margin-top:2px;color:var(--gray-600);font-size:.73rem;line-height:1.25}
+    .smart-note{display:flex;gap:8px;align-items:flex-start;margin:10px 0 0;padding:9px 10px;border-radius:11px;background:#f7faf8;color:#496255;font-size:.78rem;line-height:1.4;border:1px solid #e2ece5}
+    .smart-note i{color:#1f7a38;margin-top:1px}
+    .plan-work{font-weight:850;color:#23352b}
+    .plan-basis{font-size:.76rem;color:var(--gray-600)}
+    .priority-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:6px;background:#39b864}
+    .priority-dot.warn{background:#f59e0b}.priority-dot.bad{background:#ef4444}.priority-dot.info{background:#3b82f6}
+
+    .control-summary{display:flex;align-items:flex-start;gap:10px;padding:11px 12px;border:1px solid #cfe8d7;background:#f5fcf7;border-radius:13px;color:#255a3b}
+    .control-summary.warn{border-color:#f7dca0;background:#fffaf0;color:#7c5a17}
+    .control-summary i{font-size:1.05rem;margin-top:1px}
+    .control-summary strong{display:block;font-size:.9rem}
+    .control-summary p{margin:2px 0 0;font-size:.8rem;line-height:1.4;color:inherit;opacity:.88}
+    .control-issues{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}
+    .trace-details{margin-top:12px;border:1px solid var(--gray-200);border-radius:13px;background:#fbfcfd;overflow:hidden}
+    .trace-details summary{cursor:pointer;padding:10px 12px;font-size:.82rem;font-weight:900;color:#475467;list-style:none;display:flex;align-items:center;gap:7px}
+    .trace-details summary::-webkit-details-marker{display:none}
+    .trace-details[open] summary{border-bottom:1px solid var(--gray-200);background:#fff}
+    .trace-details .detail-grid{padding:10px}
+    .detail-grid-main{grid-template-columns:repeat(4,minmax(0,1fr))}
+
+    .write-hidden{display:none!important}
+    .ocr-view-only{display:none}
+    body.readonly .ocr-view-only{display:block}
+
+    @media(max-width:1100px){.smart-summary{grid-template-columns:1fr 1fr}.detail-grid-main{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media(max-width:900px){
+      :root{--sidebar:100%}
+      .sidebar{display:flex;flex-direction:row;padding:8px 9px}
+      .brand-compact{display:flex;align-items:center;margin:0;padding:0;border:0;background:transparent;box-shadow:none}
+      .brand-logo-wrap{width:94px;height:43px;padding:5px 8px;border-radius:10px;box-shadow:none}
+      .brand-copy,.nav-group,.nav-section-label,.sidebar-access{display:none}
+      .nav-scroll{display:flex;flex-direction:row;gap:5px}
+      .nav-button{min-height:39px;padding:4px 8px}
+      .nav-button .bi{width:30px;height:30px;flex-basis:30px}
+      .nav-button.active::after{display:none}
+      .system-strip{max-width:none;grid-template-columns:1fr 1fr}
+    }
+    @media(max-width:560px){
+      .brand-logo-wrap{width:72px;height:38px}
+      .nav-button span{font-size:.75rem}
+      .system-strip{grid-template-columns:1fr 1fr}
+      .smart-summary{grid-template-columns:1fr 1fr}
+      .smart-plan-head .field{min-width:100%;max-width:none}
+      .detail-grid-main{grid-template-columns:1fr 1fr}
+    }
+    @media(max-width:390px){.brand-logo-wrap{width:58px}.nav-button span{display:none}.smart-summary{grid-template-columns:1fr}.detail-grid-main{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -334,25 +455,32 @@
       <div class="auth-actions">
         <button class="btn btn-primary" id="btnGateLogin"><i class="bi bi-microsoft"></i> Iniciar sesión con Microsoft</button>
       </div>
-      <div class="auth-note"><strong>Seguridad:</strong> la plataforma no muestra la información institucional hasta validar la sesión corporativa.</div>
+      <div class="auth-note"><strong>Seguridad:</strong> la plataforma valida la cuenta corporativa antes de mostrar información. Los permisos de modificación se asignan según el usuario autenticado.</div>
     </div>
   </div>
 
   <div class="app-shell locked" id="appShell">
     <aside class="sidebar">
       <div class="brand brand-compact">
-        <div class="brand-logo-wrap"><img class="brand-logo" src="https://fias.org.ec/wp-content/uploads/2021/11/Logo_FIAS_web.png" alt="Logo oficial FIAS"></div>
+        <div class="brand-logo-wrap"><img class="brand-logo" src="https://fias.org.ec/wp-content/uploads/2021/11/Logo_FIAS_web.png" alt="Logo oficial FIAS" loading="eager" decoding="async"></div>
         <div class="brand-copy"><h1>Gestión Vehicular</h1><small>FIAS</small></div>
       </div>
-      <div class="nav-group">Módulos</div>
+      <div class="nav-group">Centro de operación</div>
       <div class="nav-scroll" aria-label="Navegación principal">
-        <button class="nav-button active" data-module="executive"><i class="bi bi-speedometer2"></i><span>Resumen</span></button>
+        <div class="nav-section-label">Gestión</div>
+        <button class="nav-button active" data-module="executive"><i class="bi bi-grid-1x2-fill"></i><span>Resumen</span></button>
         <button class="nav-button" data-module="maintenance"><i class="bi bi-wrench-adjustable-circle"></i><span>Mantenimientos</span></button>
-        <button class="nav-button" data-module="fleet"><i class="bi bi-truck-front"></i><span>Vehículos</span></button>
+        <button class="nav-button" data-module="fleet"><i class="bi bi-car-front-fill"></i><span>Plan preventivo</span></button>
+        <div class="nav-section-label">Control</div>
         <button class="nav-button" data-module="integrity"><i class="bi bi-shield-check"></i><span>Integridad</span></button>
-        <button class="nav-button" data-module="ocr"><i class="bi bi-file-earmark-text"></i><span>OCR</span></button>
+        <button class="nav-button" data-module="ocr"><i class="bi bi-file-earmark-scan"></i><span>OCR</span></button>
         <button class="nav-button" data-module="assistant"><i class="bi bi-stars"></i><span>Análisis</span></button>
         <button class="nav-button" data-module="admin"><i class="bi bi-journal-check"></i><span>Bitácora</span></button>
+      </div>
+      <div class="sidebar-access" aria-label="Nivel de acceso de la sesión">
+        <div class="sidebar-access-top"><span class="access-label">Acceso</span><span class="role-badge" id="roleBadge"><i class="bi bi-eye"></i> Consulta</span></div>
+        <span class="sidebar-user" id="sidebarUser">Sin sesión</span>
+        <div class="sidebar-access-note" id="roleNote">Los cambios están restringidos según la cuenta autenticada.</div>
       </div>
       <!-- Se conserva el ID porque la sincronización actualiza este nodo; queda fuera de la interfaz visible para evitar duplicidad. -->
       <div id="sideLastSync" class="visually-hidden">Sin sincronizar</div>
@@ -363,33 +491,31 @@
         <div class="page-title">
           <div class="eyebrow"><i class="bi bi-car-front-fill"></i> FIAS · Mantenimiento vehicular</div>
           <h2>Control y trazabilidad del parque vehicular</h2>
-          <p>Consulta, registro, análisis y auditoría en un solo espacio.</p>
+          <p>Historial, control preventivo y decisiones de mantenimiento en un solo espacio.</p>
         </div>
         <div class="actions">
           <button class="btn btn-ghost hidden" id="btnLogin"><i class="bi bi-microsoft"></i> Iniciar sesión</button>
           <span class="session-chip hidden" id="sessionChip"><i class="bi bi-person-check"></i><span id="sessionChipText">Sesión activa</span></span>
           <button class="btn btn-primary" id="btnSync" title="Actualizar datos desde SharePoint"><i class="bi bi-arrow-repeat"></i> Sincronizar</button>
-          <button class="btn btn-dark" id="btnNew" title="Registrar un nuevo mantenimiento"><i class="bi bi-plus-circle"></i> Nuevo registro</button>
+          <button class="btn btn-dark write-control" id="btnNew" title="Registrar un nuevo mantenimiento"><i class="bi bi-plus-circle"></i> Nuevo registro</button>
           <button class="btn btn-ghost hidden" id="btnLogout" title="Cerrar sesión"><i class="bi bi-box-arrow-right"></i><span class="logout-label">Cerrar sesión</span></button>
         </div>
       </div>
 
       <section class="system-strip" aria-label="Estado de conexión y sincronización">
         <div class="system-item">
-          <span class="system-label">Conexión</span>
+          <span class="system-label">Datos</span>
           <strong id="connState" class="status-dot warn">Pendiente</strong>
-        </div>
-        <div class="system-item">
-          <span class="system-label">Sesión Excel</span>
-          <strong id="sessionState">No iniciada</strong>
         </div>
         <div class="system-item system-item-wide">
           <span class="system-label">Última sincronización</span>
           <strong id="lastSync">—</strong>
         </div>
-        <!-- Nodo conservado por compatibilidad con la lógica existente; la identidad ya se muestra en sessionChip. -->
+        <!-- Nodos conservados por compatibilidad con la lógica de Excel y autenticación; se ocultan por ser información técnica. -->
+        <strong id="sessionState" class="visually-hidden">No iniciada</strong>
         <strong id="userName" class="visually-hidden">No autenticado</strong>
       </section>
+      <div class="read-only-note" id="readOnlyNote"><i class="bi bi-shield-lock"></i><span>Sesión en modo consulta. Puede visualizar, filtrar, analizar y exportar información; las acciones que modifican SharePoint están deshabilitadas.</span></div>
 
       <section id="executive" class="module active">
         <div class="grid-kpi" id="kpis"></div>
@@ -417,7 +543,7 @@
         <div class="card">
           <div class="card-head">
             <div><h3>Registro estructurado de mantenimientos</h3><p>Consulta operativa con filtros, tarjetas visuales, detalle técnico y acciones de control.</p></div>
-            <div class="flex gap-2 wrap"><button class="btn btn-sm btn-primary" id="btnNew2"><i class="bi bi-plus"></i> Registrar</button><button class="btn btn-sm btn-ghost" id="btnResetFilters"><i class="bi bi-arrow-counterclockwise"></i> Resetear filtros</button><button class="btn btn-sm btn-ghost" id="btnExportMaint"><i class="bi bi-download"></i> Exportar CSV</button></div>
+            <div class="flex gap-2 wrap"><button class="btn btn-sm btn-primary write-control" id="btnNew2"><i class="bi bi-plus"></i> Registrar</button><button class="btn btn-sm btn-ghost" id="btnResetFilters"><i class="bi bi-arrow-counterclockwise"></i> Resetear filtros</button><button class="btn btn-sm btn-ghost" id="btnExportMaint"><i class="bi bi-download"></i> Exportar CSV</button></div>
           </div>
           <div class="card-body">
             <div class="filters">
@@ -446,24 +572,19 @@
       <section id="fleet" class="module">
         <div class="section-grid">
           <article class="card span-12">
-            <div class="card-head"><div><h3>Priorización preventiva por vehículo</h3><p>Sirve para saber qué vehículo debe atenderse primero y por qué.</p></div></div>
-            <div class="card-body">
-              <div class="risk-explain">
-                <div>
-                  <h4>¿Qué aporta este módulo?</h4>
-                  <p>No reemplaza una evaluación mecánica. Su aporte es administrativo y preventivo: combina kilometraje, historial, costos, frecuencia de mantenimientos correctivos y consistencias pendientes para ordenar la atención de la flota.</p>
-                </div>
-                <div>
-                  <h4>Lectura práctica</h4>
-                  <ul>
-                    <li><strong>Bajo:</strong> vehículo con mantenimiento vigente y sin señales relevantes.</li>
-                    <li><strong>Medio:</strong> requiere seguimiento por cercanía de mantenimiento, costos o hallazgos.</li>
-                    <li><strong>Alto:</strong> debe priorizarse por vencimiento, reincidencia, costo elevado o inconsistencias abiertas.</li>
-                  </ul>
-                </div>
-              </div>
-              <div class="risk-grid" id="riskGrid"></div>
+            <div class="card-head smart-plan-head">
+              <div><h3>Plan preventivo inteligente</h3><p>Proyecta qué atender, cuándo y por qué a partir del odómetro, historial y reglas técnicas configurables.</p></div>
+              <div class="field"><label>Vehículo</label><select id="smartVehicleFilter"><option value="">Toda la flota</option></select></div>
             </div>
+            <div class="card-body">
+              <div class="smart-summary" id="smartPlanSummary"></div>
+              <div class="table-wrap"><table class="data-table" id="smartPlanTable"><thead><tr><th>Vehículo</th><th>Intervención prevista</th><th>Último antecedente</th><th>Próximo objetivo</th><th>Fecha estimada</th><th>Prioridad</th><th>Base</th></tr></thead><tbody id="smartPlanBody"></tbody></table></div>
+              <div class="smart-note"><i class="bi bi-info-circle"></i><span>Cuando el activo dispone de intervalos técnicos propios, el sistema los prioriza. En ausencia de esos datos se usan parámetros preventivos referenciales FIAS, que deben validarse contra el manual del fabricante antes de ejecutar una intervención.</span></div>
+            </div>
+          </article>
+          <article class="card span-12">
+            <div class="card-head"><div><h3>Prioridad de atención por vehículo</h3><p>Orden administrativo preventivo según vencimientos, reincidencia, costos y consistencias abiertas.</p></div></div>
+            <div class="card-body"><div class="risk-grid" id="riskGrid"></div></div>
           </article>
           <article class="card span-6"><div class="card-head"><div><h3>Costo por vehículo</h3><p>Control presupuestario por placa.</p></div></div><div class="card-body"><div class="chart-box"><canvas id="chartCostVehicle"></canvas></div></div></article>
           <article class="card span-6"><div class="card-head"><div><h3>Proyección de mantenimiento</h3><p>Predicción basada en historial de kilometraje.</p></div></div><div class="card-body"><div class="table-wrap"><table class="data-table"><thead><tr><th>Placa</th><th>Km actual</th><th>Próximo km</th><th>Km restantes</th><th>Fecha estimada</th><th>Prioridad</th></tr></thead><tbody id="predictionBody"></tbody></table></div></div></article>
@@ -480,7 +601,8 @@
 
       <section id="ocr" class="module">
         <div class="section-grid">
-          <article class="card span-5">
+          <article class="card span-12 ocr-view-only"><div class="card-body"><div class="control-summary"><i class="bi bi-eye"></i><div><strong>OCR disponible en modo consulta histórica</strong><p>La carga y procesamiento de nuevas facturas está reservada al usuario con permiso de edición. La cola institucional permanece visible para consulta.</p></div></div></div></article>
+          <article class="card span-5 write-control">
             <div class="card-head"><div><h3>Carga inteligente de facturas</h3><p>PDF o imagen. Extrae proveedor, factura, orden, placa, km, total y detalle base.</p></div></div>
             <div class="card-body ocr-upload-card">
               <label class="doc-drop" for="ocrInput" aria-label="Cargar factura PDF o imagen para pre-registro automático">
@@ -498,8 +620,8 @@
               <div class="ocr-status" id="ocrConsole">Esperando documento...</div>
             </div>
           </article>
-          <article class="card span-7">
-            <div class="card-head"><div><h3>Resultado de extracción</h3><p>Datos detectados antes de generar el mantenimiento.</p></div><button class="btn btn-sm btn-primary" id="btnUseOcr"><i class="bi bi-clipboard-check"></i> Usar en registro</button></div>
+          <article class="card span-7 write-control">
+            <div class="card-head"><div><h3>Resultado de extracción</h3><p>Datos detectados antes de generar el mantenimiento.</p></div><button class="btn btn-sm btn-primary write-control" id="btnUseOcr"><i class="bi bi-clipboard-check"></i> Usar en registro</button></div>
             <div class="card-body"><div class="ocr-preview" id="ocrPreview"></div></div>
           </article>
           <article class="card span-12"><div class="card-head"><div><h3>Cola OCR institucional</h3><p>Registros de <span class="mono">tblOCRCola</span>.</p></div></div><div class="card-body"><div class="table-wrap"><table class="data-table"><thead><tr><th>ID carga</th><th>Fecha</th><th>Archivo</th><th>Estado</th><th>Factura</th><th>Orden</th><th>Placa</th><th class="num">Km</th><th class="num">Total</th></tr></thead><tbody id="ocrBody"></tbody></table></div></div></article>
@@ -545,11 +667,11 @@
           <div class="field" style="grid-column:1/-1"><label>Ingreso / observación técnica</label><textarea id="fIngress"></textarea></div>
           <div class="field" style="grid-column:1/-1"><label>Cierre / control interno</label><textarea id="fClose"></textarea></div>
         </div>
-        <div class="mt-3 flex justify-between align-center wrap"><strong>Detalle técnico de ítems</strong><button class="btn btn-sm btn-ghost" id="btnAddItem"><i class="bi bi-plus"></i> Agregar ítem</button></div>
+        <div class="mt-3 flex justify-between align-center wrap"><strong>Detalle técnico de ítems</strong><button class="btn btn-sm btn-ghost write-control" id="btnAddItem"><i class="bi bi-plus"></i> Agregar ítem</button></div>
         <div class="line-items mt-2" id="itemLines"></div>
         <div class="alert-list mt-3" id="formWarnings"></div>
       </div>
-      <div class="drawer-foot"><button class="btn btn-ghost" id="btnValidateForm"><i class="bi bi-shield-check"></i> Validar</button><button class="btn btn-primary" id="btnSaveForm"><i class="bi bi-cloud-arrow-up"></i> Guardar en SharePoint</button></div>
+      <div class="drawer-foot"><button class="btn btn-ghost" id="btnValidateForm"><i class="bi bi-shield-check"></i> Validar</button><button class="btn btn-primary write-control" id="btnSaveForm"><i class="bi bi-cloud-arrow-up"></i> Guardar en SharePoint</button></div>
     </div>
   </div>
 
@@ -567,7 +689,7 @@
       <div class="detail-body" id="maintenanceDetailBody"></div>
       <div class="detail-foot">
         <span class="muted"><i class="bi bi-info-circle"></i> Vista enriquecida basada en cabecera, detalle técnico, factura y validaciones.</span>
-        <button class="btn btn-primary" id="btnModalNewFromDetail" type="button"><i class="bi bi-plus-circle"></i> Registrar nuevo</button>
+        <button class="btn btn-primary write-control" id="btnModalNewFromDetail" type="button"><i class="bi bi-plus-circle"></i> Registrar nuevo</button>
       </div>
     </div>
   </div>
@@ -586,6 +708,7 @@
       clientId: 'c8a828c1-3a20-4876-96af-b4f30ce4abeb',
       shareTokenOrUrl: 'u!aHR0cHM6Ly9maWFzZWMuc2hhcmVwb2ludC5jb20vOng6L3MvRk9ORE9ERUlOVkVSU0lPTkFNQklFTlRBTFNPU1RFTklCTEUvSVFEVGtxYXJ2aExDUjc2UzVmQ05NdlVqQVhVTTU1dllwU055Wl9ZMWROUEpoOFk/ZT1pamFYWFI=',
       scopes: ['User.Read','Files.ReadWrite.All','Sites.ReadWrite.All'],
+      editorEmail: 'jcruzg@fias.org.ec',
       tables: {
         vehicles: 'tblVehiculos',
         providers: 'tblProveedores',
@@ -654,6 +777,46 @@
       binaryWorkbook: null
     };
 
+    const SMART_MAINTENANCE_RULES = [
+      {id:'oil', label:'Aceite y filtro de aceite', km:5000, months:6, keywords:['cambio de aceite','aceite motor','filtro de aceite','lubricante'], kmFields:['Intervalo_Aceite_KM','Aceite_Intervalo_KM'], monthFields:['Intervalo_Aceite_Meses']},
+      {id:'air', label:'Filtro de aire de motor', km:10000, months:12, keywords:['filtro de aire','filtro aire motor'], kmFields:['Intervalo_Filtro_Aire_KM'], monthFields:['Intervalo_Filtro_Aire_Meses']},
+      {id:'cabin', label:'Filtro de cabina / A/C', km:10000, months:12, keywords:['filtro de cabina','filtro cabina','filtro polen','aire acondicionado'], kmFields:['Intervalo_Filtro_Cabina_KM'], monthFields:['Intervalo_Filtro_Cabina_Meses']},
+      {id:'brakes', label:'Sistema de frenos', km:10000, months:6, keywords:['freno','pastilla','disco','zapatas','limpifrenos'], kmFields:['Intervalo_Frenos_KM'], monthFields:['Intervalo_Frenos_Meses']},
+      {id:'brakefluid', label:'Líquido de frenos', km:40000, months:24, keywords:['liquido de frenos','fluido de frenos'], kmFields:['Intervalo_Liquido_Frenos_KM'], monthFields:['Intervalo_Liquido_Frenos_Meses']},
+      {id:'tires', label:'Neumáticos, alineación y balanceo', km:10000, months:6, keywords:['llanta','neumatic','alineacion','balanceo','rotacion'], kmFields:['Intervalo_Neumaticos_KM','Intervalo_Rotacion_KM'], monthFields:['Intervalo_Neumaticos_Meses']},
+      {id:'coolant', label:'Refrigerante / sistema de enfriamiento', km:40000, months:24, keywords:['refrigerante','coolant','radiador','sistema de enfriamiento'], kmFields:['Intervalo_Refrigerante_KM'], monthFields:['Intervalo_Refrigerante_Meses']},
+      {id:'transmission', label:'Fluido de transmisión', km:40000, months:24, keywords:['aceite de transmision','fluido de transmision','aceite caja','atf'], kmFields:['Intervalo_Transmision_KM'], monthFields:['Intervalo_Transmision_Meses']},
+      {id:'belt', label:'Correa de distribución', km:80000, months:60, keywords:['correa de distribucion','kit distribucion','banda de distribucion'], kmFields:['Intervalo_Distribucion_KM'], monthFields:['Intervalo_Distribucion_Meses']},
+      {id:'battery', label:'Batería y sistema de carga', km:0, months:12, keywords:['bateria','alternador','sistema de carga'], kmFields:[], monthFields:['Intervalo_Bateria_Meses']}
+    ];
+
+    function currentUserEmail(){ return normalizeText(state.account ? (state.account.username || '') : ''); }
+    function canWrite(){ return !!state.account && currentUserEmail() === normalizeText(CONFIG.editorEmail); }
+    function assertWritePermission(action='modificar información'){
+      if(canWrite()) return true;
+      toast('Acción restringida', `La sesión actual es de consulta. Solo ${CONFIG.editorEmail} puede ${action}.`, 'warn');
+      return false;
+    }
+    function applyAccessControl(){
+      const logged = !!state.account;
+      const editor = canWrite();
+      document.body.classList.toggle('readonly', logged && !editor);
+      $$('.write-control').forEach(el => {
+        el.classList.toggle('write-hidden', logged && !editor);
+        el.setAttribute('aria-hidden', logged && !editor ? 'true' : 'false');
+      });
+      const note = $('readOnlyNote');
+      if(note) note.classList.toggle('show', logged && !editor);
+      const badge = $('roleBadge');
+      if(badge){
+        badge.className = 'role-badge' + (editor ? ' editor' : '');
+        badge.innerHTML = editor ? '<i class="bi bi-shield-check"></i> Administrador' : '<i class="bi bi-eye"></i> Consulta';
+      }
+      if($('sidebarUser')) $('sidebarUser').textContent = logged ? (state.account.username || state.account.name || 'Sesión activa') : 'Sin sesión';
+      if($('roleNote')) $('roleNote').textContent = !logged ? 'Autentíquese con Microsoft 365.' : editor ? 'Puede registrar y actualizar información institucional.' : 'Puede consultar y analizar; no puede modificar SharePoint.';
+      if(!editor && $('recordDrawer')?.classList.contains('open')) closeDrawer();
+    }
+
     const $ = (id) => document.getElementById(id);
     const $$ = (selector, root=document) => [...root.querySelectorAll(selector)];
 
@@ -677,6 +840,7 @@
         gateBtn.disabled = state.syncInProgress || state.loading;
         gateBtn.innerHTML = state.loading ? '<i class="bi bi-hourglass-split"></i> Procesando...' : '<i class="bi bi-microsoft"></i> Iniciar sesión con Microsoft';
       }
+      applyAccessControl();
     }
 
     function escapeHtml(value){ return String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch])); }
@@ -935,7 +1099,7 @@
       try{
         // Importante: createSession nunca debe enviarse con un Workbook-Session-Id anterior.
         state.sessionId = '';
-        const res = await graph(`${state.driveItemPath}/workbook/createSession`, { method:'POST', body: JSON.stringify({ persistChanges: true }), workbookSession:false });
+        const res = await graph(`${state.driveItemPath}/workbook/createSession`, { method:'POST', body: JSON.stringify({ persistChanges: canWrite() }), workbookSession:false });
         state.sessionId = res && res.id ? res.id : '';
         state.workbookApiAvailable = true;
         state.binaryMode = false;
@@ -1008,6 +1172,7 @@
     }
 
     async function uploadBinaryWorkbook(){
+      if(!assertWritePermission('actualizar el libro maestro')) throw new Error('Permiso de escritura denegado.');
       if(!state.binaryWorkbook) throw new Error('No existe libro binario cargado.');
       const data = XLSX.write(state.binaryWorkbook, { bookType:'xlsx', type:'array' });
       await graphRaw(`${state.driveItemPath}/content`, {
@@ -1033,6 +1198,7 @@
     }
 
     async function addRow(tableName, object){
+      if(!assertWritePermission('registrar información')) throw new Error('Permiso de escritura denegado.');
       if(!state.workbookApiAvailable) return addRowBinary(tableName, object);
       const headers = state.headers[tableName] && state.headers[tableName].length ? state.headers[tableName] : (COLUMNS[tableName] || []);
       const values = [headers.map(h => object[h] ?? '')];
@@ -1040,6 +1206,7 @@
     }
 
     async function updateRow(tableName, rowIndex, object){
+      if(!assertWritePermission('actualizar información')) throw new Error('Permiso de escritura denegado.');
       if(!state.workbookApiAvailable) throw new Error('La actualización puntual no está disponible en modo binario. Use la versión Graph-Compatible del Excel.');
       const headers = state.headers[tableName] || [];
       const values = [headers.map(h => object[h] ?? '')];
@@ -1047,6 +1214,7 @@
     }
 
     async function audit(action, table, id, detail, status='Registrado'){
+      if(!canWrite()) return;
       const rec = {
         ID_Cambio: nextId('AUD', state.rows[CONFIG.tables.audit], 'ID_Cambio'),
         Fecha_Hora: nowIso(), Usuario: state.account ? state.account.username : 'usuario', Tabla: table,
@@ -1149,6 +1317,7 @@
         syncBtn.disabled = state.syncInProgress || !logged;
         syncBtn.innerHTML = state.syncInProgress ? '<i class="bi bi-hourglass-split"></i> Sincronizando...' : '<i class="bi bi-arrow-repeat"></i> Sincronizar';
       }
+      applyAccessControl();
     }
 
     function data(tableKey){ return state.rows[CONFIG.tables[tableKey]] || []; }
@@ -1166,6 +1335,7 @@
       renderMaintenanceTable();
       renderExecutiveSummary();
       renderCharts();
+      renderSmartMaintenancePlan();
       renderRisk();
       renderPredictions();
       renderIntegrity();
@@ -1184,6 +1354,11 @@
       $('filterType').innerHTML = '<option value="">Todos</option>' + typeSet.map(p=>`<option>${escapeHtml(p)}</option>`).join('');
       $('filterStatus').innerHTML = '<option value="">Todos</option>' + statusSet.map(p=>`<option>${escapeHtml(p)}</option>`).join('');
       $('fVehicle').innerHTML = '<option value="">Seleccione...</option>' + vehicles().map(v=>`<option value="${escapeHtml(v.ID_Activo)}">${escapeHtml(v.Placa)} · ${escapeHtml(v.Marca || '')} ${escapeHtml(v.Modelo || '')}</option>`).join('');
+      if($('smartVehicleFilter')){
+        const selected = $('smartVehicleFilter').value;
+        $('smartVehicleFilter').innerHTML = '<option value="">Toda la flota</option>' + vehicles().map(v=>`<option value="${escapeHtml(v.ID_Activo || v.Placa)}">${escapeHtml(v.Placa)} · ${escapeHtml(v.Marca || '')} ${escapeHtml(v.Modelo || '')}</option>`).join('');
+        if([...$('smartVehicleFilter').options].some(o=>o.value===selected)) $('smartVehicleFilter').value = selected;
+      }
     }
 
     function searchTokens(){
@@ -1354,8 +1529,7 @@
       renderMaintenanceCards(rows);
       const body = $('maintTable').querySelector('tbody');
       body.innerHTML = rows.map(r => {
-        const control = rowControlStatus(r);
-        const detailCount = maintenanceDetailsFor(r).length || invoiceDetailsFor(r).length;
+          const detailCount = maintenanceDetailsFor(r).length || invoiceDetailsFor(r).length;
         return `<tr class="interactive-row" data-id="${escapeHtml(r.ID_Mantenimiento)}"><td><button class="btn btn-sm btn-primary btn-view-maint" type="button" data-id="${escapeHtml(r.ID_Mantenimiento)}"><i class="bi bi-eye"></i> Ver ${detailCount ? '('+detailCount+')' : ''}</button></td><td class="mono">${highlight(r.ID_Mantenimiento)}</td><td>${formatDate(r.Fecha_Facturacion_Emision || r.Fecha_Recepcion)}</td><td><strong>${highlight(r.Placa)}</strong></td><td class="mono">${highlight(r.Orden_Reparacion)}</td><td class="mono">${highlight(r.Factura_Nro || '—')}</td><td>${documentActionHtml(r,true)}</td><td class="num">${integer(r.Km)}</td><td>${pill(r.Tipo_Mantenimiento, typePill(r.Tipo_Mantenimiento))}</td><td>${highlight(r.Agencia || '')}</td><td class="num"><strong>${money(r.Total_Control || r.Total_Con_IVA || r.Subtotal_Sin_IVA)}</strong></td><td>${pill(r.Estado_Registro, statusPill(r.Estado_Registro))}</td><td>${control}</td></tr>`;
       }).join('') || `<tr><td colspan="13"><div class="empty-state"><i class="bi bi-inbox"></i><br>No existen registros con los filtros aplicados. Pruebe con términos como aceite, filtro, frenos, llanta, orden o factura.</div></td></tr>`;
       $$('.btn-view-maint', body).forEach(btn => btn.addEventListener('click', e => { e.stopPropagation(); openMaintenanceDetail(btn.dataset.id); }));
@@ -1418,6 +1592,106 @@
     }
     function countGroup(rows, keyFn){
       return rows.reduce((acc,row)=>{ const k = keyFn(row) || 'N/D'; acc[k] = (acc[k] || 0) + 1; return acc; }, {});
+    }
+
+
+    function vehicleCurrentKm(v){
+      const history = maint().filter(m => m.Placa === v.Placa || (v.ID_Activo && m.ID_Activo === v.ID_Activo));
+      const histKm = history.reduce((mx,r)=>Math.max(mx,numberValue(r.Km)),0);
+      return Math.max(numberValue(v.Odometro_Ultimo), histKm, numberValue(v.Odometro_Inicial));
+    }
+
+    function vehicleKmPerDay(v){
+      const history = maint().filter(m => m.Placa === v.Placa || (v.ID_Activo && m.ID_Activo === v.ID_Activo))
+        .filter(r=>toIsoDate(r.Fecha_Facturacion_Emision || r.Fecha_Recepcion) && numberValue(r.Km)>0)
+        .sort((a,b)=>toIsoDate(a.Fecha_Facturacion_Emision || a.Fecha_Recepcion).localeCompare(toIsoDate(b.Fecha_Facturacion_Emision || b.Fecha_Recepcion)));
+      if(history.length < 2) return 0;
+      const first=history[0], last=history[history.length-1];
+      const days=daysBetween(first.Fecha_Facturacion_Emision || first.Fecha_Recepcion,last.Fecha_Facturacion_Emision || last.Fecha_Recepcion);
+      const km=numberValue(last.Km)-numberValue(first.Km);
+      return days>0 && km>0 ? km/days : 0;
+    }
+
+    function fieldOverride(v, fields){
+      for(const f of fields || []) if(numberValue(v[f])>0) return {value:numberValue(v[f]),field:f};
+      return null;
+    }
+
+    function serviceBlob(r){
+      const det = maintenanceDetailsFor(r).map(d=>[d.Descripcion,d.Categoria_Item,d.Observaciones].join(' ')).join(' ');
+      return normalizeText([r.Tipo_Mantenimiento,r.Categoria,r.Ingreso_Observacion,r.Cierre_Observacion,r.Observacion_Control,det].join(' '));
+    }
+
+    function lastRuleService(v, rule){
+      const rows = maint().filter(r => r.Placa === v.Placa || (v.ID_Activo && r.ID_Activo === v.ID_Activo))
+        .filter(r => rule.keywords.some(k => serviceBlob(r).includes(normalizeText(k))))
+        .sort((a,b)=>{
+          const da=toIsoDate(a.Fecha_Facturacion_Emision || a.Fecha_Recepcion), db=toIsoDate(b.Fecha_Facturacion_Emision || b.Fecha_Recepcion);
+          if(da!==db) return db.localeCompare(da);
+          return numberValue(b.Km)-numberValue(a.Km);
+        });
+      return rows[0] || null;
+    }
+
+    function addMonthsIso(iso, months){
+      if(!iso || !months) return '';
+      const d=new Date(`${toIsoDate(iso)}T12:00:00`); if(isNaN(d)) return '';
+      d.setMonth(d.getMonth()+Number(months)); return d.toISOString().slice(0,10);
+    }
+
+    function smartPlanForVehicle(v){
+      const currentKm=vehicleCurrentKm(v);
+      const kmDay=vehicleKmPerDay(v);
+      return SMART_MAINTENANCE_RULES.map(rule=>{
+        const kmOverride=fieldOverride(v,rule.kmFields), monthOverride=fieldOverride(v,rule.monthFields);
+        const intervalKm=kmOverride ? kmOverride.value : rule.km;
+        const intervalMonths=monthOverride ? monthOverride.value : rule.months;
+        const last=lastRuleService(v,rule);
+        const lastKm=last ? numberValue(last.Km) : numberValue(v.Odometro_Inicial);
+        const lastDate=last ? toIsoDate(last.Fecha_Facturacion_Emision || last.Fecha_Recepcion) : toIsoDate(v.Fecha_Alta);
+        const nextKm=intervalKm>0 && last ? lastKm+intervalKm : (intervalKm>0 && !last && lastKm>0 ? lastKm+intervalKm : 0);
+        const kmRemaining=nextKm>0 ? nextKm-currentKm : 999999;
+        const dueDate=intervalMonths>0 && lastDate ? addMonthsIso(lastDate,intervalMonths) : '';
+        const daysRemaining=dueDate ? daysBetween(todayIso(),dueDate) : 999999;
+        let status='Programado', cls='pill-ok', rank=3;
+        if(!last){ status='Revisión inicial'; cls='pill-info'; rank=2; }
+        else if((nextKm>0 && kmRemaining<=0) || (dueDate && daysRemaining<=0)){ status='Vencido'; cls='pill-bad'; rank=0; }
+        else if((nextKm>0 && kmRemaining<=Math.max(750,intervalKm*.2)) || (dueDate && daysRemaining<=45)){ status='Próximo'; cls='pill-warn'; rank=1; }
+        const kmProjected = nextKm>0 && kmRemaining>0 && kmDay>0 ? new Date(Date.now()+Math.ceil(kmRemaining/kmDay)*86400000).toISOString().slice(0,10) : '';
+        let estimated='';
+        if(kmProjected && dueDate) estimated = kmProjected < dueDate ? kmProjected : dueDate;
+        else estimated = kmProjected || dueDate;
+        if(status==='Vencido') estimated='Atención requerida';
+        if(status==='Revisión inicial') estimated='Validar historial';
+        const basis=(kmOverride || monthOverride) ? 'Configuración del activo' : 'Base FIAS referencial';
+        const nextTarget=[nextKm>0 ? `${integer(nextKm)} km` : '', dueDate ? formatDate(dueDate) : ''].filter(Boolean).join(' / ') || 'Según condición';
+        const lastText=last ? `${formatDate(lastDate)} · ${integer(lastKm)} km` : (lastDate ? `${formatDate(lastDate)} · sin antecedente identificado` : 'Sin antecedente identificado');
+        return {vehicle:v,rule,currentKm,last,lastKm,lastDate,nextKm,kmRemaining,dueDate,daysRemaining,status,cls,rank,estimated,nextTarget,lastText,basis,override:!!(kmOverride||monthOverride)};
+      });
+    }
+
+    function allSmartPlan(){ return vehicles().flatMap(smartPlanForVehicle); }
+
+    function renderSmartMaintenancePlan(){
+      if(!$('smartPlanBody')) return;
+      const selected=$('smartVehicleFilter') ? $('smartVehicleFilter').value : '';
+      const all=allSmartPlan();
+      const filtered=selected ? all.filter(x=>String(x.vehicle.ID_Activo || x.vehicle.Placa)===String(selected)) : all;
+      const ordered=filtered.sort((a,b)=>a.rank-b.rank || Math.min(a.kmRemaining,a.daysRemaining)-Math.min(b.kmRemaining,b.daysRemaining) || String(a.vehicle.Placa).localeCompare(String(b.vehicle.Placa)));
+      const overdue=all.filter(x=>x.status==='Vencido').length;
+      const upcoming=all.filter(x=>x.status==='Próximo').length;
+      const initial=all.filter(x=>x.status==='Revisión inicial').length;
+      const configured=new Set(all.filter(x=>x.override).map(x=>x.vehicle.ID_Activo || x.vehicle.Placa)).size;
+      $('smartPlanSummary').innerHTML=`
+        <div class="smart-metric"><span>Intervenciones vencidas</span><strong>${integer(overdue)}</strong><small>Atención prioritaria por km o tiempo.</small></div>
+        <div class="smart-metric"><span>Próximas</span><strong>${integer(upcoming)}</strong><small>Dentro del umbral preventivo.</small></div>
+        <div class="smart-metric"><span>Intervenciones sin antecedente</span><strong>${integer(initial)}</strong><small>Requieren validar historial técnico.</small></div>
+        <div class="smart-metric"><span>Activos con reglas propias</span><strong>${integer(configured)}</strong><small>Intervalos configurados en la base del vehículo.</small></div>`;
+      const visible=ordered.slice(0, selected ? 40 : 28);
+      $('smartPlanBody').innerHTML=visible.map(x=>{
+        const dot=x.status==='Vencido'?'bad':x.status==='Próximo'?'warn':x.status==='Revisión inicial'?'info':'';
+        return `<tr><td><strong>${escapeHtml(x.vehicle.Placa || 'N/D')}</strong><div class="plan-basis">${escapeHtml([x.vehicle.Marca,x.vehicle.Modelo].filter(Boolean).join(' '))}</div></td><td><span class="priority-dot ${dot}"></span><span class="plan-work">${escapeHtml(x.rule.label)}</span></td><td>${escapeHtml(x.lastText)}</td><td>${escapeHtml(x.nextTarget)}</td><td>${x.estimated==='Atención requerida'||x.estimated==='Validar historial' ? escapeHtml(x.estimated) : formatDate(x.estimated)}</td><td>${pill(x.status,x.cls)}</td><td><span class="plan-basis">${escapeHtml(x.basis)}</span></td></tr>`;
+      }).join('') || '<tr><td colspan="7"><div class="empty-state">No hay información suficiente para construir el plan preventivo.</div></td></tr>';
     }
 
     function computeRiskAll(){ return vehicles().map(v => computeRisk(v)); }
@@ -1649,6 +1923,7 @@
 
     async function handleOcr(file){
       if(!file) return;
+      if(!assertWritePermission('procesar y registrar una nueva factura OCR')) return;
       $('ocrConsole').textContent = 'Calculando hash documental...';
       showLoading('Procesando documento con OCR local...');
       try{
@@ -1915,6 +2190,7 @@
     function itemTypeLabel(tipo){ return tipo === 'R' ? 'Repuesto' : tipo === 'S' ? 'Servicio' : 'Mano de obra'; }
 
     function useOcrInForm(){
+      if(!assertWritePermission('generar un pre-registro')) return;
       if(!state.lastOcr){ toast('Sin OCR disponible','Primero cargue y procese una factura.','warn'); return; }
       openDrawer();
       const e = state.lastOcr;
@@ -1944,7 +2220,7 @@
       toast('Pre-registro generado', 'La factura fue mapeada al formulario. Solo valide cantidades, precios o detalles antes de guardar.');
     }
 
-    function openDrawer(){ $('recordDrawer').classList.add('open'); $('recordDrawer').setAttribute('aria-hidden','false'); if(!$('itemLines').children.length) addItemLine(); }
+    function openDrawer(){ if(!assertWritePermission('crear un mantenimiento')) return; $('recordDrawer').classList.add('open'); $('recordDrawer').setAttribute('aria-hidden','false'); if(!$('itemLines').children.length) addItemLine(); }
     function closeDrawer(){ $('recordDrawer').classList.remove('open'); $('recordDrawer').setAttribute('aria-hidden','true'); }
 
     function addItemLine(item={}){
@@ -2054,6 +2330,7 @@
     }
 
     async function saveForm(){
+      if(!assertWritePermission('guardar mantenimientos')) return;
       const warnings = validateForm();
       if(warnings.some(w=>w.level==='Alto') && !confirm('Existen alertas de nivel alto. ¿Desea guardar de todas formas para revisión?')) return;
       if(!state.connected){ toast('Sin conexión a SharePoint','Inicie sesión y sincronice antes de guardar.','warn'); return; }
@@ -2097,6 +2374,19 @@
       return rows.map(([k,v])=>`<div class="detail-cell"><span>${escapeHtml(k)}</span><strong>${pill(v, statusPill(v))}</strong></div>`).join('');
     }
 
+
+    function renderControlSummary(r){
+      const issues=[];
+      const valKm=normalizeText(r.Validacion_Km), dup=normalizeText(r.Validacion_Duplicado), fact=normalizeText(r.Validacion_Cuadre_Factura), rev=normalizeText(r.Requiere_Revision), estado=normalizeText(r.Estado_Registro);
+      if(valKm && valKm!=='ok') issues.push('Kilometraje');
+      if(dup && dup!=='ok') issues.push('Posible duplicidad');
+      if(fact && !['ok','sin_factura'].includes(fact)) issues.push('Cuadre de factura');
+      if(rev==='si') issues.push('Requiere revisión');
+      if(estado.includes('sin_factura')) issues.push('Factura no adjunta');
+      if(!issues.length) return `<div class="control-summary"><i class="bi bi-shield-check"></i><div><strong>Controles automáticos sin alertas relevantes</strong><p>Las validaciones de kilometraje, duplicidad y consistencia no requieren acción adicional para este registro.</p></div></div>`;
+      return `<div class="control-summary warn"><i class="bi bi-exclamation-triangle"></i><div><strong>${issues.length} control(es) requieren atención</strong><p>Se muestran únicamente las observaciones que aportan una acción operativa.</p><div class="control-issues">${issues.map(x=>pill(x,'pill-warn')).join('')}</div></div></div>`;
+    }
+
     function openMaintenanceDetail(id){
       const r = maintenanceById(id);
       if(!r.ID_Mantenimiento){ toast('Registro no encontrado', 'No se pudo abrir el detalle del mantenimiento seleccionado.', 'warn'); return; }
@@ -2107,21 +2397,23 @@
       $('maintenanceDetailTitle').textContent = `${r.Placa || 'Vehículo'} · ${r.Orden_Reparacion || r.ID_Mantenimiento}`;
       $('maintenanceDetailSubtitle').textContent = `Factura ${r.Factura_Nro || 'sin factura'} · ${formatDate(r.Fecha_Facturacion_Emision || r.Fecha_Recepcion)} · ${integer(r.Km)} km`;
       $('maintenanceDetailBody').innerHTML = `
-        <div class="detail-grid">
-          <div class="detail-cell"><span>ID mantenimiento</span><strong class="mono">${escapeHtml(r.ID_Mantenimiento)}</strong></div>
-          <div class="detail-cell"><span>Placa</span><strong>${highlight(r.Placa)}</strong></div>
-          <div class="detail-cell"><span>Orden reparación</span><strong class="mono">${highlight(r.Orden_Reparacion || '—')}</strong></div>
-          <div class="detail-cell"><span>Factura</span><strong class="mono">${highlight(r.Factura_Nro || '—')}</strong></div>
+        <div class="detail-grid detail-grid-main">
+          <div class="detail-cell"><span>Vehículo</span><strong>${highlight(r.Placa)}</strong></div>
           <div class="detail-cell"><span>Fecha</span><strong>${formatDate(r.Fecha_Facturacion_Emision || r.Fecha_Recepcion)}</strong></div>
           <div class="detail-cell"><span>Kilometraje</span><strong>${integer(r.Km)} km</strong></div>
           <div class="detail-cell"><span>Tipo / categoría</span><strong>${escapeHtml(r.Tipo_Mantenimiento || '')} · ${escapeHtml(r.Categoria || '')}</strong></div>
-          <div class="detail-cell"><span>Total control</span><strong>${money(r.Total_Control || r.Total_Con_IVA || r.Subtotal_Sin_IVA)}</strong></div>
           <div class="detail-cell"><span>Proveedor / agencia</span><strong>${highlight(r.Agencia || inv.Proveedor || '—')}</strong></div>
-          <div class="detail-cell"><span>Asesor</span><strong>${escapeHtml(r.Asesor_Vendedor || '—')}</strong></div>
+          <div class="detail-cell"><span>Total</span><strong>${money(r.Total_Control || r.Total_Con_IVA || r.Subtotal_Sin_IVA)}</strong></div>
           <div class="detail-cell"><span>Mano de obra</span><strong>${money(r.Subtotal_Mano_Obra || inv.Subtotal_Mano_Obra)}</strong></div>
           <div class="detail-cell"><span>Repuestos</span><strong>${money(r.Subtotal_Repuestos || inv.Subtotal_Repuestos)}</strong></div>
         </div>
-        <div class="detail-section"><h4><i class="bi bi-shield-check"></i> Validaciones de control</h4><div class="detail-grid">${validationList(r)}<div class="detail-cell"><span>Lectura general</span><strong>${control}</strong></div></div></div>
+        <details class="trace-details"><summary><i class="bi bi-diagram-3"></i> Datos de trazabilidad administrativa</summary><div class="detail-grid">
+          <div class="detail-cell"><span>ID mantenimiento</span><strong class="mono">${escapeHtml(r.ID_Mantenimiento)}</strong></div>
+          <div class="detail-cell"><span>Orden reparación</span><strong class="mono">${highlight(r.Orden_Reparacion || '—')}</strong></div>
+          <div class="detail-cell"><span>Factura</span><strong class="mono">${highlight(r.Factura_Nro || '—')}</strong></div>
+          <div class="detail-cell"><span>Asesor</span><strong>${escapeHtml(r.Asesor_Vendedor || '—')}</strong></div>
+        </div></details>
+        <div class="detail-section"><h4><i class="bi bi-shield-check"></i> Control</h4>${renderControlSummary(r)}</div>
         <div class="detail-section"><h4><i class="bi bi-chat-left-text"></i> Observaciones técnicas</h4><div class="obs-grid"><div class="obs-box"><h5>Ingreso / diagnóstico</h5><p>${highlight(r.Ingreso_Observacion || inv.Observaciones || 'Sin observación registrada.')}</p></div><div class="obs-box"><h5>Cierre / control interno</h5><p>${highlight(r.Cierre_Observacion || r.Observacion_Control || 'Sin cierre registrado.')}</p></div></div></div>
         <div class="detail-section"><h4><i class="bi bi-tools"></i> Qué se realizó en el mantenimiento</h4>${renderDetailTable(det.length ? det : invDet, det.length ? 'mant' : 'invoice')}</div>
         <div class="detail-section"><h4><i class="bi bi-receipt"></i> Soporte de factura electrónica</h4>
@@ -2211,6 +2503,7 @@
       $('btnRecheck').addEventListener('click', renderIntegrity);
       $('btnRefreshSummary').addEventListener('click', renderExecutiveSummary);
       ['filterText','filterVehicle','filterType','filterStatus','filterFrom','filterTo'].forEach(id => $(id).addEventListener('input', () => { if(id === 'filterText' && !$('filterText').value.trim()) $$('.quick-chip').forEach(c=>c.classList.remove('active')); renderMaintenanceTable(); renderKpis(); }));
+      if($('smartVehicleFilter')) $('smartVehicleFilter').addEventListener('change', renderSmartMaintenancePlan);
       $('ocrInput').addEventListener('change', e => handleOcr(e.target.files[0]));
       $('btnUseOcr').addEventListener('click', useOcrInForm);
       if($('btnAsk')) $('btnAsk').addEventListener('click', () => { $('nlAnswer').textContent = answerQuestion($('nlQuestion').value); });

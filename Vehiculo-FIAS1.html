@@ -3,1164 +3,324 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#0a2540" />
+  <meta name="theme-color" content="#0b3b2a" />
   <title>FIAS | Plataforma Integral de Mantenimientos Vehiculares</title>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" />
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
   <style>
-    /* ═══════════════════════════════════════════════
-       FIAS ENTERPRISE DESIGN SYSTEM
-       Palette: Deep Navy · Slate · Accent Teal · Warm White
-       Typography: Inter system-stack with tight tracking
-    ═══════════════════════════════════════════════ */
-    :root {
-      /* Brand colors */
-      --navy-950: #050d1a;
-      --navy-900: #0a1628;
-      --navy-800: #0f2040;
-      --navy-700: #0a2540;
-      --navy-600: #0d3060;
-      --teal-600: #0b6e6e;
-      --teal-500: #0d8080;
-      --teal-400: #10a0a0;
-      --teal-200: #b2e8e8;
-      --teal-100: #e0f7f7;
-      --teal-50:  #f0fafa;
-      /* Semantic colors */
-      --green-700: #047857;
-      --green-500: #10b981;
-      --green-100: #d1fae5;
-      --amber-700: #92400e;
-      --amber-500: #d97706;
-      --amber-100: #fef3c7;
-      --red-700:   #991b1b;
-      --red-500:   #ef4444;
-      --red-100:   #fee2e2;
-      --blue-700:  #1d4ed8;
-      --blue-100:  #dbeafe;
-      /* Neutrals */
-      --gray-950: #0f172a;
-      --gray-800: #1e293b;
-      --gray-700: #334155;
-      --gray-600: #475569;
-      --gray-500: #64748b;
-      --gray-400: #94a3b8;
-      --gray-300: #cbd5e1;
-      --gray-200: #e2e8f0;
-      --gray-100: #f1f5f9;
-      --gray-50:  #f8fafc;
-      --white:    #ffffff;
-      /* Surfaces */
-      --surface:        #f0f4f8;
-      --surface-raised: #ffffff;
-      /* Shadows — layered for depth */
-      --shadow-xs:  0 1px 2px rgba(15,23,42,.05);
-      --shadow-sm:  0 1px 3px rgba(15,23,42,.10), 0 1px 2px rgba(15,23,42,.06);
-      --shadow-md:  0 4px 6px rgba(15,23,42,.07), 0 2px 4px rgba(15,23,42,.06);
-      --shadow-lg:  0 10px 15px rgba(15,23,42,.08), 0 4px 6px rgba(15,23,42,.05);
-      --shadow-xl:  0 20px 25px rgba(15,23,42,.10), 0 10px 10px rgba(15,23,42,.04);
-      --shadow-2xl: 0 25px 50px rgba(15,23,42,.18);
-      /* Radius */
-      --radius-sm:  6px;
-      --radius-md:  10px;
-      --radius-lg:  16px;
-      --radius-xl:  22px;
-      --radius-2xl: 28px;
-      /* Layout */
-      --sidebar: 270px;
-      /* Transitions */
-      --ease: cubic-bezier(.4,0,.2,1);
+    :root{
+      --green-950:#06281d;
+      --green-900:#0b3b2a;
+      --green-800:#145338;
+      --green-700:#1f7a38;
+      --green-500:#39b864;
+      --green-100:#e9f8ee;
+      --blue-700:#1d4ed8;
+      --blue-100:#eaf1ff;
+      --amber-700:#b7791f;
+      --amber-100:#fff7df;
+      --red-700:#b42318;
+      --red-100:#ffebeb;
+      --gray-950:#101828;
+      --gray-800:#1f2937;
+      --gray-600:#667085;
+      --gray-400:#98a2b3;
+      --gray-200:#eaecf0;
+      --gray-100:#f3f4f6;
+      --white:#ffffff;
+      --surface:#f6f8fb;
+      --shadow:0 16px 40px rgba(16,24,40,.12);
+      --shadow-soft:0 8px 24px rgba(16,24,40,.08);
+      --radius-xl:24px;
+      --radius-lg:18px;
+      --radius-md:12px;
+      --sidebar:292px;
     }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--surface);color:var(--gray-950);font-family:Inter,"Segoe UI",system-ui,-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;}
+    button,input,select,textarea{font:inherit}
+    a{color:inherit}
+    .app-shell{min-height:100vh;display:grid;grid-template-columns:var(--sidebar) 1fr;}
+    .sidebar{position:sticky;top:0;height:100vh;background:linear-gradient(180deg,var(--green-950),var(--green-900) 72%,#092015);color:var(--white);padding:22px;overflow:auto;box-shadow:var(--shadow);z-index:20}
+    .brand{display:flex;gap:12px;align-items:center;margin-bottom:22px}
+    .brand-logo-wrap{width:100%;background:#fff;border-radius:16px;padding:12px 14px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 20px rgba(0,0,0,.15)}
+    .brand-logo{display:block;width:min(220px,100%);height:auto;object-fit:contain}
+    .brand h1{font-size:1.05rem;margin:0;font-weight:900;line-height:1.15}
+    .brand small{opacity:.78;display:block;margin-top:4px}
+    .nav-group{margin:20px 0 10px;font-size:.72rem;text-transform:uppercase;letter-spacing:.11em;color:#a8d7b6;font-weight:800}
+    .nav-button{width:100%;border:0;background:rgba(255,255,255,.05);color:#e7f5ec;display:flex;align-items:center;gap:11px;padding:12px 12px;border-radius:14px;margin:7px 0;text-align:left;cursor:pointer;transition:.18s ease;border:1px solid rgba(255,255,255,.07)}
+    .nav-button:hover,.nav-button.active{background:#fff;color:var(--green-800);transform:translateX(3px)}
+    .nav-button .bi{font-size:1.1rem}
+    .sidebar-card{border:1px solid rgba(255,255,255,.13);background:rgba(255,255,255,.08);border-radius:18px;padding:14px;margin-top:18px}
+    .sidebar-card .muted{color:#b8d7c2}
+    .main{min-width:0;padding:24px 28px 40px;}
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:20px}
+    .page-title h2{font-size:clamp(1.65rem,2.4vw,2.45rem);line-height:1.05;margin:0;font-weight:950;letter-spacing:-.045em}
+    .page-title p{margin:.45rem 0 0;color:var(--gray-600);max-width:920px}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+    .btn{border:0;border-radius:12px;padding:10px 14px;font-weight:850;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:.18s ease;white-space:nowrap;text-decoration:none}
+    .btn:hover{transform:translateY(-1px)}
+    .btn-primary{background:linear-gradient(135deg,var(--green-700),var(--green-500));color:#fff;box-shadow:0 8px 18px rgba(31,122,56,.25)}
+    .btn-dark{background:var(--gray-950);color:#fff}
+    .btn-ghost{background:#fff;color:var(--gray-800);border:1px solid var(--gray-200)}
+    .session-chip{display:inline-flex;align-items:center;gap:8px;border:1px solid #b7e4c7;background:linear-gradient(180deg,#f7fffa,#ffffff);color:var(--green-800);border-radius:999px;padding:9px 12px;font-size:.88rem;font-weight:900;box-shadow:var(--shadow-soft)}
+    .session-chip i{font-size:1rem}.session-chip span{max-width:230px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .btn-warning{background:#fff7df;color:#986500;border:1px solid #fbdc85}
+    .btn-danger{background:#ffebeb;color:var(--red-700);border:1px solid #ffc8c8}
+    .btn-sm{padding:7px 10px;font-size:.86rem;border-radius:10px}
+    .doc-actions{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+    .doc-actions .btn{min-height:34px}
+    .doc-note{margin-top:8px;color:var(--gray-600);font-size:.85rem}
+    .hero-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:18px;margin-bottom:18px}
+    .hero-panel{position:relative;overflow:hidden;background:linear-gradient(135deg,#083421,#1f7a38 66%,#5ad77d);color:#fff;border-radius:var(--radius-xl);padding:24px;box-shadow:var(--shadow)}
+    .hero-panel:after{content:"";position:absolute;right:-80px;top:-80px;width:260px;height:260px;background:rgba(255,255,255,.14);border-radius:50%}
+    .hero-panel h3{margin:0;font-size:1.55rem;font-weight:950;letter-spacing:-.03em;max-width:760px}
+    .hero-panel p{margin:10px 0 0;opacity:.94;max-width:900px}
+    .connection-panel{background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius-xl);padding:18px;box-shadow:var(--shadow-soft)}
+    .connection-row{display:flex;justify-content:space-between;gap:14px;padding:9px 0;border-bottom:1px dashed var(--gray-200)}
+    .connection-row:last-child{border-bottom:0}
+    .connection-row span{color:var(--gray-600)}
+    .connection-row strong{text-align:right;max-width:250px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .status-dot{display:inline-flex;align-items:center;gap:7px}
+    .status-dot:before{content:"";width:10px;height:10px;border-radius:50%;background:var(--gray-400);box-shadow:0 0 0 4px rgba(152,162,179,.18)}
+    .status-dot.ok:before{background:var(--green-500);box-shadow:0 0 0 4px rgba(57,184,100,.18)}
+    .status-dot.warn:before{background:#f59e0b;box-shadow:0 0 0 4px rgba(245,158,11,.18)}
+    .status-dot.danger:before{background:#ef4444;box-shadow:0 0 0 4px rgba(239,68,68,.18)}
+    .module{display:none;animation:fadeIn .18s ease}
+    .module.active{display:block}
+    @keyframes fadeIn{from{opacity:.3;transform:translateY(4px)}to{opacity:1;transform:none}}
+    .grid-kpi{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:14px;margin:18px 0}
+    .kpi{background:#fff;border:1px solid var(--gray-200);border-radius:18px;padding:16px;box-shadow:var(--shadow-soft);min-height:130px;display:flex;flex-direction:column;justify-content:space-between}
+    .kpi-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+    .kpi-label{color:var(--gray-600);font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;font-weight:900}
+    .kpi-value{font-size:1.75rem;font-weight:950;letter-spacing:-.045em;margin-top:6px}
+    .kpi-sub{color:var(--gray-600);font-size:.84rem;margin-top:6px}
+    .kpi-icon{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;background:var(--green-100);color:var(--green-700);font-size:1.2rem}
+    .section-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+    .span-12{grid-column:span 12}.span-8{grid-column:span 8}.span-7{grid-column:span 7}.span-6{grid-column:span 6}.span-5{grid-column:span 5}.span-4{grid-column:span 4}.span-3{grid-column:span 3}
+    .card{background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius-lg);box-shadow:var(--shadow-soft);overflow:hidden}
+    .card-head{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:16px 18px;border-bottom:1px solid var(--gray-200)}
+    .card-head h3{margin:0;font-size:1.02rem;font-weight:950;letter-spacing:-.02em}.card-head p{margin:3px 0 0;color:var(--gray-600);font-size:.87rem}
+    .card-body{padding:18px}.chart-box{height:310px;position:relative}.chart-box-sm{height:245px;position:relative}
+    .filters{display:grid;grid-template-columns:2fr repeat(5,minmax(128px,1fr));gap:10px;margin-bottom:14px}
+    .field{display:flex;flex-direction:column;gap:6px}.field label{font-size:.78rem;color:var(--gray-600);font-weight:900;text-transform:uppercase;letter-spacing:.07em}
+    .field input,.field select,.field textarea{width:100%;border:1px solid var(--gray-200);border-radius:12px;padding:10px 12px;background:#fff;color:var(--gray-950);outline:none}.field textarea{resize:vertical;min-height:92px}
+    .field input:focus,.field select:focus,.field textarea:focus{border-color:#8fd39f;box-shadow:0 0 0 4px rgba(57,184,100,.14)}
+    .table-wrap{overflow:auto;border:1px solid var(--gray-200);border-radius:16px;background:#fff}.data-table{width:100%;border-collapse:separate;border-spacing:0;min-width:960px}.data-table th{position:sticky;top:0;background:#f8fafb;color:#344054;text-align:left;font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;padding:12px;border-bottom:1px solid var(--gray-200);z-index:1}.data-table td{padding:12px;border-bottom:1px solid #f0f2f5;vertical-align:middle}.data-table tr:hover td{background:#fbfdfc}.num{text-align:right;font-variant-numeric:tabular-nums}.mono{font-family:"Cascadia Code","SFMono-Regular",Consolas,monospace;font-size:.88em}.muted{color:var(--gray-600)}
+    .pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:5px 9px;font-size:.78rem;font-weight:900;white-space:nowrap}.pill-ok{background:var(--green-100);color:#087343}.pill-warn{background:var(--amber-100);color:#986500}.pill-bad{background:var(--red-100);color:var(--red-700)}.pill-info{background:var(--blue-100);color:var(--blue-700)}.pill-neutral{background:var(--gray-100);color:var(--gray-800)}
+    .risk-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.risk-card{border:1px solid var(--gray-200);border-radius:18px;padding:16px;background:#fff;box-shadow:var(--shadow-soft)}.risk-card h4{margin:0 0 4px;font-size:1rem}.risk-score{height:10px;background:#eef1f3;border-radius:999px;overflow:hidden;margin:12px 0}.risk-score > div{height:100%;border-radius:999px;background:var(--green-500)}.risk-score.med > div{background:#f59e0b}.risk-score.high > div{background:#ef4444}
+    .alert-list{display:grid;gap:10px}.alert-item{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:flex-start;padding:13px;border:1px solid var(--gray-200);border-left:5px solid var(--gray-400);border-radius:16px;background:#fff}.alert-item h4{margin:0 0 4px;font-size:.95rem}.alert-item p{margin:0;color:var(--gray-600)}.alert-high{border-left-color:#ef4444}.alert-med{border-left-color:#f59e0b}.alert-low{border-left-color:#39b864}.alert-icon{width:36px;height:36px;border-radius:12px;display:grid;place-items:center;background:#f6f8fb}.summary-text{line-height:1.65;color:#344054}.summary-text strong{color:var(--green-800)}
+    .split-form{display:grid;grid-template-columns:1fr 1fr;gap:14px}.line-items{display:grid;gap:10px}.line-item{display:grid;grid-template-columns:1.2fr 2fr .7fr .8fr auto;gap:10px;padding:12px;background:#fbfcfd;border:1px dashed #d0d5dd;border-radius:14px;align-items:end}
+    .empty-state{text-align:center;padding:42px 20px;color:var(--gray-600);border:1px dashed #d0d5dd;border-radius:16px;background:#fbfcfd}.empty-state .bi{font-size:2rem;color:var(--green-700)}
+    .console{background:#0c111d;color:#d0d5dd;border-radius:18px;padding:14px;font-family:"Cascadia Code",Consolas,monospace;font-size:.86rem;white-space:pre-wrap;overflow:auto;max-height:260px}.nl-box{display:flex;gap:10px}.nl-box input{flex:1}
+    .ocr-upload-card{display:grid;gap:14px}
+    .doc-drop{display:flex;width:100%;min-height:192px;align-items:center;justify-content:center;flex-direction:column;gap:10px;border:2px dashed #9eddb1;border-radius:22px;background:linear-gradient(180deg,#f7fffa 0%,#ffffff 100%);padding:24px;text-align:center;cursor:pointer;box-sizing:border-box;position:relative;overflow:hidden;transition:.18s ease;border-color:#9eddb1}
+    .doc-drop::before{content:"";position:absolute;inset:auto -40px -70px auto;width:150px;height:150px;border-radius:999px;background:rgba(57,184,100,.10);pointer-events:none}
+    .doc-drop:hover{background:#eefbf2;border-color:var(--green-600);transform:translateY(-1px);box-shadow:0 14px 30px rgba(16,24,40,.08)}
+    .upload-icon{width:58px;height:58px;border-radius:18px;display:grid;place-items:center;background:var(--green-100);color:var(--green-800);font-size:1.85rem;box-shadow:inset 0 0 0 1px rgba(57,184,100,.14)}
+    .doc-drop strong{display:block;font-size:1.05rem;font-weight:950;color:var(--gray-950);line-height:1.2}
+    .doc-drop .muted{display:block;max-width:430px;line-height:1.45;font-size:.9rem}
+    .upload-button{display:inline-flex;align-items:center;gap:8px;margin-top:4px;border:1px solid #b7e4c7;border-radius:999px;background:#fff;color:var(--green-800);padding:8px 13px;font-weight:900;font-size:.84rem;box-shadow:0 6px 14px rgba(16,24,40,.06)}
+    .ocr-help{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+    .ocr-help .mini-step{border:1px solid var(--gray-200);border-radius:14px;background:#fbfcfd;padding:10px;display:flex;gap:8px;align-items:flex-start;font-size:.82rem;color:#344054;line-height:1.35}
+    .ocr-help .mini-step i{color:var(--green-700);font-size:1rem;margin-top:1px}
+    .ocr-status{background:#0c111d;color:#d0d5dd;border-radius:16px;padding:13px 14px;font-family:"Cascadia Code",Consolas,monospace;font-size:.84rem;white-space:pre-wrap;overflow:auto;max-height:220px;min-height:48px;border:1px solid rgba(255,255,255,.06)}
+    .ocr-status::before{content:"Estado: ";color:#86efac;font-weight:900}
+    .ocr-preview{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.preview-cell{background:#fbfcfd;border:1px solid var(--gray-200);border-radius:12px;padding:10px}.preview-cell span{display:block;font-size:.73rem;text-transform:uppercase;letter-spacing:.08em;color:var(--gray-600);font-weight:900}.preview-cell strong{font-size:1rem}
+    .drawer{position:fixed;inset:0;background:rgba(16,24,40,.42);z-index:60;display:none;align-items:flex-end;justify-content:center;padding:20px}.drawer.open{display:flex}.drawer-panel{width:min(1100px,100%);max-height:92vh;background:#fff;border-radius:26px;box-shadow:var(--shadow);overflow:auto}.drawer-head{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:18px 20px;background:linear-gradient(135deg,var(--green-950),var(--green-700));color:#fff}.drawer-body{padding:20px}.drawer-foot{display:flex;justify-content:space-between;gap:10px;padding:16px 20px;border-top:1px solid var(--gray-200);background:#fff;position:sticky;bottom:0}
+    .loading{position:fixed;inset:0;z-index:80;background:rgba(255,255,255,.88);display:none;align-items:center;justify-content:center;flex-direction:column;gap:12px;backdrop-filter:blur(4px)}.loading.open{display:flex}.spinner{width:44px;height:44px;border:4px solid #d9f1df;border-top-color:var(--green-700);border-radius:50%;animation:spin 1s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+    .toast-zone{position:fixed;right:18px;bottom:18px;display:grid;gap:10px;z-index:100}.toast{background:#fff;border:1px solid var(--gray-200);border-left:5px solid var(--green-500);border-radius:14px;box-shadow:var(--shadow-soft);padding:12px 14px;min-width:min(360px,90vw)}.toast.danger{border-left-color:#ef4444}.toast.warn{border-left-color:#f59e0b}.toast h4{margin:0 0 3px;font-size:.95rem}.toast p{margin:0;color:var(--gray-600)}
+    .hidden{display:none!important}.text-right{text-align:right}.mt-1{margin-top:8px}.mt-2{margin-top:14px}.mt-3{margin-top:20px}.mb-0{margin-bottom:0}.w-100{width:100%}.flex{display:flex}.gap-2{gap:10px}.wrap{flex-wrap:wrap}.justify-between{justify-content:space-between}.align-center{align-items:center}
 
-    *, *::before, *::after { box-sizing: border-box; }
-    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
-    body {
-      margin: 0;
-      background: var(--surface);
-      color: var(--gray-950);
-      font-family: Inter, "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
-      font-size: 14px;
-      line-height: 1.6;
-    }
-    button, input, select, textarea { font: inherit; }
-    a { color: inherit; }
 
-    /* ─── APP SHELL ──────────────────────────────── */
-    .app-shell {
-      min-height: 100vh;
-      display: grid;
-      grid-template-columns: var(--sidebar) 1fr;
-    }
+    /* Ajustes de usabilidad: priorización vehicular, resumen ejecutivo ampliado y filtros */
+    .risk-explain{display:grid;grid-template-columns:1.1fr .9fr;gap:14px;margin-bottom:14px;padding:14px;border:1px solid #b7e4c7;border-radius:18px;background:linear-gradient(180deg,#f7fffa,#ffffff)}
+    .risk-explain h4{margin:0 0 6px;font-size:1rem;font-weight:950;color:var(--green-800)}
+    .risk-explain p{margin:0;color:#344054;line-height:1.55}
+    .risk-explain ul{margin:4px 0 0 18px;color:#344054;line-height:1.55;padding:0}
+    .exec-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:12px}
+    .exec-metric{border:1px solid var(--gray-200);border-radius:14px;background:#fbfcfd;padding:12px}
+    .exec-metric span{display:block;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--gray-600);font-weight:900}
+    .exec-metric strong{display:block;margin-top:4px;font-size:1.1rem;color:var(--green-800)}
+    .exec-section{border:1px solid var(--gray-200);border-radius:16px;background:#fff;padding:12px;margin-top:10px}
+    .exec-section h4{margin:0 0 6px;font-size:.95rem;color:var(--gray-950);font-weight:950}
+    .exec-section p{margin:0;color:#344054;line-height:1.6}
+    .exec-section ul{margin:6px 0 0 18px;padding:0;color:#344054;line-height:1.55}
+    .filter-action-row{display:flex;justify-content:flex-end;gap:8px;margin:-4px 0 12px;flex-wrap:wrap}
 
-    /* ─── SIDEBAR ────────────────────────────────── */
-    .sidebar {
-      position: sticky;
-      top: 0;
-      height: 100vh;
-      background: var(--navy-900);
-      color: var(--white);
-      padding: 0;
-      overflow: hidden auto;
-      box-shadow: 4px 0 24px rgba(5,13,26,.25);
-      z-index: 20;
-      display: flex;
-      flex-direction: column;
-      border-right: 1px solid rgba(255,255,255,.06);
-    }
+    /* Componentes enriquecidos para búsqueda y detalle de mantenimientos */
+    .search-tools{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:10px 0 14px;flex-wrap:wrap}
+    .search-insight{display:flex;align-items:center;gap:8px;color:var(--gray-600);font-size:.9rem;line-height:1.35}.search-insight strong{color:var(--green-800)}
+    .quick-chips{display:flex;gap:8px;flex-wrap:wrap}.quick-chip{border:1px solid var(--gray-200);background:#fff;border-radius:999px;padding:7px 10px;font-size:.82rem;font-weight:850;color:#344054;cursor:pointer}.quick-chip:hover,.quick-chip.active{background:var(--green-100);border-color:#b7e4c7;color:var(--green-800)}
+    mark.hit{background:#fff2a8;color:#1f2937;border-radius:5px;padding:0 .14em;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+    .maintenance-gallery{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:10px 0 14px}.maint-card{border:1px solid var(--gray-200);background:linear-gradient(180deg,#fff,#fbfcfd);border-radius:18px;padding:14px;box-shadow:var(--shadow-soft);display:flex;flex-direction:column;gap:10px}.maint-card:hover{border-color:#b7e4c7;box-shadow:0 12px 30px rgba(31,122,56,.12)}.maint-card-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.maint-title{font-weight:950;letter-spacing:-.02em}.maint-sub{color:var(--gray-600);font-size:.86rem;margin-top:2px}.maint-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.mini-metric{border:1px solid var(--gray-200);border-radius:12px;background:#fff;padding:8px}.mini-metric span{display:block;color:var(--gray-600);font-size:.68rem;text-transform:uppercase;letter-spacing:.07em;font-weight:900}.mini-metric strong{font-size:.95rem}.item-snippets{display:flex;gap:6px;flex-wrap:wrap;min-height:28px}.item-chip{display:inline-flex;max-width:100%;border-radius:999px;background:#f3f6f8;color:#344054;padding:5px 8px;font-size:.76rem;font-weight:750;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.interactive-row{cursor:pointer}.interactive-row:hover td{background:#f6fff8!important}
+    .detail-modal{position:fixed;inset:0;background:rgba(16,24,40,.56);z-index:80;display:none;align-items:center;justify-content:center;padding:18px}.detail-modal.open{display:flex}.detail-dialog{width:min(1180px,100%);max-height:92vh;background:#fff;border-radius:26px;box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column}.detail-head{background:linear-gradient(135deg,var(--green-950),var(--green-700));color:#fff;padding:18px 20px;display:flex;justify-content:space-between;gap:14px;align-items:flex-start}.detail-title{margin:0;font-size:1.25rem;font-weight:950;letter-spacing:-.03em}.detail-subtitle{margin:4px 0 0;opacity:.86}.detail-body{padding:18px;overflow:auto}.detail-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.detail-cell{border:1px solid var(--gray-200);border-radius:14px;background:#fbfcfd;padding:10px}.detail-cell span{display:block;color:var(--gray-600);font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;font-weight:900}.detail-cell strong{display:block;margin-top:4px;font-size:1rem;word-break:break-word}.detail-section{margin-top:16px}.detail-section h4{margin:0 0 8px;font-size:1rem;font-weight:950;color:var(--gray-950)}.obs-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.obs-box{border:1px solid var(--gray-200);border-radius:14px;background:#fff;padding:12px;min-height:82px}.obs-box h5{margin:0 0 6px;font-size:.82rem;text-transform:uppercase;letter-spacing:.08em;color:var(--gray-600)}.obs-box p{margin:0;line-height:1.55;color:#344054}.detail-foot{padding:14px 18px;border-top:1px solid var(--gray-200);background:#fff;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}.sum-row{display:flex;justify-content:flex-end;gap:14px;margin-top:10px;color:var(--gray-600)}.sum-row strong{color:var(--gray-950)}
 
-    .sidebar-inner { padding: 20px 16px 28px; flex: 1; }
+    @media(max-width:1320px){.maintenance-gallery{grid-template-columns:repeat(2,1fr)}.detail-grid{grid-template-columns:repeat(2,1fr)}.grid-kpi{grid-template-columns:repeat(3,1fr)}.hero-grid{grid-template-columns:1fr}.span-8,.span-7,.span-6,.span-5,.span-4,.span-3{grid-column:span 12}.risk-grid{grid-template-columns:repeat(2,1fr)}.filters{grid-template-columns:1fr 1fr}.split-form{grid-template-columns:1fr}.ocr-preview{grid-template-columns:1fr}}
+    @media(max-width:900px){.risk-explain{grid-template-columns:1fr}.exec-grid{grid-template-columns:1fr}.maintenance-gallery{grid-template-columns:1fr}.obs-grid{grid-template-columns:1fr}.detail-modal{padding:0}.detail-dialog{max-height:100vh;border-radius:0}.app-shell{grid-template-columns:1fr}.sidebar{position:relative;height:auto}.main{padding:18px}.topbar{align-items:flex-start;flex-direction:column}.actions{justify-content:flex-start}.grid-kpi{grid-template-columns:1fr 1fr}.risk-grid{grid-template-columns:1fr}.filters{grid-template-columns:1fr}.line-item{grid-template-columns:1fr}.nl-box{flex-direction:column}.hero-panel{padding:18px}}
+    @media(max-width:560px){.grid-kpi{grid-template-columns:1fr}.connection-row{flex-direction:column}.card-head{flex-direction:column;align-items:flex-start}.drawer{padding:0}.drawer-panel{border-radius:22px 22px 0 0}}
+  
+    @media(max-width:760px){.ocr-help{grid-template-columns:1fr}.doc-drop{min-height:170px;padding:20px}.upload-icon{width:52px;height:52px}.doc-drop strong{font-size:1rem}}
 
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 20px 16px 16px;
-      border-bottom: 1px solid rgba(255,255,255,.07);
-      margin-bottom: 4px;
-    }
-    .brand-mark {
-      height: 40px;
-      width: 40px;
-      border-radius: var(--radius-md);
-      background: linear-gradient(135deg, var(--teal-500), var(--teal-400));
-      display: grid;
-      place-items: center;
-      color: #fff;
-      font-weight: 800;
-      font-size: .82rem;
-      letter-spacing: .02em;
-      flex-shrink: 0;
-      box-shadow: 0 4px 12px rgba(13,128,128,.4);
-    }
-    .brand h1 {
-      font-size: .88rem;
-      margin: 0;
-      font-weight: 700;
-      line-height: 1.25;
-      color: #fff;
-    }
-    .brand small {
-      display: block;
-      margin-top: 2px;
-      font-size: .72rem;
-      color: rgba(255,255,255,.45);
-      font-weight: 400;
-    }
 
-    .nav-group {
-      font-size: .67rem;
-      text-transform: uppercase;
-      letter-spacing: .12em;
-      color: rgba(255,255,255,.35);
-      font-weight: 700;
-      padding: 20px 4px 8px;
-    }
-    .nav-button {
-      width: 100%;
-      border: 0;
-      background: transparent;
-      color: rgba(255,255,255,.60);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 9px 12px;
-      border-radius: var(--radius-md);
-      margin: 2px 0;
-      text-align: left;
-      cursor: pointer;
-      transition: background .15s var(--ease), color .15s var(--ease), transform .12s var(--ease);
-      font-size: .86rem;
-      font-weight: 500;
-      position: relative;
-    }
-    .nav-button .bi { font-size: 1rem; flex-shrink: 0; }
-    .nav-button:hover {
-      background: rgba(255,255,255,.08);
-      color: rgba(255,255,255,.90);
-    }
-    .nav-button.active {
-      background: linear-gradient(90deg, rgba(13,128,128,.30), rgba(13,128,128,.12));
-      color: var(--teal-200);
-      font-weight: 600;
-    }
-    .nav-button.active::before {
-      content: "";
-      position: absolute;
-      left: 0;
-      top: 20%;
-      bottom: 20%;
-      width: 3px;
-      background: var(--teal-400);
-      border-radius: 0 2px 2px 0;
-    }
+    /* ===== Pantalla de acceso previa al sistema ===== */
+    .auth-gate{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:28px;background:linear-gradient(135deg,#f4fff8 0%,#eef5ff 52%,#ffffff 100%)}
+    .auth-card{width:min(560px,100%);background:#fff;border:1px solid var(--gray-200);border-radius:28px;box-shadow:var(--shadow);padding:30px;text-align:center}
+    .auth-logo-wrap{display:flex;align-items:center;justify-content:center;margin:0 auto 18px;padding:8px 12px;max-width:300px}
+    .auth-logo{display:block;width:min(270px,100%);height:auto;object-fit:contain}
+    .auth-card h2{margin:0;font-size:1.75rem;font-weight:950;letter-spacing:-.04em;color:var(--gray-950)}
+    .auth-card p{color:var(--gray-600);line-height:1.55;margin:10px 0 20px}
+    .auth-actions{display:grid;gap:10px;margin-top:14px}.auth-actions .btn{justify-content:center;width:100%}
+    .auth-note{margin-top:16px;border:1px solid #b7e4c7;background:#f7fffa;color:var(--green-800);border-radius:16px;padding:12px;font-size:.9rem;text-align:left}
+    .app-shell.locked{display:none!important}
+    .auth-gate.hidden{display:none!important}
 
-    .sidebar-bottom {
-      border-top: 1px solid rgba(255,255,255,.07);
-      padding: 12px 16px;
-    }
-    .sidebar-meta {
-      font-size: .74rem;
-      color: rgba(255,255,255,.35);
-      line-height: 1.5;
-      padding: 8px 0;
-    }
-    .sidebar-meta strong { color: rgba(255,255,255,.60); font-weight: 600; }
 
-    /* ─── MAIN ───────────────────────────────────── */
-    .main {
-      min-width: 0;
-      padding: 24px 28px 48px;
-    }
+    .brand-logo,.auth-logo{user-select:none;-webkit-user-drag:none}
 
-    /* ─── TOPBAR ─────────────────────────────────── */
-    .topbar {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-    .page-title h2 {
-      font-size: clamp(1.45rem, 2vw, 1.85rem);
-      line-height: 1.1;
-      margin: 0;
-      font-weight: 800;
-      letter-spacing: -.03em;
-      color: var(--gray-950);
-    }
-    .page-title p {
-      margin: .4rem 0 0;
-      color: var(--gray-500);
-      font-size: .88rem;
-      max-width: 860px;
-      line-height: 1.55;
-    }
-    .actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; align-items: center; }
 
-    /* ─── BUTTONS ────────────────────────────────── */
-    .btn {
-      border: 0;
-      border-radius: var(--radius-md);
-      padding: 9px 14px;
-      font-weight: 600;
-      font-size: .84rem;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      transition: all .15s var(--ease);
-      white-space: nowrap;
-      text-decoration: none;
-      line-height: 1;
+    /* ===== Optimización visual 2026 · interfaz compacta sin alterar lógica ===== */
+    :root{
+      --sidebar:252px;
+      --radius-xl:20px;
+      --radius-lg:16px;
+      --shadow:0 14px 34px rgba(16,24,40,.10);
+      --shadow-soft:0 6px 18px rgba(16,24,40,.065);
     }
-    .btn:hover { transform: translateY(-1px); }
-    .btn:active { transform: translateY(0); }
-    .btn-primary {
-      background: linear-gradient(135deg, var(--teal-600), var(--teal-500));
-      color: #fff;
-      box-shadow: 0 4px 12px rgba(13,128,128,.30), inset 0 1px 0 rgba(255,255,255,.15);
-    }
-    .btn-primary:hover { box-shadow: 0 6px 16px rgba(13,128,128,.40); }
-    .btn-dark {
-      background: var(--gray-950);
-      color: #fff;
-      box-shadow: var(--shadow-sm);
-    }
-    .btn-dark:hover { background: var(--gray-800); }
-    .btn-ghost {
-      background: var(--white);
-      color: var(--gray-700);
-      border: 1px solid var(--gray-200);
-      box-shadow: var(--shadow-xs);
-    }
-    .btn-ghost:hover { background: var(--gray-50); border-color: var(--gray-300); }
-    .btn-warning { background: var(--amber-100); color: var(--amber-700); border: 1px solid #fcd34d; }
-    .btn-danger  { background: var(--red-100);   color: var(--red-700);   border: 1px solid #fca5a5; }
-    .btn-sm { padding: 6px 10px; font-size: .80rem; border-radius: var(--radius-sm); }
+    body{line-height:1.45;background:#f5f7f9}
+    .visually-hidden{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+    .app-shell{grid-template-columns:var(--sidebar) minmax(0,1fr)}
+    .sidebar{padding:16px 14px;background:linear-gradient(180deg,#082f22 0%,#0b3b2a 72%,#08291e 100%);box-shadow:6px 0 24px rgba(16,24,40,.08)}
+    .brand{margin-bottom:16px;gap:10px}
+    .brand-compact{display:flex;align-items:center}
+    .brand-logo-wrap{width:54px;height:54px;flex:0 0 54px;border-radius:14px;padding:7px;box-shadow:none}
+    .brand-logo{width:100%;max-height:40px}
+    .brand-copy{min-width:0}
+    .brand-copy h1{font-size:.98rem;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .brand-copy small{font-size:.76rem;margin-top:3px;color:#b9d8c4;opacity:1;font-weight:750;letter-spacing:.08em}
+    .nav-group{margin:12px 8px 8px;font-size:.66rem;letter-spacing:.13em}
+    .nav-scroll{display:flex;flex-direction:column;gap:4px}
+    .nav-button{margin:0;padding:10px 11px;border-radius:11px;background:transparent;border-color:transparent;color:#dceee3;font-size:.91rem;font-weight:750}
+    .nav-button .bi{font-size:1.04rem;width:20px;text-align:center}
+    .nav-button:hover{transform:none;background:rgba(255,255,255,.09);color:#fff}
+    .nav-button.active{transform:none;background:#fff;color:var(--green-800);box-shadow:0 5px 14px rgba(0,0,0,.10);font-weight:900}
+    .sidebar-card{display:none}
 
-    /* ─── SESSION CHIP ───────────────────────────── */
-    .session-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      border: 1px solid var(--teal-200);
-      background: var(--teal-50);
-      color: var(--teal-600);
-      border-radius: 999px;
-      padding: 7px 12px;
-      font-size: .82rem;
-      font-weight: 600;
-      box-shadow: var(--shadow-xs);
-    }
-    .session-chip i { font-size: .9rem; }
-    .session-chip span { max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .main{padding:22px 24px 34px}
+    .topbar{margin-bottom:12px;align-items:center}
+    .page-title{min-width:0}
+    .eyebrow{display:flex;align-items:center;gap:7px;margin-bottom:5px;color:var(--green-700);font-weight:900;font-size:.76rem;text-transform:uppercase;letter-spacing:.08em}
+    .page-title h2{font-size:clamp(1.55rem,2.1vw,2.15rem);letter-spacing:-.035em;line-height:1.08}
+    .page-title p{margin:.32rem 0 0;font-size:.92rem;max-width:720px}
+    .actions{align-items:center;gap:8px}
+    .btn{border-radius:10px;padding:9px 12px;font-size:.9rem}
+    .btn:hover{transform:none;filter:brightness(.99)}
+    .session-chip{padding:8px 10px;box-shadow:none;background:#fff;border-color:var(--gray-200);color:#344054;max-width:260px}
+    .session-chip span{max-width:205px}
 
-    /* ─── HERO GRID ──────────────────────────────── */
-    .hero-grid {
-      display: grid;
-      grid-template-columns: 1.4fr .6fr;
-      gap: 16px;
-      margin-bottom: 20px;
-    }
-    .hero-panel {
-      position: relative;
-      overflow: hidden;
-      background: linear-gradient(135deg, var(--navy-900) 0%, var(--navy-700) 55%, var(--teal-600) 100%);
-      color: #fff;
-      border-radius: var(--radius-xl);
-      padding: 26px 28px;
-      box-shadow: var(--shadow-xl);
-    }
-    .hero-panel::before {
-      content: "";
-      position: absolute;
-      right: -60px;
-      top: -60px;
-      width: 240px;
-      height: 240px;
-      background: rgba(255,255,255,.07);
-      border-radius: 50%;
-    }
-    .hero-panel::after {
-      content: "";
-      position: absolute;
-      left: 40%;
-      bottom: -40px;
-      width: 160px;
-      height: 160px;
-      background: rgba(16,160,160,.15);
-      border-radius: 50%;
-    }
-    .hero-panel h3 {
-      position: relative;
-      margin: 0;
-      font-size: 1.30rem;
-      font-weight: 700;
-      letter-spacing: -.025em;
-      line-height: 1.3;
-      max-width: 640px;
-      z-index: 1;
-    }
-    .hero-panel p {
-      position: relative;
-      margin: 10px 0 0;
-      opacity: .72;
-      font-size: .88rem;
-      max-width: 580px;
-      line-height: 1.55;
-      z-index: 1;
-    }
+    .system-strip{display:grid;grid-template-columns:minmax(150px,.65fr) minmax(150px,.65fr) minmax(220px,1fr);gap:0;margin:0 0 16px;background:#fff;border:1px solid var(--gray-200);border-radius:14px;box-shadow:0 3px 12px rgba(16,24,40,.045);overflow:hidden}
+    .system-item{display:flex;align-items:center;justify-content:space-between;gap:12px;min-width:0;padding:10px 14px;border-right:1px solid var(--gray-200)}
+    .system-item:last-of-type{border-right:0}
+    .system-label{font-size:.72rem;color:var(--gray-600);font-weight:850;text-transform:uppercase;letter-spacing:.06em;white-space:nowrap}
+    .system-item strong{font-size:.86rem;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .status-dot:before{width:8px;height:8px;box-shadow:0 0 0 3px rgba(152,162,179,.15)}
+    .status-dot.ok:before{box-shadow:0 0 0 3px rgba(57,184,100,.15)}
+    .status-dot.warn:before{box-shadow:0 0 0 3px rgba(245,158,11,.15)}
+    .status-dot.danger:before{box-shadow:0 0 0 3px rgba(239,68,68,.15)}
 
-    /* ─── CONNECTION PANEL ───────────────────────── */
-    .connection-panel {
-      background: var(--white);
-      border: 1px solid var(--gray-200);
-      border-radius: var(--radius-xl);
-      padding: 16px 18px;
-      box-shadow: var(--shadow-md);
-    }
-    .connection-row {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 9px 0;
-      border-bottom: 1px solid var(--gray-100);
-      font-size: .84rem;
-    }
-    .connection-row:last-child { border-bottom: 0; }
-    .connection-row span { color: var(--gray-500); font-weight: 500; }
-    .connection-row strong { text-align: right; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--gray-800); font-weight: 600; }
+    .grid-kpi{gap:11px;margin:14px 0 16px}
+    .kpi{min-height:108px;padding:14px;border-radius:15px;box-shadow:0 4px 14px rgba(16,24,40,.05)}
+    .kpi-label{font-size:.7rem;letter-spacing:.065em}
+    .kpi-value{font-size:1.5rem;margin-top:4px}
+    .kpi-sub{font-size:.78rem;margin-top:4px}
+    .kpi-icon{width:38px;height:38px;border-radius:11px;font-size:1.05rem}
+    .section-grid{gap:14px}
+    .card{border-radius:15px;box-shadow:0 4px 16px rgba(16,24,40,.055)}
+    .card-head{padding:14px 16px}
+    .card-body{padding:16px}
+    .card-head h3{font-size:.98rem}
+    .card-head p{font-size:.82rem}
+    .filters{gap:8px;margin-bottom:11px}
+    .field label{font-size:.7rem}
+    .field input,.field select,.field textarea{border-radius:10px;padding:9px 10px}
+    .search-tools{margin:8px 0 12px}
+    .search-insight{font-size:.84rem}
+    .quick-chip{padding:6px 9px;font-size:.76rem}
+    .maintenance-gallery{gap:10px;margin:8px 0 12px}
+    .maint-card{border-radius:15px;padding:12px;box-shadow:0 4px 14px rgba(16,24,40,.05)}
+    .table-wrap{border-radius:12px}
+    .data-table th{padding:10px;font-size:.7rem}
+    .data-table td{padding:10px;font-size:.9rem}
+    .chart-box{height:285px}.chart-box-sm{height:225px}
+    .risk-explain{padding:12px;border-radius:14px;margin-bottom:12px}
+    .risk-card{border-radius:15px;padding:14px;box-shadow:0 4px 14px rgba(16,24,40,.05)}
+    .alert-item{padding:11px;border-radius:13px}
+    .detail-dialog,.drawer-panel{border-radius:20px}
 
-    /* ─── STATUS DOTS ────────────────────────────── */
-    .status-dot { display: inline-flex; align-items: center; gap: 7px; }
-    .status-dot::before {
-      content: "";
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: var(--gray-300);
-      box-shadow: 0 0 0 3px rgba(148,163,184,.2);
-    }
-    .status-dot.ok::before    { background: var(--green-500); box-shadow: 0 0 0 3px rgba(16,185,129,.2); }
-    .status-dot.warn::before  { background: var(--amber-500); box-shadow: 0 0 0 3px rgba(217,119,6,.2); }
-    .status-dot.danger::before{ background: var(--red-500);   box-shadow: 0 0 0 3px rgba(239,68,68,.2); }
-
-    /* ─── MODULE ANIMATION ───────────────────────── */
-    .module { display: none; animation: slideUp .2s var(--ease); }
-    .module.active { display: block; }
-    @keyframes slideUp {
-      from { opacity: 0; transform: translateY(6px); }
-      to   { opacity: 1; transform: none; }
-    }
-
-    /* ─── KPI GRID ───────────────────────────────── */
-    .grid-kpi {
-      display: grid;
-      grid-template-columns: repeat(6, minmax(0,1fr));
-      gap: 12px;
-      margin: 0 0 20px;
-    }
-    .kpi {
-      background: var(--white);
-      border: 1px solid var(--gray-200);
-      border-radius: var(--radius-lg);
-      padding: 16px;
-      box-shadow: var(--shadow-sm);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      min-height: 118px;
-      transition: box-shadow .15s var(--ease), transform .15s var(--ease);
-    }
-    .kpi:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
-    .kpi-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
-    .kpi-label {
-      color: var(--gray-500);
-      font-size: .70rem;
-      text-transform: uppercase;
-      letter-spacing: .10em;
-      font-weight: 700;
-    }
-    .kpi-value {
-      font-size: 1.65rem;
-      font-weight: 800;
-      letter-spacing: -.04em;
-      margin-top: 5px;
-      color: var(--gray-950);
-      line-height: 1;
-    }
-    .kpi-sub { color: var(--gray-400); font-size: .78rem; margin-top: 8px; }
-    .kpi-icon {
-      width: 38px; height: 38px;
-      border-radius: var(--radius-sm);
-      display: grid;
-      place-items: center;
-      background: var(--teal-100);
-      color: var(--teal-600);
-      font-size: 1.1rem;
-      flex-shrink: 0;
-    }
-
-    /* ─── SECTION GRID ───────────────────────────── */
-    .section-grid { display: grid; grid-template-columns: repeat(12,1fr); gap: 16px; }
-    .span-12{grid-column:span 12}.span-8{grid-column:span 8}.span-7{grid-column:span 7}
-    .span-6{grid-column:span 6}.span-5{grid-column:span 5}.span-4{grid-column:span 4}
-    .span-3{grid-column:span 3}
-
-    /* ─── CARDS ──────────────────────────────────── */
-    .card {
-      background: var(--white);
-      border: 1px solid var(--gray-200);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-sm);
-      overflow: hidden;
-    }
-    .card-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 14px 18px;
-      border-bottom: 1px solid var(--gray-100);
-      background: var(--gray-50);
-    }
-    .card-head h3 {
-      margin: 0;
-      font-size: .95rem;
-      font-weight: 700;
-      letter-spacing: -.02em;
-      color: var(--gray-950);
-    }
-    .card-head p { margin: 2px 0 0; color: var(--gray-500); font-size: .81rem; }
-    .card-body { padding: 16px 18px; }
-    .chart-box { height: 300px; position: relative; }
-    .chart-box-sm { height: 232px; position: relative; }
-
-    /* ─── FILTERS ────────────────────────────────── */
-    .filters {
-      display: grid;
-      grid-template-columns: 2fr repeat(5, minmax(116px,1fr));
-      gap: 10px;
-      margin-bottom: 12px;
-    }
-    .field { display: flex; flex-direction: column; gap: 5px; }
-    .field label {
-      font-size: .70rem;
-      color: var(--gray-500);
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .08em;
-    }
-    .field input,
-    .field select,
-    .field textarea {
-      width: 100%;
-      border: 1px solid var(--gray-200);
-      border-radius: var(--radius-md);
-      padding: 9px 11px;
-      background: var(--white);
-      color: var(--gray-950);
-      outline: none;
-      transition: border-color .15s var(--ease), box-shadow .15s var(--ease);
-      font-size: .85rem;
-    }
-    .field textarea { resize: vertical; min-height: 88px; }
-    .field input:focus,
-    .field select:focus,
-    .field textarea:focus {
-      border-color: var(--teal-400);
-      box-shadow: 0 0 0 3px rgba(13,128,128,.12);
-    }
-
-    /* ─── TABLE ──────────────────────────────────── */
-    .table-wrap {
-      overflow: auto;
-      border: 1px solid var(--gray-200);
-      border-radius: var(--radius-lg);
-      background: var(--white);
-    }
-    .data-table {
-      width: 100%;
-      border-collapse: separate;
-      border-spacing: 0;
-      min-width: 940px;
-    }
-    .data-table th {
-      position: sticky;
-      top: 0;
-      background: var(--gray-50);
-      color: var(--gray-600);
-      text-align: left;
-      font-size: .70rem;
-      text-transform: uppercase;
-      letter-spacing: .09em;
-      font-weight: 700;
-      padding: 11px 13px;
-      border-bottom: 1px solid var(--gray-200);
-      z-index: 1;
-      white-space: nowrap;
-    }
-    .data-table td {
-      padding: 10px 13px;
-      border-bottom: 1px solid var(--gray-100);
-      vertical-align: middle;
-      font-size: .85rem;
-    }
-    .data-table tr:last-child td { border-bottom: 0; }
-    .data-table tr:hover td { background: var(--teal-50); }
-    .num { text-align: right; font-variant-numeric: tabular-nums; }
-    .mono { font-family: "Cascadia Code","SFMono-Regular",Consolas,monospace; font-size: .82em; }
-    .muted { color: var(--gray-500); }
-
-    /* ─── PILLS ──────────────────────────────────── */
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      border-radius: 999px;
-      padding: 3px 9px;
-      font-size: .72rem;
-      font-weight: 700;
-      white-space: nowrap;
-      letter-spacing: .02em;
-    }
-    .pill-ok      { background: var(--green-100); color: var(--green-700); }
-    .pill-warn    { background: var(--amber-100); color: var(--amber-700); }
-    .pill-bad     { background: var(--red-100);   color: var(--red-700);   }
-    .pill-info    { background: var(--blue-100);  color: var(--blue-700);  }
-    .pill-neutral { background: var(--gray-100);  color: var(--gray-700);  }
-
-    /* ─── RISK GRID ──────────────────────────────── */
-    .risk-grid {
-      display: grid;
-      grid-template-columns: repeat(3,minmax(0,1fr));
-      gap: 12px;
-    }
-    .risk-card {
-      border: 1px solid var(--gray-200);
-      border-radius: var(--radius-lg);
-      padding: 14px 16px;
-      background: var(--white);
-      box-shadow: var(--shadow-xs);
-      transition: box-shadow .15s var(--ease);
-    }
-    .risk-card:hover { box-shadow: var(--shadow-md); }
-    .risk-card h4 { margin: 0 0 3px; font-size: .95rem; font-weight: 700; color: var(--gray-950); }
-    .risk-score {
-      height: 6px;
-      background: var(--gray-100);
-      border-radius: 999px;
-      overflow: hidden;
-      margin: 12px 0;
-    }
-    .risk-score > div { height: 100%; border-radius: 999px; background: var(--green-500); transition: width .4s var(--ease); }
-    .risk-score.med > div { background: var(--amber-500); }
-    .risk-score.high > div { background: var(--red-500); }
-
-    /* ─── ALERT LIST ─────────────────────────────── */
-    .alert-list { display: grid; gap: 8px; }
-    .alert-item {
-      display: grid;
-      grid-template-columns: auto 1fr auto;
-      gap: 12px;
-      align-items: flex-start;
-      padding: 12px 14px;
-      border: 1px solid var(--gray-200);
-      border-left: 4px solid var(--gray-300);
-      border-radius: var(--radius-md);
-      background: var(--white);
-      box-shadow: var(--shadow-xs);
-    }
-    .alert-item h4 { margin: 0 0 3px; font-size: .88rem; font-weight: 700; color: var(--gray-950); }
-    .alert-item p  { margin: 0; color: var(--gray-600); font-size: .82rem; line-height: 1.45; }
-    .alert-high  { border-left-color: var(--red-500); }
-    .alert-med   { border-left-color: var(--amber-500); }
-    .alert-low   { border-left-color: var(--green-500); }
-    .alert-icon  { width: 34px; height: 34px; border-radius: var(--radius-sm); display: grid; place-items: center; background: var(--gray-50); color: var(--gray-500); }
-
-    /* ─── SUMMARY TEXT ───────────────────────────── */
-    .summary-text { line-height: 1.65; color: var(--gray-700); font-size: .88rem; }
-    .summary-text strong { color: var(--teal-600); }
-
-    /* ─── FORM LAYOUT ────────────────────────────── */
-    .split-form { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .line-items { display: grid; gap: 8px; }
-    .line-item {
-      display: grid;
-      grid-template-columns: 1.1fr 2fr .65fr .85fr auto;
-      gap: 8px;
-      padding: 10px 12px;
-      background: var(--gray-50);
-      border: 1px solid var(--gray-200);
-      border-radius: var(--radius-md);
-      align-items: end;
-    }
-
-    /* ─── EMPTY STATES ───────────────────────────── */
-    .empty-state {
-      text-align: center;
-      padding: 36px 20px;
-      color: var(--gray-400);
-      border: 1px dashed var(--gray-200);
-      border-radius: var(--radius-md);
-      background: var(--gray-50);
-    }
-    .empty-state .bi { font-size: 1.75rem; color: var(--teal-400); margin-bottom: 6px; display: block; }
-
-    /* ─── CONSOLE ────────────────────────────────── */
-    .console {
-      background: var(--navy-950);
-      color: #94a3b8;
-      border-radius: var(--radius-lg);
-      padding: 14px;
-      font-family: "Cascadia Code",Consolas,monospace;
-      font-size: .82rem;
-      white-space: pre-wrap;
-      overflow: auto;
-      max-height: 260px;
-      border: 1px solid rgba(255,255,255,.05);
-    }
-    .nl-box { display: flex; gap: 10px; }
-    .nl-box input { flex: 1; }
-
-    /* ─── OCR UPLOAD ─────────────────────────────── */
-    .ocr-upload-card { display: grid; gap: 12px; }
-    .doc-drop {
-      display: flex;
-      width: 100%;
-      min-height: 176px;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      gap: 10px;
-      border: 2px dashed var(--teal-200);
-      border-radius: var(--radius-xl);
-      background: linear-gradient(180deg, var(--teal-50), var(--white));
-      padding: 24px;
-      text-align: center;
-      cursor: pointer;
-      transition: all .18s var(--ease);
-      position: relative;
-      overflow: hidden;
-    }
-    .doc-drop::before {
-      content: "";
-      position: absolute;
-      right: -30px; bottom: -50px;
-      width: 130px; height: 130px;
-      border-radius: 50%;
-      background: rgba(13,128,128,.08);
-      pointer-events: none;
-    }
-    .doc-drop:hover {
-      background: var(--teal-50);
-      border-color: var(--teal-400);
-      transform: translateY(-1px);
-      box-shadow: var(--shadow-md);
-    }
-    .upload-icon {
-      width: 52px; height: 52px;
-      border-radius: var(--radius-md);
-      display: grid;
-      place-items: center;
-      background: var(--teal-100);
-      color: var(--teal-600);
-      font-size: 1.6rem;
-    }
-    .doc-drop strong { font-size: 1rem; font-weight: 700; color: var(--gray-950); }
-    .doc-drop .muted { font-size: .84rem; max-width: 380px; line-height: 1.45; }
-    .upload-button {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      margin-top: 4px;
-      border: 1px solid var(--teal-200);
-      border-radius: 999px;
-      background: var(--white);
-      color: var(--teal-600);
-      padding: 7px 13px;
-      font-weight: 600;
-      font-size: .82rem;
-      box-shadow: var(--shadow-xs);
-    }
-    .ocr-help { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
-    .ocr-help .mini-step {
-      border: 1px solid var(--gray-200);
-      border-radius: var(--radius-md);
-      background: var(--white);
-      padding: 10px;
-      display: flex;
-      gap: 8px;
-      align-items: flex-start;
-      font-size: .81rem;
-      color: var(--gray-700);
-      line-height: 1.4;
-    }
-    .ocr-help .mini-step i { color: var(--teal-500); font-size: .95rem; margin-top: 1px; }
-    .ocr-status {
-      background: var(--navy-950);
-      color: #94a3b8;
-      border-radius: var(--radius-md);
-      padding: 12px 14px;
-      font-family: "Cascadia Code",Consolas,monospace;
-      font-size: .82rem;
-      white-space: pre-wrap;
-      overflow: auto;
-      max-height: 200px;
-      min-height: 44px;
-      border: 1px solid rgba(255,255,255,.05);
-    }
-    .ocr-status::before { content: "STATUS › "; color: var(--teal-400); font-weight: 700; }
-    .ocr-preview { display: grid; grid-template-columns: repeat(2,1fr); gap: 10px; }
-    .preview-cell {
-      background: var(--gray-50);
-      border: 1px solid var(--gray-200);
-      border-radius: var(--radius-md);
-      padding: 10px 12px;
-    }
-    .preview-cell span { display: block; font-size: .68rem; text-transform: uppercase; letter-spacing: .09em; color: var(--gray-400); font-weight: 700; }
-    .preview-cell strong { font-size: .95rem; color: var(--gray-950); }
-
-    /* ─── DRAWER ─────────────────────────────────── */
-    .drawer {
-      position: fixed;
-      inset: 0;
-      background: rgba(15,23,42,.50);
-      z-index: 60;
-      display: none;
-      align-items: flex-end;
-      justify-content: center;
-      padding: 20px;
-      backdrop-filter: blur(3px);
-    }
-    .drawer.open { display: flex; }
-    .drawer-panel {
-      width: min(1080px,100%);
-      max-height: 92vh;
-      background: var(--white);
-      border-radius: var(--radius-2xl);
-      box-shadow: var(--shadow-2xl);
-      overflow: auto;
-    }
-    .drawer-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 16px 20px;
-      background: var(--navy-900);
-      color: #fff;
-      border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
-    }
-    .drawer-head h3 { margin: 0; font-size: 1rem; font-weight: 700; }
-    .drawer-body { padding: 18px 20px; }
-    .drawer-foot {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      padding: 14px 20px;
-      border-top: 1px solid var(--gray-100);
-      background: var(--gray-50);
-      position: sticky;
-      bottom: 0;
-    }
-
-    /* ─── LOADING ────────────────────────────────── */
-    .loading {
-      position: fixed;
-      inset: 0;
-      z-index: 80;
-      background: rgba(255,255,255,.85);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      gap: 14px;
-      backdrop-filter: blur(6px);
-    }
-    .loading.open { display: flex; }
-    .spinner {
-      width: 40px; height: 40px;
-      border: 3px solid var(--gray-200);
-      border-top-color: var(--teal-500);
-      border-radius: 50%;
-      animation: spin .8s linear infinite;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .loading strong { font-size: .88rem; color: var(--gray-600); font-weight: 600; }
-
-    /* ─── TOAST ──────────────────────────────────── */
-    .toast-zone {
-      position: fixed;
-      right: 20px;
-      bottom: 20px;
-      display: grid;
-      gap: 8px;
-      z-index: 100;
-    }
-    .toast {
-      background: var(--white);
-      border: 1px solid var(--gray-200);
-      border-left: 4px solid var(--teal-500);
-      border-radius: var(--radius-md);
-      box-shadow: var(--shadow-lg);
-      padding: 12px 14px;
-      min-width: min(340px,90vw);
-      animation: slideUp .2s var(--ease);
-    }
-    .toast.danger { border-left-color: var(--red-500); }
-    .toast.warn   { border-left-color: var(--amber-500); }
-    .toast h4 { margin: 0 0 2px; font-size: .88rem; font-weight: 700; color: var(--gray-950); }
-    .toast p  { margin: 0; color: var(--gray-500); font-size: .82rem; line-height: 1.4; }
-
-    /* ─── UTILS ──────────────────────────────────── */
-    .hidden    { display: none !important; }
-    .text-right{ text-align: right; }
-    .mt-1      { margin-top: 6px; }
-    .mt-2      { margin-top: 12px; }
-    .mt-3      { margin-top: 18px; }
-    .mb-0      { margin-bottom: 0; }
-    .mb-2      { margin-bottom: 10px; }
-    .w-100     { width: 100%; }
-    .flex      { display: flex; }
-    .gap-2     { gap: 10px; }
-    .wrap      { flex-wrap: wrap; }
-    .justify-between { justify-content: space-between; }
-    .align-center    { align-items: center; }
-
-    /* ─── SEARCH & MAINTENANCE CARDS ─────────────── */
-    .search-tools {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      margin: 10px 0 14px;
-      flex-wrap: wrap;
-    }
-    .search-insight {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      color: var(--gray-500);
-      font-size: .84rem;
-      line-height: 1.4;
-    }
-    .search-insight strong { color: var(--teal-600); }
-    .quick-chips { display: flex; gap: 7px; flex-wrap: wrap; }
-    .quick-chip {
-      border: 1px solid var(--gray-200);
-      background: var(--white);
-      border-radius: 999px;
-      padding: 5px 11px;
-      font-size: .78rem;
-      font-weight: 600;
-      color: var(--gray-600);
-      cursor: pointer;
-      transition: all .15s var(--ease);
-    }
-    .quick-chip:hover,
-    .quick-chip.active {
-      background: var(--teal-100);
-      border-color: var(--teal-200);
-      color: var(--teal-600);
-    }
-    mark.hit {
-      background: #fef9c3;
-      color: var(--gray-900);
-      border-radius: 3px;
-      padding: 0 .12em;
-    }
-
-    .maintenance-gallery {
-      display: grid;
-      grid-template-columns: repeat(3,minmax(0,1fr));
-      gap: 12px;
-      margin: 10px 0 14px;
-    }
-    .maint-card {
-      border: 1px solid var(--gray-200);
-      background: var(--white);
-      border-radius: var(--radius-lg);
-      padding: 14px;
-      box-shadow: var(--shadow-xs);
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      transition: box-shadow .15s var(--ease), border-color .15s var(--ease);
-    }
-    .maint-card:hover { border-color: var(--teal-200); box-shadow: var(--shadow-md); }
-    .maint-card-head { display: flex; justify-content: space-between; gap: 8px; align-items: flex-start; }
-    .maint-title { font-weight: 700; font-size: .9rem; letter-spacing: -.01em; color: var(--gray-950); }
-    .maint-sub   { color: var(--gray-500); font-size: .80rem; margin-top: 2px; }
-    .maint-metrics { display: grid; grid-template-columns: repeat(3,1fr); gap: 7px; }
-    .mini-metric {
-      border: 1px solid var(--gray-100);
-      border-radius: var(--radius-sm);
-      background: var(--gray-50);
-      padding: 7px 9px;
-    }
-    .mini-metric span  { display: block; color: var(--gray-400); font-size: .64rem; text-transform: uppercase; letter-spacing: .07em; font-weight: 700; }
-    .mini-metric strong{ font-size: .88rem; color: var(--gray-950); font-weight: 700; }
-    .item-snippets { display: flex; gap: 5px; flex-wrap: wrap; min-height: 26px; }
-    .item-chip {
-      display: inline-flex;
-      max-width: 100%;
-      border-radius: 999px;
-      background: var(--gray-100);
-      color: var(--gray-600);
-      padding: 3px 9px;
-      font-size: .74rem;
-      font-weight: 600;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-    .interactive-row { cursor: pointer; }
-    .interactive-row:hover td { background: var(--teal-50) !important; }
-
-    /* ─── RISK EXPLAIN ───────────────────────────── */
-    .risk-explain {
-      display: grid;
-      grid-template-columns: 1.1fr .9fr;
-      gap: 16px;
-      margin-bottom: 16px;
-      padding: 16px;
-      border: 1px solid var(--teal-200);
-      border-radius: var(--radius-lg);
-      background: linear-gradient(180deg, var(--teal-50), var(--white));
-    }
-    .risk-explain h4 { margin: 0 0 6px; font-size: .95rem; font-weight: 700; color: var(--teal-600); }
-    .risk-explain p  { margin: 0; color: var(--gray-700); line-height: 1.55; font-size: .86rem; }
-    .risk-explain ul { margin: 4px 0 0 16px; color: var(--gray-700); line-height: 1.55; padding: 0; font-size: .86rem; }
-
-    /* ─── EXECUTIVE SUMMARY ──────────────────────── */
-    .exec-grid {
-      display: grid;
-      grid-template-columns: repeat(3,minmax(0,1fr));
-      gap: 8px;
-      margin-bottom: 12px;
-    }
-    .exec-metric {
-      border: 1px solid var(--gray-200);
-      border-radius: var(--radius-md);
-      background: var(--white);
-      padding: 11px 13px;
-    }
-    .exec-metric span   { display: block; font-size: .68rem; text-transform: uppercase; letter-spacing: .09em; color: var(--gray-400); font-weight: 700; }
-    .exec-metric strong { display: block; margin-top: 3px; font-size: 1.05rem; color: var(--teal-600); font-weight: 700; }
-    .exec-section {
-      border: 1px solid var(--gray-200);
-      border-radius: var(--radius-md);
-      background: var(--white);
-      padding: 12px 14px;
-      margin-top: 8px;
-    }
-    .exec-section h4 { margin: 0 0 5px; font-size: .88rem; color: var(--gray-950); font-weight: 700; }
-    .exec-section p  { margin: 0; color: var(--gray-700); line-height: 1.6; font-size: .85rem; }
-    .exec-section ul { margin: 5px 0 0 16px; padding: 0; color: var(--gray-700); line-height: 1.55; font-size: .85rem; }
-    .filter-action-row { display: flex; justify-content: flex-end; gap: 8px; margin: -4px 0 12px; flex-wrap: wrap; }
-
-    /* ─── DETAIL MODAL ───────────────────────────── */
-    .detail-modal {
-      position: fixed;
-      inset: 0;
-      background: rgba(15,23,42,.55);
-      z-index: 80;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-      backdrop-filter: blur(4px);
-    }
-    .detail-modal.open { display: flex; }
-    .detail-dialog {
-      width: min(1160px,100%);
-      max-height: 92vh;
-      background: var(--white);
-      border-radius: var(--radius-2xl);
-      box-shadow: var(--shadow-2xl);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-    }
-    .detail-head {
-      background: var(--navy-900);
-      color: #fff;
-      padding: 16px 20px;
-      display: flex;
-      justify-content: space-between;
-      gap: 14px;
-      align-items: flex-start;
-      border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
-    }
-    .detail-title    { margin: 0; font-size: 1.15rem; font-weight: 700; letter-spacing: -.025em; }
-    .detail-subtitle { margin: 4px 0 0; opacity: .65; font-size: .84rem; }
-    .detail-body     { padding: 18px; overflow: auto; }
-    .detail-grid     { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 8px; }
-    .detail-cell {
-      border: 1px solid var(--gray-200);
-      border-radius: var(--radius-md);
-      background: var(--gray-50);
-      padding: 10px 12px;
-    }
-    .detail-cell span   { display: block; color: var(--gray-400); font-size: .67rem; text-transform: uppercase; letter-spacing: .09em; font-weight: 700; }
-    .detail-cell strong { display: block; margin-top: 3px; font-size: .92rem; word-break: break-word; color: var(--gray-950); }
-    .detail-section    { margin-top: 14px; }
-    .detail-section h4 { margin: 0 0 8px; font-size: .95rem; font-weight: 700; color: var(--gray-950); }
-    .obs-grid          { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .obs-box {
-      border: 1px solid var(--gray-200);
-      border-radius: var(--radius-md);
-      background: var(--white);
-      padding: 12px;
-      min-height: 78px;
-    }
-    .obs-box h5 { margin: 0 0 5px; font-size: .74rem; text-transform: uppercase; letter-spacing: .09em; color: var(--gray-400); font-weight: 700; }
-    .obs-box p  { margin: 0; line-height: 1.55; color: var(--gray-700); font-size: .85rem; }
-    .detail-foot {
-      padding: 12px 18px;
-      border-top: 1px solid var(--gray-100);
-      background: var(--gray-50);
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    .sum-row { display: flex; justify-content: flex-end; gap: 14px; margin-top: 10px; color: var(--gray-500); font-size: .85rem; }
-    .sum-row strong { color: var(--gray-950); }
-
-    /* ─── AUTH GATE ──────────────────────────────── */
-    .auth-gate {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 28px;
-      background: linear-gradient(135deg, var(--navy-900) 0%, var(--navy-800) 40%, #0f3460 75%, var(--teal-600) 100%);
-    }
-    .auth-card {
-      width: min(520px,100%);
-      background: var(--white);
-      border: 1px solid var(--gray-200);
-      border-radius: var(--radius-2xl);
-      box-shadow: var(--shadow-2xl);
-      padding: 32px;
-      text-align: center;
-    }
-    .auth-logo {
-      width: 72px; height: 72px;
-      border-radius: var(--radius-lg);
-      background: linear-gradient(135deg, var(--navy-900), var(--teal-600));
-      color: #fff;
-      display: grid;
-      place-items: center;
-      margin: 0 auto 18px;
-      font-weight: 800;
-      font-size: 1.1rem;
-      letter-spacing: .04em;
-      box-shadow: 0 8px 24px rgba(13,128,128,.35);
-    }
-    .auth-card h2   { margin: 0; font-size: 1.6rem; font-weight: 800; letter-spacing: -.04em; color: var(--gray-950); }
-    .auth-card p    { color: var(--gray-500); line-height: 1.55; margin: 10px 0 20px; font-size: .9rem; }
-    .auth-actions   { display: grid; gap: 10px; margin-top: 14px; }
-    .auth-actions .btn { justify-content: center; width: 100%; padding: 12px 16px; font-size: .9rem; }
-    .auth-note {
-      margin-top: 16px;
-      border: 1px solid var(--teal-200);
-      background: var(--teal-50);
-      color: var(--teal-600);
-      border-radius: var(--radius-md);
-      padding: 11px 13px;
-      font-size: .82rem;
-      text-align: left;
-      line-height: 1.5;
-    }
-    .app-shell.locked { display: none !important; }
-    .auth-gate.hidden { display: none !important; }
-
-    /* ─── RESPONSIVE ─────────────────────────────── */
     @media(max-width:1320px){
-      .maintenance-gallery { grid-template-columns: repeat(2,1fr); }
-      .detail-grid          { grid-template-columns: repeat(2,1fr); }
-      .grid-kpi             { grid-template-columns: repeat(3,1fr); }
-      .hero-grid            { grid-template-columns: 1fr; }
-      .span-8,.span-7,.span-6,.span-5,.span-4,.span-3 { grid-column: span 12; }
-      .risk-grid            { grid-template-columns: repeat(2,1fr); }
-      .filters              { grid-template-columns: 1fr 1fr; }
-      .split-form           { grid-template-columns: 1fr; }
-      .ocr-preview          { grid-template-columns: 1fr; }
+      .main{padding:20px}
+      .system-strip{grid-template-columns:repeat(3,minmax(0,1fr))}
     }
     @media(max-width:900px){
-      .risk-explain    { grid-template-columns: 1fr; }
-      .exec-grid       { grid-template-columns: 1fr; }
-      .maintenance-gallery { grid-template-columns: 1fr; }
-      .obs-grid        { grid-template-columns: 1fr; }
-      .detail-modal    { padding: 0; }
-      .detail-dialog   { max-height: 100vh; border-radius: 0; }
-      .app-shell       { grid-template-columns: 1fr; }
-      .sidebar         { position: relative; height: auto; }
-      .main            { padding: 16px; }
-      .topbar          { align-items: flex-start; flex-direction: column; }
-      .actions         { justify-content: flex-start; }
-      .grid-kpi        { grid-template-columns: 1fr 1fr; }
-      .risk-grid       { grid-template-columns: 1fr; }
-      .filters         { grid-template-columns: 1fr; }
-      .line-item       { grid-template-columns: 1fr; }
-      .nl-box          { flex-direction: column; }
-      .hero-panel      { padding: 18px; }
+      .app-shell{display:block}
+      .sidebar{position:sticky;top:0;height:auto;display:flex;align-items:center;gap:10px;padding:9px 10px;overflow:hidden;z-index:55;box-shadow:0 4px 18px rgba(16,24,40,.16)}
+      .brand{margin:0;flex:0 0 auto}
+      .brand-logo-wrap{width:42px;height:42px;flex-basis:42px;border-radius:11px;padding:5px}
+      .brand-copy,.nav-group{display:none}
+      .nav-scroll{flex:1;min-width:0;display:flex;flex-direction:row;gap:5px;overflow-x:auto;overscroll-behavior-inline:contain;scrollbar-width:none;padding:1px 0}
+      .nav-scroll::-webkit-scrollbar{display:none}
+      .nav-button{width:auto;flex:0 0 auto;margin:0;padding:8px 10px;gap:7px;white-space:nowrap;font-size:.82rem;border:1px solid rgba(255,255,255,.08)}
+      .nav-button.active{box-shadow:none}
+      .main{padding:14px 12px 28px}
+      .topbar{gap:12px;margin-bottom:10px}
+      .page-title h2{font-size:1.55rem}
+      .page-title p{font-size:.87rem}
+      .actions{width:100%;justify-content:flex-start}
+      .session-chip{order:-1;max-width:100%;flex:1 1 100%}
+      .session-chip span{max-width:calc(100vw - 95px)}
+      .system-strip{grid-template-columns:1fr 1fr;margin-bottom:12px}
+      .system-item{padding:9px 10px;border-bottom:1px solid var(--gray-200)}
+      .system-item:nth-of-type(2){border-right:0}
+      .system-item-wide{grid-column:1/-1;border-bottom:0!important;border-right:0!important}
+      .grid-kpi{margin-top:12px}
+      .card-head,.card-body{padding:13px}
     }
     @media(max-width:560px){
-      .grid-kpi        { grid-template-columns: 1fr; }
-      .connection-row  { flex-direction: column; }
-      .card-head       { flex-direction: column; align-items: flex-start; }
-      .drawer          { padding: 0; }
-      .drawer-panel    { border-radius: var(--radius-xl) var(--radius-xl) 0 0; }
+      .sidebar{padding:8px}
+      .brand-logo-wrap{width:38px;height:38px;flex-basis:38px}
+      .nav-button{padding:8px 9px;font-size:.78rem}
+      .nav-button .bi{width:auto}
+      .main{padding:12px 9px 24px}
+      .eyebrow{font-size:.68rem}
+      .page-title h2{font-size:1.35rem}
+      .page-title p{font-size:.84rem}
+      .actions{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+      .actions .session-chip{grid-column:1/-1}
+      .actions .btn{justify-content:center;min-width:0}
+      .actions #btnLogout{grid-column:1/-1}
+      .system-strip{grid-template-columns:1fr 1fr;border-radius:12px}
+      .system-item{display:block}
+      .system-label{display:block;margin-bottom:3px;font-size:.65rem}
+      .system-item strong{display:flex;font-size:.8rem}
+      .system-item-wide strong{font-size:.78rem}
+      .grid-kpi{grid-template-columns:1fr 1fr;gap:8px}
+      .kpi{min-height:96px;padding:11px}
+      .kpi-value{font-size:1.3rem}
+      .kpi-icon{width:34px;height:34px}
+      .kpi-sub{display:none}
+      .card-head{gap:8px}
+      .chart-box{height:245px}.chart-box-sm{height:215px}
+      .logout-label{display:inline}
     }
-    @media(max-width:760px){
-      .ocr-help        { grid-template-columns: 1fr; }
-      .doc-drop        { min-height: 155px; padding: 18px; }
+    @media(max-width:390px){
+      .grid-kpi{grid-template-columns:1fr}
+      .nav-button span{display:none}
+      .nav-button{width:38px;height:38px;justify-content:center;padding:0}
     }
-  </style>
+
+</style>
 </head>
 <body>
   <div class="loading" id="loading"><div class="spinner"></div><strong id="loadingText">Inicializando plataforma...</strong></div>
@@ -1168,75 +328,68 @@
 
   <div class="auth-gate" id="authGate">
     <div class="auth-card">
-      <div class="auth-logo">FIAS</div>
-      <h2>Acceso institucional</h2>
-      <p>Inicie sesión con su cuenta corporativa de Microsoft 365 para acceder a la plataforma de mantenimiento vehicular del FIAS.</p>
+      <div class="auth-logo-wrap"><img class="auth-logo" src="https://fias.org.ec/wp-content/uploads/2021/11/Logo_FIAS_web.png" alt="Logo oficial FIAS"></div>
+      <h2>Acceso a mantenimientos vehiculares</h2>
+      <p>Inicie sesión con su cuenta institucional de Microsoft 365 antes de cargar, consultar o sincronizar la base de mantenimiento vehicular del FIAS.</p>
       <div class="auth-actions">
-        <button class="btn btn-primary" id="btnGateLogin"><i class="bi bi-microsoft"></i> Continuar con Microsoft 365</button>
+        <button class="btn btn-primary" id="btnGateLogin"><i class="bi bi-microsoft"></i> Iniciar sesión con Microsoft</button>
       </div>
-      <div class="auth-note"><strong>Sesión segura:</strong> la plataforma no expone información institucional hasta validar la identidad corporativa.</div>
+      <div class="auth-note"><strong>Seguridad:</strong> la plataforma no muestra la información institucional hasta validar la sesión corporativa.</div>
     </div>
   </div>
 
   <div class="app-shell locked" id="appShell">
     <aside class="sidebar">
-      <div class="brand">
-        <div class="brand-mark">FIAS</div>
-        <div>
-          <h1>Mantenimientos Vehiculares</h1>
-          <small>SharePoint · Control preventivo · Trazabilidad</small>
-        </div>
+      <div class="brand brand-compact">
+        <div class="brand-logo-wrap"><img class="brand-logo" src="https://fias.org.ec/wp-content/uploads/2021/11/Logo_FIAS_web.png" alt="Logo oficial FIAS"></div>
+        <div class="brand-copy"><h1>Gestión Vehicular</h1><small>FIAS</small></div>
       </div>
-      <div class="sidebar-inner">
-        <div class="nav-group">Centro de operación</div>
-        <button class="nav-button active" data-module="executive"><i class="bi bi-speedometer2"></i> Visor ejecutivo</button>
-        <button class="nav-button" data-module="maintenance"><i class="bi bi-wrench-adjustable-circle"></i> Mantenimientos</button>
-        <button class="nav-button" data-module="fleet"><i class="bi bi-truck-front"></i> Vehículos y prioridad</button>
-        <button class="nav-button" data-module="integrity"><i class="bi bi-shield-check"></i> Integridad y auditoría</button>
-        <button class="nav-button" data-module="ocr"><i class="bi bi-file-earmark-text"></i> OCR documental</button>
-        <button class="nav-button" data-module="assistant"><i class="bi bi-stars"></i> Análisis y recomendaciones</button>
-        <button class="nav-button" data-module="admin"><i class="bi bi-journal-check"></i> Bitácora de cambios</button>
+      <div class="nav-group">Módulos</div>
+      <div class="nav-scroll" aria-label="Navegación principal">
+        <button class="nav-button active" data-module="executive"><i class="bi bi-speedometer2"></i><span>Resumen</span></button>
+        <button class="nav-button" data-module="maintenance"><i class="bi bi-wrench-adjustable-circle"></i><span>Mantenimientos</span></button>
+        <button class="nav-button" data-module="fleet"><i class="bi bi-truck-front"></i><span>Vehículos</span></button>
+        <button class="nav-button" data-module="integrity"><i class="bi bi-shield-check"></i><span>Integridad</span></button>
+        <button class="nav-button" data-module="ocr"><i class="bi bi-file-earmark-text"></i><span>OCR</span></button>
+        <button class="nav-button" data-module="assistant"><i class="bi bi-stars"></i><span>Análisis</span></button>
+        <button class="nav-button" data-module="admin"><i class="bi bi-journal-check"></i><span>Bitácora</span></button>
       </div>
-      <div class="sidebar-bottom">
-        <div class="sidebar-meta">
-          <strong>Libro maestro</strong><br>
-          Excel SharePoint FIAS<br>
-          <span id="sideLastSync">Sin sincronizar</span>
-        </div>
-        <div class="sidebar-meta" style="padding-top:0">
-          <strong>Modelo de datos</strong><br>
-          Vehículos · Mantenimientos · Facturas · OCR
-        </div>
-      </div>
+      <!-- Se conserva el ID porque la sincronización actualiza este nodo; queda fuera de la interfaz visible para evitar duplicidad. -->
+      <div id="sideLastSync" class="visually-hidden">Sin sincronizar</div>
     </aside>
 
     <main class="main">
       <div class="topbar">
         <div class="page-title">
-          <h2>Comando técnico del parque vehicular</h2>
-          <p>Plataforma construida sobre la información real del mantenimiento vehicular FIAS: vehículos, intervenciones, detalle técnico, facturas electrónicas, consistencias, documentos, OCR y bitácora de cambios.</p>
+          <div class="eyebrow"><i class="bi bi-car-front-fill"></i> FIAS · Mantenimiento vehicular</div>
+          <h2>Control y trazabilidad del parque vehicular</h2>
+          <p>Consulta, registro, análisis y auditoría en un solo espacio.</p>
         </div>
         <div class="actions">
           <button class="btn btn-ghost hidden" id="btnLogin"><i class="bi bi-microsoft"></i> Iniciar sesión</button>
           <span class="session-chip hidden" id="sessionChip"><i class="bi bi-person-check"></i><span id="sessionChipText">Sesión activa</span></span>
-          <button class="btn btn-primary" id="btnSync"><i class="bi bi-arrow-repeat"></i> Sincronizar</button>
-          <button class="btn btn-dark" id="btnNew"><i class="bi bi-plus-circle"></i> Nuevo registro</button>
-          <button class="btn btn-ghost hidden" id="btnLogout"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</button>
+          <button class="btn btn-primary" id="btnSync" title="Actualizar datos desde SharePoint"><i class="bi bi-arrow-repeat"></i> Sincronizar</button>
+          <button class="btn btn-dark" id="btnNew" title="Registrar un nuevo mantenimiento"><i class="bi bi-plus-circle"></i> Nuevo registro</button>
+          <button class="btn btn-ghost hidden" id="btnLogout" title="Cerrar sesión"><i class="bi bi-box-arrow-right"></i><span class="logout-label">Cerrar sesión</span></button>
         </div>
       </div>
 
-      <div class="hero-grid">
-        <section class="hero-panel">
-          <h3>Gestión inteligente del ciclo de vida vehicular, con validación preventiva y trazabilidad institucional.</h3>
-          <p>El sistema consulta el Excel centralizado del FIAS para visualizar, validar, registrar y auditar mantenimientos, facturas y soportes documentales desde una interfaz operativa unificada.</p>
-        </section>
-        <section class="connection-panel">
-          <div class="connection-row"><span>Estado</span><strong id="connState" class="status-dot warn">Pendiente</strong></div>
-          <div class="connection-row"><span>Usuario</span><strong id="userName">No autenticado</strong></div>
-          <div class="connection-row"><span>Sesión Excel</span><strong id="sessionState">No iniciada</strong></div>
-          <div class="connection-row"><span>Última sincronización</span><strong id="lastSync">—</strong></div>
-        </section>
-      </div>
+      <section class="system-strip" aria-label="Estado de conexión y sincronización">
+        <div class="system-item">
+          <span class="system-label">Conexión</span>
+          <strong id="connState" class="status-dot warn">Pendiente</strong>
+        </div>
+        <div class="system-item">
+          <span class="system-label">Sesión Excel</span>
+          <strong id="sessionState">No iniciada</strong>
+        </div>
+        <div class="system-item system-item-wide">
+          <span class="system-label">Última sincronización</span>
+          <strong id="lastSync">—</strong>
+        </div>
+        <!-- Nodo conservado por compatibilidad con la lógica existente; la identidad ya se muestra en sessionChip. -->
+        <strong id="userName" class="visually-hidden">No autenticado</strong>
+      </section>
 
       <section id="executive" class="module active">
         <div class="grid-kpi" id="kpis"></div>
@@ -1264,11 +417,7 @@
         <div class="card">
           <div class="card-head">
             <div><h3>Registro estructurado de mantenimientos</h3><p>Consulta operativa con filtros, tarjetas visuales, detalle técnico y acciones de control.</p></div>
-            <div class="flex gap-2 wrap">
-              <button class="btn btn-sm btn-primary" id="btnNew2"><i class="bi bi-plus"></i> Registrar</button>
-              <button class="btn btn-sm btn-ghost" id="btnResetFilters"><i class="bi bi-arrow-counterclockwise"></i> Resetear filtros</button>
-              <button class="btn btn-sm btn-ghost" id="btnExportMaint"><i class="bi bi-download"></i> Exportar CSV</button>
-            </div>
+            <div class="flex gap-2 wrap"><button class="btn btn-sm btn-primary" id="btnNew2"><i class="bi bi-plus"></i> Registrar</button><button class="btn btn-sm btn-ghost" id="btnResetFilters"><i class="bi bi-arrow-counterclockwise"></i> Resetear filtros</button><button class="btn btn-sm btn-ghost" id="btnExportMaint"><i class="bi bi-download"></i> Exportar CSV</button></div>
           </div>
           <div class="card-body">
             <div class="filters">
@@ -1289,12 +438,7 @@
               </div>
             </div>
             <div class="maintenance-gallery" id="maintCards"></div>
-            <div class="table-wrap">
-              <table class="data-table" id="maintTable">
-                <thead><tr><th>Detalle</th><th>ID</th><th>Fecha</th><th>Placa</th><th>Orden</th><th>Factura</th><th>Km</th><th>Tipo</th><th>Proveedor/Agencia</th><th class="num">Total</th><th>Estado</th><th>Control</th></tr></thead>
-                <tbody></tbody>
-              </table>
-            </div>
+            <div class="table-wrap"><table class="data-table" id="maintTable"><thead><tr><th>Detalle</th><th>ID</th><th>Fecha</th><th>Placa</th><th>Orden</th><th>Factura</th><th>Documentos</th><th>Km</th><th>Tipo</th><th>Proveedor/Agencia</th><th class="num">Total</th><th>Estado</th><th>Control</th></tr></thead><tbody></tbody></table></div>
           </div>
         </div>
       </section>
@@ -1321,41 +465,16 @@
               <div class="risk-grid" id="riskGrid"></div>
             </div>
           </article>
-          <article class="card span-6">
-            <div class="card-head"><div><h3>Costo por vehículo</h3><p>Control presupuestario por placa.</p></div></div>
-            <div class="card-body"><div class="chart-box"><canvas id="chartCostVehicle"></canvas></div></div>
-          </article>
-          <article class="card span-6">
-            <div class="card-head"><div><h3>Proyección de mantenimiento</h3><p>Predicción basada en historial de kilometraje.</p></div></div>
-            <div class="card-body">
-              <div class="table-wrap">
-                <table class="data-table"><thead><tr><th>Placa</th><th>Km actual</th><th>Próximo km</th><th>Km restantes</th><th>Fecha estimada</th><th>Prioridad</th></tr></thead>
-                <tbody id="predictionBody"></tbody></table>
-              </div>
-            </div>
-          </article>
+          <article class="card span-6"><div class="card-head"><div><h3>Costo por vehículo</h3><p>Control presupuestario por placa.</p></div></div><div class="card-body"><div class="chart-box"><canvas id="chartCostVehicle"></canvas></div></div></article>
+          <article class="card span-6"><div class="card-head"><div><h3>Proyección de mantenimiento</h3><p>Predicción basada en historial de kilometraje.</p></div></div><div class="card-body"><div class="table-wrap"><table class="data-table"><thead><tr><th>Placa</th><th>Km actual</th><th>Próximo km</th><th>Km restantes</th><th>Fecha estimada</th><th>Prioridad</th></tr></thead><tbody id="predictionBody"></tbody></table></div></div></article>
         </div>
       </section>
 
       <section id="integrity" class="module">
         <div class="section-grid">
-          <article class="card span-6">
-            <div class="card-head"><div><h3>Duplicados detectados</h3><p>Comparación por placa, orden, factura, proveedor, fecha y costo.</p></div><button class="btn btn-sm btn-ghost" id="btnRecheck"><i class="bi bi-search"></i> Recalcular</button></div>
-            <div class="card-body"><div class="alert-list" id="duplicateList"></div></div>
-          </article>
-          <article class="card span-6">
-            <div class="card-head"><div><h3>Inconsistencias de datos</h3><p>Fechas, odómetro, costos atípicos, facturas y soportes.</p></div></div>
-            <div class="card-body"><div class="alert-list" id="inconsistencyList"></div></div>
-          </article>
-          <article class="card span-12">
-            <div class="card-head"><div><h3>Matriz de consistencias registradas en Excel</h3><p>Lectura directa de <span class="mono">tblConsistencias</span>.</p></div></div>
-            <div class="card-body">
-              <div class="table-wrap">
-                <table class="data-table"><thead><tr><th>ID</th><th>Severidad</th><th>Tabla</th><th>Registro</th><th>Hallazgo</th><th>Acción recomendada</th><th>Estado</th></tr></thead>
-                <tbody id="consistencyBody"></tbody></table>
-              </div>
-            </div>
-          </article>
+          <article class="card span-6"><div class="card-head"><div><h3>Duplicados detectados</h3><p>Comparación por placa, orden, factura, proveedor, fecha y costo.</p></div><button class="btn btn-sm btn-ghost" id="btnRecheck"><i class="bi bi-search"></i> Recalcular</button></div><div class="card-body"><div class="alert-list" id="duplicateList"></div></div></article>
+          <article class="card span-6"><div class="card-head"><div><h3>Inconsistencias de datos</h3><p>Fechas, odómetro, costos atípicos, facturas y soportes.</p></div></div><div class="card-body"><div class="alert-list" id="inconsistencyList"></div></div></article>
+          <article class="card span-12"><div class="card-head"><div><h3>Matriz de consistencias registradas en Excel</h3><p>Lectura directa de <span class="mono">tblConsistencias</span>.</p></div></div><div class="card-body"><div class="table-wrap"><table class="data-table"><thead><tr><th>ID</th><th>Severidad</th><th>Tabla</th><th>Registro</th><th>Hallazgo</th><th>Acción recomendada</th><th>Estado</th></tr></thead><tbody id="consistencyBody"></tbody></table></div></div></article>
         </div>
       </section>
 
@@ -1383,83 +502,28 @@
             <div class="card-head"><div><h3>Resultado de extracción</h3><p>Datos detectados antes de generar el mantenimiento.</p></div><button class="btn btn-sm btn-primary" id="btnUseOcr"><i class="bi bi-clipboard-check"></i> Usar en registro</button></div>
             <div class="card-body"><div class="ocr-preview" id="ocrPreview"></div></div>
           </article>
-          <article class="card span-12">
-            <div class="card-head"><div><h3>Cola OCR institucional</h3><p>Registros de <span class="mono">tblOCRCola</span>.</p></div></div>
-            <div class="card-body">
-              <div class="table-wrap">
-                <table class="data-table"><thead><tr><th>ID carga</th><th>Fecha</th><th>Archivo</th><th>Estado</th><th>Factura</th><th>Orden</th><th>Placa</th><th class="num">Km</th><th class="num">Total</th></tr></thead>
-                <tbody id="ocrBody"></tbody></table>
-              </div>
-            </div>
-          </article>
+          <article class="card span-12"><div class="card-head"><div><h3>Cola OCR institucional</h3><p>Registros de <span class="mono">tblOCRCola</span>.</p></div></div><div class="card-body"><div class="table-wrap"><table class="data-table"><thead><tr><th>ID carga</th><th>Fecha</th><th>Archivo</th><th>Estado</th><th>Factura</th><th>Orden</th><th>Placa</th><th class="num">Km</th><th class="num">Total</th></tr></thead><tbody id="ocrBody"></tbody></table></div></div></article>
         </div>
       </section>
 
       <section id="assistant" class="module">
         <div class="section-grid">
-          <article class="card span-5">
-            <div class="card-head"><div><h3>Recomendaciones técnicas</h3><p>Acciones sugeridas por reincidencia, desgaste, costo, vencimiento e inconsistencias.</p></div></div>
-            <div class="card-body"><div class="alert-list" id="recommendationList"></div></div>
-          </article>
-          <article class="card span-7">
-            <div class="card-head"><div><h3>Análisis de costos anómalos</h3><p>Valores desviados frente al promedio histórico del vehículo y categoría.</p></div></div>
-            <div class="card-body">
-              <div class="table-wrap">
-                <table class="data-table"><thead><tr><th>Fecha</th><th>Placa</th><th>Orden</th><th>Categoría</th><th class="num">Total</th><th>Promedio referencia</th><th>Lectura</th></tr></thead>
-                <tbody id="costAnomalyBody"></tbody></table>
-              </div>
-            </div>
-          </article>
-          <article class="card span-12">
-            <div class="card-head">
-              <div><h3>Consulta en lenguaje natural</h3><p>Realice preguntas sobre vencidos, riesgo, duplicados, facturas, costos o promedio del último trimestre.</p></div>
-            </div>
-            <div class="card-body">
-              <div class="nl-box">
-                <div class="field w-100"><label>Pregunta</label><input id="nlQuestion" placeholder="Ej: ¿Qué vehículos tienen mantenimiento vencido?"></div>
-                <button class="btn btn-primary" id="btnAsk" style="margin-top:20px;white-space:nowrap"><i class="bi bi-search"></i> Consultar</button>
-              </div>
-              <div class="console mt-2" id="nlAnswer">La respuesta aparecerá aquí...</div>
-            </div>
-          </article>
+          <article class="card span-5"><div class="card-head"><div><h3>Recomendaciones técnicas</h3><p>Acciones sugeridas por reincidencia, desgaste, costo, vencimiento e inconsistencias.</p></div></div><div class="card-body"><div class="alert-list" id="recommendationList"></div></div></article>
+          <article class="card span-7"><div class="card-head"><div><h3>Análisis de costos anómalos</h3><p>Valores desviados frente al promedio histórico del vehículo y categoría.</p></div></div><div class="card-body"><div class="table-wrap"><table class="data-table"><thead><tr><th>Fecha</th><th>Placa</th><th>Orden</th><th>Categoría</th><th class="num">Total</th><th>Promedio referencia</th><th>Lectura</th></tr></thead><tbody id="costAnomalyBody"></tbody></table></div></div></article>
         </div>
       </section>
 
       <section id="admin" class="module">
         <div class="section-grid">
-          <article class="card span-12">
-            <div class="card-head">
-              <div><h3>Auditoría de cambios</h3><p>Bitácora institucional de modificaciones, validaciones y registros realizados en la plataforma.</p></div>
-              <div><pre class="console" id="adminConsole" style="margin:0;max-height:none;min-height:auto;padding:6px 10px;font-size:.75rem;border-radius:6px"></pre></div>
-            </div>
-            <div class="card-body">
-              <div class="table-wrap">
-                <table class="data-table"><thead><tr><th>ID</th><th>Fecha</th><th>Usuario</th><th>Tabla</th><th>Registro</th><th>Campo/Acción</th><th>Motivo</th><th>Estado</th></tr></thead>
-                <tbody id="auditBody"></tbody></table>
-              </div>
-            </div>
-          </article>
-          <article class="card span-12">
-            <div class="card-head"><div><h3>Modelo de datos activo</h3><p>Tablas cargadas desde el libro Excel en SharePoint.</p></div></div>
-            <div class="card-body">
-              <div class="table-wrap">
-                <table class="data-table"><thead><tr><th>Tabla</th><th>Nombre técnico</th><th>Descripción</th></tr></thead>
-                <tbody id="schemaBody"></tbody></table>
-              </div>
-            </div>
-          </article>
+          <article class="card span-12"><div class="card-head"><div><h3>Auditoría de cambios</h3><p>Bitácora institucional de modificaciones, validaciones y registros realizados en la plataforma.</p></div></div><div class="card-body"><div class="table-wrap"><table class="data-table"><thead><tr><th>ID</th><th>Fecha</th><th>Usuario</th><th>Tabla</th><th>Registro</th><th>Campo/Acción</th><th>Motivo</th><th>Estado</th></tr></thead><tbody id="auditBody"></tbody></table></div></div></article>
         </div>
       </section>
     </main>
   </div>
 
-  <!-- DRAWER: Nuevo mantenimiento -->
   <div class="drawer" id="recordDrawer" aria-hidden="true">
     <div class="drawer-panel">
-      <div class="drawer-head">
-        <h3 id="drawerTitle">Nuevo mantenimiento</h3>
-        <button class="btn btn-sm btn-ghost" id="btnCloseDrawer"><i class="bi bi-x-lg"></i> Cerrar</button>
-      </div>
+      <div class="drawer-head"><h3 id="drawerTitle">Nuevo mantenimiento</h3><button class="btn btn-sm btn-ghost" id="btnCloseDrawer"><i class="bi bi-x-lg"></i> Cerrar</button></div>
       <div class="drawer-body">
         <div class="split-form">
           <div class="field"><label>Vehículo</label><select id="fVehicle"></select></div>
@@ -1468,6 +532,8 @@
           <div class="field"><label>Kilometraje</label><input id="fKm" type="number" min="0"></div>
           <div class="field"><label>Orden reparación</label><input id="fOrder" placeholder="A340859"></div>
           <div class="field"><label>Factura</label><input id="fInvoice" placeholder="005-502-000119306"></div>
+          <div class="field"><label>Enlace factura SharePoint</label><input id="fInvoiceLink" type="url" placeholder="https://...sharepoint.com/..."></div>
+          <div class="field"><label>Enlace soporte / expediente del mantenimiento</label><input id="fDocumentLink" type="url" placeholder="https://...sharepoint.com/..."></div>
           <div class="field"><label>Tipo mantenimiento</label><select id="fType"><option>Preventivo</option><option>Correctivo</option><option>Repuestos/Materiales</option><option>Neumáticos</option><option>Accesorios</option><option>Emergente</option></select></div>
           <div class="field"><label>Categoría</label><input id="fCategory" placeholder="Mantenimiento por kilometraje"></div>
           <div class="field"><label>Agencia / proveedor</label><input id="fAgency" placeholder="CASABACA S.A. / CARRION"></div>
@@ -1479,21 +545,16 @@
           <div class="field" style="grid-column:1/-1"><label>Ingreso / observación técnica</label><textarea id="fIngress"></textarea></div>
           <div class="field" style="grid-column:1/-1"><label>Cierre / control interno</label><textarea id="fClose"></textarea></div>
         </div>
-        <div class="mt-3 flex justify-between align-center wrap">
-          <strong>Detalle técnico de ítems</strong>
-          <button class="btn btn-sm btn-ghost" id="btnAddItem"><i class="bi bi-plus"></i> Agregar ítem</button>
-        </div>
+        <div class="mt-3 flex justify-between align-center wrap"><strong>Detalle técnico de ítems</strong><button class="btn btn-sm btn-ghost" id="btnAddItem"><i class="bi bi-plus"></i> Agregar ítem</button></div>
         <div class="line-items mt-2" id="itemLines"></div>
         <div class="alert-list mt-3" id="formWarnings"></div>
       </div>
-      <div class="drawer-foot">
-        <button class="btn btn-ghost" id="btnValidateForm"><i class="bi bi-shield-check"></i> Validar</button>
-        <button class="btn btn-primary" id="btnSaveForm"><i class="bi bi-cloud-arrow-up"></i> Guardar en SharePoint</button>
-      </div>
+      <div class="drawer-foot"><button class="btn btn-ghost" id="btnValidateForm"><i class="bi bi-shield-check"></i> Validar</button><button class="btn btn-primary" id="btnSaveForm"><i class="bi bi-cloud-arrow-up"></i> Guardar en SharePoint</button></div>
     </div>
   </div>
 
-  <!-- MODAL: Detalle de mantenimiento -->
+
+
   <div class="detail-modal" id="maintenanceDetailModal" aria-hidden="true">
     <div class="detail-dialog" role="dialog" aria-modal="true" aria-labelledby="maintenanceDetailTitle">
       <div class="detail-head">
@@ -2095,7 +1156,8 @@
     function vehicles(){ return data('vehicles'); }
     function details(){ return data('maintenanceDetail'); }
     function invoices(){ return data('invoices'); }
-    function consistencies(){ return data('consistency'); }
+    function consistencies(){ return data('consistency').filter(r => r && r.ID_Control); }
+    function documents(){ return data('documents').filter(r => r && r.ID_Documento); }
     function ocrRows(){ return data('ocr'); }
 
     function renderAll(){
@@ -2163,6 +1225,50 @@
       );
     }
 
+    function vehicleForMaintenance(r){
+      return vehicles().find(v =>
+        (r.ID_Activo && v.ID_Activo === r.ID_Activo) ||
+        (r.Placa && v.Placa === r.Placa)
+      ) || {};
+    }
+
+    function safeExternalUrl(value){
+      const raw = String(value || '').trim();
+      if(!raw) return '';
+      try{
+        const u = new URL(raw);
+        return (u.protocol === 'https:' || u.protocol === 'http:') ? u.href : '';
+      }catch(_){ return ''; }
+    }
+
+    function documentLinksFor(r){
+      const inv = invoiceFor(r);
+      const vehicle = vehicleForMaintenance(r);
+      const invoiceDoc = documents().find(d => d.Link_SharePoint && (
+        (r.Factura_Nro && String(d.Observaciones || '').includes(r.Factura_Nro)) ||
+        (inv.Archivo_Origen && d.Archivo_Origen === inv.Archivo_Origen)
+      )) || {};
+      const expedienteDoc = documents().find(d => d.Link_SharePoint && normalizeText(d.Tipo_Documento).includes('expediente')) || {};
+      const invoiceUrl = safeExternalUrl(inv.Link_SharePoint || invoiceDoc.Link_SharePoint || (r.Factura_Nro ? r.Link_Documento_SharePoint : ''));
+      const expedienteUrl = safeExternalUrl(vehicle.Link_Carpeta_SharePoint || expedienteDoc.Link_SharePoint);
+      const supportUrl = safeExternalUrl(r.Link_Documento_SharePoint);
+      return {
+        invoiceUrl,
+        expedienteUrl,
+        supportUrl: supportUrl && supportUrl !== invoiceUrl ? supportUrl : ''
+      };
+    }
+
+    function documentActionHtml(r, compact=true){
+      const {invoiceUrl, expedienteUrl, supportUrl} = documentLinksFor(r);
+      const actions = [];
+      if(invoiceUrl) actions.push(`<a class="btn btn-sm btn-ghost doc-link" href="${escapeHtml(invoiceUrl)}" target="_blank" rel="noopener noreferrer"><i class="bi bi-receipt"></i> Factura</a>`);
+      if(expedienteUrl) actions.push(`<a class="btn btn-sm btn-ghost doc-link" href="${escapeHtml(expedienteUrl)}" target="_blank" rel="noopener noreferrer"><i class="bi bi-folder2-open"></i> Expediente</a>`);
+      if(supportUrl) actions.push(`<a class="btn btn-sm btn-ghost doc-link" href="${escapeHtml(supportUrl)}" target="_blank" rel="noopener noreferrer"><i class="bi bi-file-earmark-text"></i> Soporte</a>`);
+      if(!actions.length) return '<span class="muted">Sin enlace</span>';
+      return `<div class="doc-actions${compact ? ' compact' : ''}">${actions.join('')}</div>`;
+    }
+
     function maintenanceSearchBlob(r){
       const det = maintenanceDetailsFor(r).map(d => [d.Tipo_Item,d.Descripcion,d.Categoria_Item,d.Observaciones,d.Fuente,d.Valor_Total].join(' ')).join(' ');
       const inv = invoiceFor(r);
@@ -2170,7 +1276,7 @@
       return normalizeText([
         r.ID_Mantenimiento,r.ID_Activo,r.Placa,r.Orden_Reparacion,r.Factura_Nro,r.Fecha_Recepcion,r.Fecha_Facturacion_Emision,r.Km,r.Tipo_Mantenimiento,r.Categoria,r.Agencia,r.Asesor_Vendedor,
         r.Ingreso_Observacion,r.Cierre_Observacion,r.Estado_Registro,r.Validacion_Km,r.Validacion_Duplicado,r.Validacion_Cuadre_Factura,r.Observacion_Control,r.Total_Control,
-        inv.Proveedor,inv.RUC_Proveedor,inv.Clave_Acceso,inv.Forma_Pago,inv.Observaciones,det,invDet
+        inv.Proveedor,inv.RUC_Proveedor,inv.Clave_Acceso,inv.Forma_Pago,inv.Observaciones,inv.Link_SharePoint,r.Link_Documento_SharePoint,det,invDet
       ].join(' '));
     }
 
@@ -2250,8 +1356,8 @@
       body.innerHTML = rows.map(r => {
         const control = rowControlStatus(r);
         const detailCount = maintenanceDetailsFor(r).length || invoiceDetailsFor(r).length;
-        return `<tr class="interactive-row" data-id="${escapeHtml(r.ID_Mantenimiento)}"><td><button class="btn btn-sm btn-primary btn-view-maint" type="button" data-id="${escapeHtml(r.ID_Mantenimiento)}"><i class="bi bi-eye"></i> Ver ${detailCount ? '('+detailCount+')' : ''}</button></td><td class="mono">${highlight(r.ID_Mantenimiento)}</td><td>${formatDate(r.Fecha_Facturacion_Emision || r.Fecha_Recepcion)}</td><td><strong>${highlight(r.Placa)}</strong></td><td class="mono">${highlight(r.Orden_Reparacion)}</td><td class="mono">${highlight(r.Factura_Nro || '—')}</td><td class="num">${integer(r.Km)}</td><td>${pill(r.Tipo_Mantenimiento, typePill(r.Tipo_Mantenimiento))}</td><td>${highlight(r.Agencia || '')}</td><td class="num"><strong>${money(r.Total_Control || r.Total_Con_IVA || r.Subtotal_Sin_IVA)}</strong></td><td>${pill(r.Estado_Registro, statusPill(r.Estado_Registro))}</td><td>${control}</td></tr>`;
-      }).join('') || `<tr><td colspan="12"><div class="empty-state"><i class="bi bi-inbox"></i><br>No existen registros con los filtros aplicados. Pruebe con términos como aceite, filtro, frenos, llanta, orden o factura.</div></td></tr>`;
+        return `<tr class="interactive-row" data-id="${escapeHtml(r.ID_Mantenimiento)}"><td><button class="btn btn-sm btn-primary btn-view-maint" type="button" data-id="${escapeHtml(r.ID_Mantenimiento)}"><i class="bi bi-eye"></i> Ver ${detailCount ? '('+detailCount+')' : ''}</button></td><td class="mono">${highlight(r.ID_Mantenimiento)}</td><td>${formatDate(r.Fecha_Facturacion_Emision || r.Fecha_Recepcion)}</td><td><strong>${highlight(r.Placa)}</strong></td><td class="mono">${highlight(r.Orden_Reparacion)}</td><td class="mono">${highlight(r.Factura_Nro || '—')}</td><td>${documentActionHtml(r,true)}</td><td class="num">${integer(r.Km)}</td><td>${pill(r.Tipo_Mantenimiento, typePill(r.Tipo_Mantenimiento))}</td><td>${highlight(r.Agencia || '')}</td><td class="num"><strong>${money(r.Total_Control || r.Total_Con_IVA || r.Subtotal_Sin_IVA)}</strong></td><td>${pill(r.Estado_Registro, statusPill(r.Estado_Registro))}</td><td>${control}</td></tr>`;
+      }).join('') || `<tr><td colspan="13"><div class="empty-state"><i class="bi bi-inbox"></i><br>No existen registros con los filtros aplicados. Pruebe con términos como aceite, filtro, frenos, llanta, orden o factura.</div></td></tr>`;
       $$('.btn-view-maint', body).forEach(btn => btn.addEventListener('click', e => { e.stopPropagation(); openMaintenanceDetail(btn.dataset.id); }));
       $$('.interactive-row', body).forEach(row => row.addEventListener('dblclick', () => openMaintenanceDetail(row.dataset.id)));
     }
@@ -2267,6 +1373,7 @@
           <div class="maint-card-head"><div><div class="maint-title">${highlight(r.Placa || 'N/D')} · ${highlight(r.Orden_Reparacion || 'Sin orden')}</div><div class="maint-sub">${formatDate(r.Fecha_Facturacion_Emision || r.Fecha_Recepcion)} · ${highlight(r.Factura_Nro || 'Sin factura')}</div></div>${pill(r.Tipo_Mantenimiento || r.Categoria, typePill(r.Tipo_Mantenimiento || r.Categoria))}</div>
           <div class="maint-metrics"><div class="mini-metric"><span>Km</span><strong>${integer(r.Km)}</strong></div><div class="mini-metric"><span>Total</span><strong>${money(r.Total_Control || r.Total_Con_IVA || r.Subtotal_Sin_IVA)}</strong></div><div class="mini-metric"><span>Detalle</span><strong>${all.length}</strong></div></div>
           <div class="item-snippets">${snippets}</div>
+          <div class="mt-2">${documentActionHtml(r,true)}</div>
           <button class="btn btn-sm btn-ghost btn-view-maint-card" type="button" data-id="${escapeHtml(r.ID_Mantenimiento)}"><i class="bi bi-layout-text-window"></i> Abrir ficha detallada</button>
         </article>`;
       }).join('') || `<div class="empty-state" style="grid-column:1/-1"><i class="bi bi-search"></i><br>No hay tarjetas para mostrar con los filtros aplicados.</div>`;
@@ -2818,6 +1925,8 @@
       $('fKm').value = e.km || '';
       $('fOrder').value = e.orden || '';
       $('fInvoice').value = e.factura || '';
+      $('fInvoiceLink').value = '';
+      $('fDocumentLink').value = '';
       $('fType').value = e.tipoMantenimiento || 'Preventivo';
       $('fCategory').value = e.categoria || 'Mantenimiento por factura electrónica';
       $('fAgency').value = [e.proveedor, e.agencia].filter(Boolean).join(' / ');
@@ -2864,13 +1973,15 @@
       const parts = numberValue($('fParts').value);
       const iva = numberValue($('fIva').value);
       const total = numberValue($('fTotal').value) || (labor + parts + iva);
+      const subtotalSinIva = round2(total - iva);
+      const documentLink = safeExternalUrl($('fDocumentLink') ? $('fDocumentLink').value : '');
       return {
         ID_Mantenimiento:id, ID_Activo: vehicle.ID_Activo || '', Placa: vehicle.Placa || '', Orden_Reparacion: order, Factura_Nro: invoice, Fecha_Recepcion: date, Fecha_Facturacion_Emision: invDate,
         Año: Number(date.slice(0,4)), Mes: date.slice(0,7), Km: km, Km_Anterior: prevKm, Delta_Km: km - prevKm,
         Tipo_Mantenimiento: $('fType').value, Categoria: $('fCategory').value.trim(), Agencia: $('fAgency').value.trim(), Asesor_Vendedor: $('fAdvisor').value.trim(),
         Ingreso_Observacion: $('fIngress').value.trim(), Cierre_Observacion: $('fClose').value.trim(), Subtotal_Mano_Obra: labor, Subtotal_Repuestos: parts,
-        Subtotal_Sin_IVA: labor + parts, IVA: iva, Total_Con_IVA: total, Total_Control: total, Fuente_Principal: 'Registro HTML Enterprise', Archivo_Origen: state.lastOcr ? state.lastOcr.archivo : '', Hash_Documento: state.lastOcr ? state.lastOcr.hash : '',
-        Estado_Registro: 'REGISTRADO_HTML', Validacion_Km: km >= prevKm ? 'OK' : 'ERROR_KM_DECREMENTO', Validacion_Duplicado: hasDuplicate(vehicle.Placa, order, invoice) ? 'DUPLICADO_POTENCIAL' : 'OK', Validacion_Cuadre_Factura: invoice ? 'PENDIENTE_VALIDACION' : 'SIN_FACTURA', Requiere_Revision: 'SI', Fecha_Carga: nowIso(), Usuario_Carga: state.account ? state.account.username : 'usuario', Version_Registro: 1, Link_Documento_SharePoint: '', Observacion_Control: 'Registro generado desde plataforma HTML Enterprise.'
+        Subtotal_Sin_IVA: subtotalSinIva, IVA: iva, Total_Con_IVA: total, Total_Control: total, Fuente_Principal: 'Registro HTML Enterprise', Archivo_Origen: state.lastOcr ? state.lastOcr.archivo : '', Hash_Documento: state.lastOcr ? state.lastOcr.hash : '',
+        Estado_Registro: 'REGISTRADO_HTML', Validacion_Km: km >= prevKm ? 'OK' : 'ERROR_KM_DECREMENTO', Validacion_Duplicado: hasDuplicate(vehicle.Placa, order, invoice) ? 'DUPLICADO_POTENCIAL' : 'OK', Validacion_Cuadre_Factura: invoice ? 'PENDIENTE_VALIDACION' : 'SIN_FACTURA', Requiere_Revision: 'SI', Fecha_Carga: nowIso(), Usuario_Carga: state.account ? state.account.username : 'usuario', Version_Registro: 1, Link_Documento_SharePoint: documentLink, Observacion_Control: 'Registro generado desde plataforma HTML Enterprise.'
       };
     }
 
@@ -2896,6 +2007,8 @@
       if(rec.Factura_Nro && !/^\d{3}-\d{3}-\d{9}$/.test(rec.Factura_Nro)) warnings.push({level:'Medio',title:'Formato factura',text:'La factura debería cumplir 000-000-000000000.'});
       if(rec.Km < rec.Km_Anterior) warnings.push({level:'Alto',title:'Kilometraje inconsistente',text:`El km ingresado ${integer(rec.Km)} es menor al anterior ${integer(rec.Km_Anterior)}.`});
       if(rec.Validacion_Duplicado !== 'OK') warnings.push({level:'Alto',title:'Duplicado potencial',text:'Existe coincidencia de orden o factura para este vehículo.'});
+      if($('fInvoiceLink').value.trim() && !safeExternalUrl($('fInvoiceLink').value)) warnings.push({level:'Medio',title:'Enlace de factura inválido',text:'Use una URL http/https válida de SharePoint.'});
+      if($('fDocumentLink').value.trim() && !safeExternalUrl($('fDocumentLink').value)) warnings.push({level:'Medio',title:'Enlace de expediente inválido',text:'Use una URL http/https válida de SharePoint.'});
       $('formWarnings').innerHTML = renderAlertList(warnings, 'Formulario validado sin observaciones críticas.');
       return warnings;
     }
@@ -2908,7 +2021,7 @@
         Subtotal_Mano_Obra: e.subtotalManoObra || rec.Subtotal_Mano_Obra || 0, Subtotal_Repuestos: e.subtotalRepuestos || rec.Subtotal_Repuestos || 0,
         Subtotal_Sin_IVA: e.subtotalSinIva || rec.Subtotal_Sin_IVA || 0, IVA_15: e.iva || rec.IVA || 0, Total_Factura: e.total || rec.Total_Con_IVA || 0,
         Forma_Pago: e.formaPago || 'OTROS CON UTILIZACION DEL SISTEMA FINANCIERO', Estado_Validacion: 'PRE_REGISTRO_VALIDADO_USUARIO', Archivo_Origen: e.archivo || rec.Archivo_Origen || '',
-        Hash_SHA256: e.hash || rec.Hash_Documento || '', Link_SharePoint: '', Fecha_Carga: nowIso(), Usuario_Carga: state.account ? state.account.username : 'usuario',
+        Hash_SHA256: e.hash || rec.Hash_Documento || '', Link_SharePoint: safeExternalUrl($('fInvoiceLink') ? $('fInvoiceLink').value : ''), Fecha_Carga: nowIso(), Usuario_Carga: state.account ? state.account.username : 'usuario',
         Observaciones: `Factura mapeada automáticamente a mantenimiento ${rec.ID_Mantenimiento}. Validar detalle contable si aplica.`
       };
     }
@@ -3018,6 +2131,8 @@
             <div class="detail-cell"><span>Clave de acceso</span><strong class="mono">${escapeHtml(inv.Clave_Acceso || '—')}</strong></div>
             <div class="detail-cell"><span>IVA / Total factura</span><strong>${money(inv.IVA_15 || r.IVA)} · ${money(inv.Total_Factura || r.Total_Con_IVA)}</strong></div>
           </div>
+          <div class="mt-3">${documentActionHtml(r,false)}</div>
+          <div class="doc-note">Los enlaces se abren en una pestaña nueva. SharePoint puede solicitar autenticación institucional.</div>
           <div class="mt-3">${renderDetailTable(invDet, 'invoice')}</div>
         </div>`;
       $('maintenanceDetailModal').classList.add('open');

@@ -1,0 +1,1104 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="theme-color" content="#123b32" />
+<meta name="color-scheme" content="light" />
+<meta name="description" content="Portal institucional FIAS para consulta directa de la base de contratos almacenada en Microsoft 365." />
+<title>FIAS | Portal Enterprise de Inteligencia Contractual</title>
+<link rel="preconnect" href="https://alcdn.msauth.net" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<style>
+:root{
+  --forest:#123b32;
+  --forest-2:#1d5b4a;
+  --mint:#dff3ea;
+  --mint-2:#f2fbf7;
+  --azure:#245c93;
+  --azure-soft:#eaf2fb;
+  --gold:#a96f1f;
+  --gold-soft:#fff5e3;
+  --red:#a63c3c;
+  --red-soft:#fff0ef;
+  --ink:#1c2925;
+  --muted:#65736e;
+  --line:#dfe7e3;
+  --line-2:#edf2ef;
+  --canvas:#f5f7f6;
+  --card:#ffffff;
+  --shadow:0 14px 34px rgba(28,41,37,.08);
+  --shadow-sm:0 6px 18px rgba(28,41,37,.06);
+  --radius:18px;
+  --radius-sm:12px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--canvas);color:var(--ink);font-family:Inter,"Segoe UI",system-ui,-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif}
+button,input,select{font:inherit}button{cursor:pointer}a{color:inherit}
+.hidden{display:none!important}
+
+/* Acceso institucional */
+.auth-gate{min-height:100vh;display:grid;place-items:center;padding:28px;background:linear-gradient(140deg,#f3faf6 0%,#f8faf9 48%,#eef5f2 100%)}
+.auth-card{width:min(590px,100%);background:#fff;border:1px solid var(--line);border-radius:28px;box-shadow:0 26px 70px rgba(18,59,50,.14);overflow:hidden}
+.auth-accent{height:8px;background:linear-gradient(90deg,var(--forest),#2e7e66,#5aa88d)}
+.auth-body{padding:34px}
+.auth-logo{display:block;width:min(265px,72%);height:auto;margin:0 auto 28px;object-fit:contain}
+.auth-eyebrow{display:flex;justify-content:center;align-items:center;gap:8px;color:var(--forest-2);font-size:.76rem;font-weight:900;letter-spacing:.09em;text-transform:uppercase}
+.auth-eyebrow:before{content:"";width:8px;height:8px;border-radius:50%;background:#3f9d76;box-shadow:0 0 0 5px rgba(63,157,118,.12)}
+.auth-card h1{text-align:center;margin:11px 0 10px;font-size:clamp(1.75rem,4vw,2.35rem);line-height:1.06;letter-spacing:-.045em}
+.auth-card p{text-align:center;color:var(--muted);line-height:1.62;margin:0 auto;max-width:470px}
+.auth-btn{width:100%;margin-top:24px;border:0;border-radius:14px;background:var(--forest);color:#fff;padding:14px 18px;font-weight:900;display:flex;align-items:center;justify-content:center;gap:10px;transition:.18s;box-shadow:0 10px 22px rgba(18,59,50,.18)}
+.auth-btn:hover{transform:translateY(-1px);background:#184b40}.auth-btn:disabled{opacity:.55;cursor:default;transform:none}
+.auth-note{margin-top:18px;border:1px solid #cfe4da;background:var(--mint-2);border-radius:15px;padding:12px 13px;color:#365d50;font-size:.84rem;line-height:1.45}
+.auth-note strong{color:var(--forest)}
+
+/* Shell */
+.portal{min-height:100vh}
+.masthead{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+.masthead-inner{width:min(1560px,calc(100% - 32px));margin:0 auto;min-height:76px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+.brand-zone{display:flex;align-items:center;gap:15px;min-width:0}.brand-zone img{width:144px;height:50px;object-fit:contain;object-position:left center}.brand-divider{height:34px;width:1px;background:var(--line)}
+.brand-title{min-width:0}.brand-title strong{display:block;font-size:1rem;letter-spacing:-.02em}.brand-title span{display:block;color:var(--muted);font-size:.76rem;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:510px}
+.top-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.author-head{display:inline-flex;align-items:center;gap:9px;padding:7px 11px 7px 12px;border:1px solid #dbe5e1;background:#fff;border-radius:999px;box-shadow:0 3px 10px rgba(16,48,40,.05);white-space:nowrap}
+.author-head-label{display:flex;flex-direction:column;line-height:1.12}.author-head-label small{font-size:.62rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:850}.author-head-label strong{font-size:.79rem;color:var(--ink);font-weight:900;margin-top:2px}
+.linkedin-head{width:30px;height:30px;border-radius:8px;background:#0a66c2;color:#fff;display:grid;place-items:center;text-decoration:none;flex:0 0 30px;transition:.18s;box-shadow:0 4px 10px rgba(10,102,194,.18)}.linkedin-head:hover{transform:translateY(-1px);background:#084f96;box-shadow:0 7px 16px rgba(10,102,194,.24)}.linkedin-head svg{width:16px;height:16px;fill:currentColor}
+.session-pill{display:inline-flex;align-items:center;gap:8px;border:1px solid #cee3d8;background:#f6fcf8;color:var(--forest-2);border-radius:999px;padding:8px 11px;font-size:.78rem;font-weight:850;max-width:250px}
+.session-pill:before{content:"";width:8px;height:8px;border-radius:50%;background:#3e9c73}.session-pill span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.btn{border:0;border-radius:11px;min-height:38px;padding:0 12px;display:inline-flex;align-items:center;justify-content:center;gap:7px;font-size:.8rem;font-weight:850;text-decoration:none;transition:.18s;white-space:nowrap}
+.btn:hover{transform:translateY(-1px)}.btn-primary{background:var(--forest);color:#fff}.btn-primary:hover{background:#194d41}.btn-soft{background:#eef3f1;color:#36544a}.btn-soft:hover{background:#e4ece8}.btn-outline{background:#fff;color:var(--forest);border:1px solid var(--line)}.btn-danger{background:#fff3f2;color:var(--red);border:1px solid #f0d0cd}.btn:disabled{opacity:.48;cursor:default;transform:none}
+
+.workspace{width:min(1560px,calc(100% - 32px));margin:0 auto;padding:24px 0 44px}
+.intro{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(340px,.7fr);gap:18px;align-items:stretch;margin-bottom:16px}
+.intro-main{background:#fff;border:1px solid var(--line);border-radius:22px;padding:24px 26px;box-shadow:var(--shadow-sm);position:relative;overflow:hidden}
+.intro-main:after{content:"";position:absolute;right:-46px;bottom:-74px;width:190px;height:190px;border:34px solid rgba(18,59,50,.045);border-radius:50%}
+.eyebrow{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--forest-2);font-weight:950}.intro h1{margin:8px 0 9px;font-size:clamp(1.8rem,3.3vw,3rem);line-height:1.02;letter-spacing:-.05em;max-width:880px}.intro p{margin:0;color:var(--muted);line-height:1.55;max-width:880px;font-size:.93rem}
+.source-card{background:var(--forest);color:#fff;border-radius:22px;padding:20px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 15px 34px rgba(18,59,50,.16)}
+.source-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.source-label{font-size:.69rem;text-transform:uppercase;letter-spacing:.09em;font-weight:900;color:rgba(255,255,255,.65)}.source-state{display:flex;align-items:center;gap:7px;font-size:.78rem;font-weight:900}.source-state:before{content:"";width:9px;height:9px;border-radius:50%;background:#f4ba55;box-shadow:0 0 0 5px rgba(244,186,85,.14)}.source-state.ok:before{background:#7be2b2;box-shadow:0 0 0 5px rgba(123,226,178,.14)}.source-state.bad:before{background:#ff8b83;box-shadow:0 0 0 5px rgba(255,139,131,.14)}
+.source-card h2{margin:8px 0 5px;font-size:1.1rem;letter-spacing:-.025em}.source-card p{margin:0;color:rgba(255,255,255,.72);font-size:.78rem;line-height:1.45;overflow-wrap:anywhere}.source-meta{margin-top:18px;display:grid;grid-template-columns:1fr 1fr;gap:9px}.source-meta div{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.10);border-radius:12px;padding:10px}.source-meta span{display:block;color:rgba(255,255,255,.58);font-size:.64rem;text-transform:uppercase;font-weight:850;letter-spacing:.07em}.source-meta strong{display:block;margin-top:4px;font-size:.79rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+.metric-strip{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-bottom:16px}.metric{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px 15px;box-shadow:var(--shadow-sm);min-width:0}.metric span{display:block;color:var(--muted);font-size:.67rem;font-weight:900;text-transform:uppercase;letter-spacing:.08em}.metric strong{display:block;font-size:1.48rem;margin-top:5px;letter-spacing:-.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.metric small{display:block;color:var(--muted);font-size:.7rem;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.metric.primary{border-color:#c7dfd4;background:linear-gradient(180deg,#fff,#f7fcfa)}.metric.primary strong{color:var(--forest)}
+
+.explorer{display:grid;grid-template-columns:310px minmax(0,1fr);gap:14px;align-items:start}.filter-panel{position:sticky;top:92px;background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow-sm);overflow:hidden}.panel-head{padding:16px 17px;border-bottom:1px solid var(--line-2)}.panel-head h2{margin:0;font-size:1rem;letter-spacing:-.02em}.panel-head p{margin:4px 0 0;color:var(--muted);font-size:.75rem;line-height:1.4}.filter-body{padding:14px 15px;display:grid;gap:12px}.field{display:grid;gap:6px}.field label{font-size:.66rem;color:var(--muted);font-weight:900;text-transform:uppercase;letter-spacing:.075em}.field input,.field select{width:100%;min-height:39px;border:1px solid var(--line);border-radius:10px;background:#fff;padding:0 10px;color:var(--ink);outline:none;font-size:.81rem}.field input:focus,.field select:focus{border-color:#8bb8a6;box-shadow:0 0 0 4px rgba(46,126,102,.10)}
+.amount-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.check-row{display:flex;align-items:flex-start;gap:9px;padding:10px;border:1px solid var(--line);border-radius:11px;background:#fafcfb;font-size:.78rem;color:#42514c}.check-row input{margin-top:2px;accent-color:var(--forest)}.filter-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 15px 15px}
+.year-brief{border-top:1px solid var(--line-2);padding:14px 15px}.year-brief-title{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}.year-brief-title strong{font-size:.78rem}.year-brief-title span{color:var(--muted);font-size:.67rem}.year-bars{display:grid;gap:9px}.year-row{display:grid;grid-template-columns:38px 1fr 58px;gap:8px;align-items:center;font-size:.7rem}.year-row button{border:0;background:none;padding:0;text-align:left;color:var(--forest);font-weight:900}.year-track{height:7px;border-radius:999px;background:#edf2ef;overflow:hidden}.year-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,#2e7e66,#77af9a)}.year-value{text-align:right;color:var(--muted);font-variant-numeric:tabular-nums}
+
+.results-column{min-width:0;display:grid;gap:12px}.search-card{background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow-sm);padding:14px}.search-row{display:grid;grid-template-columns:minmax(0,1fr) 170px 130px;gap:9px;align-items:end}.search-box{position:relative}.search-box input{width:100%;height:46px;border:1px solid var(--line);border-radius:13px;padding:0 44px 0 14px;font-size:.92rem;outline:none;background:#fbfcfc}.search-box input:focus{border-color:#84b3a1;box-shadow:0 0 0 4px rgba(46,126,102,.10);background:#fff}.search-icon{position:absolute;right:13px;top:50%;transform:translateY(-50%);font-size:1.1rem;color:#87938f}.smart-hint{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-top:9px;color:var(--muted);font-size:.72rem}.smart-hint strong{color:var(--forest)}
+.quality-banner{display:none;background:#fff;border:1px solid #efd9ad;border-left:4px solid #d49a32;border-radius:14px;padding:12px 14px;align-items:flex-start;gap:10px}.quality-banner.show{display:flex}.quality-icon{width:32px;height:32px;border-radius:10px;background:var(--gold-soft);color:var(--gold);display:grid;place-items:center;font-weight:950;flex:0 0 32px}.quality-banner strong{display:block;font-size:.8rem}.quality-banner p{margin:3px 0 0;color:var(--muted);font-size:.72rem;line-height:1.45}
+.results-card{background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow-sm);overflow:hidden}.results-head{padding:13px 15px;border-bottom:1px solid var(--line-2);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.result-title strong{font-size:.85rem}.result-title span{display:block;color:var(--muted);font-size:.69rem;margin-top:3px}.result-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.result-actions select{height:36px;border:1px solid var(--line);border-radius:10px;padding:0 9px;background:#fff;color:var(--ink);font-size:.74rem}
+.table-wrap{overflow:auto;max-height:720px}.data-table{width:100%;border-collapse:separate;border-spacing:0;min-width:1120px}.data-table th{position:sticky;top:0;z-index:2;background:#f7f9f8;border-bottom:1px solid var(--line);padding:10px 11px;text-align:left;color:#64716d;font-size:.62rem;text-transform:uppercase;letter-spacing:.075em;white-space:nowrap}.data-table td{padding:11px;border-bottom:1px solid var(--line-2);vertical-align:top;font-size:.76rem}.data-table tbody tr:hover td{background:#fafcfb}.col-ref{width:94px}.ref-code{display:inline-flex;align-items:center;gap:5px;font-weight:950;color:var(--forest);white-space:nowrap}.ref-year{display:block;color:var(--muted);font-size:.66rem;margin-top:3px}.project-chip{display:inline-flex;max-width:170px;padding:4px 7px;border-radius:999px;background:var(--mint);color:#285a4a;font-size:.65rem;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.method{color:#52615c;max-width:175px}.provider{font-weight:800;max-width:210px;line-height:1.35}.object{min-width:280px;max-width:480px;color:#40504a;line-height:1.42}.amount{text-align:right;font-weight:950;color:#23473b;white-space:nowrap;font-variant-numeric:tabular-nums}.amount.missing{color:var(--gold);font-size:.68rem}.row-action{border:1px solid var(--line);background:#fff;border-radius:9px;padding:6px 8px;color:var(--forest);font-weight:900;font-size:.69rem;white-space:nowrap}.row-action:hover{background:var(--mint-2)}.issue-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#d49a32;margin-left:4px;vertical-align:middle}
+.card-list{display:none;padding:10px;gap:9px}.contract-card{border:1px solid var(--line);border-radius:14px;padding:12px;background:#fff}.card-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.card-ref{font-weight:950;color:var(--forest)}.card-amount{font-weight:950;color:#23473b}.card-project{margin-top:7px}.card-provider{font-size:.8rem;font-weight:850;margin-top:9px}.card-object{font-size:.75rem;color:var(--muted);line-height:1.42;margin-top:4px}.card-foot{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-top:10px;padding-top:9px;border-top:1px solid var(--line-2)}.card-foot span{font-size:.67rem;color:var(--muted)}
+.pagination{padding:11px 14px;border-top:1px solid var(--line-2);display:flex;align-items:center;justify-content:space-between;gap:12px}.page-info{font-size:.71rem;color:var(--muted)}.page-controls{display:flex;gap:6px}.page-btn{width:34px;height:34px;border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--forest);font-weight:950}.page-btn:disabled{opacity:.35;cursor:default}
+ .footer{text-align:center;color:#7a8782;font-size:.68rem;padding:18px 4px 0}
+.footer .author-link{display:inline-flex;align-items:center;gap:5px;margin-left:4px;color:#1d5b4a;font-weight:800;text-decoration:none;border-bottom:1px solid rgba(29,91,74,.28);padding-bottom:1px}
+.footer .author-link:hover{color:#0f4437;border-bottom-color:#0f4437}
+.report-author{margin-top:16px;padding-top:12px;border-top:1px solid #e3eae7;color:#6d7b76;font-size:.78rem;text-align:right}
+.report-author a{color:#1d5b4a;font-weight:800;text-decoration:none}
+
+/* Detalle */
+.drawer{position:fixed;inset:0;background:rgba(18,31,27,.38);z-index:80;display:none;justify-content:flex-end;backdrop-filter:blur(3px)}.drawer.open{display:flex}.drawer-panel{height:100%;width:min(660px,100%);background:#fff;box-shadow:-18px 0 55px rgba(18,31,27,.18);display:flex;flex-direction:column;animation:slideIn .19s ease}@keyframes slideIn{from{transform:translateX(35px);opacity:.6}to{transform:none;opacity:1}}.drawer-head{padding:19px 20px;border-bottom:1px solid var(--line);display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.drawer-kicker{font-size:.66rem;text-transform:uppercase;letter-spacing:.09em;font-weight:900;color:var(--forest-2)}.drawer-head h2{margin:5px 0 0;font-size:1.25rem;letter-spacing:-.03em}.close-btn{width:38px;height:38px;border:1px solid var(--line);border-radius:11px;background:#fff;font-size:1.25rem;color:var(--ink)}.drawer-body{padding:18px 20px;overflow:auto}.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.detail-cell{border:1px solid var(--line);border-radius:12px;padding:10px 11px;background:#fbfcfb}.detail-cell.wide{grid-column:1/-1}.detail-cell span{display:block;color:var(--muted);font-size:.62rem;text-transform:uppercase;letter-spacing:.075em;font-weight:900}.detail-cell strong,.detail-cell p{display:block;margin:4px 0 0;font-size:.79rem;line-height:1.48;word-break:break-word}.detail-object{margin-top:12px;border:1px solid var(--line);border-radius:14px;padding:13px 14px}.detail-object span{font-size:.64rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:900}.detail-object p{margin:6px 0 0;line-height:1.62;font-size:.86rem}.drawer-foot{margin-top:auto;border-top:1px solid var(--line);padding:13px 20px;display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap}.drawer-foot small{color:var(--muted);font-size:.67rem}.drawer-foot a{margin-left:auto}
+.loading{position:fixed;inset:0;z-index:100;background:rgba(248,250,249,.88);display:none;align-items:center;justify-content:center;flex-direction:column;gap:12px;backdrop-filter:blur(5px)}.loading.open{display:flex}.spinner{width:42px;height:42px;border:4px solid #dcebe4;border-top-color:var(--forest-2);border-radius:50%;animation:spin .9s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}.loading strong{font-size:.88rem;color:var(--forest)}
+.toast-zone{position:fixed;right:16px;bottom:16px;z-index:120;display:grid;gap:8px}.toast{width:min(390px,calc(100vw - 32px));background:#fff;border:1px solid var(--line);border-left:4px solid #489575;border-radius:12px;box-shadow:var(--shadow);padding:11px 12px}.toast.warn{border-left-color:#d49a32}.toast.bad{border-left-color:#c24a46}.toast strong{display:block;font-size:.78rem}.toast p{margin:3px 0 0;color:var(--muted);font-size:.7rem;line-height:1.4}
+
+
+/* ===== Inteligencia contractual / Business Intelligence ===== */
+.bi-suite{margin-bottom:16px;background:#fff;border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow-sm);overflow:hidden}
+.bi-head{padding:18px 20px;border-bottom:1px solid var(--line-2);display:flex;align-items:flex-end;justify-content:space-between;gap:18px;flex-wrap:wrap;background:linear-gradient(180deg,#fff,#fbfdfc)}
+.bi-kicker{font-size:.68rem;text-transform:uppercase;letter-spacing:.095em;font-weight:950;color:var(--forest-2)}
+.bi-head h2{margin:5px 0 3px;font-size:1.3rem;letter-spacing:-.035em}.bi-head p{margin:0;color:var(--muted);font-size:.76rem;line-height:1.45;max-width:850px}
+.bi-actions{display:flex;gap:8px;flex-wrap:wrap}.bi-grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:12px;padding:12px}
+.bi-card{border:1px solid var(--line);border-radius:16px;background:#fff;min-width:0;overflow:hidden}
+.bi-card.span-12{grid-column:span 12}.bi-card.span-8{grid-column:span 8}.bi-card.span-7{grid-column:span 7}.bi-card.span-6{grid-column:span 6}.bi-card.span-5{grid-column:span 5}.bi-card.span-4{grid-column:span 4}
+.bi-card-head{padding:13px 14px 9px;display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.bi-card-head h3{margin:0;font-size:.86rem;letter-spacing:-.015em}.bi-card-head p{margin:3px 0 0;color:var(--muted);font-size:.67rem;line-height:1.4}
+.bi-tag{display:inline-flex;align-items:center;gap:5px;border-radius:999px;background:var(--mint-2);border:1px solid #d6e9df;color:var(--forest-2);padding:5px 8px;font-size:.62rem;font-weight:900;white-space:nowrap}
+.bi-chart{height:280px;padding:2px 12px 12px;position:relative}.bi-chart.tall{height:320px}.bi-chart.compact{height:250px}
+.bi-insights{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(280px,.6fr);gap:12px;padding:0 12px 12px}
+.insight-narrative{border:1px solid var(--line);border-radius:15px;background:linear-gradient(180deg,#fbfdfc,#fff);padding:15px}
+.insight-narrative h3{margin:0 0 9px;font-size:.9rem}.insight-list{display:grid;gap:8px}.insight-item{display:flex;gap:9px;align-items:flex-start;font-size:.76rem;line-height:1.48;color:#40504a}.insight-item:before{content:"";width:7px;height:7px;border-radius:50%;background:#3f9271;margin-top:5px;flex:0 0 7px}
+.insight-item.warn:before{background:#d49a32}.insight-item strong{color:var(--forest)}
+.ranking-panel{border:1px solid var(--line);border-radius:15px;overflow:hidden}.ranking-head{padding:11px 12px;background:#f7f9f8;border-bottom:1px solid var(--line);font-size:.72rem;font-weight:950}.ranking-list{display:grid}.ranking-row{display:grid;grid-template-columns:24px minmax(0,1fr) auto;gap:8px;align-items:center;padding:9px 11px;border-bottom:1px solid var(--line-2);font-size:.69rem}.ranking-row:last-child{border-bottom:0}.ranking-index{width:22px;height:22px;border-radius:7px;background:#eef4f1;display:grid;place-items:center;color:var(--forest);font-weight:950}.ranking-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ranking-value{text-align:right;font-weight:900;color:#294a3e;white-space:nowrap}
+.analytics-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;padding:0 12px 12px}.analytics-mini{border:1px solid var(--line);border-radius:13px;padding:10px;background:#fbfcfb}.analytics-mini span{display:block;color:var(--muted);font-size:.61rem;text-transform:uppercase;letter-spacing:.075em;font-weight:900}.analytics-mini strong{display:block;margin-top:4px;font-size:.98rem;letter-spacing:-.025em}.analytics-mini small{display:block;color:var(--muted);font-size:.63rem;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* Reporte analítico ejecutivo */
+.report-modal{position:fixed;inset:0;z-index:95;background:rgba(18,31,27,.48);display:none;align-items:center;justify-content:center;padding:18px;backdrop-filter:blur(4px)}.report-modal.open{display:flex}
+.report-dialog{width:min(1080px,100%);max-height:92vh;background:#fff;border-radius:24px;box-shadow:0 28px 80px rgba(18,31,27,.24);display:flex;flex-direction:column;overflow:hidden}
+.report-head{padding:17px 20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:14px;align-items:flex-start}.report-head h2{margin:4px 0 0;font-size:1.2rem;letter-spacing:-.03em}.report-body{padding:18px 20px;overflow:auto}.report-actions{display:flex;gap:8px;flex-wrap:wrap}
+.report-cover{border-radius:17px;background:linear-gradient(125deg,var(--forest),#266b58);color:#fff;padding:18px}.report-cover small{opacity:.72;text-transform:uppercase;letter-spacing:.09em;font-weight:900}.report-cover h3{margin:6px 0 4px;font-size:1.3rem}.report-cover p{margin:0;opacity:.82;font-size:.76rem}
+.report-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:12px}.report-kpi{border:1px solid var(--line);border-radius:13px;padding:10px}.report-kpi span{display:block;color:var(--muted);font-size:.61rem;text-transform:uppercase;font-weight:900;letter-spacing:.07em}.report-kpi strong{display:block;margin-top:4px;font-size:1.05rem}
+.report-section{margin-top:14px;border:1px solid var(--line);border-radius:15px;overflow:hidden}.report-section h4{margin:0;padding:11px 13px;background:#f7f9f8;border-bottom:1px solid var(--line);font-size:.78rem}.report-section-body{padding:12px 13px;font-size:.75rem;line-height:1.55;color:#40504a}.report-table{width:100%;border-collapse:collapse}.report-table th,.report-table td{padding:7px 8px;border-bottom:1px solid var(--line-2);font-size:.69rem;text-align:left}.report-table th{color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-size:.6rem}.report-table td:last-child,.report-table th:last-child{text-align:right}.report-table tr:last-child td{border-bottom:0}
+
+/* Módulos claramente segregados: contratos adjudicados vs fase preparatoria */
+.source-link{display:inline-flex;color:#ddf5e9;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.35);font-size:.73rem;font-weight:850;margin-top:9px;padding-bottom:2px}
+.source-link:hover{color:white;border-color:white}
+.module-tabs{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.module-tab{min-width:0;display:flex;align-items:center;gap:13px;border:1px solid var(--line);border-radius:17px;background:#fff;padding:15px 18px;text-align:left;box-shadow:var(--shadow-sm);color:var(--ink);transition:150ms}
+.module-tab:hover{border-color:#90b8a6;transform:translateY(-1px)}.module-tab.selected{background:linear-gradient(120deg,#edf8f2,#fff);border:2px solid #27765c;padding:14px 17px}
+.module-tab strong{font-size:.88rem;display:block}.module-tab small{display:block;color:var(--muted);font-size:.69rem;margin-top:4px}.module-tab em{margin-left:auto;font-size:.81rem;font-style:normal;font-weight:950;background:#e3f1e9;color:#205943;border-radius:999px;padding:6px 10px;white-space:nowrap}
+.tab-icon{display:grid;place-items:center;flex:0 0 38px;width:38px;height:38px;border-radius:12px;background:#dff0e7;color:#24664e;font-size:1.35rem}
+.process-banner{display:flex;justify-content:space-between;align-items:center;gap:18px;margin-bottom:14px;border-radius:20px;padding:22px 24px;background:linear-gradient(115deg,#174739,#2b6b55);color:white;box-shadow:0 12px 26px rgba(18,59,50,.16)}
+.process-banner .eyebrow{color:#bbf5d4}.process-banner h2{font-size:1.6rem;margin:7px 0}.process-banner p{max-width:850px;line-height:1.55;font-size:.82rem;margin:0;color:#e2f2e8}.process-pill{font-weight:900;letter-spacing:.08em;border:1px solid #85bfa4;color:#e8ffef;font-size:.7rem;padding:10px;border-radius:999px}
+.process-kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-bottom:14px}.process-dashboard{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.process-chart-card,.process-controls{background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow-sm);overflow:hidden}
+.process-chart-body{padding:12px 17px 17px;display:grid;gap:11px;min-height:73px}.process-chart-row{display:grid;grid-template-columns:minmax(80px,1fr) minmax(110px,2fr) 30px;gap:9px;align-items:center;font-size:.72rem}
+.process-chart-label{overflow:hidden;white-space:nowrap;text-overflow:ellipsis;color:#456156}.process-chart-track{height:9px;border-radius:99px;background:#eaf2ef;overflow:hidden}.process-chart-fill{height:100%;background:linear-gradient(90deg,#278768,#6cbea0);border-radius:99px}.process-chart-row strong{text-align:right}
+.process-control-grid{padding:15px;display:grid;grid-template-columns:2fr repeat(5,minmax(110px,1fr));gap:11px;align-items:end}.process-control-actions{display:flex;justify-content:flex-end;gap:8px;padding:0 15px 15px}.process-controls{margin-bottom:12px}
+.process-alert{margin-bottom:12px;border:1px solid #efcc90;background:#fffbf2;color:#765018;padding:13px;border-left:5px solid #ca8f2c;border-radius:12px;font-size:.77rem;line-height:1.5}
+.process-table{min-width:1070px}.process-object{min-width:300px;max-width:490px;line-height:1.45}.process-budget{min-width:150px;font-size:.73rem!important;max-width:220px;overflow-wrap:anywhere}.process-state{font-weight:850;color:#27674e}.process-note{color:#856028;font-size:.66rem;display:block;margin-top:5px}
+@media(max-width:1260px){.process-control-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.process-search{grid-column:span 3}}
+@media(max-width:900px){.process-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.process-dashboard{grid-template-columns:1fr}}
+@media(max-width:640px){.module-tabs{grid-template-columns:1fr}.process-control-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.process-search{grid-column:span 2}.process-banner{align-items:flex-start}.process-pill{display:none}}
+@media print{.module-tabs{display:none!important}#processView.hidden,#contractView.hidden{display:none!important}.process-controls,.process-chart-card{display:none!important}#processView:not(.hidden) .p-table-wrap{display:block!important;max-height:none!important}#processView:not(.hidden) #pCardList{display:none!important}}
+
+@media(max-width:1180px){.metric-strip{grid-template-columns:repeat(4,1fr)}.bi-card.span-8,.bi-card.span-7,.bi-card.span-6,.bi-card.span-5,.bi-card.span-4{grid-column:span 6}.bi-insights{grid-template-columns:1fr}.analytics-strip{grid-template-columns:1fr 1fr}.intro{grid-template-columns:1fr}.source-meta{grid-template-columns:repeat(4,1fr)}.explorer{grid-template-columns:270px minmax(0,1fr)}.search-row{grid-template-columns:1fr 150px}.search-row .page-size-field{display:none}}
+@media(max-width:900px){.bi-card.span-12,.bi-card.span-8,.bi-card.span-7,.bi-card.span-6,.bi-card.span-5,.bi-card.span-4{grid-column:span 12}.bi-chart{height:260px}.report-kpis{grid-template-columns:1fr 1fr}.masthead-inner{width:min(100% - 20px);min-height:70px}.brand-divider,.brand-title span,.session-pill{display:none}.brand-zone img{width:120px}.workspace{width:calc(100% - 20px);padding-top:15px}.metric-strip{grid-template-columns:1fr 1fr}.explorer{grid-template-columns:1fr}.filter-panel{position:static}.filter-body{grid-template-columns:1fr 1fr}.filter-actions{grid-template-columns:1fr 1fr}.year-brief{display:none}.search-row{grid-template-columns:1fr}.search-row .page-size-field{display:block}.table-wrap{display:none}.card-list{display:grid}.intro-main{padding:20px}.source-meta{grid-template-columns:1fr 1fr}}
+@media(max-width:570px){.analytics-strip,.report-kpis{grid-template-columns:1fr}.bi-grid{padding:8px}.bi-head{padding:15px}.bi-actions{width:100%}.bi-actions .btn{flex:1}.bi-chart{height:235px}.masthead-inner{align-items:center}.brand-zone img{width:108px}.top-actions .btn span{display:none}.top-actions .btn{width:38px;padding:0}.intro h1{font-size:1.8rem}.metric-strip{grid-template-columns:1fr}.filter-body{grid-template-columns:1fr}.amount-grid{grid-template-columns:1fr 1fr}.smart-hint{align-items:flex-start;flex-direction:column}.result-actions{width:100%;justify-content:space-between}.detail-grid{grid-template-columns:1fr}.detail-cell.wide{grid-column:auto}.auth-body{padding:28px 22px}}
+@media print{.auth-gate,.masthead,.filter-panel,.search-card,.result-actions,.pagination,.drawer,.toast-zone,.loading,.report-modal{display:none!important}body.report-print .portal{display:none!important}body.report-print .report-modal{position:static!important;display:block!important;background:#fff!important;padding:0!important}body.report-print .report-dialog{width:100%!important;max-height:none!important;box-shadow:none!important;border-radius:0!important;overflow:visible!important}body.report-print .report-head{display:none!important}body.report-print .report-body{padding:0!important;overflow:visible!important}.workspace{width:100%;padding:0}.intro{display:block}.source-card{margin-top:10px;background:#fff;color:#000;border:1px solid #ccc;box-shadow:none}.source-card p,.source-label{color:#555}.source-meta div{border-color:#ddd}.source-meta span{color:#777}.source-meta strong{color:#000}.metric-strip{grid-template-columns:repeat(5,1fr)}.explorer{display:block}.results-card,.intro-main,.metric{box-shadow:none}.table-wrap{display:block;max-height:none}.data-table{min-width:0}.card-list{display:none}}
+@media(max-width:760px){.masthead{position:relative}.masthead-inner{flex-direction:column;align-items:stretch;padding:12px 0}.top-actions{justify-content:flex-start}.author-head{order:-1;width:max-content}}
+</style>
+</head>
+<body>
+<div class="loading" id="loading"><div class="spinner"></div><strong id="loadingText">Conectando con Microsoft 365…</strong></div>
+<div class="toast-zone" id="toastZone"></div>
+
+<section class="auth-gate" id="authGate">
+  <div class="auth-card">
+    <div class="auth-accent"></div>
+    <div class="auth-body">
+      <img class="auth-logo" src="https://fias.org.ec/wp-content/uploads/2021/11/Logo_FIAS_web.png" alt="Logo oficial FIAS" />
+      <div class="auth-eyebrow">Consulta institucional segura</div>
+      <h1>Portal Enterprise de Contratos</h1>
+      <p>Acceda con su cuenta corporativa de Microsoft 365. Datos de contratación 2026 y procesos preparatorios desde SharePoint, en dos módulos separados y sin almacenamiento de datos en archivos JSON intermedios.</p>
+      <button class="auth-btn" id="loginBtn" type="button">▣&nbsp; Iniciar sesión con Microsoft 365</button>
+      <div class="auth-note"><strong>Modelo de acceso:</strong> solo lectura. Los permisos efectivos siguen dependiendo del acceso que cada usuario tenga al archivo dentro de Microsoft 365.</div>
+    </div>
+  </div>
+</section>
+
+<div class="portal hidden" id="portal">
+  <header class="masthead">
+    <div class="masthead-inner">
+      <div class="brand-zone">
+        <img src="https://fias.org.ec/wp-content/uploads/2021/11/Logo_FIAS_web.png" alt="FIAS" />
+        <div class="brand-divider"></div>
+        <div class="brand-title"><strong>Inteligencia Contractual FIAS</strong><span>Dashboard Enterprise · Microsoft 365</span></div>
+      </div>
+      <div class="top-actions">
+        <div class="author-head" aria-label="Autoría del desarrollo">
+          <div class="author-head-label"><small>Desarrollado por</small><strong>Jair Cruz</strong></div>
+          <a class="linkedin-head" href="https://www.linkedin.com/in/jair-cruz-gallegos-65998776/" target="_blank" rel="noopener noreferrer" aria-label="Abrir perfil de LinkedIn de Jair Cruz" title="LinkedIn · Jair Cruz">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.32 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14ZM7.1 20.45H3.54V9H7.1v11.45Z"/></svg>
+          </a>
+        </div>
+        <div class="session-pill" id="sessionPill"><span id="sessionText">Sesión institucional</span></div>
+        <button class="btn btn-primary" id="syncBtn" type="button" title="Actualizar la información vigente">↻ <span>Actualizar datos</span></button>
+        <button class="btn btn-danger" id="logoutBtn" type="button" title="Cerrar sesión">⎋ <span>Salir</span></button>
+      </div>
+    </div>
+  </header>
+
+  <main class="workspace">
+    <section class="intro">
+      <article class="intro-main">
+        <div class="eyebrow">FIAS · Gestión Contractual 2026</div>
+        <h1>Contratos adjudicados y procesos por iniciar, con información independiente.</h1>
+        <p>Consulte los contratos y órdenes de 2026, y dé seguimiento a los procesos preparatorios en un módulo independiente. Los datos proceden de dos hojas distintas del mismo archivo institucional de SharePoint.</p>
+      </article>
+      <aside class="source-card">
+        <div>
+          <div class="source-top"><div><div class="source-label">Conexión institucional</div><h2 id="sourceFileName">Repositorio contractual protegido</h2></div><div class="source-state" id="sourceState">Conectando</div></div>
+          <p id="sourceDetail">La aplicación consulta dos hojas diferenciadas del Excel vigente en Microsoft 365.</p><a class="source-link" id="openSourceLink" href="#" target="_blank" rel="noopener noreferrer">↗ Abrir archivo en SharePoint</a>
+        </div>
+        <div class="source-meta">
+          <div><span>Hojas</span><strong id="sourceSheet">Contratos + Preparatoria</strong></div>
+          <div><span>Última lectura</span><strong id="lastSync">—</strong></div>
+          <div><span>Modificado M365</span><strong id="fileModified">—</strong></div>
+          <div><span>Acceso</span><strong>Solo lectura</strong></div>
+        </div>
+      </aside>
+    </section>
+
+    <nav class="module-tabs" role="tablist" aria-label="Módulos de seguimiento">
+      <button class="module-tab selected" type="button" id="tabContracts" role="tab" aria-selected="true" aria-controls="contractView"><span class="tab-icon">▦</span><span><strong>Contratos y órdenes adjudicadas</strong><small>Hoja: contratos ordenes adj 2026</small></span><em id="contractTabCount">0</em></button>
+      <button class="module-tab" type="button" id="tabProcesses" role="tab" aria-selected="false" aria-controls="processView"><span class="tab-icon">◷</span><span><strong>Procesos por iniciar</strong><small>Hoja: Detalle procesos prep_prec</small></span><em id="processTabCount">0</em></button>
+    </nav>
+    <div id="contractView" class="contract-view" role="tabpanel" aria-labelledby="tabContracts">
+    <section class="metric-strip" aria-label="Indicadores clave de desempeño">
+      <article class="metric primary"><span>Contratos y órdenes visibles</span><strong id="kpiRecords">0</strong><small id="kpiRecordsSub">de 0 registros cargados</small></article>
+      <article class="metric"><span>Monto visible</span><strong id="kpiAmount">$0,00</strong><small id="kpiAmountSub">Suma contractual filtrada</small></article>
+      <article class="metric"><span>Ticket promedio</span><strong id="kpiAverage">$0,00</strong><small>Promedio por contrato con monto</small></article>
+      <article class="metric"><span>Mediana contractual</span><strong id="kpiMedian">$0,00</strong><small>Valor central de los contratos</small></article>
+      <article class="metric"><span>Proveedores</span><strong id="kpiProviders">0</strong><small>Oferentes contratados distintos</small></article>
+      <article class="metric"><span>Proyectos</span><strong id="kpiProjects">0</strong><small>Proyectos en la consulta actual</small></article>
+      <article class="metric"><span>Concentración Top 5</span><strong id="kpiConcentration">0%</strong><small>Participación de los 5 mayores proveedores</small></article>
+      <article class="metric"><span>Calidad de datos</span><strong id="kpiQuality">100%</strong><small id="kpiQualitySub">Registros sin incidencias básicas</small></article>
+      <article class="metric hidden"><span>Años</span><strong id="kpiYears">0</strong><small id="kpiYearsSub">Cobertura temporal</small></article>
+    </section>
+
+
+    <section class="bi-suite" id="biSuite">
+      <div class="bi-head">
+        <div>
+          <div class="bi-kicker">Business Intelligence · Contratación FIAS</div>
+          <h2>Cuadro de mando ejecutivo e inteligencia contractual</h2>
+          <p>Los indicadores y visualizaciones responden a los filtros activos. Puede pulsar años, proyectos, métodos o tipos de adquisición para profundizar el análisis.</p>
+        </div>
+        <div class="bi-actions">
+          <button class="btn btn-soft" id="biResetBtn" type="button">Restablecer análisis</button>
+          <button class="btn btn-primary" id="reportBtn" type="button">Reporte analítico</button>
+        </div>
+      </div>
+
+      <div class="analytics-strip">
+        <div class="analytics-mini"><span>Proyecto líder</span><strong id="biTopProject">—</strong><small id="biTopProjectSub">Sin datos</small></div>
+        <div class="analytics-mini"><span>Mayor contrato</span><strong id="biLargestAmount">$0,00</strong><small id="biLargestSub">—</small></div>
+        <div class="analytics-mini"><span>Variación último año</span><strong id="biYoY">—</strong><small id="biYoYSub">Monto contractual anual</small></div>
+        <div class="analytics-mini"><span>Índice de concentración</span><strong id="biHHI">—</strong><small id="biHHISub">Participación por proveedor</small></div>
+      </div>
+
+      <div class="bi-grid">
+        <article class="bi-card span-8">
+          <div class="bi-card-head"><div><h3>Evolución anual de contratación</h3><p>Monto contratado y número de registros por año.</p></div><span class="bi-tag">Clic en un año para filtrar</span></div>
+          <div class="bi-chart tall"><canvas id="chartAnnual"></canvas></div>
+        </article>
+        <article class="bi-card span-4">
+          <div class="bi-card-head"><div><h3>Composición por tipo</h3><p>Bienes, servicios, consultoría y demás categorías.</p></div><span class="bi-tag">Interactivo</span></div>
+          <div class="bi-chart tall"><canvas id="chartTypes"></canvas></div>
+        </article>
+
+        <article class="bi-card span-6">
+          <div class="bi-card-head"><div><h3>Proyectos por monto contratado</h3><p>Ranking de los principales proyectos de la consulta.</p></div><span class="bi-tag">Top 10</span></div>
+          <div class="bi-chart"><canvas id="chartProjects"></canvas></div>
+        </article>
+        <article class="bi-card span-6">
+          <div class="bi-card-head"><div><h3>Métodos de contratación</h3><p>Distribución por número de procesos y valor asociado.</p></div><span class="bi-tag">Clic para filtrar</span></div>
+          <div class="bi-chart"><canvas id="chartMethods"></canvas></div>
+        </article>
+
+        <article class="bi-card span-7">
+          <div class="bi-card-head"><div><h3>Concentración de proveedores</h3><p>Proveedores con mayor monto acumulado en la selección actual.</p></div><span class="bi-tag">Top 10</span></div>
+          <div class="bi-chart"><canvas id="chartSuppliers"></canvas></div>
+        </article>
+        <article class="bi-card span-5">
+          <div class="bi-card-head"><div><h3>Distribución de tamaño contractual</h3><p>Segmentación de contratos por rangos de valor.</p></div><span class="bi-tag">Perfil de cartera</span></div>
+          <div class="bi-chart"><canvas id="chartSize"></canvas></div>
+        </article>
+      </div>
+
+      <div class="bi-insights">
+        <div class="insight-narrative">
+          <h3>Lectura ejecutiva automática</h3>
+          <div class="insight-list" id="executiveInsights"><div class="insight-item">Sin información cargada para generar conclusiones.</div></div>
+        </div>
+        <div class="ranking-panel">
+          <div class="ranking-head">Principales proveedores por monto</div>
+          <div class="ranking-list" id="supplierRanking"></div>
+        </div>
+      </div>
+    </section>
+
+
+    <section class="explorer">
+      <aside class="filter-panel">
+        <div class="panel-head"><h2>Refinar consulta</h2><p>Los filtros se combinan entre sí y actúan sobre la base cargada en memoria.</p></div>
+        <div class="filter-body">
+          <div class="field"><label for="yearFilter">Año</label><select id="yearFilter"><option value="">Todos</option></select></div>
+          <div class="field"><label for="projectFilter">Proyecto</label><select id="projectFilter"><option value="">Todos</option></select></div>
+          <div class="field"><label for="unitFilter">Unidad administrativa</label><select id="unitFilter"><option value="">Todas</option></select></div>
+          <div class="field"><label for="methodFilter">Método de contratación</label><select id="methodFilter"><option value="">Todos</option></select></div>
+          <div class="field"><label for="typeFilter">Tipo de adquisición</label><select id="typeFilter"><option value="">Todos</option></select></div>
+           <div class="field"><label for="statusFilter">Estado contractual</label><select id="statusFilter"><option value="">Todos</option></select></div>
+          <div class="field"><label>Rango de monto (USD)</label><div class="amount-grid"><input id="amountMin" type="number" min="0" step="100" placeholder="Mínimo" aria-label="Monto mínimo"><input id="amountMax" type="number" min="0" step="100" placeholder="Máximo" aria-label="Monto máximo"></div></div>
+          <label class="check-row"><input id="qualityOnly" type="checkbox"><span>Mostrar únicamente registros con incidencias básicas de integridad.</span></label>
+        </div>
+        <div class="filter-actions"><button class="btn btn-soft" id="clearBtn" type="button">Limpiar</button><button class="btn btn-outline" id="exportBtn" type="button">Exportar CSV</button></div>
+        <div class="year-brief"><div class="year-brief-title"><strong>Distribución por año</strong><span>clic para filtrar</span></div><div class="year-bars" id="yearBars"></div></div>
+      </aside>
+
+      <div class="results-column">
+        <section class="search-card">
+          <div class="search-row">
+            <div class="field"><label for="searchBox">Búsqueda inteligente</label><div class="search-box"><input id="searchBox" type="search" autocomplete="off" placeholder="Ej.: auditoría, SOFTNESA, REM, 2026, equipos informáticos…"><span class="search-icon">⌕</span></div></div>
+            <div class="field"><label for="sortSelect">Ordenar</label><select id="sortSelect"><option value="date-desc">Más recientes</option><option value="date-asc">Más antiguos</option><option value="amount-desc">Mayor monto</option><option value="amount-asc">Menor monto</option><option value="provider-asc">Proveedor A–Z</option><option value="ref-asc">Año / número</option><option value="relevance">Relevancia</option></select></div>
+            <div class="field page-size-field"><label for="pageSize">Por página</label><select id="pageSize"><option>15</option><option selected>25</option><option>50</option><option>100</option></select></div>
+          </div>
+          <div class="smart-hint"><span id="searchHint">La búsqueda analiza simultáneamente número, proveedor, objeto, proyecto, unidad, método y tipo de adquisición.</span><strong id="activeFilters">Sin filtros adicionales</strong></div>
+        </section>
+
+        <div class="quality-banner" id="qualityBanner"><div class="quality-icon">!</div><div><strong id="qualityTitle">Control de integridad de la fuente</strong><p id="qualityText">—</p></div></div>
+
+        <section class="results-card">
+          <div class="results-head">
+            <div class="result-title"><strong id="resultCount">0 contratos</strong><span id="resultAmount">Monto visible: $0,00</span></div>
+            <div class="result-actions"><button class="btn btn-soft" type="button" onclick="window.print()">Imprimir / PDF</button></div>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table" aria-label="Base contractual FIAS">
+              <thead><tr><th>N.º</th><th>Fecha</th><th>Proyecto</th><th>Método</th><th>Proveedor / RUC</th><th>Objeto contractual</th><th>Estado</th><th style="text-align:right">Monto</th><th></th></tr></thead>
+              <tbody id="tableBody"></tbody>
+            </table>
+          </div>
+          <div class="card-list" id="cardList"></div>
+          <div class="pagination"><div class="page-info" id="pageInfo">—</div><div class="page-controls"><button class="page-btn" id="firstPage" type="button">«</button><button class="page-btn" id="prevPage" type="button">‹</button><button class="page-btn" id="nextPage" type="button">›</button><button class="page-btn" id="lastPage" type="button">»</button></div></div>
+        </section>
+      </div>
+    </section>
+    </div><!-- contractView: indicadores, inteligencia y detalle SOLO de contratos -->
+    <div id="processView" class="hidden" role="tabpanel" aria-labelledby="tabProcesses">
+      <section class="process-banner"><div><span class="eyebrow">Gestión preparatoria · Cartera independiente</span><h2>Procesos por iniciar</h2><p>Seguimiento previo a la adjudicación. El presupuesto referencial <strong>no se suma</strong> al monto contractual y no se consideran adjudicaciones estos procesos.</p></div><span class="process-pill">PRECONTRACTUAL</span></section>
+      <section class="process-kpis" aria-label="Indicadores de procesos preparatorios">
+        <div class="metric primary"><span>Registros de procesos</span><strong id="pKpiCount">0</strong><small id="pKpiTotal">De 0 en la hoja</small></div>
+        <div class="metric"><span>Presupuesto cuantificable</span><strong id="pKpiBudget">$0,00</strong><small>Solo importes numéricos explícitos</small></div>
+        <div class="metric"><span>En preparatoria</span><strong id="pKpiPreparing">0</strong><small>Estado registrado como preparatoria</small></div>
+        <div class="metric"><span>Estados diferentes</span><strong id="pKpiStatuses">0</strong><small>Según la columna Estado</small></div>
+        <div class="metric"><span>Registros por revisar</span><strong id="pKpiIssues">0</strong><small>Posibles anomalías de la hoja</small></div>
+      </section>
+      <div class="process-dashboard">
+        <article class="process-chart-card"><div class="panel-head"><h2>Distribución por estado</h2><p>Clasificación literal según la información registrada.</p></div><div id="pStatusDistribution" class="process-chart-body"></div></article>
+        <article class="process-chart-card"><div class="panel-head"><h2>Composición por adquisición</h2><p>Recuento de procesos, sin combinar montos contractuales.</p></div><div id="pTypeDistribution" class="process-chart-body"></div></article>
+      </div>
+      <section class="process-controls"><div class="process-control-grid">
+        <div class="field process-search"><label for="pSearch">Buscar en procesos por iniciar</label><input id="pSearch" type="search" autocomplete="off" placeholder="Objeto, unidad, proyecto, observaciones…"></div>
+        <div class="field"><label for="pState">Estado</label><select id="pState"><option value="">Todos los estados</option></select></div>
+        <div class="field"><label for="pMethod">Método</label><select id="pMethod"><option value="">Todos los métodos</option></select></div>
+        <div class="field"><label for="pType">Tipo</label><select id="pType"><option value="">Todos los tipos</option></select></div>
+        <div class="field"><label for="pProject">Proyecto</label><select id="pProject"><option value="">Todos los proyectos</option></select></div>
+        <div class="field"><label for="pSort">Ordenar</label><select id="pSort"><option value="source">Orden del Excel</option><option value="budget-desc">Mayor presupuesto</option><option value="budget-asc">Menor presupuesto</option><option value="state">Estado A–Z</option></select></div>
+      </div><div class="process-control-actions"><button class="btn btn-soft" id="pClear" type="button">Limpiar filtros</button><button class="btn btn-outline" id="pExport" type="button">Exportar procesos CSV</button></div></section>
+      <div class="process-alert hidden" id="pQualityAlert" role="status"></div>
+      <section class="results-card"><div class="results-head"><div class="result-title"><strong id="pResultCount">0 procesos</strong><span id="pResultSub">Solo datos de la hoja preparatoria</span></div><span class="bi-tag">Base separada de contratos</span></div>
+        <div class="table-wrap p-table-wrap"><table class="data-table process-table" aria-label="Procesos por iniciar FIAS"><thead><tr><th>N.º</th><th>Proyecto</th><th>Método</th><th>Tipo</th><th>Objeto del proceso</th><th>Presupuesto referencial</th><th>Estado</th><th></th></tr></thead><tbody id="pTableBody"></tbody></table></div>
+        <div class="card-list" id="pCardList"></div>
+        <div class="pagination"><div class="page-info" id="pPageInfo">—</div><div class="page-controls"><button class="page-btn" id="pFirst" type="button">«</button><button class="page-btn" id="pPrev" type="button">‹</button><button class="page-btn" id="pNext" type="button">›</button><button class="page-btn" id="pLast" type="button">»</button></div></div>
+      </section>
+    </div><!-- processView: completamente independiente de contratos -->
+    <div class="footer" id="footer">Fondo de Inversión Ambiental Sostenible · Portal de consulta institucional de solo lectura · Desarrollado por: <a class="author-link" href="https://www.linkedin.com/in/jair-cruz-gallegos-65998776/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn de Jair Cruz">Jair Cruz ↗</a></div>
+  </main>
+</div>
+
+<div class="drawer" id="detailDrawer" aria-hidden="true">
+  <div class="drawer-panel" role="dialog" aria-modal="true" aria-labelledby="drawerTitle">
+    <div class="drawer-head"><div><div class="drawer-kicker">Ficha contractual</div><h2 id="drawerTitle">Detalle del contrato</h2></div><button class="close-btn" id="closeDrawer" type="button" aria-label="Cerrar">×</button></div>
+    <div class="drawer-body" id="drawerBody"></div>
+    <div class="drawer-foot"><small>Información de consulta institucional en modo de solo lectura.</small></div>
+  </div>
+</div>
+
+
+<div class="report-modal" id="reportModal" aria-hidden="true">
+  <div class="report-dialog" role="dialog" aria-modal="true" aria-labelledby="reportTitle">
+    <div class="report-head">
+      <div><div class="drawer-kicker">Inteligencia contractual</div><h2 id="reportTitle">Reporte analítico ejecutivo</h2></div>
+      <div class="report-actions">
+        <button class="btn btn-primary" id="printReportBtn" type="button">Imprimir / PDF</button>
+        <button class="btn btn-outline" id="closeReportBtn" type="button">Cerrar</button>
+      </div>
+    </div>
+    <div class="report-body" id="reportBody"></div>
+  </div>
+</div>
+
+
+<script src="https://alcdn.msauth.net/browser/2.32.0/js/msal-browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<script>
+(() => {
+'use strict';
+
+const CONFIG = {
+  tenantId: '5e23e4af-237d-4d97-bf6e-dca808015787',
+  clientId: 'c8a828c1-3a20-4876-96af-b4f30ce4abeb',
+  shareUrl: 'https://fiasec-my.sharepoint.com/:x:/g/personal/anunez_fias_org_ec/IQBsxIqVKwywSoldJB04zry2AU570lVNfSoVJ1dMb2nIEcw?e=V14SXA',
+  preferredSheet: 'contratos ordenes adj 2026',
+  processesSheet: 'Detalle procesos prep_prec',
+  scopes: ['Files.Read'],
+  autoRefreshMinutes: 60
+};
+
+const state = {
+  msal: null,
+  account: null,
+  token: '',
+  driveItem: null,
+  records: [],
+  filtered: [],
+  processes: [],
+  processFiltered: [],
+  processPage: 1,
+  activeTab: 'contracts',
+  page: 1,
+  syncing: false,
+  lastSync: null,
+  refreshTimer: null,
+  sourceSheet: CONFIG.preferredSheet,
+  sourceProcessSheet: CONFIG.processesSheet,
+  sourceKind: 'Microsoft 365',
+  searchCache: new Map(),
+  charts: {}
+};
+
+const $ = id => document.getElementById(id);
+const money = new Intl.NumberFormat('es-EC',{style:'currency',currency:'USD',minimumFractionDigits:2,maximumFractionDigits:2});
+const integer = new Intl.NumberFormat('es-EC');
+const dateFmt = new Intl.DateTimeFormat('es-EC',{day:'2-digit',month:'short',year:'numeric'});
+const safe = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+const norm = v => String(v ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/\s+/g,' ').trim();
+const compactKey = v => norm(v).replace(/[^a-z0-9]/g,'');
+const has = v => v !== null && v !== undefined && String(v).trim() !== '';
+const toNumber = v => {
+  if(v === null || v === undefined || v === '') return null;
+  if(typeof v === 'number') return Number.isFinite(v) ? v : null;
+  let s = String(v).trim().replace(/[^\d,.-]/g,'');
+  if(!s) return null;
+  if(s.includes(',') && s.includes('.')) s = s.replace(/\./g,'').replace(',','.');
+  else if(s.includes(',')) s = s.replace(',','.');
+  const n = Number(s); return Number.isFinite(n) ? n : null;
+};
+const displayMoney = v => has(v) && Number.isFinite(Number(v)) ? money.format(Number(v)) : 'No registrado';
+
+function excelDate(value){
+  if(!has(value)) return '';
+  if(value instanceof Date && !Number.isNaN(value.getTime())) return value.toISOString().slice(0,10);
+  if(typeof value === 'number'){
+    if(window.XLSX && XLSX.SSF){
+      const d = XLSX.SSF.parse_date_code(value);
+      if(d) return `${String(d.y).padStart(4,'0')}-${String(d.m).padStart(2,'0')}-${String(d.d).padStart(2,'0')}`;
+    }
+  }
+  const text = String(value).trim();
+  let m = text.match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})/);
+  if(m) return `${m[1]}-${String(m[2]).padStart(2,'0')}-${String(m[3]).padStart(2,'0')}`;
+  m = text.match(/^(\d{1,2})[-/](\d{1,2})[-/](\d{4})/);
+  if(m) return `${m[3]}-${String(m[2]).padStart(2,'0')}-${String(m[1]).padStart(2,'0')}`;
+  return text;
+}
+function displayDate(value){
+  if(!value) return '—';
+  const d = new Date(`${value}T00:00:00`);
+  return Number.isNaN(d.getTime()) ? value : dateFmt.format(d);
+}
+function toast(title,body='',type='ok'){
+  const n = document.createElement('div'); n.className = `toast ${type==='warn'?'warn':type==='bad'?'bad':''}`;
+  n.innerHTML = `<strong>${safe(title)}</strong><p>${safe(body)}</p>`; $('toastZone').appendChild(n); setTimeout(()=>n.remove(),6000);
+}
+function setLoading(open,text='Procesando…'){$('loadingText').textContent=text;$('loading').classList.toggle('open',!!open)}
+function debounce(fn,wait=170){let t;return(...args)=>{clearTimeout(t);t=setTimeout(()=>fn(...args),wait)}}
+function shareId(url){
+  const utf8 = unescape(encodeURIComponent(String(url)));
+  return 'u!' + btoa(utf8).replace(/=+$/,'').replace(/\+/g,'-').replace(/\//g,'_');
+}
+function currentRedirectUri(){
+  if(location.protocol === 'file:') return '';
+  return location.origin + location.pathname;
+}
+
+async function setupMsal(){
+  if(!window.msal) throw new Error('No se pudo cargar la librería de autenticación Microsoft.');
+  const redirectUri = currentRedirectUri();
+  if(!redirectUri) throw new Error('La autenticación Microsoft requiere publicar el HTML en una dirección HTTPS o ejecutar un servidor local autorizado; no funciona desde file://.');
+  state.msal = new msal.PublicClientApplication({
+    auth:{clientId:CONFIG.clientId,authority:`https://login.microsoftonline.com/${CONFIG.tenantId}`,redirectUri},
+    cache:{cacheLocation:'sessionStorage',storeAuthStateInCookie:false}
+  });
+  if(typeof state.msal.initialize === 'function') await state.msal.initialize();
+  const accounts = state.msal.getAllAccounts();
+  if(accounts.length) state.account = accounts[0];
+  updateAuthUi();
+}
+async function acquireToken(){
+  if(!state.account) throw new Error('No existe una cuenta institucional autenticada.');
+  try{
+    const r = await state.msal.acquireTokenSilent({scopes:CONFIG.scopes,account:state.account});
+    state.account = r.account || state.account; state.token = r.accessToken; return state.token;
+  }catch(err){
+    if(window.msal && err instanceof msal.InteractionRequiredAuthError){
+      const r = await state.msal.acquireTokenPopup({scopes:CONFIG.scopes,account:state.account});
+      state.account = r.account || state.account; state.token = r.accessToken; return state.token;
+    }
+    throw err;
+  }
+}
+async function login(){
+  setLoading(true,'Autenticando con Microsoft 365…');
+  try{
+    if(!state.msal) await setupMsal();
+    const r = await state.msal.loginPopup({scopes:CONFIG.scopes,prompt:'select_account'});
+    state.account = r.account; state.token = r.accessToken || ''; updateAuthUi(); await syncExcel(true);
+  }catch(err){toast('No fue posible iniciar sesión',friendlyError(err),'bad')}
+  finally{setLoading(false)}
+}
+async function logout(){
+  clearInterval(state.refreshTimer); state.refreshTimer=null;
+  const account=state.account;
+  state.records=[];state.filtered=[];state.processes=[];state.processFiltered=[];state.driveItem=null;state.token='';state.account=null;state.searchCache.clear();Object.keys(state.charts).forEach(destroyChart);renderAll();updateAuthUi();
+  try{ if(state.msal && account) await state.msal.logoutPopup({account,postLogoutRedirectUri:currentRedirectUri(),mainWindowRedirectUri:currentRedirectUri()}); }
+  catch(err){toast('Sesión local cerrada','Microsoft mantuvo la cuenta en el navegador; puede cerrar la pestaña si lo requiere.','warn')}
+}
+function updateAuthUi(){
+  const logged=!!state.account;
+  $('authGate').classList.toggle('hidden',logged);$('portal').classList.toggle('hidden',!logged);
+  if(logged){$('sessionText').textContent=state.account.username||state.account.name||'Sesión institucional';}
+}
+
+async function graphFetch(path,options={},expectJson=false){
+  const token = await acquireToken();
+  const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),45000);
+  try{
+    const headers=Object.assign({Authorization:`Bearer ${token}`},options.headers||{});
+    const res=await fetch(`https://graph.microsoft.com/v1.0${path}`,Object.assign({},options,{headers,signal:controller.signal,cache:'no-store'}));
+    if(!res.ok){const text=await res.text().catch(()=>res.statusText);throw new Error(`Microsoft Graph ${res.status}: ${text}`)}
+    return expectJson ? await res.json() : res;
+  }catch(err){if(err && err.name==='AbortError')throw new Error('Tiempo de espera agotado al consultar Microsoft 365.');throw err}
+  finally{clearTimeout(timer)}
+}
+async function resolveDriveItem(){
+  const token=shareId(CONFIG.shareUrl);
+  const item=await graphFetch(`/shares/${token}/driveItem?$select=id,name,size,lastModifiedDateTime,webUrl,parentReference`,{},true);
+  if(!item || !item.id) throw new Error('No se pudo resolver el Excel desde el nuevo enlace de SharePoint.');
+  state.driveItem=item; return item;
+}
+async function downloadExcel(){
+  const token=shareId(CONFIG.shareUrl);
+  const res=await graphFetch(`/shares/${token}/driveItem/content`,{method:'GET'},false);
+  const buffer=await res.arrayBuffer();
+  if(buffer.byteLength < 1000) throw new Error('Microsoft 365 devolvió un archivo vacío o incompleto.');
+  return buffer;
+}
+
+function locateSheet(workbook,name){
+  const matched=workbook.SheetNames.find(n=>compactKey(n)===compactKey(name));
+  if(!matched) throw new Error(`La hoja obligatoria «${name}» no está en el archivo de SharePoint. Hojas presentes: ${workbook.SheetNames.join(', ')}`);
+  return matched;
+}
+function sheetContent(workbook,name,required){
+  const actual=locateSheet(workbook,name);
+  const matrix=XLSX.utils.sheet_to_json(workbook.Sheets[actual],{header:1,defval:'',raw:true,blankrows:true});
+  const headerIndex=matrix.findIndex(row=>{
+    const keys=(row||[]).map(compactKey);
+    return required.every(k=>keys.includes(compactKey(k)));
+  });
+  if(headerIndex<0) throw new Error(`Encabezados incompletos en «${actual}». Esperados: ${required.join(', ')}.`);
+  const headers=(matrix[headerIndex]||[]).map(x=>String(x??'').trim());
+  const map=new Map();headers.forEach((h,i)=>{if(h)map.set(compactKey(h),i)});
+  return {sheet:actual,rows:matrix.slice(headerIndex+1).map((row,i)=>({row,sourceRow:headerIndex+i+2})).filter(x=>Array.isArray(x.row)&&x.row.some(has)),map,worksheet:workbook.Sheets[actual]};
+}
+function valueAt(row,map,aliases){
+  for(const a of aliases){const idx=map.get(compactKey(a));if(idx!==undefined)return row[idx]??''}return '';
+}
+function field(row,map,...aliases){return String(valueAt(row,map,aliases)??'').trim()}
+function strictBudget(value){
+  if(typeof value==='number')return Number.isFinite(value)?value:null;
+  const t=String(value??'').trim();
+  if(!t || !/^(?:USD\s*)?\$?\s*[+-]?[\d.,\s]+$/.test(t))return null;
+  return toNumber(t);
+}
+function sheetHyperlink(worksheet,rowOneBased,colZeroBased){
+  const a=XLSX.utils.encode_cell({r:rowOneBased-1,c:colZeroBased});
+  const link=worksheet[a]?.l?.Target || worksheet[a]?.l?.target || '';
+  return /^https:\/\//i.test(link)?link:'';
+}
+function parseContractRows(info){
+  const records=[];
+  for(const {row,sourceRow} of info.rows){
+    const yearValue=toNumber(valueAt(row,info.map,['Año','Ano']));
+    const nro=field(row,info.map,'Nro.','Nro','Número');
+    const objeto=field(row,info.map,'Objeto del Contrato');
+    const proyecto=field(row,info.map,'Proyecto');
+    if(!nro && !objeto && !proyecto)continue;
+    const rucIdx=info.map.get(compactKey('RUC'));
+    const rucCell=rucIdx===undefined?null:info.worksheet[XLSX.utils.encode_cell({r:sourceRow-1,c:rucIdx})];
+    const ruc=String(rucCell?.w??rucCell?.v??valueAt(row,info.map,['RUC'])??'').trim();
+    const linkIndex=info.map.get(compactKey('Link procesos'));
+    const rec={
+      id:`contract-row-${sourceRow}`,sourceRow,anio:yearValue?Math.trunc(yearValue):null,
+      fecha:excelDate(valueAt(row,info.map,['Fecha'])),nro,
+      secuencial:field(row,info.map,'No.','No'),
+      unidad:field(row,info.map,'Unidad Administrativa'),proyecto,
+      metodo:field(row,info.map,'Método de Contratación'),
+      tipo:field(row,info.map,'Tipo de Adquisición'),
+      ruc,proveedor:field(row,info.map,'Oferente Contratado'),objeto,
+      monto:toNumber(valueAt(row,info.map,['Monto'])),
+      unidades:toNumber(valueAt(row,info.map,['Unidades'])),
+      estado:field(row,info.map,'Estado'),
+      observaciones:field(row,info.map,'Observaciones'),
+      linkProceso:field(row,info.map,'Link procesos'),
+      linkHref:linkIndex===undefined?'':sheetHyperlink(info.worksheet,sourceRow,linkIndex)
+    };
+    rec.issueMissingAmount=rec.monto===null;
+    rec.issueMissingCore=!rec.anio||!rec.nro||!rec.proyecto||!rec.proveedor||!rec.objeto;
+    records.push(rec);
+  }
+  const keys=new Map();
+  records.forEach(r=>{if(r.anio&&r.nro){const k=`${r.anio}|${norm(r.nro)}`;keys.set(k,(keys.get(k)||0)+1)}});
+  records.forEach(r=>{const k=r.anio&&r.nro?`${r.anio}|${norm(r.nro)}`:'';r.issueDuplicate=!!k&&keys.get(k)>1;r.hasIssue=r.issueMissingAmount||r.issueMissingCore||r.issueDuplicate});
+  return records;
+}
+function parseProcessRows(info){
+  const records=[];
+  for(const {row,sourceRow} of info.rows){
+    const objeto=field(row,info.map,'Objeto del Proceso');
+    const nro=field(row,info.map,'No.','No');
+    if(!objeto && !nro)continue;
+    const rawBudget=valueAt(row,info.map,['Presupuesto Referencial']);
+    const estado=field(row,info.map,'Estado');
+    const r={
+      id:`process-row-${sourceRow}`,sourceRow,nro,anio:toNumber(valueAt(row,info.map,['Año','Ano'])),
+      unidad:field(row,info.map,'Unidad Administrativa'),proyecto:field(row,info.map,'Proyecto'),
+      metodo:field(row,info.map,'Método de Contratación'),tipo:field(row,info.map,'Tipo de Adquisición'),
+      objeto, presupuestoTexto:String(rawBudget??'').trim(),presupuestoValor:strictBudget(rawBudget),
+      estado,observaciones:field(row,info.map,'Observaciones')
+    };
+    r.issueUnnumbered=!r.nro;
+    r.issueNumericState=!!estado && /^\s*\$?\s*[\d.,]+\s*$/.test(estado);
+    r.hasIssue=r.issueUnnumbered||r.issueNumericState||!r.objeto;
+    records.push(r);
+  }
+  return records;
+}
+function parseWorkbook(buffer){
+  if(!window.XLSX)throw new Error('No está disponible la biblioteca para leer Excel.');
+  const wb=XLSX.read(buffer,{type:'array',raw:true,cellDates:false});
+  const ci=sheetContent(wb,CONFIG.preferredSheet,['Año','Fecha','Nro.','Proyecto','Objeto del Contrato','Monto']);
+  const pi=sheetContent(wb,CONFIG.processesSheet,['Año','Proyecto','Objeto del Proceso','Presupuesto Referencial','Estado']);
+  return {contracts:parseContractRows(ci),processes:parseProcessRows(pi),contractSheet:ci.sheet,processSheet:pi.sheet};
+}
+
+async function syncExcel(notify=true){
+  if(!state.account){updateAuthUi();return}
+  if(state.syncing){toast('Actualización en curso','La base contractual ya se está leyendo desde Microsoft 365.','warn');return}
+  state.syncing=true;$('syncBtn').disabled=true;setLoading(true,'Leyendo las dos hojas de SharePoint de forma independiente…');
+  try{
+    const item=await resolveDriveItem();
+    const buffer=await downloadExcel();
+    const parsed=parseWorkbook(buffer);
+    state.records=parsed.contracts;state.processes=parsed.processes;
+    state.sourceSheet=parsed.contractSheet;state.sourceProcessSheet=parsed.processSheet;
+    state.searchCache.clear();state.page=1;state.processPage=1;state.lastSync=new Date();
+    state.sourceKind='Microsoft 365';updateSourceUi(true);populateFilters();populateProcessFilters();renderAll();scheduleAutoRefresh();
+    if(notify)toast('Hojas actualizadas',`${integer.format(state.records.length)} contratos y ${integer.format(state.processes.length)} procesos cargados sin combinarse desde ${item.name}.`);
+  }catch(err){updateSourceUi(false,err);toast('No se pudo leer el Excel',friendlyError(err),'bad')}
+  finally{state.syncing=false;$('syncBtn').disabled=false;setLoading(false)}
+}
+function scheduleAutoRefresh(){
+  clearInterval(state.refreshTimer);
+  if(CONFIG.autoRefreshMinutes>0) state.refreshTimer=setInterval(()=>{if(state.account&&!document.hidden&&!state.syncing)syncExcel(false)},CONFIG.autoRefreshMinutes*60*1000);
+}
+function updateSourceUi(ok,error=null){
+  const s=$('sourceState');s.className='source-state '+(ok?'ok':error?'bad':'');s.textContent=ok?'Conectado':error?'Error':'Conectando';
+  $('sourceFileName').textContent=state.driveItem?.name||'Archivo de contratos FIAS';$('sourceSheet').textContent='2 bases independientes';
+  $('lastSync').textContent=state.lastSync?state.lastSync.toLocaleString('es-EC'):'—';
+  $('fileModified').textContent=state.driveItem?.lastModifiedDateTime?new Date(state.driveItem.lastModifiedDateTime).toLocaleString('es-EC'):'—';
+  $('sourceDetail').textContent=ok?`${integer.format(state.records.length)} contratos (${state.sourceSheet}) y ${integer.format(state.processes.length)} procesos (${state.sourceProcessSheet}), sin sumar ni mezclar. Actualización automática cada ${CONFIG.autoRefreshMinutes} min mientras el portal esté abierto.`:error?friendlyError(error):'Dos hojas específicas consultadas en SharePoint.';
+  $('openSourceLink').href=CONFIG.shareUrl;
+}
+function friendlyError(err){
+  const msg=String(err&&err.message?err.message:err);
+  if(/AADSTS|consent|permission/i.test(msg)) return 'La cuenta o la aplicación no tiene todavía el permiso Files.Read necesario para este archivo.';
+  if(/403|accessDenied|forbidden/i.test(msg)) return 'Microsoft 365 denegó el acceso. Verifique que el usuario disponga de permisos sobre el Excel compartido por SharePoint.';
+  if(/404|itemNotFound/i.test(msg)) return 'No se encontró el archivo compartido o el enlace dejó de ser válido.';
+  if(/file:\/\//i.test(msg)) return msg;
+  return msg.length>420?msg.slice(0,420)+'…':msg;
+}
+
+function uniq(field){return [...new Set(state.records.map(r=>r[field]).filter(has))].sort((a,b)=>String(a).localeCompare(String(b),'es',{numeric:true,sensitivity:'base'}))}
+function uniqNormalized(field){const map=new Map();state.records.forEach(r=>{if(!has(r[field]))return;const key=norm(r[field]);if(key&&!map.has(key))map.set(key,String(r[field]).trim())});return [...map.values()].sort((a,b)=>a.localeCompare(b,'es',{numeric:true,sensitivity:'base'}))}
+function fillSelect(id,values,label){const n=$(id);const current=n.value;n.innerHTML=`<option value="">${safe(label)}</option>`+values.map(v=>`<option value="${safe(v)}">${safe(v)}</option>`).join('');if([...n.options].some(o=>o.value===current))n.value=current}
+function populateFilters(){fillSelect('yearFilter',uniq('anio').map(String),'Todos los años');fillSelect('projectFilter',uniq('proyecto'),'Todos los proyectos');fillSelect('unitFilter',uniq('unidad'),'Todas las unidades');fillSelect('methodFilter',uniqNormalized('metodo'),'Todos los métodos');fillSelect('typeFilter',uniqNormalized('tipo'),'Todos los tipos');fillSelect('statusFilter',uniqNormalized('estado'),'Todos los estados')}
+function searchBlob(r){if(state.searchCache.has(r.id))return state.searchCache.get(r.id);const blob=norm([r.anio,r.nro,r.fecha,r.unidad,r.proyecto,r.metodo,r.tipo,r.proveedor,r.objeto,r.monto,r.unidades,r.estado,r.ruc,r.linkProceso,r.observaciones].join(' '));state.searchCache.set(r.id,blob);return blob}
+function relevance(r,query){
+  const q=norm(query);if(!q)return 0;const terms=q.split(' ').filter(Boolean);const blob=searchBlob(r);if(!terms.every(t=>blob.includes(t)))return -1;
+  let score=0;const p=norm(r.proveedor),o=norm(r.objeto),pr=norm(r.proyecto),u=norm(r.unidad),m=norm(r.metodo),ty=norm(r.tipo),nr=norm(r.nro);
+  terms.forEach(t=>{if(nr===t)score+=50;if(pr===t)score+=22;if(p.startsWith(t))score+=15;if(p.includes(t))score+=8;if(o.includes(t))score+=7;if(u.includes(t))score+=5;if(m.includes(t)||ty.includes(t))score+=4});
+  if(p.includes(q))score+=18;if(o.includes(q))score+=12;return score;
+}
+function activeFilterData(){return{year:$('yearFilter').value,project:$('projectFilter').value,unit:$('unitFilter').value,method:$('methodFilter').value,type:$('typeFilter').value,status:$('statusFilter').value,min:toNumber($('amountMin').value),max:toNumber($('amountMax').value),quality:$('qualityOnly').checked,q:$('searchBox').value}}
+function filterRecords(){
+  const f=activeFilterData();const scored=[];
+  state.records.forEach(r=>{
+    if(f.year&&String(r.anio)!==f.year)return;if(f.project&&r.proyecto!==f.project)return;if(f.unit&&r.unidad!==f.unit)return;if(f.method&&norm(r.metodo)!==norm(f.method))return;if(f.type&&norm(r.tipo)!==norm(f.type))return;if(f.status&&norm(r.estado)!==norm(f.status))return;
+    if(f.min!==null&&(r.monto===null||r.monto<f.min))return;if(f.max!==null&&(r.monto===null||r.monto>f.max))return;if(f.quality&&!r.hasIssue)return;
+    const score=relevance(r,f.q);if(score<0)return;scored.push({r,score});
+  });
+  const mode=$('sortSelect').value;const dateVal=r=>r.fecha?Date.parse(`${r.fecha}T00:00:00`):0;const amountVal=r=>r.monto===null?-Infinity:Number(r.monto)||0;
+  scored.sort((a,b)=>{
+    if(mode==='relevance'&&norm(f.q))return b.score-a.score||dateVal(b.r)-dateVal(a.r);
+    if(mode==='date-asc')return dateVal(a.r)-dateVal(b.r)||Number(a.r.nro||0)-Number(b.r.nro||0);
+    if(mode==='amount-desc')return amountVal(b.r)-amountVal(a.r);
+    if(mode==='amount-asc'){const av=amountVal(a.r),bv=amountVal(b.r);if(av===-Infinity)return 1;if(bv===-Infinity)return-1;return av-bv}
+    if(mode==='provider-asc')return a.r.proveedor.localeCompare(b.r.proveedor,'es',{sensitivity:'base'});
+    if(mode==='ref-asc')return Number(a.r.anio||0)-Number(b.r.anio||0)||Number(a.r.nro||0)-Number(b.r.nro||0);
+    return dateVal(b.r)-dateVal(a.r)||Number(b.r.anio||0)-Number(a.r.anio||0)||Number(b.r.nro||0)-Number(a.r.nro||0);
+  });
+  state.filtered=scored.map(x=>x.r);
+}
+function median(values){if(!values.length)return 0;const a=[...values].sort((x,y)=>x-y),m=Math.floor(a.length/2);return a.length%2?a[m]:(a[m-1]+a[m])/2}
+function aggregate(rows,field){
+  const map=new Map();
+  rows.forEach(r=>{
+    const raw=r[field];if(!has(raw))return;
+    const key=norm(raw);if(!key)return;
+    if(!map.has(key))map.set(key,{key,label:String(raw).trim(),count:0,amount:0,missingAmount:0});
+    const g=map.get(key);g.count+=1;if(r.monto===null)g.missingAmount+=1;else g.amount+=Number(r.monto)||0;
+  });
+  return [...map.values()];
+}
+function providerStats(rows){
+  const groups=aggregate(rows,'proveedor').sort((a,b)=>b.amount-a.amount||b.count-a.count);
+  const total=groups.reduce((s,g)=>s+g.amount,0);
+  const top5=groups.slice(0,5).reduce((s,g)=>s+g.amount,0);
+  const hhi=total?groups.reduce((s,g)=>{const share=g.amount/total;return s+(share*share*10000)},0):0;
+  return{groups,total,top5Share:total?top5/total*100:0,hhi};
+}
+function summary(rows){
+  const amounts=rows.map(r=>r.monto).filter(v=>v!==null&&Number.isFinite(Number(v))).map(Number);
+  const amount=amounts.reduce((s,v)=>s+v,0);
+  const p=providerStats(rows);
+  const issues=rows.filter(r=>r.hasIssue).length;
+  return{
+    count:rows.length,amount,average:amounts.length?amount/amounts.length:0,median:median(amounts),
+    providers:p.groups.length,projects:new Set(rows.map(r=>norm(r.proyecto)).filter(Boolean)).size,
+    years:[...new Set(rows.map(r=>r.anio).filter(Boolean))].sort((a,b)=>a-b),
+    top5Share:p.top5Share,hhi:p.hhi,issues,quality:rows.length?Math.max(0,(rows.length-issues)/rows.length*100):100
+  };
+}
+function renderKpis(){
+  const s=summary(state.filtered);
+  $('kpiRecords').textContent=integer.format(s.count);$('kpiRecordsSub').textContent=`de ${integer.format(state.records.length)} registros cargados`;
+  $('kpiAmount').textContent=money.format(s.amount);$('kpiAverage').textContent=money.format(s.average);$('kpiMedian').textContent=money.format(s.median);
+  $('kpiProviders').textContent=integer.format(s.providers);$('kpiProjects').textContent=integer.format(s.projects);
+  $('kpiConcentration').textContent=`${s.top5Share.toFixed(1)}%`;
+  $('kpiQuality').textContent=`${s.quality.toFixed(1)}%`;$('kpiQualitySub').textContent=s.issues?`${integer.format(s.issues)} registros visibles con incidencias básicas`:'Sin incidencias básicas en la selección';
+  $('kpiYears').textContent=integer.format(s.years.length);$('kpiYearsSub').textContent=s.years.length?`${s.years[0]} – ${s.years[s.years.length-1]}`:'Sin información';
+  $('resultCount').textContent=`${integer.format(s.count)} ${s.count===1?'contrato':'contratos'}`;$('resultAmount').textContent=`Monto visible: ${money.format(s.amount)}`;
+}
+
+function groupSorted(rows,field,metric='amount',limit=10){
+  const arr=aggregate(rows,field);
+  arr.sort((a,b)=>metric==='count'?(b.count-a.count||b.amount-a.amount):(b.amount-a.amount||b.count-a.count));
+  return limit?arr.slice(0,limit):arr;
+}
+function yearStats(rows){
+  const m=new Map();
+  rows.forEach(r=>{if(!r.anio)return;const y=String(r.anio);if(!m.has(y))m.set(y,{year:Number(r.anio),count:0,amount:0});const g=m.get(y);g.count++;if(r.monto!==null)g.amount+=Number(r.monto)||0});
+  return [...m.values()].sort((a,b)=>a.year-b.year);
+}
+function sizeBuckets(rows){
+  const defs=[
+    {label:'< $1 mil',min:0,max:1000},{label:'$1–5 mil',min:1000,max:5000},{label:'$5–20 mil',min:5000,max:20000},
+    {label:'$20–50 mil',min:20000,max:50000},{label:'$50–100 mil',min:50000,max:100000},{label:'> $100 mil',min:100000,max:Infinity}
+  ];
+  return defs.map(d=>({...d,count:rows.filter(r=>r.monto!==null&&Number(r.monto)>=d.min&&Number(r.monto)<d.max).length,amount:rows.filter(r=>r.monto!==null&&Number(r.monto)>=d.min&&Number(r.monto)<d.max).reduce((s,r)=>s+Number(r.monto||0),0)}));
+}
+function destroyChart(id){if(state.charts[id]){state.charts[id].destroy();delete state.charts[id]}}
+function moneyShort(v){
+  const n=Number(v)||0;const a=Math.abs(n);
+  if(a>=1e6)return `$${(n/1e6).toFixed(a>=1e7?1:2)} M`;
+  if(a>=1e3)return `$${(n/1e3).toFixed(a>=1e5?0:1)} mil`;
+  return money.format(n);
+}
+function chartCommon(extra={}){
+  return Object.assign({
+    responsive:true,maintainAspectRatio:false,animation:{duration:260},
+    plugins:{legend:{labels:{boxWidth:10,boxHeight:10,usePointStyle:true,font:{size:10}}},tooltip:{padding:10,titleFont:{size:11},bodyFont:{size:10}}},
+    scales:{x:{grid:{color:'rgba(70,90,82,.06)'},ticks:{font:{size:9},color:'#68756f'}},y:{grid:{color:'rgba(70,90,82,.06)'},ticks:{font:{size:9},color:'#68756f'}}}
+  },extra);
+}
+function applyChartFilter(field,value){
+  if(!has(value))return;
+  const map={anio:'yearFilter',proyecto:'projectFilter',metodo:'methodFilter',tipo:'typeFilter',unidad:'unitFilter'};
+  const id=map[field];
+  if(id){
+    const select=$(id);const exact=[...select.options].find(o=>o.value===String(value))||[...select.options].find(o=>norm(o.value)===norm(value));
+    if(exact){select.value=exact.value;state.page=1;renderAll();return}
+  }
+  if(field==='proveedor'){$('searchBox').value=String(value);$('sortSelect').value='relevance';state.page=1;renderAll()}
+}
+function renderBiMini(rows){
+  const projects=groupSorted(rows,'proyecto','amount',1),largest=rows.filter(r=>r.monto!==null).sort((a,b)=>Number(b.monto)-Number(a.monto))[0];
+  const ys=yearStats(rows),s=summary(rows);
+  $('biTopProject').textContent=projects[0]?.label||'—';$('biTopProjectSub').textContent=projects[0]?`${moneyShort(projects[0].amount)} · ${integer.format(projects[0].count)} contratos`:'Sin datos';
+  $('biLargestAmount').textContent=largest?money.format(largest.monto):money.format(0);$('biLargestSub').textContent=largest?`${largest.proyecto||'Sin proyecto'} · N.º ${largest.nro||'—'} / ${largest.anio||'—'}`:'Sin datos';
+  if(ys.length>=2){
+    const a=ys[ys.length-2],b=ys[ys.length-1],pct=a.amount?((b.amount-a.amount)/a.amount*100):null;
+    $('biYoY').textContent=pct===null?'N/D':`${pct>=0?'+':''}${pct.toFixed(1)}%`;$('biYoYSub').textContent=`${b.year} vs. ${a.year} · variación nominal`;
+  }else{$('biYoY').textContent='N/D';$('biYoYSub').textContent='Se requieren al menos dos años visibles'}
+  $('biHHI').textContent=s.hhi?integer.format(Math.round(s.hhi)):'0';$('biHHISub').textContent=`Escala 0–10.000 · Top 5: ${s.top5Share.toFixed(1)}%`;
+}
+function renderSupplierRanking(rows){
+  const top=providerStats(rows).groups.slice(0,5);
+  $('supplierRanking').innerHTML=top.length?top.map((g,i)=>`<button class="ranking-row" type="button" data-supplier-rank="${safe(g.label)}" style="border:0;width:100%;background:#fff;text-align:left"><span class="ranking-index">${i+1}</span><span class="ranking-name" title="${safe(g.label)}">${safe(g.label)}</span><span class="ranking-value">${moneyShort(g.amount)}</span></button>`).join(''):'<div style="padding:18px;color:var(--muted);font-size:.72rem">Sin datos de proveedores.</div>';
+  document.querySelectorAll('[data-supplier-rank]').forEach(b=>b.onclick=()=>applyChartFilter('proveedor',b.dataset.supplierRank));
+}
+function executiveInsightData(rows){
+  const s=summary(rows),projects=groupSorted(rows,'proyecto','amount',3),providers=providerStats(rows).groups,methods=groupSorted(rows,'metodo','count',3),types=groupSorted(rows,'tipo','count',3),ys=yearStats(rows);
+  const items=[];
+  if(!rows.length)return[{text:'No existen registros con los criterios actuales.',warn:true}];
+  if(projects[0]){const share=s.amount?projects[0].amount/s.amount*100:0;items.push({html:`El proyecto <strong>${safe(projects[0].label)}</strong> concentra ${share.toFixed(1)}% del monto visible (${moneyShort(projects[0].amount)}).`})}
+  if(providers[0]){const share=s.amount?providers[0].amount/s.amount*100:0;items.push({html:`El proveedor con mayor monto acumulado es <strong>${safe(providers[0].label)}</strong>, con ${moneyShort(providers[0].amount)} (${share.toFixed(1)}% del total visible).`,warn:share>=25})}
+  if(methods[0])items.push({html:`El método más frecuente es <strong>${safe(methods[0].label)}</strong>, utilizado en ${integer.format(methods[0].count)} registros.`});
+  if(types[0])items.push({html:`La categoría de adquisición predominante es <strong>${safe(types[0].label)}</strong>, con ${integer.format(types[0].count)} contratos.`});
+  if(s.average>0&&s.median>0){const ratio=s.average/s.median;items.push({html:`El ticket promedio es ${moneyShort(s.average)} y la mediana ${moneyShort(s.median)}${ratio>=2?', lo que evidencia una distribución influida por contratos de alto valor.':'.'}`,warn:ratio>=2})}
+  if(ys.length>=2){const a=ys[ys.length-2],b=ys[ys.length-1];if(a.amount){const pct=(b.amount-a.amount)/a.amount*100;items.push({html:`El monto del año más reciente visible (${b.year}) es ${pct>=0?'superior':'inferior'} en ${Math.abs(pct).toFixed(1)}% al de ${a.year}. La comparación es nominal y no ajusta por avance del ejercicio.`,warn:true})}}
+  if(s.issues)items.push({html:`La calidad básica de la selección es <strong>${s.quality.toFixed(1)}%</strong>; ${integer.format(s.issues)} registros presentan al menos una incidencia de integridad detectada.`,warn:true});
+  else items.push({html:`La selección actual no presenta incidencias básicas de integridad según los controles automáticos del portal.`});
+  return items.slice(0,7);
+}
+function renderInsights(rows){
+  const items=executiveInsightData(rows);
+  $('executiveInsights').innerHTML=items.map(x=>`<div class="insight-item ${x.warn?'warn':''}">${x.html||safe(x.text)}</div>`).join('');
+}
+function renderCharts(rows){
+  if(!window.Chart){return}
+  const colors=['#1d5b4a','#245c93','#a96f1f','#4b7d6b','#6e7f91','#8f6b43','#5d8e9e','#7d6b91','#4f7b45','#9a5f5f'];
+  const ys=yearStats(rows);
+  destroyChart('annual');
+  state.charts.annual=new Chart($('chartAnnual'),{
+    type:'bar',
+    data:{labels:ys.map(x=>String(x.year)),datasets:[
+      {label:'Monto contratado',data:ys.map(x=>x.amount),backgroundColor:'#2f735f',borderRadius:7,yAxisID:'yMoney'},
+      {type:'line',label:'N.º contratos',data:ys.map(x=>x.count),borderColor:'#a96f1f',backgroundColor:'#a96f1f',pointRadius:4,pointHoverRadius:6,tension:.28,yAxisID:'yCount'}
+    ]},
+    options:Object.assign(chartCommon(),{
+      onClick:(e,elements)=>{if(elements[0])applyChartFilter('anio',ys[elements[0].index].year)},
+      scales:{x:{grid:{display:false},ticks:{font:{size:10},color:'#68756f'}},yMoney:{position:'left',grid:{color:'rgba(70,90,82,.06)'},ticks:{callback:v=>moneyShort(v),font:{size:9},color:'#68756f'}},yCount:{position:'right',grid:{drawOnChartArea:false},ticks:{precision:0,font:{size:9},color:'#8a6a38'}}},
+      plugins:{legend:{labels:{boxWidth:10,usePointStyle:true,font:{size:10}}},tooltip:{callbacks:{label:ctx=>ctx.dataset.yAxisID==='yMoney'?` ${ctx.dataset.label}: ${money.format(ctx.raw)}`:` ${ctx.dataset.label}: ${integer.format(ctx.raw)}`}}}
+    })
+  });
+
+  const types=groupSorted(rows,'tipo','count',8);
+  destroyChart('types');
+  state.charts.types=new Chart($('chartTypes'),{type:'doughnut',data:{labels:types.map(x=>x.label),datasets:[{data:types.map(x=>x.count),backgroundColor:colors.slice(0,types.length),borderWidth:2,borderColor:'#fff',hoverOffset:7}]},options:{responsive:true,maintainAspectRatio:false,cutout:'62%',onClick:(e,els)=>{if(els[0])applyChartFilter('tipo',types[els[0].index].label)},plugins:{legend:{position:'bottom',labels:{boxWidth:9,usePointStyle:true,font:{size:9},padding:12}},tooltip:{callbacks:{label:ctx=>{const g=types[ctx.dataIndex];return ` ${g.label}: ${integer.format(g.count)} · ${moneyShort(g.amount)}`}}}}}});
+
+  const projects=groupSorted(rows,'proyecto','amount',10);
+  destroyChart('projects');
+  state.charts.projects=new Chart($('chartProjects'),{
+    type:'bar',
+    data:{labels:projects.map(x=>x.label),datasets:[{label:'Monto',data:projects.map(x=>x.amount),backgroundColor:'#245c93',borderRadius:6}]},
+    options:Object.assign(chartCommon(),{
+      indexAxis:'y',
+      onClick:(e,els)=>{if(els[0])applyChartFilter('proyecto',projects[els[0].index].label)},
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` ${money.format(ctx.raw)}`}}},
+      scales:{x:{grid:{color:'rgba(70,90,82,.06)'},ticks:{callback:v=>moneyShort(v),font:{size:9}}},y:{grid:{display:false},ticks:{font:{size:9},autoSkip:false}}}
+    })
+  });
+
+  const methods=groupSorted(rows,'metodo','count',9);
+  destroyChart('methods');
+  state.charts.methods=new Chart($('chartMethods'),{
+    type:'bar',
+    data:{labels:methods.map(x=>x.label),datasets:[{label:'Procesos',data:methods.map(x=>x.count),backgroundColor:'#4b7d6b',borderRadius:6}]},
+    options:Object.assign(chartCommon(),{
+      indexAxis:'y',
+      onClick:(e,els)=>{if(els[0])applyChartFilter('metodo',methods[els[0].index].label)},
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>{const g=methods[ctx.dataIndex];return ` ${integer.format(g.count)} procesos · ${moneyShort(g.amount)}`}}}},
+      scales:{x:{grid:{color:'rgba(70,90,82,.06)'},ticks:{precision:0,font:{size:9}}},y:{grid:{display:false},ticks:{font:{size:9},autoSkip:false}}}
+    })
+  });
+
+  const suppliers=providerStats(rows).groups.slice(0,10);
+  destroyChart('suppliers');
+  state.charts.suppliers=new Chart($('chartSuppliers'),{
+    type:'bar',
+    data:{labels:suppliers.map(x=>x.label),datasets:[{label:'Monto',data:suppliers.map(x=>x.amount),backgroundColor:'#a96f1f',borderRadius:6}]},
+    options:Object.assign(chartCommon(),{
+      indexAxis:'y',
+      onClick:(e,els)=>{if(els[0])applyChartFilter('proveedor',suppliers[els[0].index].label)},
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` ${money.format(ctx.raw)} · ${integer.format(suppliers[ctx.dataIndex].count)} contratos`}}},
+      scales:{x:{grid:{color:'rgba(70,90,82,.06)'},ticks:{callback:v=>moneyShort(v),font:{size:9}}},y:{grid:{display:false},ticks:{font:{size:9},autoSkip:false}}}
+    })
+  });
+
+  const buckets=sizeBuckets(rows);
+  destroyChart('size');
+  state.charts.size=new Chart($('chartSize'),{
+    type:'bar',
+    data:{labels:buckets.map(x=>x.label),datasets:[{label:'Contratos',data:buckets.map(x=>x.count),backgroundColor:['#d9ebe4','#afd4c5','#7eb6a0','#558f7a','#356d5b','#1d5b4a'],borderRadius:6}]},
+    options:Object.assign(chartCommon(),{
+      onClick:(e,els)=>{if(!els[0])return;const b=buckets[els[0].index];$('amountMin').value=Number.isFinite(b.min)&&b.min>0?b.min:'';$('amountMax').value=Number.isFinite(b.max)?b.max:'';state.page=1;renderAll()},
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` ${integer.format(ctx.raw)} contratos · ${moneyShort(buckets[ctx.dataIndex].amount)}`}}},
+      scales:{x:{grid:{display:false},ticks:{font:{size:9},maxRotation:0,minRotation:0}},y:{grid:{color:'rgba(70,90,82,.06)'},ticks:{precision:0,font:{size:9}}}}
+    })
+  });
+}
+function renderBI(){const rows=state.filtered;renderBiMini(rows);renderCharts(rows);renderInsights(rows);renderSupplierRanking(rows)}
+function filterDescription(){
+  const f=activeFilterData(),parts=[];
+  if(f.year)parts.push(`Año: ${f.year}`);if(f.project)parts.push(`Proyecto: ${f.project}`);if(f.unit)parts.push(`Unidad: ${f.unit}`);if(f.method)parts.push(`Método: ${f.method}`);if(f.type)parts.push(`Tipo: ${f.type}`);if(f.status)parts.push(`Estado: ${f.status}`);
+  if(f.min!==null||f.max!==null)parts.push(`Monto: ${f.min!==null?money.format(f.min):'sin mínimo'} – ${f.max!==null?money.format(f.max):'sin máximo'}`);
+  if(f.quality)parts.push('Solo incidencias de integridad');if(norm(f.q))parts.push(`Búsqueda: “${f.q.trim()}”`);
+  return parts.length?parts.join(' · '):'Base contractual completa';
+}
+function reportRows(groups,metric='amount',limit=10){
+  return groups.slice(0,limit).map((g,i)=>`<tr><td>${i+1}</td><td>${safe(g.label??g.year)}</td><td>${metric==='count'?integer.format(g.count):money.format(g.amount)}</td></tr>`).join('');
+}
+function buildExecutiveReport(){
+  const rows=state.filtered,s=summary(rows),ys=yearStats(rows),projects=groupSorted(rows,'proyecto','amount',10),providers=providerStats(rows).groups.slice(0,10),methods=groupSorted(rows,'metodo','count',10),insights=executiveInsightData(rows);
+  const quality=rows.filter(r=>r.hasIssue).length;
+  const generated=new Date().toLocaleString('es-EC');
+  $('reportBody').innerHTML=`
+    <div class="report-cover"><small>Fondo de Inversión Ambiental Sostenible</small><h3>Reporte analítico ejecutivo de contratación</h3><p>${safe(filterDescription())} · Generado ${safe(generated)}</p></div>
+    <div class="report-kpis">
+      <div class="report-kpi"><span>Contratos</span><strong>${integer.format(s.count)}</strong></div>
+      <div class="report-kpi"><span>Monto</span><strong>${money.format(s.amount)}</strong></div>
+      <div class="report-kpi"><span>Promedio</span><strong>${money.format(s.average)}</strong></div>
+      <div class="report-kpi"><span>Mediana</span><strong>${money.format(s.median)}</strong></div>
+      <div class="report-kpi"><span>Proveedores</span><strong>${integer.format(s.providers)}</strong></div>
+      <div class="report-kpi"><span>Proyectos</span><strong>${integer.format(s.projects)}</strong></div>
+      <div class="report-kpi"><span>Top 5 proveedores</span><strong>${s.top5Share.toFixed(1)}%</strong></div>
+      <div class="report-kpi"><span>Calidad básica</span><strong>${s.quality.toFixed(1)}%</strong></div>
+    </div>
+    <section class="report-section"><h4>Lectura ejecutiva</h4><div class="report-section-body">${insights.map(x=>`<p style="margin:0 0 8px">${x.html||safe(x.text)}</p>`).join('')}</div></section>
+    <section class="report-section"><h4>Evolución anual</h4><div class="report-section-body"><table class="report-table"><thead><tr><th>Año</th><th>Contratos</th><th>Monto</th></tr></thead><tbody>${ys.map(y=>`<tr><td>${y.year}</td><td>${integer.format(y.count)}</td><td>${money.format(y.amount)}</td></tr>`).join('')}</tbody></table></div></section>
+    <section class="report-section"><h4>Top 10 proyectos por monto</h4><div class="report-section-body"><table class="report-table"><thead><tr><th>#</th><th>Proyecto</th><th>Monto</th></tr></thead><tbody>${reportRows(projects,'amount')}</tbody></table></div></section>
+    <section class="report-section"><h4>Top 10 proveedores por monto</h4><div class="report-section-body"><table class="report-table"><thead><tr><th>#</th><th>Proveedor</th><th>Monto</th></tr></thead><tbody>${reportRows(providers,'amount')}</tbody></table></div></section>
+    <section class="report-section"><h4>Métodos más utilizados</h4><div class="report-section-body"><table class="report-table"><thead><tr><th>#</th><th>Método</th><th>Procesos</th></tr></thead><tbody>${reportRows(methods,'count')}</tbody></table></div></section>
+    <section class="report-section"><h4>Gobernanza y calidad de la fuente</h4><div class="report-section-body">Repositorio institucional protegido. Última lectura: ${safe(state.lastSync?state.lastSync.toLocaleString('es-EC'):'—')}. Registros con incidencias básicas en la selección: ${integer.format(quality)}. El reporte opera en modo de solo lectura y no altera la información institucional.</div></section><div class="report-author">Desarrollado por: <a href="https://www.linkedin.com/in/jair-cruz-gallegos-65998776/" target="_blank" rel="noopener noreferrer">Jair Cruz ↗</a></div>`;
+}
+function openReport(){buildExecutiveReport();$('reportModal').classList.add('open');$('reportModal').setAttribute('aria-hidden','false');document.body.style.overflow='hidden'}
+function closeReport(){$('reportModal').classList.remove('open');$('reportModal').setAttribute('aria-hidden','true');document.body.style.overflow=''}
+function printReport(){buildExecutiveReport();document.body.classList.add('report-print');window.print();setTimeout(()=>document.body.classList.remove('report-print'),300)}
+
+function renderYearBars(){const groups={};state.records.forEach(r=>{if(r.anio)groups[r.anio]=(groups[r.anio]||0)+1});const max=Math.max(1,...Object.values(groups));$('yearBars').innerHTML=Object.keys(groups).sort().map(y=>`<div class="year-row"><button type="button" data-year="${safe(y)}">${safe(y)}</button><div class="year-track"><div class="year-fill" style="width:${(groups[y]/max)*100}%"></div></div><div class="year-value">${integer.format(groups[y])}</div></div>`).join('');document.querySelectorAll('[data-year]').forEach(b=>b.onclick=()=>{$('yearFilter').value=String(b.dataset.year);state.page=1;renderAll()})}
+function qualityStats(){const missing=state.records.filter(r=>r.issueMissingAmount).length,dupes=state.records.filter(r=>r.issueDuplicate).length,core=state.records.filter(r=>r.issueMissingCore).length;return{missing,dupes,core,total:state.records.filter(r=>r.hasIssue).length}}
+function renderQuality(){const q=qualityStats();const b=$('qualityBanner');if(!q.total){b.classList.remove('show');return}b.classList.add('show');$('qualityTitle').textContent='La fuente contiene registros que conviene revisar';const parts=[];if(q.missing)parts.push(`${q.missing} sin monto`);if(q.dupes)parts.push(`${q.dupes} asociados a números repetidos dentro del mismo año`);if(q.core)parts.push(`${q.core} con algún dato principal vacío`);$('qualityText').textContent=parts.join(' · ')+'. El portal no altera estos datos; únicamente los identifica para control.'}
+function activeFilterCount(){const f=activeFilterData();return[f.year,f.project,f.unit,f.method,f.type,f.status,f.min!==null,f.max!==null,f.quality].filter(Boolean).length}
+function renderHints(){const n=activeFilterCount();$('activeFilters').textContent=n?`${n} ${n===1?'filtro activo':'filtros activos'}`:'Sin filtros adicionales';const q=norm($('searchBox').value);$('searchHint').textContent=q?`Búsqueda activa: “${$('searchBox').value.trim()}”. Todos los términos deben aparecer en el registro; la relevancia prioriza número, proyecto, proveedor y objeto.`:'La búsqueda analiza simultáneamente número, proveedor, objeto, proyecto, unidad, método y tipo de adquisición.'}
+function pageData(){const size=Math.max(1,Number($('pageSize').value)||25);const pages=Math.max(1,Math.ceil(state.filtered.length/size));if(state.page>pages)state.page=pages;if(state.page<1)state.page=1;const start=(state.page-1)*size;return{rows:state.filtered.slice(start,start+size),size,pages,start}}
+function issueMark(r){return r.hasIssue?'<span class="issue-dot" title="Registro con incidencia de integridad"></span>':''}
+function rowHtml(r){return `<tr><td class="col-ref"><span class="ref-code">N.º ${safe(r.nro||'—')}${issueMark(r)}</span><span class="ref-year">${safe(r.anio||'Año no registrado')}</span></td><td>${safe(displayDate(r.fecha))}</td><td><span class="project-chip" title="${safe(r.proyecto)}">${safe(r.proyecto||'Sin proyecto')}</span></td><td class="method">${safe(r.metodo||'—')}<br><span style="color:#7c8985;font-size:.65rem">${safe(r.tipo||'')}</span></td><td class="provider">${safe(r.proveedor||'—')}<br><small style="color:var(--muted)">${safe(r.ruc?'RUC '+r.ruc:'Sin RUC en origen')}</small></td><td class="object">${safe(r.objeto||'—')}</td><td class="process-state">${safe(r.estado||'No registrado')}</td><td class="amount ${r.monto===null?'missing':''}">${r.monto===null?'Sin monto':money.format(r.monto)}</td><td><button class="row-action" type="button" data-id="${safe(r.id)}">Detalle</button></td></tr>`}
+function cardHtml(r){return `<article class="contract-card"><div class="card-top"><div><div class="card-ref">${safe(r.anio||'—')} · N.º ${safe(r.nro||'—')}${issueMark(r)}</div><div class="card-project"><span class="project-chip">${safe(r.proyecto||'Sin proyecto')}</span></div></div><div class="card-amount">${r.monto===null?'—':money.format(r.monto)}</div></div><div class="card-provider">${safe(r.proveedor||'—')}</div><div class="card-object">${safe(r.objeto||'—')}</div><div class="card-foot"><span>${safe(displayDate(r.fecha))} · ${safe(r.estado||'Estado sin registrar')}</span><button class="row-action" type="button" data-id="${safe(r.id)}">Detalle</button></div></article>`}
+function renderResults(){const p=pageData();$('tableBody').innerHTML=p.rows.length?p.rows.map(rowHtml).join(''):`<tr><td colspan="9" style="padding:42px;text-align:center;color:#71807a">No existen contratos con los criterios aplicados.</td></tr>`;$('cardList').innerHTML=p.rows.length?p.rows.map(cardHtml).join(''):`<div style="padding:30px;text-align:center;color:#71807a">No existen contratos con los criterios aplicados.</div>`;document.querySelectorAll('.row-action[data-id]').forEach(b=>b.onclick=()=>openDetail(b.dataset.id));const from=state.filtered.length?p.start+1:0,to=Math.min(p.start+p.size,state.filtered.length);$('pageInfo').textContent=`${integer.format(from)}–${integer.format(to)} de ${integer.format(state.filtered.length)} · Página ${p.pages?state.page:0} de ${p.pages}`;$('firstPage').disabled=$('prevPage').disabled=state.page<=1;$('nextPage').disabled=$('lastPage').disabled=state.page>=p.pages}
+function renderAll(){filterRecords();renderKpis();renderBI();renderYearBars();renderQuality();renderHints();renderResults();renderProcesses();$('contractTabCount').textContent=integer.format(state.records.length);$('processTabCount').textContent=integer.format(state.processes.length);$('footer').innerHTML=`Fondo de Inversión Ambiental Sostenible · ${integer.format(state.records.length)} contratos + ${integer.format(state.processes.length)} procesos en módulos diferenciados · Consulta institucional de solo lectura · Desarrollado por: <a class="author-link" href="https://www.linkedin.com/in/jair-cruz-gallegos-65998776/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn de Jair Cruz">Jair Cruz ↗</a>`}
+function clearFilters(){['yearFilter','projectFilter','unitFilter','methodFilter','typeFilter','statusFilter'].forEach(id=>$(id).value='');$('amountMin').value='';$('amountMax').value='';$('qualityOnly').checked=false;$('searchBox').value='';$('sortSelect').value='date-desc';state.page=1;renderAll()}
+function goPage(n){const size=Math.max(1,Number($('pageSize').value)||25);const pages=Math.max(1,Math.ceil(state.filtered.length/size));state.page=Math.max(1,Math.min(pages,n));renderResults();document.querySelector('.results-card')?.scrollIntoView({behavior:'smooth',block:'start'})}
+function csvCell(v){const s=String(v??'');return /[";,\n\r]/.test(s)?`"${s.replace(/"/g,'""')}"`:s}
+function downloadCSV(rows,headers,extract,filename,label){
+  if(!rows.length){toast('Sin registros','No existen datos para exportar.','warn');return}
+  const lines=[headers.map(csvCell).join(';')];
+  rows.forEach(r=>lines.push(extract(r).map(csvCell).join(';')));
+  const blob=new Blob(['\ufeff'+lines.join('\r\n')],{type:'text/csv;charset=utf-8'});
+  const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+  toast('CSV generado',`${integer.format(rows.length)} ${label} exportados, solo del módulo seleccionado.`);
+}
+function exportCSV(){
+  downloadCSV(state.filtered,['No.','Año','Fecha','Nro.','Unidad Administrativa','Proyecto','Método de Contratación','Tipo de Adquisición','RUC','Oferente Contratado','Objeto del Contrato','Monto','Unidades','Estado','Observaciones','Link procesos'],r=>[r.secuencial,r.anio??'',r.fecha,r.nro,r.unidad,r.proyecto,r.metodo,r.tipo,r.ruc,r.proveedor,r.objeto,r.monto??'',r.unidades??'',r.estado,r.observaciones,r.linkProceso],`fias-contratos-2026-${new Date().toISOString().slice(0,10)}.csv`,'contratos');
+}
+function openDetail(id){
+  const r=state.records.find(x=>x.id===id);if(!r)return;
+  $('drawerTitle').textContent=`${r.anio||'Año no registrado'} · N.º ${r.nro||'—'}`;
+  $('detailDrawer').querySelector('.drawer-kicker').textContent='Detalle de contrato / orden adjudicada';
+  const flags=[];if(r.issueDuplicate)flags.push('Número repetido en el mismo año');if(r.issueMissingAmount)flags.push('Monto no registrado');if(r.issueMissingCore)flags.push('Dato principal incompleto');
+  const link=r.linkHref?`<a target="_blank" rel="noopener noreferrer" href="${safe(r.linkHref)}">Abrir referencia ↗</a>`:safe(r.linkProceso||'—');
+  $('drawerBody').innerHTML=`<div class="detail-grid"><div class="detail-cell"><span>Año</span><strong>${safe(r.anio||'No registrado')}</strong></div><div class="detail-cell"><span>Fecha</span><strong>${safe(displayDate(r.fecha))}</strong></div><div class="detail-cell"><span>Número</span><strong>${safe(r.nro||'—')}</strong></div><div class="detail-cell"><span>Monto contractual</span><strong>${safe(displayMoney(r.monto))}</strong></div><div class="detail-cell wide"><span>Unidad administrativa</span><strong>${safe(r.unidad||'—')}</strong></div><div class="detail-cell"><span>Proyecto</span><strong>${safe(r.proyecto||'—')}</strong></div><div class="detail-cell"><span>Unidades</span><strong>${safe(r.unidades??'—')}</strong></div><div class="detail-cell"><span>Método de contratación</span><strong>${safe(r.metodo||'—')}</strong></div><div class="detail-cell"><span>Tipo de adquisición</span><strong>${safe(r.tipo||'—')}</strong></div><div class="detail-cell wide"><span>Oferente contratado</span><strong>${safe(r.proveedor||'—')}</strong></div><div class="detail-cell"><span>RUC</span><strong>${safe(r.ruc||'No registrado')}</strong></div><div class="detail-cell"><span>Estado</span><strong>${safe(r.estado||'No registrado')}</strong></div><div class="detail-cell wide"><span>Link procesos (registrado en Excel)</span><strong>${link}</strong></div>${has(r.observaciones)?`<div class="detail-cell wide"><span>Observaciones</span><p style="white-space:pre-wrap">${safe(r.observaciones)}</p></div>`:''}${flags.length?`<div class="detail-cell wide" style="border-color:#ecd7ae;background:#fffaf1"><span>Control de integridad</span><p>${safe(flags.join(' · '))}</p></div>`:''}</div><div class="detail-object"><span>Objeto contractual</span><p>${safe(r.objeto||'—')}</p></div>`;
+  $('detailDrawer').classList.add('open');$('detailDrawer').setAttribute('aria-hidden','false');document.body.style.overflow='hidden';
+}
+function closeDetail(){$('detailDrawer').classList.remove('open');$('detailDrawer').setAttribute('aria-hidden','true');document.body.style.overflow=''}
+
+function chooseTab(tab){
+  if(!['contracts','processes'].includes(tab))return;
+  state.activeTab=tab;
+  $('contractView').classList.toggle('hidden',tab!=='contracts');
+  $('processView').classList.toggle('hidden',tab!=='processes');
+  [['tabContracts','contracts'],['tabProcesses','processes']].forEach(([id,key])=>{
+    $(id).classList.toggle('selected',key===tab);$(id).setAttribute('aria-selected',String(key===tab));
+  });
+}
+function processOptions(id,key,label){
+  const distinct=new Map();state.processes.forEach(r=>{const text=String(r[key]||'').trim();const k=norm(text);if(k&&!distinct.has(k))distinct.set(k,text)});
+  const vals=[...distinct.values()].sort((a,b)=>a.localeCompare(b,'es',{sensitivity:'base'}));
+  fillSelect(id,vals,label);
+}
+function populateProcessFilters(){
+  processOptions('pState','estado','Todos los estados');processOptions('pMethod','metodo','Todos los métodos');
+  processOptions('pType','tipo','Todos los tipos');processOptions('pProject','proyecto','Todos los proyectos');
+}
+function filterProcesses(){
+  const q=norm($('pSearch').value).split(' ').filter(Boolean);
+  let rows=state.processes.filter(r=>{
+    if($('pState').value!==''&&norm(r.estado)!==norm($('pState').value))return false;
+    if($('pMethod').value!==''&&norm(r.metodo)!==norm($('pMethod').value))return false;
+    if($('pType').value!==''&&norm(r.tipo)!==norm($('pType').value))return false;
+    if($('pProject').value!==''&&norm(r.proyecto)!==norm($('pProject').value))return false;
+    const blob=norm([r.nro,r.anio,r.unidad,r.proyecto,r.metodo,r.tipo,r.objeto,r.presupuestoTexto,r.estado,r.observaciones].join(' '));
+    return q.every(t=>blob.includes(t));
+  });
+  const sort=$('pSort').value;
+  if(sort==='budget-desc')rows.sort((a,b)=>(b.presupuestoValor??-Infinity)-(a.presupuestoValor??-Infinity));
+  else if(sort==='budget-asc')rows.sort((a,b)=>a.presupuestoValor===null?1:b.presupuestoValor===null?-1:a.presupuestoValor-b.presupuestoValor);
+  else if(sort==='state')rows.sort((a,b)=>a.estado.localeCompare(b.estado,'es',{sensitivity:'base'}));
+  else rows.sort((a,b)=>a.sourceRow-b.sourceRow);
+  state.processFiltered=rows;
+}
+function processBudget(r){return r.presupuestoValor!==null?money.format(r.presupuestoValor):(r.presupuestoTexto||'Sin presupuesto registrado')}
+function processDistribution(id,field){
+  const groups=new Map();state.processFiltered.forEach(r=>{
+    const raw=field==='estado'&&r.issueNumericState?'Estado por revisar':(r[field]||'Sin registrar');
+    const key=norm(raw);if(!groups.has(key))groups.set(key,{name:String(raw).replace(/^./,ch=>ch.toUpperCase()),count:0});
+    groups.get(key).count++;
+  });
+  const items=[...groups.values()].map(x=>[x.name,x.count]).sort((a,b)=>b[1]-a[1]);const max=Math.max(1,...items.map(x=>x[1]));
+  $(id).innerHTML=items.length?items.map(([k,v])=>`<div class="process-chart-row"><span class="process-chart-label" title="${safe(k)}">${safe(k)}</span><div class="process-chart-track"><div class="process-chart-fill" style="width:${Math.round(v/max*100)}%"></div></div><strong>${integer.format(v)}</strong></div>`).join(''):'<p style="font-size:.75rem;color:var(--muted)">No hay procesos con estos filtros.</p>';
+}
+function processPageData(){const size=15,pages=Math.max(1,Math.ceil(state.processFiltered.length/size));state.processPage=Math.min(Math.max(1,state.processPage),pages);const start=(state.processPage-1)*size;return{rows:state.processFiltered.slice(start,start+size),pages,size,start}}
+function processTableRow(r){return `<tr><td><span class="ref-code">${safe(r.nro||'Sin N.º')}${r.hasIssue?'<span class="issue-dot" title="Revisar registro de origen"></span>':''}</span><span class="ref-year">${safe(r.anio??'—')}</span></td><td><span class="project-chip">${safe(r.proyecto||'—')}</span></td><td class="method">${safe(r.metodo||'—')}</td><td>${safe(r.tipo||'—')}</td><td class="process-object">${safe(r.objeto||'—')}</td><td class="process-budget">${safe(processBudget(r))}</td><td><span class="process-state">${safe(r.estado||'No registrado')}</span></td><td><button type="button" class="row-action" data-process-id="${safe(r.id)}">Detalle</button></td></tr>`}
+function processCardRow(r){return `<article class="contract-card"><div class="card-top"><div class="card-ref">Proceso ${safe(r.nro||'Sin N.º')}${r.hasIssue?'<span class="issue-dot"></span>':''}</div><div class="card-amount">${r.presupuestoValor!==null?money.format(r.presupuestoValor):'Por definir'}</div></div><div class="card-project"><span class="project-chip">${safe(r.proyecto||'—')}</span></div><div class="card-provider">${safe(r.estado||'Estado no registrado')}</div><div class="card-object">${safe(r.objeto||'—')}</div><div class="card-foot"><span>${safe(r.metodo||'Método no registrado')}</span><button type="button" class="row-action" data-process-id="${safe(r.id)}">Detalle</button></div></article>`}
+function renderProcesses(){
+  filterProcesses();const rows=state.processFiltered,all=state.processes;
+  const amount=rows.reduce((sum,r)=>sum+(r.presupuestoValor??0),0);
+  $('pKpiCount').textContent=integer.format(rows.length);$('pKpiTotal').textContent=`de ${integer.format(all.length)} en la hoja original`;
+  $('pKpiBudget').textContent=money.format(amount);
+  $('pKpiPreparing').textContent=integer.format(rows.filter(r=>norm(r.estado)==='preparatoria').length);
+  $('pKpiStatuses').textContent=integer.format(new Set(rows.map(r=>r.issueNumericState?'estado por revisar':norm(r.estado)).filter(Boolean)).size);
+  $('pKpiIssues').textContent=integer.format(rows.filter(r=>r.hasIssue).length);
+  processDistribution('pStatusDistribution','estado');processDistribution('pTypeDistribution','tipo');
+  const issues=all.filter(r=>r.hasIssue);
+  const banner=$('pQualityAlert');banner.classList.toggle('hidden',!issues.length);
+  if(issues.length)banner.textContent=`Control del Excel de origen: ${issues.length} registro(s) preparatorio(s) requieren revisión. ${issues.map(r=>`Fila ${r.sourceRow}: ${[r.issueUnnumbered?'sin No.':null,r.issueNumericState?'la celda Estado parece contener un valor numérico':null].filter(Boolean).join(' y ')}`).join('; ')}. No se corrigió ni mezcló ningún dato automáticamente.`;
+  $('pResultCount').textContent=`${integer.format(rows.length)} ${rows.length===1?'proceso':'procesos'}`;
+  $('pResultSub').textContent=`Presupuesto referencial cuantificable ${money.format(amount)} · No equivale a monto adjudicado`;
+  const p=processPageData();
+  $('pTableBody').innerHTML=p.rows.length?p.rows.map(processTableRow).join(''):'<tr><td colspan="8" style="padding:35px;text-align:center;color:var(--muted)">No hay procesos para estos filtros.</td></tr>';
+  $('pCardList').innerHTML=p.rows.length?p.rows.map(processCardRow).join(''):'<div style="padding:25px;color:var(--muted)">No se encontraron procesos.</div>';
+  document.querySelectorAll('[data-process-id]').forEach(n=>n.onclick=()=>openProcessDetail(n.dataset.processId));
+  const first=rows.length?p.start+1:0,last=Math.min(p.start+p.size,rows.length);
+  $('pPageInfo').textContent=`${integer.format(first)}–${integer.format(last)} de ${integer.format(rows.length)} · Página ${state.processPage} de ${p.pages}`;
+  $('pFirst').disabled=$('pPrev').disabled=state.processPage<=1;
+  $('pNext').disabled=$('pLast').disabled=state.processPage>=p.pages;
+}
+function openProcessDetail(id){
+  const r=state.processes.find(x=>x.id===id);if(!r)return;
+  $('detailDrawer').querySelector('.drawer-kicker').textContent='Proceso por iniciar · Sin adjudicación';
+  $('drawerTitle').textContent=`Proceso ${r.nro||'sin número'} · ${r.proyecto||'Sin proyecto'}`;
+  const fields=[['Número de proceso',r.nro||'No registrado'],['Año',r.anio??'No registrado'],['Unidad administrativa',r.unidad],['Proyecto',r.proyecto],['Método de contratación',r.metodo],['Tipo de adquisición',r.tipo],['Estado registrado',r.estado||'No registrado'],['Presupuesto referencial',processBudget(r)],['Fila de origen',r.sourceRow]];
+  $('drawerBody').innerHTML=`<div class="detail-grid">${fields.map(([k,v])=>`<div class="detail-cell"><span>${safe(k)}</span><strong>${safe(v)}</strong></div>`).join('')}<div class="detail-cell wide"><span>Objeto del proceso</span><p style="white-space:pre-wrap">${safe(r.objeto||'—')}</p></div><div class="detail-cell wide"><span>Observaciones y seguimiento (fuente original)</span><p style="white-space:pre-wrap">${safe(r.observaciones||'—')}</p></div>${r.hasIssue?`<div class="detail-cell wide" style="background:#fff8eb;border-color:#e9cf9d"><span>Posible incidencia en archivo</span><p>${safe([r.issueUnnumbered?'Número del proceso en blanco':'',r.issueNumericState?'El dato del Estado es numérico, verifique ubicación de las columnas':''].filter(Boolean).join(' · '))}</p></div>`:''}</div>`;
+  $('detailDrawer').classList.add('open');$('detailDrawer').setAttribute('aria-hidden','false');document.body.style.overflow='hidden';
+}
+function clearProcessFilters(){['pState','pMethod','pType','pProject'].forEach(id=>$(id).value='');$('pSearch').value='';$('pSort').value='source';state.processPage=1;renderProcesses()}
+function goProcessPage(n){state.processPage=Math.max(1,Math.min(Math.max(1,Math.ceil(state.processFiltered.length/15)),n));renderProcesses();$('processView').querySelector('.results-card').scrollIntoView({behavior:'smooth',block:'start'})}
+function exportProcesses(){
+  downloadCSV(state.processFiltered,['No.','Año','Unidad Administrativa','Proyecto','Método de Contratación','Tipo de Adquisición','Objeto del Proceso','Presupuesto Referencial (original)','Valor numérico identificable','Estado','Observaciones','Fila de Excel'],r=>[r.nro,r.anio??'',r.unidad,r.proyecto,r.metodo,r.tipo,r.objeto,r.presupuestoTexto,r.presupuestoValor??'',r.estado,r.observaciones,r.sourceRow],`fias-procesos-preparatorios-2026-${new Date().toISOString().slice(0,10)}.csv`,'procesos');
+}
+
+function bind(){
+  $('tabContracts').onclick=()=>chooseTab('contracts');$('tabProcesses').onclick=()=>chooseTab('processes');
+  $('pClear').onclick=clearProcessFilters;$('pExport').onclick=exportProcesses;
+  $('pSearch').addEventListener('input',debounce(()=>{state.processPage=1;renderProcesses()},160));
+  ['pState','pMethod','pType','pProject','pSort'].forEach(id=>$(id).addEventListener('change',()=>{state.processPage=1;renderProcesses()}));
+  $('pFirst').onclick=()=>goProcessPage(1);$('pPrev').onclick=()=>goProcessPage(state.processPage-1);$('pNext').onclick=()=>goProcessPage(state.processPage+1);$('pLast').onclick=()=>goProcessPage(999999);
+  $('loginBtn').onclick=login;$('syncBtn').onclick=()=>syncExcel(true);$('logoutBtn').onclick=logout;$('clearBtn').onclick=clearFilters;$('exportBtn').onclick=exportCSV;$('biResetBtn').onclick=clearFilters;$('reportBtn').onclick=openReport;$('closeReportBtn').onclick=closeReport;$('printReportBtn').onclick=printReport;
+  $('closeDrawer').onclick=closeDetail;$('detailDrawer').addEventListener('click',e=>{if(e.target===$('detailDrawer'))closeDetail()});$('reportModal').addEventListener('click',e=>{if(e.target===$('reportModal'))closeReport()});document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeDetail();closeReport()}});
+  const deb=debounce(()=>{state.page=1;renderAll()},160);['searchBox','amountMin','amountMax'].forEach(id=>$(id).addEventListener('input',deb));['yearFilter','projectFilter','unitFilter','methodFilter','typeFilter','statusFilter','qualityOnly','sortSelect','pageSize'].forEach(id=>$(id).addEventListener('change',()=>{state.page=1;renderAll()}));
+  $('firstPage').onclick=()=>goPage(1);$('prevPage').onclick=()=>goPage(state.page-1);$('nextPage').onclick=()=>goPage(state.page+1);$('lastPage').onclick=()=>goPage(999999);
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden&&state.account&&state.lastSync&&Date.now()-state.lastSync.getTime()>CONFIG.autoRefreshMinutes*60*1000)syncExcel(false)});
+}
+async function boot(){
+  bind();window.addEventListener('afterprint',()=>document.body.classList.remove('report-print'));$('openSourceLink').href=CONFIG.shareUrl;chooseTab('contracts');renderAll();
+  try{await setupMsal();if(state.account){updateAuthUi();await syncExcel(false)}}catch(err){toast('Configuración de acceso',friendlyError(err),'bad');$('loginBtn').disabled=false}
+}
+
+document.addEventListener('DOMContentLoaded',boot);
+})();
+</script>
+</body>
+</html>

@@ -155,6 +155,17 @@ button,input,select{font:inherit}button{cursor:pointer}a{color:inherit}
 @media(max-width:570px){.analytics-strip,.report-kpis{grid-template-columns:1fr}.bi-grid{padding:8px}.bi-head{padding:15px}.bi-actions{width:100%}.bi-actions .btn{flex:1}.bi-chart{height:235px}.masthead-inner{align-items:center}.brand-zone img{width:108px}.top-actions .btn span{display:none}.top-actions .btn{width:38px;padding:0}.intro h1{font-size:1.8rem}.metric-strip{grid-template-columns:1fr}.filter-body{grid-template-columns:1fr}.amount-grid{grid-template-columns:1fr 1fr}.smart-hint{align-items:flex-start;flex-direction:column}.result-actions{width:100%;justify-content:space-between}.detail-grid{grid-template-columns:1fr}.detail-cell.wide{grid-column:auto}.auth-body{padding:28px 22px}}
 @media print{.auth-gate,.masthead,.filter-panel,.search-card,.result-actions,.pagination,.drawer,.toast-zone,.loading,.report-modal{display:none!important}body.report-print .portal{display:none!important}body.report-print .report-modal{position:static!important;display:block!important;background:#fff!important;padding:0!important}body.report-print .report-dialog{width:100%!important;max-height:none!important;box-shadow:none!important;border-radius:0!important;overflow:visible!important}body.report-print .report-head{display:none!important}body.report-print .report-body{padding:0!important;overflow:visible!important}.workspace{width:100%;padding:0}.intro{display:block}.source-card{margin-top:10px;background:#fff;color:#000;border:1px solid #ccc;box-shadow:none}.source-card p,.source-label{color:#555}.source-meta div{border-color:#ddd}.source-meta span{color:#777}.source-meta strong{color:#000}.metric-strip{grid-template-columns:repeat(5,1fr)}.explorer{display:block}.results-card,.intro-main,.metric{box-shadow:none}.table-wrap{display:block;max-height:none}.data-table{min-width:0}.card-list{display:none}}
 @media(max-width:760px){.masthead{position:relative}.masthead-inner{flex-direction:column;align-items:stretch;padding:12px 0}.top-actions{justify-content:flex-start}.author-head{order:-1;width:max-content}}
+
+/* V3: archivo histórico, trazabilidad de hipervínculos y visualización de estados */
+.local-preview{display:flex;width:100%;margin:10px 0 0;min-height:43px;border-color:#b7d7c9}.local-help{font-size:.7rem!important;color:#7b8883!important;margin:8px 0 0!important}
+.history-notice{display:flex;align-items:center;gap:13px;background:#f0f7fb;border:1px solid #d5e6ee;padding:13px 16px;border-radius:16px;margin-bottom:15px;color:#25465e}.history-notice .history-icon{background:#dcebf2;width:32px;height:32px;display:grid;place-items:center;border-radius:10px;font-weight:900;flex:0 0 32px}.history-notice strong{display:block;font-size:.77rem}.history-notice p{font-size:.73rem;line-height:1.44;margin:3px 0 0;color:#517184}.history-badge{margin-left:auto;white-space:nowrap;border:1px solid #c8dce7;border-radius:999px;padding:7px 10px;font-size:.7rem;font-weight:900;color:#245c93;background:#fff}
+.status-badge{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:6px 9px;max-width:190px;line-height:1.2;white-space:normal;font-size:.66rem;font-weight:900;border:1px solid transparent}.status-badge:before{content:'';width:7px;height:7px;border-radius:50%;flex:0 0 7px;background:currentColor}.tone-active{background:#e6f6ed;color:#1d6b49;border-color:#b6e0c7}.tone-done{background:#eaf2fd;color:#245c93;border-color:#cadef4}.tone-warn{background:#fff3e4;color:#966320;border-color:#f1dbaf}.tone-neutral{background:#f1f0ff;color:#61529c;border-color:#ddd9f5}.tone-missing{background:#f6f7f8;color:#7d8790;border-color:#e4e8ea}
+.link-pill{display:inline-flex;align-items:center;justify-content:center;gap:5px;color:#155c47;text-decoration:none;border-radius:9px;border:1px solid #bcdacb;background:#ebf8f0;padding:7px 9px;font-size:.68rem;font-weight:900;white-space:nowrap;transition:.15s}.link-pill:hover{background:#d4efe0;transform:translateY(-1px)}.link-unavailable{font-size:.67rem;color:#84918a;white-space:nowrap}.card-status-row{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-top:9px;flex-wrap:wrap}.card-status-row small{font-size:.66rem;color:var(--muted)}.card-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.note-cell{background:#fffaf2;border-color:#efdfbd}.note-cell p{color:#765f35}
+.status-analytics{display:grid;grid-template-columns:minmax(200px,.55fr) minmax(0,1.45fr);gap:18px;margin:0 12px 15px;padding:16px;border:1px solid var(--line);border-radius:16px;background:#f9fcfa;align-items:center}.status-analytics h3{font-size:1rem;margin:5px 0 7px}.status-analytics p{margin:0;font-size:.73rem;line-height:1.5;color:var(--muted)}.status-analytic-bars{display:grid;gap:9px}.status-bar-row{display:grid;grid-template-columns:minmax(120px,180px) minmax(0,1fr) 38px;gap:10px;align-items:center;border:0;background:transparent;width:100%;padding:3px;text-align:left;font-size:.71rem;color:#41554b;cursor:pointer}.status-bar-row:hover{color:var(--forest)}.status-bar-track{height:11px;background:#e4ede8;overflow:hidden;border-radius:999px}.status-bar-track i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#2f735f,#65a88c)}.status-bar-row strong{text-align:right;color:var(--forest)}
+.data-table{min-width:1420px}.data-table td{line-height:1.4}.data-table td:nth-child(9){min-width:90px}.data-table th:nth-child(7){min-width:150px}.metric-strip{grid-template-columns:repeat(5,minmax(0,1fr))}
+@media(max-width:1050px){.status-analytics{grid-template-columns:1fr}.metric-strip{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:570px){.history-notice{align-items:flex-start}.history-badge{display:none}.metric-strip{grid-template-columns:repeat(2,minmax(0,1fr))}.status-bar-row{grid-template-columns:minmax(86px,112px) minmax(0,1fr) 32px;gap:6px}.card-actions .link-unavailable{display:none}}
+@media print{.link-pill{color:#000;border:none;padding:0}.history-notice{display:none}.status-analytics{break-inside:avoid}.data-table{min-width:0}}
 </style>
 </head>
 <body>
@@ -170,6 +181,8 @@ button,input,select{font:inherit}button{cursor:pointer}a{color:inherit}
       <h1>Portal Enterprise de Contratos</h1>
       <p>Acceda con su cuenta corporativa de Microsoft 365. Datos de contratación 2026 y procesos preparatorios desde SharePoint, en dos módulos separados y sin almacenamiento de datos en archivos JSON intermedios.</p>
       <button class="auth-btn" id="loginBtn" type="button">▣&nbsp; Iniciar sesión con Microsoft 365</button>
+      <button class="btn btn-outline local-preview" id="localPreviewBtn" type="button">▤&nbsp; Revisar una copia Excel local</button>
+      <p class="local-help">Vista previa en el dispositivo, sin cargar datos a servidores. La publicación institucional requiere Microsoft 365.</p>
       <div class="auth-note"><strong>Modelo de acceso:</strong> solo lectura. Los permisos efectivos siguen dependiendo del acceso que cada usuario tenga al archivo dentro de Microsoft 365.</div>
     </div>
   </div>
@@ -191,6 +204,8 @@ button,input,select{font:inherit}button{cursor:pointer}a{color:inherit}
           </a>
         </div>
         <div class="session-pill" id="sessionPill"><span id="sessionText">Sesión institucional</span></div>
+        <button class="btn btn-outline" id="localImportBtn" type="button" title="Revisar copia Excel sin sustituir el archivo de SharePoint">▤ <span>Excel local</span></button>
+        <input class="hidden" type="file" id="localFile" accept=".xlsx,.xls,.xlsm" aria-label="Seleccionar Excel local" />
         <button class="btn btn-primary" id="syncBtn" type="button" title="Actualizar la información vigente">↻ <span>Actualizar datos</span></button>
         <button class="btn btn-danger" id="logoutBtn" type="button" title="Cerrar sesión">⎋ <span>Salir</span></button>
       </div>
@@ -201,7 +216,7 @@ button,input,select{font:inherit}button{cursor:pointer}a{color:inherit}
     <section class="intro">
       <article class="intro-main">
         <div class="eyebrow">FIAS · Gestión Contractual 2026</div>
-        <h1>Contratos adjudicados y procesos por iniciar, con información independiente.</h1>
+        <h1>Histórico de contratos 2023–2026 y procesos por iniciar, con información independiente.</h1>
         <p>Consulte los contratos y órdenes de 2026, y dé seguimiento a los procesos preparatorios en un módulo independiente. Los datos proceden de dos hojas distintas del mismo archivo institucional de SharePoint.</p>
       </article>
       <aside class="source-card">
@@ -219,10 +234,11 @@ button,input,select{font:inherit}button{cursor:pointer}a{color:inherit}
     </section>
 
     <nav class="module-tabs" role="tablist" aria-label="Módulos de seguimiento">
-      <button class="module-tab selected" type="button" id="tabContracts" role="tab" aria-selected="true" aria-controls="contractView"><span class="tab-icon">▦</span><span><strong>Contratos y órdenes adjudicadas</strong><small>Hoja: contratos ordenes adj 2026</small></span><em id="contractTabCount">0</em></button>
+      <button class="module-tab selected" type="button" id="tabContracts" role="tab" aria-selected="true" aria-controls="contractView"><span class="tab-icon">▦</span><span><strong>Contratos y órdenes adjudicadas</strong><small>Histórico 2023–2025 + adjudicados 2026</small></span><em id="contractTabCount">0</em></button>
       <button class="module-tab" type="button" id="tabProcesses" role="tab" aria-selected="false" aria-controls="processView"><span class="tab-icon">◷</span><span><strong>Procesos por iniciar</strong><small>Hoja: Detalle procesos prep_prec</small></span><em id="processTabCount">0</em></button>
     </nav>
     <div id="contractView" class="contract-view" role="tabpanel" aria-labelledby="tabContracts">
+    <div class="history-notice" id="historyNotice" role="note"><span class="history-icon">i</span><div><strong>Cobertura de datos y trazabilidad</strong><p id="historyNoticeText">Contratos y órdenes 2026 con el detalle vigente; histórico 2023–2025 desde BaseContratos. Los estados, RUC, enlaces y fechas individuales ausentes en los históricos no se presumen.</p></div><span id="historyBadge" class="history-badge">2023 — 2026</span></div>
     <section class="metric-strip" aria-label="Indicadores clave de desempeño">
       <article class="metric primary"><span>Contratos y órdenes visibles</span><strong id="kpiRecords">0</strong><small id="kpiRecordsSub">de 0 registros cargados</small></article>
       <article class="metric"><span>Monto visible</span><strong id="kpiAmount">$0,00</strong><small id="kpiAmountSub">Suma contractual filtrada</small></article>
@@ -232,6 +248,8 @@ button,input,select{font:inherit}button{cursor:pointer}a{color:inherit}
       <article class="metric"><span>Proyectos</span><strong id="kpiProjects">0</strong><small>Proyectos en la consulta actual</small></article>
       <article class="metric"><span>Concentración Top 5</span><strong id="kpiConcentration">0%</strong><small>Participación de los 5 mayores proveedores</small></article>
       <article class="metric"><span>Calidad de datos</span><strong id="kpiQuality">100%</strong><small id="kpiQualitySub">Registros sin incidencias básicas</small></article>
+      <article class="metric"><span>Con estado informado</span><strong id="kpiStatusCoverage">0</strong><small id="kpiStatusCoverageSub">Estado explícito en la fuente</small></article>
+      <article class="metric"><span>Acceso al proceso</span><strong id="kpiLinks">0</strong><small id="kpiLinksSub">Vínculos verificables de SharePoint</small></article>
       <article class="metric hidden"><span>Años</span><strong id="kpiYears">0</strong><small id="kpiYearsSub">Cobertura temporal</small></article>
     </section>
 
@@ -241,7 +259,7 @@ button,input,select{font:inherit}button{cursor:pointer}a{color:inherit}
         <div>
           <div class="bi-kicker">Business Intelligence · Contratación FIAS</div>
           <h2>Cuadro de mando ejecutivo e inteligencia contractual</h2>
-          <p>Los indicadores y visualizaciones responden a los filtros activos. Puede pulsar años, proyectos, métodos o tipos de adquisición para profundizar el análisis.</p>
+          <p>Los indicadores cubren 2023–2026 y responden a los filtros activos. Los datos históricos de 2023–2025 no contienen todos los campos del formato 2026; se identifican los vacíos sin inventar estados ni fechas de contratación.</p>
         </div>
         <div class="bi-actions">
           <button class="btn btn-soft" id="biResetBtn" type="button">Restablecer análisis</button>
@@ -285,6 +303,7 @@ button,input,select{font:inherit}button{cursor:pointer}a{color:inherit}
         </article>
       </div>
 
+      <div class="status-analytics"><div><div class="bi-kicker">Trazabilidad y seguimiento</div><h3>Estados de los registros</h3><p>Las categorías «Sin estado registrado» y «No informado (histórico)» significan ausencia del dato; no constituyen estados administrativos confirmados.</p></div><div class="status-analytic-bars" id="contractStatusDistribution"></div></div>
       <div class="bi-insights">
         <div class="insight-narrative">
           <h3>Lectura ejecutiva automática</h3>
@@ -303,6 +322,7 @@ button,input,select{font:inherit}button{cursor:pointer}a{color:inherit}
         <div class="panel-head"><h2>Refinar consulta</h2><p>Los filtros se combinan entre sí y actúan sobre la base cargada en memoria.</p></div>
         <div class="filter-body">
           <div class="field"><label for="yearFilter">Año</label><select id="yearFilter"><option value="">Todos</option></select></div>
+          <div class="field"><label for="sourceFilter">Fuente de registro</label><select id="sourceFilter"><option value="">Todas</option></select></div>
           <div class="field"><label for="projectFilter">Proyecto</label><select id="projectFilter"><option value="">Todos</option></select></div>
           <div class="field"><label for="unitFilter">Unidad administrativa</label><select id="unitFilter"><option value="">Todas</option></select></div>
           <div class="field"><label for="methodFilter">Método de contratación</label><select id="methodFilter"><option value="">Todos</option></select></div>
@@ -319,10 +339,10 @@ button,input,select{font:inherit}button{cursor:pointer}a{color:inherit}
         <section class="search-card">
           <div class="search-row">
             <div class="field"><label for="searchBox">Búsqueda inteligente</label><div class="search-box"><input id="searchBox" type="search" autocomplete="off" placeholder="Ej.: auditoría, SOFTNESA, REM, 2026, equipos informáticos…"><span class="search-icon">⌕</span></div></div>
-            <div class="field"><label for="sortSelect">Ordenar</label><select id="sortSelect"><option value="date-desc">Más recientes</option><option value="date-asc">Más antiguos</option><option value="amount-desc">Mayor monto</option><option value="amount-asc">Menor monto</option><option value="provider-asc">Proveedor A–Z</option><option value="ref-asc">Año / número</option><option value="relevance">Relevancia</option></select></div>
+            <div class="field"><label for="sortSelect">Ordenar</label><select id="sortSelect"><option value="date-desc">Año / fecha recientes</option><option value="date-asc">Año / fecha antiguos</option><option value="amount-desc">Mayor monto</option><option value="amount-asc">Menor monto</option><option value="provider-asc">Proveedor A–Z</option><option value="ref-asc">Año / número</option><option value="relevance">Relevancia</option></select></div>
             <div class="field page-size-field"><label for="pageSize">Por página</label><select id="pageSize"><option>15</option><option selected>25</option><option>50</option><option>100</option></select></div>
           </div>
-          <div class="smart-hint"><span id="searchHint">La búsqueda analiza simultáneamente número, proveedor, objeto, proyecto, unidad, método y tipo de adquisición.</span><strong id="activeFilters">Sin filtros adicionales</strong></div>
+          <div class="smart-hint"><span id="searchHint">La búsqueda incluye 2023–2026: número, proveedor, objeto, proyecto, estado, unidad, método y tipo.</span><strong id="activeFilters">Sin filtros adicionales</strong></div>
         </section>
 
         <div class="quality-banner" id="qualityBanner"><div class="quality-icon">!</div><div><strong id="qualityTitle">Control de integridad de la fuente</strong><p id="qualityText">—</p></div></div>
@@ -334,7 +354,7 @@ button,input,select{font:inherit}button{cursor:pointer}a{color:inherit}
           </div>
           <div class="table-wrap">
             <table class="data-table" aria-label="Base contractual FIAS">
-              <thead><tr><th>N.º</th><th>Fecha</th><th>Proyecto</th><th>Método</th><th>Proveedor / RUC</th><th>Objeto contractual</th><th>Estado</th><th style="text-align:right">Monto</th><th></th></tr></thead>
+              <thead><tr><th>N.º / origen</th><th>Fecha</th><th>Proyecto</th><th>Método</th><th>Proveedor / RUC</th><th>Objeto contractual</th><th>Estado</th><th style="text-align:right">Monto</th><th>Proceso</th><th>Ficha</th></tr></thead>
               <tbody id="tableBody"></tbody>
             </table>
           </div>
@@ -412,6 +432,8 @@ const CONFIG = {
   shareUrl: 'https://fiasec-my.sharepoint.com/:x:/g/personal/anunez_fias_org_ec/IQBsxIqVKwywSoldJB04zry2AU570lVNfSoVJ1dMb2nIEcw?e=V14SXA',
   preferredSheet: 'contratos ordenes adj 2026',
   processesSheet: 'Detalle procesos prep_prec',
+  historicSheet: 'BaseContratos',
+  historicYears: [2023, 2024, 2025],
   scopes: ['Files.Read'],
   autoRefreshMinutes: 60
 };
@@ -434,6 +456,7 @@ const state = {
   sourceSheet: CONFIG.preferredSheet,
   sourceProcessSheet: CONFIG.processesSheet,
   sourceKind: 'Microsoft 365',
+  localMode: false,
   searchCache: new Map(),
   charts: {}
 };
@@ -531,8 +554,8 @@ async function login(){
 async function logout(){
   clearInterval(state.refreshTimer); state.refreshTimer=null;
   const account=state.account;
-  state.records=[];state.filtered=[];state.processes=[];state.processFiltered=[];state.driveItem=null;state.token='';state.account=null;state.searchCache.clear();Object.keys(state.charts).forEach(destroyChart);renderAll();updateAuthUi();
-  try{ if(state.msal && account) await state.msal.logoutPopup({account,postLogoutRedirectUri:currentRedirectUri(),mainWindowRedirectUri:currentRedirectUri()}); }
+  state.records=[];state.filtered=[];state.processes=[];state.processFiltered=[];state.driveItem=null;state.localMode=false;state.token='';state.account=null;state.searchCache.clear();Object.keys(state.charts).forEach(destroyChart);renderAll();updateAuthUi();
+  try{ if(state.msal && account && account.homeAccountId) await state.msal.logoutPopup({account,postLogoutRedirectUri:currentRedirectUri(),mainWindowRedirectUri:currentRedirectUri()}); }
   catch(err){toast('Sesión local cerrada','Microsoft mantuvo la cuenta en el navegador; puede cerrar la pestaña si lo requiere.','warn')}
 }
 function updateAuthUi(){
@@ -593,15 +616,45 @@ function strictBudget(value){
   if(!t || !/^(?:USD\s*)?\$?\s*[+-]?[\d.,\s]+$/.test(t))return null;
   return toNumber(t);
 }
+// SharePoint puede guardar los hipervínculos OOXML como rutas relativas ../../:f:/g/...
+// Se convierten a URL absolutas solo si el destino resulta ser un SharePoint HTTPS.
+function normalizeLinkTarget(value){
+  const raw=String(value??'').trim();if(!raw)return '';
+  try{
+    let url='';
+    if(/^https:\/\//i.test(raw))url=new URL(raw);
+    else{
+      const path=raw.match(/:(?:f|x|w|b):\/g\/[^\s]+$/i);
+      if(!path)return '';
+      url=new URL('/'+path[0],new URL(CONFIG.shareUrl).origin);
+    }
+    return url.protocol==='https:' && /(^|\.)sharepoint\.com$/i.test(url.hostname) ? url.href : '';
+  }catch{return ''}
+}
 function sheetHyperlink(worksheet,rowOneBased,colZeroBased){
   const a=XLSX.utils.encode_cell({r:rowOneBased-1,c:colZeroBased});
-  const link=worksheet[a]?.l?.Target || worksheet[a]?.l?.target || '';
-  return /^https:\/\//i.test(link)?link:'';
+  return normalizeLinkTarget(worksheet[a]?.l?.Target || worksheet[a]?.l?.target || '');
 }
-function parseContractRows(info){
+function displayStatus(r){return r.estadoVisual||r.estado||'Sin estado registrado'}
+function statusTone(r){
+  if(!has(r.estado))return 'missing';
+  const n=norm(r.estado);
+  if(/finaliz|terminad|completad|cerrad|liquidad|ejecutad/.test(n))return 'done';
+  if(/ejecuc|vigent|activ/.test(n))return 'active';
+  if(/suspend|anulad|cancel|desiert|fallid/.test(n))return 'warn';
+  return 'neutral';
+}
+function statusBadge(r){return `<span class="status-badge tone-${statusTone(r)}" title="${safe(has(r.estado)?'Estado textual de la matriz':'No existe un estado explícito en esta fuente')}">${safe(displayStatus(r))}</span>`}
+function processLinkButton(r,short=false){
+  return r.linkHref?`<a class="link-pill" href="${safe(r.linkHref)}" target="_blank" rel="noopener noreferrer" title="Abrir vínculo original de SharePoint">↗ ${short?'Abrir':'Ver proceso'}</a>`:`<span class="link-unavailable" title="No consta un hipervínculo navegable en la matriz de origen">Sin enlace</span>`;
+}
+function parseContractRows(info,{historical=false,years=null}={}){
   const records=[];
   for(const {row,sourceRow} of info.rows){
     const yearValue=toNumber(valueAt(row,info.map,['Año','Ano']));
+    const yearInferred=!yearValue&&!historical&&years?.length===1;
+    const year=yearValue?Math.trunc(yearValue):(yearInferred?years[0]:null);
+    if(years && !years.includes(year))continue;
     const nro=field(row,info.map,'Nro.','Nro','Número');
     const objeto=field(row,info.map,'Objeto del Contrato');
     const proyecto=field(row,info.map,'Proyecto');
@@ -610,22 +663,25 @@ function parseContractRows(info){
     const rucCell=rucIdx===undefined?null:info.worksheet[XLSX.utils.encode_cell({r:sourceRow-1,c:rucIdx})];
     const ruc=String(rucCell?.w??rucCell?.v??valueAt(row,info.map,['RUC'])??'').trim();
     const linkIndex=info.map.get(compactKey('Link procesos'));
+    const textoLink=field(row,info.map,'Link procesos');
+    const estado=field(row,info.map,'Estado');
     const rec={
-      id:`contract-row-${sourceRow}`,sourceRow,anio:yearValue?Math.trunc(yearValue):null,
-      fecha:excelDate(valueAt(row,info.map,['Fecha'])),nro,
-      secuencial:field(row,info.map,'No.','No'),
+      id:`${historical?'historic':'contract'}-row-${sourceRow}`,sourceRow,sourceSheet:info.sheet,historical,
+      anio:year, yearInferred, fecha:historical?'':excelDate(valueAt(row,info.map,['Fecha'])),
+      fechaReferencial:historical?excelDate(valueAt(row,info.map,['Fecha'])):'',
+      nro,secuencial:field(row,info.map,'No.','No'),
       unidad:field(row,info.map,'Unidad Administrativa'),proyecto,
       metodo:field(row,info.map,'Método de Contratación'),
       tipo:field(row,info.map,'Tipo de Adquisición'),
       ruc,proveedor:field(row,info.map,'Oferente Contratado'),objeto,
       monto:toNumber(valueAt(row,info.map,['Monto'])),
       unidades:toNumber(valueAt(row,info.map,['Unidades'])),
-      estado:field(row,info.map,'Estado'),
+      estado,estadoVisual:estado||(historical?'No informado (histórico)':'Sin estado registrado'),
       observaciones:field(row,info.map,'Observaciones'),
-      linkProceso:field(row,info.map,'Link procesos'),
-      linkHref:linkIndex===undefined?'':sheetHyperlink(info.worksheet,sourceRow,linkIndex)
+      linkProceso:textoLink,
+      linkHref:linkIndex===undefined?normalizeLinkTarget(textoLink):(sheetHyperlink(info.worksheet,sourceRow,linkIndex)||normalizeLinkTarget(textoLink))
     };
-    rec.issueMissingAmount=rec.monto===null;
+    rec.issueMissingAmount=rec.monto===null;rec.issueMissingSourceYear=yearInferred;
     rec.issueMissingCore=!rec.anio||!rec.nro||!rec.proyecto||!rec.proveedor||!rec.objeto;
     records.push(rec);
   }
@@ -658,25 +714,33 @@ function parseProcessRows(info){
 }
 function parseWorkbook(buffer){
   if(!window.XLSX)throw new Error('No está disponible la biblioteca para leer Excel.');
-  const wb=XLSX.read(buffer,{type:'array',raw:true,cellDates:false});
+  const wb=XLSX.read(buffer,{type:'array',raw:true,cellDates:false,cellHTML:false});
   const ci=sheetContent(wb,CONFIG.preferredSheet,['Año','Fecha','Nro.','Proyecto','Objeto del Contrato','Monto']);
   const pi=sheetContent(wb,CONFIG.processesSheet,['Año','Proyecto','Objeto del Proceso','Presupuesto Referencial','Estado']);
-  return {contracts:parseContractRows(ci),processes:parseProcessRows(pi),contractSheet:ci.sheet,processSheet:pi.sheet};
+  const hi=sheetContent(wb,CONFIG.historicSheet,['Año','Nro.','Unidad Administrativa','Objeto del Contrato','Monto']);
+  const history=parseContractRows(hi,{historical:true,years:CONFIG.historicYears});
+  const current=parseContractRows(ci,{historical:false,years:[2026]});
+  const loadedYears=new Set(history.map(r=>r.anio));
+  const missingYears=CONFIG.historicYears.filter(y=>!loadedYears.has(y));
+  if(missingYears.length)throw new Error(`La hoja histórica ${hi.sheet} no contiene registros para ${missingYears.join(', ')}.`);
+  // IMPORTANTE: se excluye 2026 de BaseContratos para evitar duplicar 2026.
+  return {contracts:[...history,...current],history,current,processes:parseProcessRows(pi),contractSheet:ci.sheet,historicSheet:hi.sheet,processSheet:pi.sheet};
 }
 
 async function syncExcel(notify=true){
   if(!state.account){updateAuthUi();return}
   if(state.syncing){toast('Actualización en curso','La base contractual ya se está leyendo desde Microsoft 365.','warn');return}
-  state.syncing=true;$('syncBtn').disabled=true;setLoading(true,'Leyendo las dos hojas de SharePoint de forma independiente…');
+  if(state.localMode){toast('Vista previa local','Para actualizar desde SharePoint, cierre la vista local e inicie sesión con Microsoft 365.','warn');return}
+  state.syncing=true;$('syncBtn').disabled=true;setLoading(true,'Leyendo histórico, contratos 2026 y procesos preparatorios de SharePoint…');
   try{
     const item=await resolveDriveItem();
     const buffer=await downloadExcel();
     const parsed=parseWorkbook(buffer);
-    state.records=parsed.contracts;state.processes=parsed.processes;
+    state.records=parsed.contracts;state.processes=parsed.processes;state.historicCount=parsed.history.length;state.currentCount=parsed.current.length;
     state.sourceSheet=parsed.contractSheet;state.sourceProcessSheet=parsed.processSheet;
     state.searchCache.clear();state.page=1;state.processPage=1;state.lastSync=new Date();
-    state.sourceKind='Microsoft 365';updateSourceUi(true);populateFilters();populateProcessFilters();renderAll();scheduleAutoRefresh();
-    if(notify)toast('Hojas actualizadas',`${integer.format(state.records.length)} contratos y ${integer.format(state.processes.length)} procesos cargados sin combinarse desde ${item.name}.`);
+    state.sourceKind='Microsoft 365';state.localMode=false;updateSourceUi(true);populateFilters();populateProcessFilters();renderAll();scheduleAutoRefresh();
+    if(notify)toast('Hojas actualizadas',`${integer.format(state.historicCount)} históricos + ${integer.format(state.currentCount)} de 2026 y ${integer.format(state.processes.length)} preparatorios. No se mezclan ni duplican.`);
   }catch(err){updateSourceUi(false,err);toast('No se pudo leer el Excel',friendlyError(err),'bad')}
   finally{state.syncing=false;$('syncBtn').disabled=false;setLoading(false)}
 }
@@ -685,12 +749,13 @@ function scheduleAutoRefresh(){
   if(CONFIG.autoRefreshMinutes>0) state.refreshTimer=setInterval(()=>{if(state.account&&!document.hidden&&!state.syncing)syncExcel(false)},CONFIG.autoRefreshMinutes*60*1000);
 }
 function updateSourceUi(ok,error=null){
-  const s=$('sourceState');s.className='source-state '+(ok?'ok':error?'bad':'');s.textContent=ok?'Conectado':error?'Error':'Conectando';
-  $('sourceFileName').textContent=state.driveItem?.name||'Archivo de contratos FIAS';$('sourceSheet').textContent='2 bases independientes';
+  const s=$('sourceState');s.className='source-state '+(ok?'ok':error?'bad':'');s.textContent=state.localMode?'Vista previa local':ok?'Conectado':error?'Error':'Conectando';
+  $('sourceFileName').textContent=state.localMode?'Vista previa · Excel del dispositivo':(state.driveItem?.name||'Archivo de contratos FIAS');$('sourceSheet').textContent='3 hojas · 2 módulos';
   $('lastSync').textContent=state.lastSync?state.lastSync.toLocaleString('es-EC'):'—';
   $('fileModified').textContent=state.driveItem?.lastModifiedDateTime?new Date(state.driveItem.lastModifiedDateTime).toLocaleString('es-EC'):'—';
-  $('sourceDetail').textContent=ok?`${integer.format(state.records.length)} contratos (${state.sourceSheet}) y ${integer.format(state.processes.length)} procesos (${state.sourceProcessSheet}), sin sumar ni mezclar. Actualización automática cada ${CONFIG.autoRefreshMinutes} min mientras el portal esté abierto.`:error?friendlyError(error):'Dos hojas específicas consultadas en SharePoint.';
+  $('sourceDetail').textContent=ok?`${integer.format(state.historicCount||0)} históricos 2023–2025 (${CONFIG.historicSheet}) + ${integer.format(state.currentCount||0)} contratos/órdenes de 2026 (${state.sourceSheet}) · ${integer.format(state.processes.length)} preparatorios (${state.sourceProcessSheet}) en módulo aparte. ${state.localMode?'Solo vista previa local; los datos no salen del dispositivo.':`Actualización automática cada ${CONFIG.autoRefreshMinutes} min.`}`:error?friendlyError(error):'Histórico, contratos 2026 y preparatorios consultados en SharePoint.';
   $('openSourceLink').href=CONFIG.shareUrl;
+  $('syncBtn').disabled=state.localMode;
 }
 function friendlyError(err){
   const msg=String(err&&err.message?err.message:err);
@@ -701,26 +766,42 @@ function friendlyError(err){
   return msg.length>420?msg.slice(0,420)+'…':msg;
 }
 
+async function openLocalWorkbook(file){
+  if(!file)return;
+  setLoading(true,'Leyendo copia Excel en su dispositivo…');
+  try{
+    const parsed=parseWorkbook(await file.arrayBuffer());
+    clearInterval(state.refreshTimer);state.refreshTimer=null;
+    state.account={username:'Vista previa local · '+file.name};state.localMode=true;
+    state.records=parsed.contracts;state.processes=parsed.processes;
+    state.historicCount=parsed.history.length;state.currentCount=parsed.current.length;
+    state.driveItem=null;state.sourceSheet=parsed.contractSheet;state.sourceProcessSheet=parsed.processSheet;
+    state.lastSync=new Date();state.sourceKind='Vista previa local';state.searchCache.clear();state.page=1;state.processPage=1;
+    updateAuthUi();populateFilters();populateProcessFilters();renderAll();updateSourceUi(true);
+    toast('Archivo analizado',`${integer.format(state.historicCount)} históricos, ${integer.format(state.currentCount)} registros de 2026 y ${integer.format(state.processes.length)} preparatorios. Archivo leído localmente.`);
+  }catch(e){toast('Excel incompatible',friendlyError(e),'bad')}
+  finally{setLoading(false);$('localFile').value=''}
+}
 function uniq(field){return [...new Set(state.records.map(r=>r[field]).filter(has))].sort((a,b)=>String(a).localeCompare(String(b),'es',{numeric:true,sensitivity:'base'}))}
 function uniqNormalized(field){const map=new Map();state.records.forEach(r=>{if(!has(r[field]))return;const key=norm(r[field]);if(key&&!map.has(key))map.set(key,String(r[field]).trim())});return [...map.values()].sort((a,b)=>a.localeCompare(b,'es',{numeric:true,sensitivity:'base'}))}
 function fillSelect(id,values,label){const n=$(id);const current=n.value;n.innerHTML=`<option value="">${safe(label)}</option>`+values.map(v=>`<option value="${safe(v)}">${safe(v)}</option>`).join('');if([...n.options].some(o=>o.value===current))n.value=current}
-function populateFilters(){fillSelect('yearFilter',uniq('anio').map(String),'Todos los años');fillSelect('projectFilter',uniq('proyecto'),'Todos los proyectos');fillSelect('unitFilter',uniq('unidad'),'Todas las unidades');fillSelect('methodFilter',uniqNormalized('metodo'),'Todos los métodos');fillSelect('typeFilter',uniqNormalized('tipo'),'Todos los tipos');fillSelect('statusFilter',uniqNormalized('estado'),'Todos los estados')}
-function searchBlob(r){if(state.searchCache.has(r.id))return state.searchCache.get(r.id);const blob=norm([r.anio,r.nro,r.fecha,r.unidad,r.proyecto,r.metodo,r.tipo,r.proveedor,r.objeto,r.monto,r.unidades,r.estado,r.ruc,r.linkProceso,r.observaciones].join(' '));state.searchCache.set(r.id,blob);return blob}
+function populateFilters(){fillSelect('yearFilter',uniq('anio').map(String),'Todos los años');fillSelect('sourceFilter',uniq('sourceSheet'),'Todas las fuentes');fillSelect('projectFilter',uniq('proyecto'),'Todos los proyectos');fillSelect('unitFilter',uniq('unidad'),'Todas las unidades');fillSelect('methodFilter',uniqNormalized('metodo'),'Todos los métodos');fillSelect('typeFilter',uniqNormalized('tipo'),'Todos los tipos');fillSelect('statusFilter',uniqNormalized('estadoVisual'),'Todos los estados')}
+function searchBlob(r){if(state.searchCache.has(r.id))return state.searchCache.get(r.id);const blob=norm([r.anio,r.nro,r.fecha,r.unidad,r.proyecto,r.metodo,r.tipo,r.proveedor,r.objeto,r.monto,r.unidades,r.estado,r.estadoVisual,r.ruc,r.linkProceso,r.observaciones,r.sourceSheet].join(' '));state.searchCache.set(r.id,blob);return blob}
 function relevance(r,query){
   const q=norm(query);if(!q)return 0;const terms=q.split(' ').filter(Boolean);const blob=searchBlob(r);if(!terms.every(t=>blob.includes(t)))return -1;
   let score=0;const p=norm(r.proveedor),o=norm(r.objeto),pr=norm(r.proyecto),u=norm(r.unidad),m=norm(r.metodo),ty=norm(r.tipo),nr=norm(r.nro);
   terms.forEach(t=>{if(nr===t)score+=50;if(pr===t)score+=22;if(p.startsWith(t))score+=15;if(p.includes(t))score+=8;if(o.includes(t))score+=7;if(u.includes(t))score+=5;if(m.includes(t)||ty.includes(t))score+=4});
   if(p.includes(q))score+=18;if(o.includes(q))score+=12;return score;
 }
-function activeFilterData(){return{year:$('yearFilter').value,project:$('projectFilter').value,unit:$('unitFilter').value,method:$('methodFilter').value,type:$('typeFilter').value,status:$('statusFilter').value,min:toNumber($('amountMin').value),max:toNumber($('amountMax').value),quality:$('qualityOnly').checked,q:$('searchBox').value}}
+function activeFilterData(){return{year:$('yearFilter').value,source:$('sourceFilter').value,project:$('projectFilter').value,unit:$('unitFilter').value,method:$('methodFilter').value,type:$('typeFilter').value,status:$('statusFilter').value,min:toNumber($('amountMin').value),max:toNumber($('amountMax').value),quality:$('qualityOnly').checked,q:$('searchBox').value}}
 function filterRecords(){
   const f=activeFilterData();const scored=[];
   state.records.forEach(r=>{
-    if(f.year&&String(r.anio)!==f.year)return;if(f.project&&r.proyecto!==f.project)return;if(f.unit&&r.unidad!==f.unit)return;if(f.method&&norm(r.metodo)!==norm(f.method))return;if(f.type&&norm(r.tipo)!==norm(f.type))return;if(f.status&&norm(r.estado)!==norm(f.status))return;
+    if(f.year&&String(r.anio)!==f.year)return;if(f.source&&r.sourceSheet!==f.source)return;if(f.project&&r.proyecto!==f.project)return;if(f.unit&&r.unidad!==f.unit)return;if(f.method&&norm(r.metodo)!==norm(f.method))return;if(f.type&&norm(r.tipo)!==norm(f.type))return;if(f.status&&norm(displayStatus(r))!==norm(f.status))return;
     if(f.min!==null&&(r.monto===null||r.monto<f.min))return;if(f.max!==null&&(r.monto===null||r.monto>f.max))return;if(f.quality&&!r.hasIssue)return;
     const score=relevance(r,f.q);if(score<0)return;scored.push({r,score});
   });
-  const mode=$('sortSelect').value;const dateVal=r=>r.fecha?Date.parse(`${r.fecha}T00:00:00`):0;const amountVal=r=>r.monto===null?-Infinity:Number(r.monto)||0;
+  const mode=$('sortSelect').value;const dateVal=r=>r.fecha?Date.parse(`${r.fecha}T00:00:00`):Date.UTC(r.anio||0,0,1);const amountVal=r=>r.monto===null?-Infinity:Number(r.monto)||0;
   scored.sort((a,b)=>{
     if(mode==='relevance'&&norm(f.q))return b.score-a.score||dateVal(b.r)-dateVal(a.r);
     if(mode==='date-asc')return dateVal(a.r)-dateVal(b.r)||Number(a.r.nro||0)-Number(b.r.nro||0);
@@ -769,6 +850,11 @@ function renderKpis(){
   $('kpiProviders').textContent=integer.format(s.providers);$('kpiProjects').textContent=integer.format(s.projects);
   $('kpiConcentration').textContent=`${s.top5Share.toFixed(1)}%`;
   $('kpiQuality').textContent=`${s.quality.toFixed(1)}%`;$('kpiQualitySub').textContent=s.issues?`${integer.format(s.issues)} registros visibles con incidencias básicas`:'Sin incidencias básicas en la selección';
+  const rows=state.filtered, known=rows.filter(r=>has(r.estado)),links=rows.filter(r=>!!r.linkHref);
+  $('kpiStatusCoverage').textContent=integer.format(known.length);
+  $('kpiStatusCoverageSub').textContent=`${rows.length?(100*known.length/rows.length).toFixed(1):'0,0'}% del total visible · resto sin dato`;
+  $('kpiLinks').textContent=integer.format(links.length);
+  $('kpiLinksSub').textContent=`${rows.length?(100*links.length/rows.length).toFixed(1):'0,0'}% de los registros visibles`;
   $('kpiYears').textContent=integer.format(s.years.length);$('kpiYearsSub').textContent=s.years.length?`${s.years[0]} – ${s.years[s.years.length-1]}`:'Sin información';
   $('resultCount').textContent=`${integer.format(s.count)} ${s.count===1?'contrato':'contratos'}`;$('resultAmount').textContent=`Monto visible: ${money.format(s.amount)}`;
 }
@@ -921,10 +1007,17 @@ function renderCharts(rows){
     })
   });
 }
-function renderBI(){const rows=state.filtered;renderBiMini(rows);renderCharts(rows);renderInsights(rows);renderSupplierRanking(rows)}
+function renderContractStatuses(rows){
+  const grouped=new Map();rows.forEach(r=>{const k=displayStatus(r);grouped.set(k,(grouped.get(k)||0)+1)});
+  const groups=[...grouped.entries()].sort((a,b)=>b[1]-a[1]);
+  const largest=Math.max(1,...groups.map(([,n])=>n));
+  $('contractStatusDistribution').innerHTML=groups.length?groups.map(([k,v])=>`<button class="status-bar-row" type="button" data-status-choice="${safe(k)}" title="Filtrar contratos por ${safe(k)}"><span>${safe(k)}</span><span class="status-bar-track"><i style="width:${Math.max(2,100*v/largest)}%"></i></span><strong>${integer.format(v)}</strong></button>`).join(''):'<p>Sin resultados para estos filtros.</p>';
+  document.querySelectorAll('[data-status-choice]').forEach(b=>b.onclick=()=>{$('statusFilter').value=b.dataset.statusChoice;state.page=1;renderAll()});
+}
+function renderBI(){const rows=state.filtered;renderBiMini(rows);renderCharts(rows);renderInsights(rows);renderSupplierRanking(rows);renderContractStatuses(rows)}
 function filterDescription(){
   const f=activeFilterData(),parts=[];
-  if(f.year)parts.push(`Año: ${f.year}`);if(f.project)parts.push(`Proyecto: ${f.project}`);if(f.unit)parts.push(`Unidad: ${f.unit}`);if(f.method)parts.push(`Método: ${f.method}`);if(f.type)parts.push(`Tipo: ${f.type}`);if(f.status)parts.push(`Estado: ${f.status}`);
+  if(f.year)parts.push(`Año: ${f.year}`);if(f.source)parts.push(`Fuente: ${f.source}`);if(f.project)parts.push(`Proyecto: ${f.project}`);if(f.unit)parts.push(`Unidad: ${f.unit}`);if(f.method)parts.push(`Método: ${f.method}`);if(f.type)parts.push(`Tipo: ${f.type}`);if(f.status)parts.push(`Estado: ${f.status}`);
   if(f.min!==null||f.max!==null)parts.push(`Monto: ${f.min!==null?money.format(f.min):'sin mínimo'} – ${f.max!==null?money.format(f.max):'sin máximo'}`);
   if(f.quality)parts.push('Solo incidencias de integridad');if(norm(f.q))parts.push(`Búsqueda: “${f.q.trim()}”`);
   return parts.length?parts.join(' · '):'Base contractual completa';
@@ -935,11 +1028,13 @@ function reportRows(groups,metric='amount',limit=10){
 function buildExecutiveReport(){
   const rows=state.filtered,s=summary(rows),ys=yearStats(rows),projects=groupSorted(rows,'proyecto','amount',10),providers=providerStats(rows).groups.slice(0,10),methods=groupSorted(rows,'metodo','count',10),insights=executiveInsightData(rows);
   const quality=rows.filter(r=>r.hasIssue).length;
+  const estados=[...rows.reduce((m,r)=>{const k=displayStatus(r);m.set(k,(m.get(k)||0)+1);return m},new Map()).entries()].sort((a,b)=>b[1]-a[1]);
+  const linked=rows.filter(r=>!!r.linkHref).length, known=rows.filter(r=>has(r.estado)).length;
   const generated=new Date().toLocaleString('es-EC');
   $('reportBody').innerHTML=`
     <div class="report-cover"><small>Fondo de Inversión Ambiental Sostenible</small><h3>Reporte analítico ejecutivo de contratación</h3><p>${safe(filterDescription())} · Generado ${safe(generated)}</p></div>
     <div class="report-kpis">
-      <div class="report-kpi"><span>Contratos</span><strong>${integer.format(s.count)}</strong></div>
+      <div class="report-kpi"><span>Contratos y órdenes</span><strong>${integer.format(s.count)}</strong></div>
       <div class="report-kpi"><span>Monto</span><strong>${money.format(s.amount)}</strong></div>
       <div class="report-kpi"><span>Promedio</span><strong>${money.format(s.average)}</strong></div>
       <div class="report-kpi"><span>Mediana</span><strong>${money.format(s.median)}</strong></div>
@@ -949,7 +1044,9 @@ function buildExecutiveReport(){
       <div class="report-kpi"><span>Calidad básica</span><strong>${s.quality.toFixed(1)}%</strong></div>
     </div>
     <section class="report-section"><h4>Lectura ejecutiva</h4><div class="report-section-body">${insights.map(x=>`<p style="margin:0 0 8px">${x.html||safe(x.text)}</p>`).join('')}</div></section>
-    <section class="report-section"><h4>Evolución anual</h4><div class="report-section-body"><table class="report-table"><thead><tr><th>Año</th><th>Contratos</th><th>Monto</th></tr></thead><tbody>${ys.map(y=>`<tr><td>${y.year}</td><td>${integer.format(y.count)}</td><td>${money.format(y.amount)}</td></tr>`).join('')}</tbody></table></div></section>
+    <section class="report-section"><h4>Evolución anual</h4><div class="report-section-body"><table class="report-table"><thead><tr><th>Año</th><th>Contratos / órdenes</th><th>Monto</th></tr></thead><tbody>${ys.map(y=>`<tr><td>${y.year}</td><td>${integer.format(y.count)}</td><td>${money.format(y.amount)}</td></tr>`).join('')}</tbody></table></div></section>
+    <section class="report-section"><h4>Estados registrados y disponibilidad de enlaces</h4><div class="report-section-body"><p>Registros con un estado expreso: <strong>${integer.format(known)} de ${integer.format(rows.length)}</strong>. Enlaces navegables de proceso: <strong>${integer.format(linked)}</strong>. Los estados no informados no se interpretan como adjudicación, finalización ni ejecución.</p><table class="report-table"><thead><tr><th>Estado o ausencia de dato</th><th>Registros</th></tr></thead><tbody>${estados.map(([k,v])=>`<tr><td>${safe(k)}</td><td>${integer.format(v)}</td></tr>`).join('')}</tbody></table></div></section>
+    <section class="report-section"><h4>Alcance de la base histórica y criterios de armonización</h4><div class="report-section-body">Se integran únicamente los años 2023, 2024 y 2025 de la hoja <strong>BaseContratos</strong> y los registros de 2026 de <strong>contratos ordenes adj 2026</strong>, sin duplicar 2026 del consolidado. El histórico no proporciona RUC, enlace ni estado contractual explícito, y sus valores de fecha no se validaron como fechas individuales de suscripción; por ello esos atributos aparecen como no disponibles. Los procesos de <strong>Detalle procesos prep_prec</strong> se administran en un módulo independiente y sus presupuestos no forman parte de las sumas contractuales. La comparación anual es nominal y no demuestra homogeneidad de cobertura entre ejercicios.</div></section>
     <section class="report-section"><h4>Top 10 proyectos por monto</h4><div class="report-section-body"><table class="report-table"><thead><tr><th>#</th><th>Proyecto</th><th>Monto</th></tr></thead><tbody>${reportRows(projects,'amount')}</tbody></table></div></section>
     <section class="report-section"><h4>Top 10 proveedores por monto</h4><div class="report-section-body"><table class="report-table"><thead><tr><th>#</th><th>Proveedor</th><th>Monto</th></tr></thead><tbody>${reportRows(providers,'amount')}</tbody></table></div></section>
     <section class="report-section"><h4>Métodos más utilizados</h4><div class="report-section-body"><table class="report-table"><thead><tr><th>#</th><th>Método</th><th>Procesos</th></tr></thead><tbody>${reportRows(methods,'count')}</tbody></table></div></section>
@@ -961,18 +1058,25 @@ function printReport(){buildExecutiveReport();document.body.classList.add('repor
 
 function renderYearBars(){const groups={};state.records.forEach(r=>{if(r.anio)groups[r.anio]=(groups[r.anio]||0)+1});const max=Math.max(1,...Object.values(groups));$('yearBars').innerHTML=Object.keys(groups).sort().map(y=>`<div class="year-row"><button type="button" data-year="${safe(y)}">${safe(y)}</button><div class="year-track"><div class="year-fill" style="width:${(groups[y]/max)*100}%"></div></div><div class="year-value">${integer.format(groups[y])}</div></div>`).join('');document.querySelectorAll('[data-year]').forEach(b=>b.onclick=()=>{$('yearFilter').value=String(b.dataset.year);state.page=1;renderAll()})}
 function qualityStats(){const missing=state.records.filter(r=>r.issueMissingAmount).length,dupes=state.records.filter(r=>r.issueDuplicate).length,core=state.records.filter(r=>r.issueMissingCore).length;return{missing,dupes,core,total:state.records.filter(r=>r.hasIssue).length}}
-function renderQuality(){const q=qualityStats();const b=$('qualityBanner');if(!q.total){b.classList.remove('show');return}b.classList.add('show');$('qualityTitle').textContent='La fuente contiene registros que conviene revisar';const parts=[];if(q.missing)parts.push(`${q.missing} sin monto`);if(q.dupes)parts.push(`${q.dupes} asociados a números repetidos dentro del mismo año`);if(q.core)parts.push(`${q.core} con algún dato principal vacío`);$('qualityText').textContent=parts.join(' · ')+'. El portal no altera estos datos; únicamente los identifica para control.'}
-function activeFilterCount(){const f=activeFilterData();return[f.year,f.project,f.unit,f.method,f.type,f.status,f.min!==null,f.max!==null,f.quality].filter(Boolean).length}
-function renderHints(){const n=activeFilterCount();$('activeFilters').textContent=n?`${n} ${n===1?'filtro activo':'filtros activos'}`:'Sin filtros adicionales';const q=norm($('searchBox').value);$('searchHint').textContent=q?`Búsqueda activa: “${$('searchBox').value.trim()}”. Todos los términos deben aparecer en el registro; la relevancia prioriza número, proyecto, proveedor y objeto.`:'La búsqueda analiza simultáneamente número, proveedor, objeto, proyecto, unidad, método y tipo de adquisición.'}
+function renderQuality(){const q=qualityStats();const b=$('qualityBanner');if(!q.total){b.classList.remove('show');return}b.classList.add('show');$('qualityTitle').textContent='La fuente contiene registros que conviene revisar';const parts=[];if(q.missing)parts.push(`${q.missing} sin monto`);if(q.dupes)parts.push(`${q.dupes} asociados a números repetidos dentro del mismo año`);if(q.core)parts.push(`${q.core} con algún dato principal vacío`);const inferred=state.records.filter(r=>r.yearInferred).length;if(inferred)parts.push(`${inferred} de 2026 con año inferido por la hoja de origen`);$('qualityText').textContent=parts.join(' · ')+'. El portal no altera estos datos; únicamente los identifica para control.'}
+function activeFilterCount(){const f=activeFilterData();return[f.year,f.source,f.project,f.unit,f.method,f.type,f.status,f.min!==null,f.max!==null,f.quality].filter(Boolean).length}
+function renderHints(){const n=activeFilterCount();$('activeFilters').textContent=n?`${n} ${n===1?'filtro activo':'filtros activos'}`:'Sin filtros adicionales';const q=norm($('searchBox').value);$('searchHint').textContent=q?`Búsqueda activa: “${$('searchBox').value.trim()}”. Todos los términos deben aparecer en el registro; la relevancia prioriza número, proyecto, proveedor y objeto.`:'La búsqueda incluye 2023–2026: número, proveedor, objeto, proyecto, estado, unidad, método y tipo.'}
 function pageData(){const size=Math.max(1,Number($('pageSize').value)||25);const pages=Math.max(1,Math.ceil(state.filtered.length/size));if(state.page>pages)state.page=pages;if(state.page<1)state.page=1;const start=(state.page-1)*size;return{rows:state.filtered.slice(start,start+size),size,pages,start}}
 function issueMark(r){return r.hasIssue?'<span class="issue-dot" title="Registro con incidencia de integridad"></span>':''}
-function rowHtml(r){return `<tr><td class="col-ref"><span class="ref-code">N.º ${safe(r.nro||'—')}${issueMark(r)}</span><span class="ref-year">${safe(r.anio||'Año no registrado')}</span></td><td>${safe(displayDate(r.fecha))}</td><td><span class="project-chip" title="${safe(r.proyecto)}">${safe(r.proyecto||'Sin proyecto')}</span></td><td class="method">${safe(r.metodo||'—')}<br><span style="color:#7c8985;font-size:.65rem">${safe(r.tipo||'')}</span></td><td class="provider">${safe(r.proveedor||'—')}<br><small style="color:var(--muted)">${safe(r.ruc?'RUC '+r.ruc:'Sin RUC en origen')}</small></td><td class="object">${safe(r.objeto||'—')}</td><td class="process-state">${safe(r.estado||'No registrado')}</td><td class="amount ${r.monto===null?'missing':''}">${r.monto===null?'Sin monto':money.format(r.monto)}</td><td><button class="row-action" type="button" data-id="${safe(r.id)}">Detalle</button></td></tr>`}
-function cardHtml(r){return `<article class="contract-card"><div class="card-top"><div><div class="card-ref">${safe(r.anio||'—')} · N.º ${safe(r.nro||'—')}${issueMark(r)}</div><div class="card-project"><span class="project-chip">${safe(r.proyecto||'Sin proyecto')}</span></div></div><div class="card-amount">${r.monto===null?'—':money.format(r.monto)}</div></div><div class="card-provider">${safe(r.proveedor||'—')}</div><div class="card-object">${safe(r.objeto||'—')}</div><div class="card-foot"><span>${safe(displayDate(r.fecha))} · ${safe(r.estado||'Estado sin registrar')}</span><button class="row-action" type="button" data-id="${safe(r.id)}">Detalle</button></div></article>`}
-function renderResults(){const p=pageData();$('tableBody').innerHTML=p.rows.length?p.rows.map(rowHtml).join(''):`<tr><td colspan="9" style="padding:42px;text-align:center;color:#71807a">No existen contratos con los criterios aplicados.</td></tr>`;$('cardList').innerHTML=p.rows.length?p.rows.map(cardHtml).join(''):`<div style="padding:30px;text-align:center;color:#71807a">No existen contratos con los criterios aplicados.</div>`;document.querySelectorAll('.row-action[data-id]').forEach(b=>b.onclick=()=>openDetail(b.dataset.id));const from=state.filtered.length?p.start+1:0,to=Math.min(p.start+p.size,state.filtered.length);$('pageInfo').textContent=`${integer.format(from)}–${integer.format(to)} de ${integer.format(state.filtered.length)} · Página ${p.pages?state.page:0} de ${p.pages}`;$('firstPage').disabled=$('prevPage').disabled=state.page<=1;$('nextPage').disabled=$('lastPage').disabled=state.page>=p.pages}
-function renderAll(){filterRecords();renderKpis();renderBI();renderYearBars();renderQuality();renderHints();renderResults();renderProcesses();$('contractTabCount').textContent=integer.format(state.records.length);$('processTabCount').textContent=integer.format(state.processes.length);$('footer').innerHTML=`Fondo de Inversión Ambiental Sostenible · ${integer.format(state.records.length)} contratos + ${integer.format(state.processes.length)} procesos en módulos diferenciados · Consulta institucional de solo lectura · Desarrollado por: <a class="author-link" href="https://www.linkedin.com/in/jair-cruz-gallegos-65998776/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn de Jair Cruz">Jair Cruz ↗</a>`}
-function clearFilters(){['yearFilter','projectFilter','unitFilter','methodFilter','typeFilter','statusFilter'].forEach(id=>$(id).value='');$('amountMin').value='';$('amountMax').value='';$('qualityOnly').checked=false;$('searchBox').value='';$('sortSelect').value='date-desc';state.page=1;renderAll()}
+function rowHtml(r){return `<tr><td class="col-ref"><span class="ref-code">N.º ${safe(r.nro||'—')}${issueMark(r)}</span><span class="ref-year">${safe(r.anio||'Año no registrado')} · ${r.historical?'Histórico':'2026'}</span></td><td title="${r.historical?'La fuente histórica no identifica fecha individual':''}">${safe(r.fecha?displayDate(r.fecha):'No consta')}</td><td><span class="project-chip" title="${safe(r.proyecto)}">${safe(r.proyecto||'Sin proyecto')}</span></td><td class="method">${safe(r.metodo||'—')}<br><span style="color:#7c8985;font-size:.65rem">${safe(r.tipo||'')}</span></td><td class="provider">${safe(r.proveedor||'—')}<br><small style="color:var(--muted)">${safe(r.ruc?'RUC '+r.ruc:r.historical?'RUC no disponible':'Sin RUC en origen')}</small></td><td class="object">${safe(r.objeto||'—')}</td><td>${statusBadge(r)}</td><td class="amount ${r.monto===null?'missing':''}">${r.monto===null?'Sin monto':money.format(r.monto)}</td><td>${processLinkButton(r,true)}</td><td><button class="row-action" type="button" data-id="${safe(r.id)}">Detalle</button></td></tr>`}
+function cardHtml(r){return `<article class="contract-card"><div class="card-top"><div><div class="card-ref">${safe(r.anio||'—')} · N.º ${safe(r.nro||'—')}${issueMark(r)}</div><div class="card-project"><span class="project-chip">${safe(r.proyecto||'Sin proyecto')}</span></div></div><div class="card-amount">${r.monto===null?'—':money.format(r.monto)}</div></div><div class="card-provider">${safe(r.proveedor||'—')}</div><div class="card-object">${safe(r.objeto||'—')}</div><div class="card-status-row">${statusBadge(r)}<small>${safe(r.fecha?displayDate(r.fecha):'Sin fecha individual')}</small></div><div class="card-foot"><span>${r.historical?'Fuente histórica':'Detalle 2026'}</span><div class="card-actions">${processLinkButton(r,true)}<button class="row-action" type="button" data-id="${safe(r.id)}">Detalle</button></div></div></article>`}
+function renderResults(){const p=pageData();$('tableBody').innerHTML=p.rows.length?p.rows.map(rowHtml).join(''):`<tr><td colspan="10" style="padding:42px;text-align:center;color:#71807a">No existen contratos con los criterios aplicados.</td></tr>`;$('cardList').innerHTML=p.rows.length?p.rows.map(cardHtml).join(''):`<div style="padding:30px;text-align:center;color:#71807a">No existen contratos con los criterios aplicados.</div>`;document.querySelectorAll('.row-action[data-id]').forEach(b=>b.onclick=()=>openDetail(b.dataset.id));const from=state.filtered.length?p.start+1:0,to=Math.min(p.start+p.size,state.filtered.length);$('pageInfo').textContent=`${integer.format(from)}–${integer.format(to)} de ${integer.format(state.filtered.length)} · Página ${p.pages?state.page:0} de ${p.pages}`;$('firstPage').disabled=$('prevPage').disabled=state.page<=1;$('nextPage').disabled=$('lastPage').disabled=state.page>=p.pages}
+function renderAll(){filterRecords();renderKpis();renderBI();renderYearBars();renderQuality();renderHints();renderResults();renderProcesses();$('historyBadge').textContent=state.records.length?`${Math.min(...state.records.map(r=>r.anio).filter(Boolean))} — ${Math.max(...state.records.map(r=>r.anio).filter(Boolean))}`:'2023 — 2026';
+  $('historyNoticeText').textContent=`Cobertura cargada: ${integer.format(state.historicCount||0)} registros históricos 2023–2025 + ${integer.format(state.currentCount||0)} de 2026. El histórico proviene de «BaseContratos»; las fechas individuales, estados, RUC y enlaces no consignados se muestran como no disponibles. Los presupuestos preparatorios son independientes.`;
+  $('contractTabCount').textContent=integer.format(state.records.length);$('processTabCount').textContent=integer.format(state.processes.length);$('footer').innerHTML=`Fondo de Inversión Ambiental Sostenible · ${integer.format(state.records.length)} contratos/órdenes 2023–2026 + ${integer.format(state.processes.length)} procesos en módulos diferenciados · Consulta institucional de solo lectura · Desarrollado por: <a class="author-link" href="https://www.linkedin.com/in/jair-cruz-gallegos-65998776/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn de Jair Cruz">Jair Cruz ↗</a>`}
+function clearFilters(){['yearFilter','sourceFilter','projectFilter','unitFilter','methodFilter','typeFilter','statusFilter'].forEach(id=>$(id).value='');$('amountMin').value='';$('amountMax').value='';$('qualityOnly').checked=false;$('searchBox').value='';$('sortSelect').value='date-desc';state.page=1;renderAll()}
 function goPage(n){const size=Math.max(1,Number($('pageSize').value)||25);const pages=Math.max(1,Math.ceil(state.filtered.length/size));state.page=Math.max(1,Math.min(pages,n));renderResults();document.querySelector('.results-card')?.scrollIntoView({behavior:'smooth',block:'start'})}
-function csvCell(v){const s=String(v??'');return /[";,\n\r]/.test(s)?`"${s.replace(/"/g,'""')}"`:s}
+function csvCell(v){
+  let s=String(v??'');
+  // Evita interpretación de fórmulas al abrir en Excel datos textuales provenientes de terceros.
+  if(typeof v==='string' && /^[\s]*[=+@]/.test(s))s="'"+s;
+  return /[";,\n\r]/.test(s)?`"${s.replace(/"/g,'""')}"`:s;
+}
 function downloadCSV(rows,headers,extract,filename,label){
   if(!rows.length){toast('Sin registros','No existen datos para exportar.','warn');return}
   const lines=[headers.map(csvCell).join(';')];
@@ -982,15 +1086,16 @@ function downloadCSV(rows,headers,extract,filename,label){
   toast('CSV generado',`${integer.format(rows.length)} ${label} exportados, solo del módulo seleccionado.`);
 }
 function exportCSV(){
-  downloadCSV(state.filtered,['No.','Año','Fecha','Nro.','Unidad Administrativa','Proyecto','Método de Contratación','Tipo de Adquisición','RUC','Oferente Contratado','Objeto del Contrato','Monto','Unidades','Estado','Observaciones','Link procesos'],r=>[r.secuencial,r.anio??'',r.fecha,r.nro,r.unidad,r.proyecto,r.metodo,r.tipo,r.ruc,r.proveedor,r.objeto,r.monto??'',r.unidades??'',r.estado,r.observaciones,r.linkProceso],`fias-contratos-2026-${new Date().toISOString().slice(0,10)}.csv`,'contratos');
+  downloadCSV(state.filtered,['No.','Año','Fecha individual consignada','Nro.','Unidad Administrativa','Proyecto','Método de Contratación','Tipo de Adquisición','RUC','Oferente Contratado','Objeto del Contrato','Monto','Unidades','Estado literal','Estado visible','Observaciones','Texto referencia de proceso','URL directa del proceso','Hoja de origen','Fila de origen','Fecha en hoja histórica (referencial; no validada como firma)'],r=>[r.secuencial,r.anio??'',r.fecha,r.nro,r.unidad,r.proyecto,r.metodo,r.tipo,r.ruc,r.proveedor,r.objeto,r.monto??'',r.unidades??'',r.estado,displayStatus(r),r.observaciones,r.linkProceso,r.linkHref,r.sourceSheet,r.sourceRow,r.fechaReferencial||''],`fias-contratos-2023-2026-${new Date().toISOString().slice(0,10)}.csv`,'contratos');
 }
 function openDetail(id){
   const r=state.records.find(x=>x.id===id);if(!r)return;
   $('drawerTitle').textContent=`${r.anio||'Año no registrado'} · N.º ${r.nro||'—'}`;
-  $('detailDrawer').querySelector('.drawer-kicker').textContent='Detalle de contrato / orden adjudicada';
-  const flags=[];if(r.issueDuplicate)flags.push('Número repetido en el mismo año');if(r.issueMissingAmount)flags.push('Monto no registrado');if(r.issueMissingCore)flags.push('Dato principal incompleto');
-  const link=r.linkHref?`<a target="_blank" rel="noopener noreferrer" href="${safe(r.linkHref)}">Abrir referencia ↗</a>`:safe(r.linkProceso||'—');
-  $('drawerBody').innerHTML=`<div class="detail-grid"><div class="detail-cell"><span>Año</span><strong>${safe(r.anio||'No registrado')}</strong></div><div class="detail-cell"><span>Fecha</span><strong>${safe(displayDate(r.fecha))}</strong></div><div class="detail-cell"><span>Número</span><strong>${safe(r.nro||'—')}</strong></div><div class="detail-cell"><span>Monto contractual</span><strong>${safe(displayMoney(r.monto))}</strong></div><div class="detail-cell wide"><span>Unidad administrativa</span><strong>${safe(r.unidad||'—')}</strong></div><div class="detail-cell"><span>Proyecto</span><strong>${safe(r.proyecto||'—')}</strong></div><div class="detail-cell"><span>Unidades</span><strong>${safe(r.unidades??'—')}</strong></div><div class="detail-cell"><span>Método de contratación</span><strong>${safe(r.metodo||'—')}</strong></div><div class="detail-cell"><span>Tipo de adquisición</span><strong>${safe(r.tipo||'—')}</strong></div><div class="detail-cell wide"><span>Oferente contratado</span><strong>${safe(r.proveedor||'—')}</strong></div><div class="detail-cell"><span>RUC</span><strong>${safe(r.ruc||'No registrado')}</strong></div><div class="detail-cell"><span>Estado</span><strong>${safe(r.estado||'No registrado')}</strong></div><div class="detail-cell wide"><span>Link procesos (registrado en Excel)</span><strong>${link}</strong></div>${has(r.observaciones)?`<div class="detail-cell wide"><span>Observaciones</span><p style="white-space:pre-wrap">${safe(r.observaciones)}</p></div>`:''}${flags.length?`<div class="detail-cell wide" style="border-color:#ecd7ae;background:#fffaf1"><span>Control de integridad</span><p>${safe(flags.join(' · '))}</p></div>`:''}</div><div class="detail-object"><span>Objeto contractual</span><p>${safe(r.objeto||'—')}</p></div>`;
+  $('detailDrawer').querySelector('.drawer-kicker').textContent=r.historical?'Ficha histórica · BaseContratos':'Ficha contractual · 2026';
+  const flags=[];if(r.issueDuplicate)flags.push('Número repetido en el mismo año');if(r.issueMissingAmount)flags.push('Monto no registrado');if(r.issueMissingCore)flags.push('Dato principal incompleto');if(r.yearInferred)flags.push('Año 2026 deducido únicamente de la hoja de origen porque la celda Año está vacía');
+  const link=r.linkHref?`<a class="link-pill" target="_blank" rel="noopener noreferrer" href="${safe(r.linkHref)}">↗ Abrir proceso en SharePoint</a>`:safe(r.linkProceso||'No hay hipervínculo navegable en la matriz');
+  const dateNote=r.historical?`<div class="detail-cell wide note-cell"><span>Alcance temporal del histórico</span><p>La fecha individual del contrato no consta de forma verificable en la fuente histórica. ${r.fechaReferencial?`BaseContratos contiene ${safe(displayDate(r.fechaReferencial))} como valor de fecha referencial; no se presenta como fecha de suscripción.`:''}</p></div>`:'';
+  $('drawerBody').innerHTML=`<div class="detail-grid"><div class="detail-cell"><span>Año</span><strong>${safe(r.anio||'No registrado')}</strong></div><div class="detail-cell"><span>Fecha de contrato</span><strong>${safe(r.fecha?displayDate(r.fecha):'No consta fecha individual')}</strong></div><div class="detail-cell"><span>Número</span><strong>${safe(r.nro||'—')}</strong></div><div class="detail-cell"><span>Monto contractual</span><strong>${safe(displayMoney(r.monto))}</strong></div><div class="detail-cell wide"><span>Unidad administrativa</span><strong>${safe(r.unidad||'—')}</strong></div><div class="detail-cell"><span>Proyecto</span><strong>${safe(r.proyecto||'—')}</strong></div><div class="detail-cell"><span>Unidades</span><strong>${safe(r.unidades??'No registrado')}</strong></div><div class="detail-cell"><span>Método de contratación</span><strong>${safe(r.metodo||'—')}</strong></div><div class="detail-cell"><span>Tipo de adquisición</span><strong>${safe(r.tipo||'—')}</strong></div><div class="detail-cell wide"><span>Oferente contratado</span><strong>${safe(r.proveedor||'—')}</strong></div><div class="detail-cell"><span>RUC</span><strong>${safe(r.ruc||'No disponible en fuente')}</strong></div><div class="detail-cell"><span>Estado</span>${statusBadge(r)}</div><div class="detail-cell wide"><span>Acceso al proceso</span><strong>${link}</strong>${r.linkHref&&r.linkProceso?`<p>${safe(r.linkProceso)}</p>`:''}</div><div class="detail-cell wide"><span>Fuente y trazabilidad</span><strong>${safe(r.sourceSheet)} · fila ${safe(r.sourceRow)}</strong></div>${has(r.observaciones)?`<div class="detail-cell wide"><span>Observaciones</span><p style="white-space:pre-wrap">${safe(r.observaciones)}</p></div>`:''}${dateNote}${flags.length?`<div class="detail-cell wide" style="border-color:#ecd7ae;background:#fffaf1"><span>Control de integridad</span><p>${safe(flags.join(' · '))}</p></div>`:''}</div><div class="detail-object"><span>Objeto contractual</span><p>${safe(r.objeto||'—')}</p></div>`;
   $('detailDrawer').classList.add('open');$('detailDrawer').setAttribute('aria-hidden','false');document.body.style.overflow='hidden';
 }
 function closeDetail(){$('detailDrawer').classList.remove('open');$('detailDrawer').setAttribute('aria-hidden','true');document.body.style.overflow=''}
@@ -1041,7 +1146,7 @@ function processDistribution(id,field){
   $(id).innerHTML=items.length?items.map(([k,v])=>`<div class="process-chart-row"><span class="process-chart-label" title="${safe(k)}">${safe(k)}</span><div class="process-chart-track"><div class="process-chart-fill" style="width:${Math.round(v/max*100)}%"></div></div><strong>${integer.format(v)}</strong></div>`).join(''):'<p style="font-size:.75rem;color:var(--muted)">No hay procesos con estos filtros.</p>';
 }
 function processPageData(){const size=15,pages=Math.max(1,Math.ceil(state.processFiltered.length/size));state.processPage=Math.min(Math.max(1,state.processPage),pages);const start=(state.processPage-1)*size;return{rows:state.processFiltered.slice(start,start+size),pages,size,start}}
-function processTableRow(r){return `<tr><td><span class="ref-code">${safe(r.nro||'Sin N.º')}${r.hasIssue?'<span class="issue-dot" title="Revisar registro de origen"></span>':''}</span><span class="ref-year">${safe(r.anio??'—')}</span></td><td><span class="project-chip">${safe(r.proyecto||'—')}</span></td><td class="method">${safe(r.metodo||'—')}</td><td>${safe(r.tipo||'—')}</td><td class="process-object">${safe(r.objeto||'—')}</td><td class="process-budget">${safe(processBudget(r))}</td><td><span class="process-state">${safe(r.estado||'No registrado')}</span></td><td><button type="button" class="row-action" data-process-id="${safe(r.id)}">Detalle</button></td></tr>`}
+function processTableRow(r){return `<tr><td><span class="ref-code">${safe(r.nro||'Sin N.º')}${r.hasIssue?'<span class="issue-dot" title="Revisar registro de origen"></span>':''}</span><span class="ref-year">${safe(r.anio??'—')}</span></td><td><span class="project-chip">${safe(r.proyecto||'—')}</span></td><td class="method">${safe(r.metodo||'—')}</td><td>${safe(r.tipo||'—')}</td><td class="process-object">${safe(r.objeto||'—')}</td><td class="process-budget">${safe(processBudget(r))}</td><td>${statusBadge(r)}</td><td><button type="button" class="row-action" data-process-id="${safe(r.id)}">Detalle</button></td></tr>`}
 function processCardRow(r){return `<article class="contract-card"><div class="card-top"><div class="card-ref">Proceso ${safe(r.nro||'Sin N.º')}${r.hasIssue?'<span class="issue-dot"></span>':''}</div><div class="card-amount">${r.presupuestoValor!==null?money.format(r.presupuestoValor):'Por definir'}</div></div><div class="card-project"><span class="project-chip">${safe(r.proyecto||'—')}</span></div><div class="card-provider">${safe(r.estado||'Estado no registrado')}</div><div class="card-object">${safe(r.objeto||'—')}</div><div class="card-foot"><span>${safe(r.metodo||'Método no registrado')}</span><button type="button" class="row-action" data-process-id="${safe(r.id)}">Detalle</button></div></article>`}
 function renderProcesses(){
   filterProcesses();const rows=state.processFiltered,all=state.processes;
@@ -1086,9 +1191,10 @@ function bind(){
   $('pSearch').addEventListener('input',debounce(()=>{state.processPage=1;renderProcesses()},160));
   ['pState','pMethod','pType','pProject','pSort'].forEach(id=>$(id).addEventListener('change',()=>{state.processPage=1;renderProcesses()}));
   $('pFirst').onclick=()=>goProcessPage(1);$('pPrev').onclick=()=>goProcessPage(state.processPage-1);$('pNext').onclick=()=>goProcessPage(state.processPage+1);$('pLast').onclick=()=>goProcessPage(999999);
+  $('localPreviewBtn').onclick=()=> $('localFile').click();$('localImportBtn').onclick=()=> $('localFile').click();$('localFile').addEventListener('change',e=>openLocalWorkbook(e.target.files?.[0]));
   $('loginBtn').onclick=login;$('syncBtn').onclick=()=>syncExcel(true);$('logoutBtn').onclick=logout;$('clearBtn').onclick=clearFilters;$('exportBtn').onclick=exportCSV;$('biResetBtn').onclick=clearFilters;$('reportBtn').onclick=openReport;$('closeReportBtn').onclick=closeReport;$('printReportBtn').onclick=printReport;
   $('closeDrawer').onclick=closeDetail;$('detailDrawer').addEventListener('click',e=>{if(e.target===$('detailDrawer'))closeDetail()});$('reportModal').addEventListener('click',e=>{if(e.target===$('reportModal'))closeReport()});document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeDetail();closeReport()}});
-  const deb=debounce(()=>{state.page=1;renderAll()},160);['searchBox','amountMin','amountMax'].forEach(id=>$(id).addEventListener('input',deb));['yearFilter','projectFilter','unitFilter','methodFilter','typeFilter','statusFilter','qualityOnly','sortSelect','pageSize'].forEach(id=>$(id).addEventListener('change',()=>{state.page=1;renderAll()}));
+  const deb=debounce(()=>{state.page=1;renderAll()},160);['searchBox','amountMin','amountMax'].forEach(id=>$(id).addEventListener('input',deb));['yearFilter','sourceFilter','projectFilter','unitFilter','methodFilter','typeFilter','statusFilter','qualityOnly','sortSelect','pageSize'].forEach(id=>$(id).addEventListener('change',()=>{state.page=1;renderAll()}));
   $('firstPage').onclick=()=>goPage(1);$('prevPage').onclick=()=>goPage(state.page-1);$('nextPage').onclick=()=>goPage(state.page+1);$('lastPage').onclick=()=>goPage(999999);
   document.addEventListener('visibilitychange',()=>{if(!document.hidden&&state.account&&state.lastSync&&Date.now()-state.lastSync.getTime()>CONFIG.autoRefreshMinutes*60*1000)syncExcel(false)});
 }
